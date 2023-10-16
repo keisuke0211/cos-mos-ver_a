@@ -432,11 +432,6 @@ namespace {
 		// デバイスを取得
 		LPDIRECT3DDEVICE9 device = m_window.GetD3DDevice();
 
-		m_polygon3D.Put(ConvPosRotToMatrix(D3DXVECTOR3(0.0f, 0.0f, 43.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f)))
-			->SetSize(m_window.GetWidth() * 0.05f, m_window.GetHeight() * 0.05f)
-			->SetPriority(0)
-			;
-
 		m_polygon3D.Put(ConvPosRotToMatrix(D3DXVECTOR3(0.0f, 0.0f, 43.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f)), true)
 			->SetSize(m_window.GetWidth() * 0.05f, m_window.GetHeight() * 0.05f)
 			->SetTex_Camera(&m_camera)

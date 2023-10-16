@@ -24,16 +24,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="code\system\csv_file.cpp">
-      <Filter>ソース ファイル\system</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="code\system\csv_file.h">
-      <Filter>ソース ファイル\system</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="code\Project\System\csv_file.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
