@@ -6,7 +6,6 @@
 //========================================
 #pragma once
 
-#include "data.h"
 #include "manager.h"
 #include "Mode/mode.h"
 #include "Mode/mode_game.h"
