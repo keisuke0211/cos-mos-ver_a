@@ -4,10 +4,7 @@
 // Author:RIKU NISHIMURA
 // 
 //========================================
-// [[[ input.h ]]]
-//========================================
-#ifndef _INPUT_H_
-#define _INPUT_H_
+#pragma once
 
 //****************************************
 // クラス定義
@@ -112,6 +109,11 @@ public:
 	D3DXVECTOR2        GetCursorMove(void)      { return m_cursorMove; }
 	StickInput         GetStick(STICK stick)    { return m_aStick[stick]; }
 	ACTIVE_DEVICE_TYPE GetActiveInputType(void) { return m_activeInputType; }
+	// 統合
+	bool Press  (int nKey, int nButton) { return KeyPress  (nKey) || ButtonPress  (nButton); }
+	bool Trigger(int nKey, int nButton) { return KeyTrigger(nKey) || ButtonTrigger(nButton); }
+	bool Repeat (int nKey, int nButton) { return KeyRepeat (nKey) || ButtonRepeat (nButton); }
+	bool Release(int nKey, int nButton) { return KeyRelease(nKey) || ButtonRelease(nButton); }
 	// キーボード
 	bool KeyPress  (int nKey) { return m_aKeyPress  [nKey] != 0; }
 	bool KeyTrigger(int nKey) { return m_aKeyTrigger[nKey] != 0; }
@@ -188,5 +190,3 @@ private:
 	void UpdateStick(void);
 	void UpdateController(void);
 };
-
-#endif
