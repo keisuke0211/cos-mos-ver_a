@@ -218,6 +218,7 @@
     <ClCompile Include="code\_RNLib\_ImGui\imgui_widgets.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="code\Project\Character\player.h" />
     <ClInclude Include="code\Project\data.h" />
     <ClInclude Include="code\Project\main.h" />
     <ClInclude Include="code\Project\manager.h" />
