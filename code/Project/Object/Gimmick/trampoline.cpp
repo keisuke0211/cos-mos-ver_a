@@ -5,6 +5,7 @@
 // 
 //========================================
 #include "trampoline.h"
+#include "../../main.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -16,6 +17,7 @@
 // コンストラクタ
 //========================================
 CTrampoline::CTrampoline(void) {
+	Manager::BlockMgr()->AddList(this);
 	m_type = TYPE::NONE;
 }
 
@@ -26,13 +28,14 @@ CTrampoline::~CTrampoline(void) {
 
 }
 
+int g_TexIdx = 1;
 //========================================
 // 初期化処理
 // Author:RYUKI FUJIWARA
 //========================================
 void CTrampoline::Init(void) {
 
-	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Spring Floor.x");
+	ModelIdx = RNLib::Model()->Load("data\\_RNData\\Model\\Effect\\Clod_M\\Body.x");
 }
 
 //========================================
@@ -49,24 +52,7 @@ void CTrampoline::Uninit(void) {
 //========================================
 void CTrampoline::Update(void) {
 
-	RNLib::Model()->Put(D3DXVECTOR3(0.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), ModelIdx, false);
-}
-
-//========================================
-// 生成処理
-//========================================
-CTrampoline* CTrampoline::Create(void) {
-
-	// 種類に応じてオブジェクト生成
-	CTrampoline* pGimmick = NULL;
-
-	//メモリ生成
-	pGimmick = new CTrampoline;
-
-	// 初期化処理
-	pGimmick->Init();
-
-	return pGimmick;
+	RNLib::Model()->Put(D3DXVECTOR3(40.0f, 0.0f, 40.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), ModelIdx, false);
 }
 
 //========================================

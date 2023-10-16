@@ -53,14 +53,27 @@ void CBlockMgr::Update(void)
 //========================================
 CBlock *CBlockMgr::Create(D3DXVECTOR3 pos)
 {
-	CBlock *pBlock = NULL;
+	CBlock *pObj = NULL;
 
-	if (pBlock != NULL) { return pBlock; }
-	pBlock = new CBlock;
+	if (pObj != NULL) { return pObj; }
+	pObj = new CBlock;
 
 	// ‰Šú‰»ˆ—
-	pBlock->Init();
-	pBlock->SetPos(pos);
+	pObj->Init();
+	pObj->SetPos(pos);
 
-	return pBlock;
+	return pObj;
+}
+
+CTrampoline *CBlockMgr::TCreate(D3DXVECTOR3 pos)
+{
+	CTrampoline *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CTrampoline;
+
+	// ‰Šú‰»ˆ—
+	pObj->Init();
+
+	return pObj;
 }

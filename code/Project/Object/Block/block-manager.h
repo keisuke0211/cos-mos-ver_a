@@ -11,6 +11,7 @@
 
 #include "../../../_RNLib/RNlib.h"
 #include "block.h"
+#include "../Gimmick/trampoline.h"
 
 //****************************************
 // ƒNƒ‰ƒX
@@ -26,6 +27,7 @@ public:
 	virtual void Update(void);
 	
 	CBlock *Create(D3DXVECTOR3 pos);
+	CTrampoline *TCreate(D3DXVECTOR3 pos);
 
 };
 

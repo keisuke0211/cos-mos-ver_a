@@ -43,6 +43,7 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Create(D3DXVECTOR3(0.0f,0.0f,0.0f));
+	Manager::BlockMgr()->TCreate(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 
 //========================================

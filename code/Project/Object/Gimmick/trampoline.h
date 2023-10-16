@@ -12,7 +12,7 @@
 // クラス定義
 //****************************************
 // モードの情報構造体
-class CTrampoline {
+class CTrampoline : public CList {
 public:
 	//========== [[[ 列挙型定義 ]]]
 	enum class TYPE {
@@ -31,7 +31,6 @@ public:
 	virtual void   Draw(void);
 	void   SetType(TYPE type) { m_type = type; }
 	TYPE   GetType(void) { return m_type; }
-	static  CTrampoline* Create(void);
 
 protected:
 	
