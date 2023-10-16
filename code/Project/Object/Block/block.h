@@ -27,6 +27,7 @@ public:
 		D3DXVECTOR3	size;		// サイズ
 		D3DXCOLOR col;			// 頂点カラー
 		int nType;				// 種類
+		int nModelIdx;			// モデル番号
 		int nID;				// ID
 	};
 
@@ -41,10 +42,11 @@ public:
 	/* 読み込み	*/static void Load(void);
 
 	// -- 設定 ---------------------------------------------
-	/* 位置		*/void SetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
-	/* 向き		*/void SetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
-	/* 色		*/void SetColor(const D3DXCOLOR col) { m_Info.col = col; }
-	/* 大きさ	*/void SetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
+	/* 位置			*/void SetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
+	/* 向き			*/void SetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
+	/* 色			*/void SetColor(const D3DXCOLOR col) { m_Info.col = col; }
+	/* 大きさ		*/void SetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
+	/* モデル番号	*/void SetModelIdx(const int nIdx) { m_Info.nModelIdx = nIdx; }
 
 	// -- 所得 ---------------------------------------------
 	/* 位置		*/D3DXVECTOR3 GetPos(void) { return m_Info.pos; }

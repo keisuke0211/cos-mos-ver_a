@@ -35,7 +35,6 @@ int g_TexIdx = 1;
 //========================================
 void CTrampoline::Init(void) {
 
-	ModelIdx = RNLib::Model()->Load("data\\_RNData\\Model\\Effect\\Clod_M\\Body.x");
 }
 
 //========================================

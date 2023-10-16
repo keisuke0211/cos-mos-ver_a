@@ -30,6 +30,7 @@ public:
 	virtual void   Update(void);
 	virtual void   Draw(void);
 	void   SetType(TYPE type) { m_type = type; }
+	void	SetModelIdx(int idx) { ModelIdx = idx; }
 	TYPE   GetType(void) { return m_type; }
 
 protected:
