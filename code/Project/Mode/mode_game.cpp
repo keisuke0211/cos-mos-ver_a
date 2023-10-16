@@ -28,8 +28,6 @@ CMode_Game::~CMode_Game(void) {
 
 }
 
-int g_modelIdx = -1;
-
 //========================================
 // ‰Šú‰»ˆ—
 // Author:RIKU NISHIMURA
@@ -42,8 +40,6 @@ void CMode_Game::Init(void) {
 
 	// ó‘ÔÝ’è
 	SetState((int)STATE::NONE);
-
-	g_modelIdx = RNLib::Model()->Load("data\\_RNData\\Model\\Effect\\Clod_M\\Body.x");
 }
 
 //========================================
