@@ -186,9 +186,6 @@
     <ClCompile Include="code\Project\Mode\mode_game.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="code\Project\data.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="code\Project\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -380,9 +377,6 @@
     <ClInclude Include="code\Project\Mode\mode_game.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="code\Project\data.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="code\Project\main.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -393,6 +387,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="code\Project\Object\Block\block.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Character\player.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
