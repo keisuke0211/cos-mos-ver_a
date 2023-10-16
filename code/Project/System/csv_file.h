@@ -40,124 +40,26 @@ public:
 	virtual~CSVFILE();
 
 	// ***** 関数 *****
+	/* 読み込み			*/void FileLood(string filepath, bool bHeader, bool bIndex, char delim);
+	/* 書き出し			*/void FileSave(string filepath, char delim);
+	/* コンソール出力	*/void FileShow(void);
 
-	//--------------------------------------------------
-	// 読み込み処理
-	// 引数1  : string filepath / ファイルパス
-	// 引数2  : bool bHeader	/ ヘッダーの有無
-	// 引数3  : bool bIndex		/ インデックスの有無
-	// 引数4  : char delim		/ 区切り文字
-	//--------------------------------------------------
-	void FileLood(string filepath, bool bHeader, bool bIndex, char delim);
-
-	//--------------------------------------------------
-	// 書き出し処理
-	// 引数1  : string filepath / ファイルパス
-	// 引数2  : char delim		/ 区切り文字
-	//--------------------------------------------------
-	void FileSave(string filepath, char delim);
-
-	//--------------------------------------------------
-	// コンソール出力処理
-	//--------------------------------------------------
-	void FileShow(void);
-
-	// -- 構成 -------------------------------------------------------------------
-
-	//--------------------------------------------------
-	// 端数処理 (float型)
-	// 引数1  : float &val		/ データ
-	// 引数2  : ing nLen		/ 桁数
-	// 引数3  : FORMAT format	/ 処理
-	// 返値   : float			/ データ(変換後)
-	//--------------------------------------------------
-	float Format(float val, int nLen, FORMAT format);
-
-	//--------------------------------------------------
-	// 端数処理 (double型)
-	// 引数1  : double &val		/ データ
-	// 引数2  : ing nLen		/ 桁数
-	// 引数3  : FORMAT format	/ 処理
-	// 返値   : double			/ データ(変換後)
-	//--------------------------------------------------
-	double Format(double val, int nLen, FORMAT format);
+	// -- 端数処理 -------------------------------------------------------------------
+	/* float	*/float Format(float val, int nLen, FORMAT format);
+	/* double	*/double Format(double val, int nLen, FORMAT format);
 
 	// -- 変換 -------------------------------------------------------------------
+	/* 文字列 → int		*/bool ToValue(int &val, const string &str);
+	/* 文字列 → float		*/bool ToValue(float &val, const string &str);
+	/* 文字列 → double		*/bool ToValue(double &val, const string &str);
+	/* 文字列 → char		*/bool ToValue(char* &val, const string &str);
+	/* 文字列 → bool		*/bool ToValue(bool &val, const string &str);
 
-	//--------------------------------------------------
-	// 文字列 → int型
-	// 引数1  : int &val    / データ(変換先)
-	// 引数2  : string &str / データ(変換元)
-	// 返値   : bool        / 変換できたか
-	//--------------------------------------------------
-	bool ToValue(int &val, const string &str);
-
-	//--------------------------------------------------
-	// 文字列 → float型
-	// 引数1  : float &val  / データ(変換先)
-	// 引数2  : string &str / データ(変換元)
-	// 返値   : bool        / 変換できたか
-	//--------------------------------------------------
-	bool ToValue(float &val, const string &str);
-
-	//--------------------------------------------------
-	// 文字列 → double型
-	// 引数1  : double &val / データ(変換先)
-	// 引数2  : string &str / データ(変換元)
-	// 返値   : bool        / 変換できたか
-	//--------------------------------------------------
-	bool ToValue(double &val, const string &str);
-
-	//--------------------------------------------------
-	// 文字列 → char型
-	// 引数1  : char &val	/ データ(変換先)
-	// 引数2  : string &str / データ(変換元)
-	// 返値   : bool        / 変換できたか
-	//--------------------------------------------------
-	bool ToValue(char* &val, const string &str);
-
-	//--------------------------------------------------
-	// 文字列 → bool型
-	// 引数1  : bool &val	/ データ(変換先)
-	// 引数2  : string &str / データ(変換元)
-	// 返値   : bool        / 変換できたか
-	//--------------------------------------------------
-	bool ToValue(bool &val, const string &str);
-
-	//--------------------------------------------------
-	// int型 → 文字列
-	// 引数1  : int &val / データ
-	// 返値   : string	/ データ(string)
-	//--------------------------------------------------
-	string CastCell(int &val) { return to_string(val); }
-
-	//--------------------------------------------------
-	// float型 → 文字列
-	// 引数1  : float &val  / データ
-	// 返値   : string	   / データ(string)
-	//--------------------------------------------------
-	string CastCell(float &val){ return to_string(Format(val, 2, FORMAT_FLOOR)); }
-
-	//--------------------------------------------------
-	// double型 → 文字列
-	// 引数1  : double &val / データ
-	// 返値   : string	   / データ(string)
-	//--------------------------------------------------
-	string CastCell(double &val) { return to_string(val); }
-
-	//--------------------------------------------------
-	// char型 → 文字列
-	// 引数1  : char &val / データ
-	// 返値   : string	   / データ(string)
-	//--------------------------------------------------
-	string CastCell(char &val) { return &val; }
-
-	//--------------------------------------------------
-	// char型 → 文字列
-	// 引数1  : char* &val / データ
-	// 返値   : string	   / データ(string)
-	//--------------------------------------------------
-	string CastCell(char* &val) { return * &val; }
+	/* int		→ 文字列	*/string CastCell(int &val) { return to_string(val); }
+	/* float	→ 文字列	*/string CastCell(float &val){ return to_string(Format(val, 2, FORMAT_FLOOR)); }	
+	/* double	→ 文字列	*/string CastCell(double &val) { return to_string(val); }
+	/* char		→ 文字列	*/string CastCell(char &val) { return &val; }
+	/* char*	→ 文字列	*/string CastCell(char* &val) { return * &val; }
 
 	// -- 設定 -----------------------------------------
 	/* ヘッダー		*/void SetHeader(string str, char delim);
