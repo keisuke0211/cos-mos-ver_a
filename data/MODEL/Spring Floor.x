@@ -235,7 +235,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Documents\\Visual Studio 2015\\Projects\\C+project X 004\\data\\TEXTURE\\pillar000.jpg";
+    "data\\TEXTURE\\pillar000.jpg";
    }
   }
  }
