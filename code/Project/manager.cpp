@@ -13,6 +13,7 @@ namespace {
 	//========== [[[ 変数宣言 ]]]
 	CMode*      m_modeObj;
 	CMode::TYPE m_reserveModeType;
+	CBlockMgr   m_blockMgr;
 }
 
 //================================================================================
@@ -20,6 +21,7 @@ namespace {
 //==========| Managerの関数
 //----------|---------------------------------------------------------------------
 //================================================================================
+CBlockMgr* Manager::BlockMgr(void) { return &m_blockMgr; }
 
 //========================================
 // 初期化処理
@@ -29,6 +31,8 @@ void Manager::Init(CMode::TYPE mode) {
 
 	// モード設定
 	SetMode(mode);
+
+	m_blockMgr.Init();
 }
 
 //========================================
@@ -39,6 +43,8 @@ void Manager::Uninit(void) {
 
 	// モードオブジェクト解放
 	RNLib::Memory()->Release(&m_modeObj);
+
+	m_blockMgr.Uninit();
 }
 
 //========================================
@@ -46,6 +52,8 @@ void Manager::Uninit(void) {
 // Author:RIKU NISHIMURA
 //========================================
 void Manager::Update(void) {
+
+	m_blockMgr.Update();
 
 	// 予約されている時、遷移がモード設定待ちならモードを設定する
 	if (m_reserveModeType != CMode::TYPE::NONE) {
