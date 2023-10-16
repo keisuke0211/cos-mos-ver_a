@@ -8,6 +8,7 @@
 
 #include "Mode/mode.h"
 #include "../_RNLib/RNlib.h"
+#include "Object\Block\block-manager.h"
 
 //****************************************
 // –¼‘O‹óŠÔ
@@ -22,4 +23,5 @@ namespace Manager {
 	void        SetMode    (const CMode::TYPE newMode);
 	CMode::TYPE GetMode    (void);
 	void        Transition (const CMode::TYPE newMode, const CTransition::TYPE transType);
+	CBlockMgr*  BlockMgr   (void);
 };
