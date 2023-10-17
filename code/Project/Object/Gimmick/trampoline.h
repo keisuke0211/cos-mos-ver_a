@@ -29,13 +29,17 @@ public:
 	virtual void   Uninit(void);
 	virtual void   Update(void);
 	virtual void   Draw(void);
-	void   SetType(TYPE type) { m_type = type; }
-	TYPE   GetType(void) { return m_type; }
+	void   SetType(TYPE type) { m_type = type; }			//í—Şİ’è
+	TYPE   GetType(void) { return m_type; }					//í—Şæ“¾
+	void   SetPos(D3DXVECTOR3 pos) { m_pos = pos; }			//ˆÊ’uİ’è
+	void   SetScale(D3DXVECTOR3 scale) { m_scale = scale; }	//Šgkİ’è
 
 protected:
 	
 private:
 	//========== [[[ •Ï”éŒ¾ ]]]
-	TYPE m_type;
-	int ModelIdx;
+	TYPE m_type;			//í—Ş
+	int m_modelIdx;			//ƒ‚ƒfƒ‹”Ô†
+	D3DXVECTOR3 m_pos;		//ˆÊ’u
+	D3DXVECTOR3 m_scale;	//‘å‚«‚³
 };

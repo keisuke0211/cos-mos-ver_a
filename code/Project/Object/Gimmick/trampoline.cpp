@@ -18,7 +18,11 @@
 //========================================
 CTrampoline::CTrampoline(void) {
 	Manager::BlockMgr()->AddList(this);
+
+	//‰Šúó‘Ô
 	m_type = TYPE::NONE;
+	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_scale = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //========================================
@@ -28,14 +32,13 @@ CTrampoline::~CTrampoline(void) {
 
 }
 
-int g_TexIdx = 1;
 //========================================
 // ‰Šú‰»ˆ—
 // Author:RYUKI FUJIWARA
 //========================================
 void CTrampoline::Init(void) {
 
-	ModelIdx = RNLib::Model()->Load("data\\_RNData\\Model\\Effect\\Clod_M\\Body.x");
+	m_modelIdx = RNLib::Model()->Load("data\\_RNData\\Model\\Effect\\Clod_M\\Body.x");
 }
 
 //========================================
@@ -52,7 +55,7 @@ void CTrampoline::Uninit(void) {
 //========================================
 void CTrampoline::Update(void) {
 
-	RNLib::Model()->Put(D3DXVECTOR3(40.0f, 0.0f, 40.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), ModelIdx, false);
+	RNLib::Model()->Put(D3DXVECTOR3(40.0f, 0.0f, 40.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx, false);
 }
 
 //========================================
