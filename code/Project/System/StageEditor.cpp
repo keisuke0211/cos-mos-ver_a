@@ -14,6 +14,7 @@
 //========================================
 CStageEditor::StageType *CStageEditor::m_StageType = NULL;
 int CStageEditor::m_StageMax = 0;
+const float CStageEditor::SIZE_OF_1_SQUARE = 40.0f;
 const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.txt";
 
 //========================================
@@ -101,7 +102,8 @@ void CStageEditor::StageLoad(int stage)
 	CSVFILE *pFile = new CSVFILE;
 
 	int nStage = stage;
-	bool bSet = false;
+	bool bSet = true;
+	bool bEnd = false;
 
 	IntControl(&nStage, m_StageMax, 0);
 
@@ -124,44 +126,54 @@ void CStageEditor::StageLoad(int stage)
 		{
 			string sData = pFile->GetData(nRow, nLine);
 
+			char *aDataSearch;	// データ検索用
+
+			/*pFile->ToValue(aDataSearch, sData);*/
+			/*if (!strcmp(aDataSearch, "SetStage")) { bSet = true; }
+			if (!strcmp(aDataSearch, "EndStage")) { bSet = false; }
+			if (!strcmp(aDataSearch, "End")) { bEnd = true; }*/
+
 			// ステージ生成
 			if (bSet)
 			{
 				pFile->ToValue(nType, sData);
-			}
 
-			break;
+				if (nType >= 0)
+				{
+					D3DXVECTOR3 pos = D3DXVECTOR3(-120.0f,0.0f,0.0f);
+
+					float x = SIZE_OF_1_SQUARE / 2 + SIZE_OF_1_SQUARE * nLine;
+					float y = SIZE_OF_1_SQUARE / 2 + SIZE_OF_1_SQUARE * nRow;
+
+					pos += D3DXVECTOR3(x, y, 0.0f);
+
+					// 配置
+					switch (nType)
+					{
+					case TYPE_BLOCK:
+						Manager::BlockMgr()->BlockCreate(pos);
+						break;
+					case TYPE_TRAMPOLINE:
+						Manager::BlockMgr()->TrampolineCreate(pos);
+						break;
+					case TYPE_THORN:
+
+						break;
+					case TYPE_LIFT:
+						Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+						break;
+					case TYPE_Meteor:
+						Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+						break;
+					}
+				}
+			}
 		}
 
 		// 最大数に達したら返す
-		if (nRow == nRowMax - 1)	// (列数 - 列の最大数 - ヘッダーの列数)
+		if (nRow == nRowMax)
 		{
-			return;
-		}
-
-		if (nType >= 0)
-		{
-			D3DXVECTOR3 pos = INITD3DXVECTOR3;
-
-			// 配置
-			switch (nType)
-			{
-			case TYPE_BLOCK:
-				Manager::BlockMgr()->BlockCreate(pos);
-				break;
-			case TYPE_TRAMPOLINE:
-				Manager::BlockMgr()->TrampolineCreate(pos);
-				break;
-			case TYPE_THORN:
-
-				break;
-			case TYPE_LIFT:
-				Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-				break;
-			case TYPE_Meteor:
-				Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-				break;
-			}
+			bEnd = true;
 		}
 	}
 

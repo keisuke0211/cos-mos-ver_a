@@ -11,9 +11,11 @@
 //****************************************
 class CStageEditor {
 
-	static const char* STAGE_INFO_FILE;		// ステージ情報のファイルパス
-
 public:
+
+	// 定数
+	static const char* STAGE_INFO_FILE;		// ステージ情報のファイルパス
+	static const float SIZE_OF_1_SQUARE;
 
 	// *** 情報構造体 ***
 
@@ -43,6 +45,9 @@ private:
 		TYPE_Meteor,		// 隕石
 		TYPE_MAX
 	};
+
+	// *** 関数宣言 ***
+	/* ステージ生成 */void SetStage();
 
 	// *** 変数宣言 ***
 	static StageType *m_StageType;
