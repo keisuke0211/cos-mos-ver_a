@@ -21,9 +21,15 @@ CTrampoline::CTrampoline(void) {
 	Manager::BlockMgr()->AddList(this);
 
 	//‰Šúó‘Ô
-	m_type = TYPE::NONE;
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	m_type = TYPE::TRAMPOLINE;
+	m_width = SIZE_OF_1_SQUARE * 2.0f;
+	m_height = SIZE_OF_1_SQUARE;
+	m_state = STATE::NONE;
+	m_scale = D3DXVECTOR3(5.0f, 5.0f, 5.0f);
+	m_bLand = false;
+	m_modelIdx[0] = RNLib::Model()->Load("data\\MODEL\\Block.x");
+	m_modelIdx[1] = RNLib::Model()->Load("data\\MODEL\\SpringFloor.x");
+	m_modelIdx[2] = m_modelIdx[1];
 }
 
 //========================================
@@ -55,20 +61,30 @@ void CTrampoline::Uninit(void) {
 //========================================
 void CTrampoline::Update(void) {
 
+	//ˆÊ’u‹L‰¯
+	m_posOld = m_pos;
+
+	if (RNLib::Input()->KeyTrigger(DIK_UPARROW))
+	{
+		m_state = STATE::UP_LAND;
+	}
+	if (RNLib::Input()->KeyTrigger(DIK_DOWNARROW))
+	{
+		m_state = STATE::DOWN_LAND;
+	}
+
 	D3DXMATRIX mtx = ConvPosRotToMatrix(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	D3DXMatrixScaling(&mtx, m_scale.x, m_scale.y, m_scale.z);
-	RNLib::Model()->Put(mtx, m_modelIdx, false);
-
-	if (RNLib::Input()->KeyPress(DIK_UPARROW))
-	{
-		m_scale.y += 0.1f;
-	}
-	if (RNLib::Input()->KeyPress(DIK_DOWNARROW))
-	{
-		m_scale.y -= 0.1f;
-	}
+	RNLib::Model()->Put(mtx, m_modelIdx[0], false)
+		->SetModel(2);
 
 	SetScale(m_scale);
+
+
+	RNLib::Model()->Put(D3DXVECTOR3(0.0f, 20.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false);
+	RNLib::Model()->Put(D3DXVECTOR3(0.0f, -20.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[2], false);
+
+
 }
 
 //========================================
