@@ -120,7 +120,6 @@ CTrampoline *CBlockMgr::TrampolineCreate(int type, D3DXVECTOR3 pos)
 
 	// ‰Šú‰»ˆ—
 	pObj->Init();
-	pObj->SetModelIdx(m_pBlockType[type].nModelIdx);
 	pObj->SetPos(pos);
 
 	return pObj;
