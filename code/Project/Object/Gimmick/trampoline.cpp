@@ -6,6 +6,7 @@
 //========================================
 #include "trampoline.h"
 #include "../../main.h"
+#include "../../../_RNLib/_Basis/Other/input.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -22,7 +23,7 @@ CTrampoline::CTrampoline(void) {
 	//‰Šúó‘Ô
 	m_type = TYPE::NONE;
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_scale = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 }
 
 //========================================
@@ -54,7 +55,15 @@ void CTrampoline::Uninit(void) {
 //========================================
 void CTrampoline::Update(void) {
 
-	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx, false);
+	
+	D3DXMATRIX mtx = ConvPosRotToMatrix(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	D3DXMatrixScaling(&mtx, m_scale.x, m_scale.y, m_scale.z);
+	RNLib::Model()->Put(mtx, m_modelIdx, false);
+
+	if (RNLib::Input()->KeyTrigger(DIK_UPARROW))
+	{
+
+	}
 }
 
 //========================================
