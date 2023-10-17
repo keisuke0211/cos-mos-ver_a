@@ -43,7 +43,8 @@ void CBlockMgr::Init(void)
 //========================================
 void CBlockMgr::Uninit(void)
 {
-	
+	delete m_pBlockType;
+	m_pBlockType = NULL;
 }
 
 //========================================
@@ -127,12 +128,12 @@ CBlock *CBlockMgr::BlockCreate(int type, D3DXVECTOR3 pos)
 }
 
 // ƒgƒ‰ƒ“ƒ|ƒŠƒ“
-CTrampoline *CBlockMgr::TrampolineCreate(int type, D3DXVECTOR3 pos)
+CStageEditor *CBlockMgr::TrampolineCreate(int type, D3DXVECTOR3 pos)
 {
-	CTrampoline *pObj = NULL;
+	CStageEditor *pObj = NULL;
 
 	if (pObj != NULL) { return pObj; }
-	pObj = new CTrampoline;
+	pObj = new CStageEditor;
 
 	// ‰Šú‰»ˆ—
 	pObj->Init();

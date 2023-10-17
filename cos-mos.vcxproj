@@ -164,6 +164,7 @@
     <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp" />
     <ClCompile Include="code\Project\precompile.cpp" />
     <ClCompile Include="code\Project\System\csv_file.cpp" />
+    <ClCompile Include="code\Project\System\StageEditor.cpp" />
     <ClCompile Include="code\_RNLib\game-mode.cpp" />
     <ClCompile Include="code\_RNLib\RNlib.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\2D\Draw\polygon2D.cpp" />
@@ -231,6 +232,7 @@
     <ClInclude Include="code\Project\Object\Gimmick\trampoline.h" />
     <ClInclude Include="code\Project\precompile.h" />
     <ClInclude Include="code\Project\System\csv_file.h" />
+    <ClInclude Include="code\Project\System\StageEditor.h" />
     <ClInclude Include="code\_RNLib\game-mode.h" />
     <ClInclude Include="code\_RNLib\RNlib.h" />
     <ClInclude Include="code\_RNLib\RNmain.h" />

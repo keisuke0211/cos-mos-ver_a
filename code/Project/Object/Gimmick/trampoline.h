@@ -12,7 +12,7 @@
 // クラス定義
 //****************************************
 // モードの情報構造体
-class CTrampoline : public CList {
+class CStageEditor : public CList {
 public:
 	//========== [[[ 列挙型定義 ]]]
 	enum class TYPE {
@@ -23,8 +23,8 @@ public:
 	};
 
 	//========== [[[ 関数宣言 ]]]
-	CTrampoline();
-	virtual        ~CTrampoline();
+	CStageEditor();
+	virtual        ~CStageEditor();
 	virtual void   Init(void);
 	virtual void   Uninit(void);
 	virtual void   Update(void);

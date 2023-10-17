@@ -16,7 +16,7 @@
 //========================================
 // コンストラクタ
 //========================================
-CTrampoline::CTrampoline(void) {
+CStageEditor::CStageEditor(void) {
 	Manager::BlockMgr()->AddList(this);
 
 	//初期状態
@@ -28,7 +28,7 @@ CTrampoline::CTrampoline(void) {
 //========================================
 // デストラクタ
 //========================================
-CTrampoline::~CTrampoline(void) {
+CStageEditor::~CStageEditor(void) {
 
 }
 
@@ -36,7 +36,7 @@ CTrampoline::~CTrampoline(void) {
 // 初期化処理
 // Author:RYUKI FUJIWARA
 //========================================
-void CTrampoline::Init(void) {
+void CStageEditor::Init(void) {
 
 }
 
@@ -44,7 +44,7 @@ void CTrampoline::Init(void) {
 // 終了処理
 // Author:RYUKI FUJIWARA
 //========================================
-void CTrampoline::Uninit(void) {
+void CStageEditor::Uninit(void) {
 
 }
 
@@ -52,7 +52,7 @@ void CTrampoline::Uninit(void) {
 // 更新処理
 // Author:RYUKI FUJIWARA
 //========================================
-void CTrampoline::Update(void) {
+void CStageEditor::Update(void) {
 
 	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx, false);
 }
@@ -61,7 +61,7 @@ void CTrampoline::Update(void) {
 // 描画処理
 // Author:RYUKI FUJIWARA
 //========================================
-void CTrampoline::Draw(void) {
+void CStageEditor::Draw(void) {
 
 
 }

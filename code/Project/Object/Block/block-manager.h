@@ -6,8 +6,7 @@
 //========================================
 // *** block.h ***
 //========================================
-#ifndef _BLOCK_MANAGER_H_
-#define _BLOCK_MANAGER_H_
+#pragma once
 
 #include "../../../_RNLib/RNlib.h"
 #include "block.h"
@@ -33,7 +32,7 @@ public:
 
 	// -- 生成 ---------------------------------------------
 	/* ブロック		*/CBlock *BlockCreate(int type,D3DXVECTOR3 pos);
-	/* トランポリン	*/CTrampoline *TrampolineCreate(int type, D3DXVECTOR3 pos);
+	/* トランポリン	*/CStageEditor *TrampolineCreate(int type, D3DXVECTOR3 pos);
 	/* 隕石			*/CMeteor *MeteorCreate(int type, D3DXVECTOR3 pos);
 
 private:
@@ -54,4 +53,3 @@ private:
 	static BlockType *m_pBlockType;	// 種類情報
 };
 
-#endif
