@@ -24,6 +24,7 @@ public:
 	void	SetModelIdx(int idx) { ModelIdx = idx; }
 	void	SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	void	SetMove(D3DXVECTOR3 move) { m_move = move; }
+
 protected:
 
 private:
