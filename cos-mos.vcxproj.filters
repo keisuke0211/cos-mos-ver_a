@@ -467,4 +467,7 @@
     <Text Include="data\_RNData\SoundList.txt" />
     <Text Include="data\_RNData\VisualSetting.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="data\FONT\851Gkktt_005.ttf" />
+  </ItemGroup>
 </Project>
