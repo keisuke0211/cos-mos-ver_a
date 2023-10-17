@@ -11,7 +11,7 @@ NUM_MODEL = 3
 #========================================
 # ファイル名
 #========================================
-MODEL = data\\MODEL\\Block.x 							#00 床
+MODEL = data\\MODEL\\Block.x 		#00 床
 MODEL = data\\MODEL\\SpringFloor.x 	#01 トランポリン
 MODEL = data\\MODEL\\Meteorite.x 	#02 隕石
 

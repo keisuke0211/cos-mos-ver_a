@@ -168,7 +168,7 @@
     <ClCompile Include="code\Project\Object\Block\block.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="code\Project\Object\Block\block-manager.cpp">
+    <ClCompile Include="code\Project\Object\stage-object-manager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp">
@@ -241,6 +241,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="code\Project\Character\player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Object\Block\move-block.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -410,7 +413,7 @@
     <ClInclude Include="code\Project\Object\Block\block.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="code\Project\Object\Block\block-manager.h">
+    <ClInclude Include="code\Project\Object\stage-object-manager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="code\Project\Object\Gimmick\trampoline.h">
@@ -444,6 +447,9 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="code\_RNLib\_Basis\Mechanical\object.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Object\Block\move-block.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
