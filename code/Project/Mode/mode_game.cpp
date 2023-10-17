@@ -6,6 +6,7 @@
 //========================================
 #include "../main.h"
 #include "../Object/Block/block-manager.h"
+#include "../System/StageEditor.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -42,10 +43,8 @@ void CMode_Game::Init(void) {
 	// 状態設定
 	SetState((int)STATE::NONE);
 
-	Manager::BlockMgr()->Load();
-	Manager::BlockMgr()->BlockCreate(0,D3DXVECTOR3(0.0f,0.0f,0.0f));
-	Manager::BlockMgr()->TrampolineCreate(1,D3DXVECTOR3(40.0f, 0.0f, 0.0f));
-	Manager::BlockMgr()->MeteorCreate(2, D3DXVECTOR3(80.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+	// ステージ生成
+	Manager::StgEd()->StageLoad(0);
 }
 
 //========================================
