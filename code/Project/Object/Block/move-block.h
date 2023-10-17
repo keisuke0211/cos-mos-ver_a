@@ -30,6 +30,11 @@ public:
 		int nModelIdx;
 	};
 
+	typedef enum
+	{
+		NONE,
+
+	}MOVETYPE;
 
 	//ä÷êî
 	CMoveBlock();
@@ -41,6 +46,7 @@ public:
 	void Draw(void);
 
 	//ê›íË
+	void SetMove(MOVETYPE type, D3DXVECTOR3 move, int CntMove);
 	void SetColor(const D3DXCOLOR col) { m_Info.col = col; }
 	void SetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
 	void SetModelIdx(const int nIdx) { m_Info.nModelIdx = nIdx; }

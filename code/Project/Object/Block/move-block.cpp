@@ -64,8 +64,8 @@ void CMoveBlock::Uninit(void)
 //========================================
 void CMoveBlock::Update(void)
 {
-	//m_Info.pos.y -= 1.0f;
-	//m_Info.nCntMove++;
+	
+
 	m_pos.x += 1.0f;
 
 	RNLib::Model()->Put(m_pos, m_rot, m_Info.nModelIdx);
