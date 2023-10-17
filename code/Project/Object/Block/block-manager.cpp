@@ -140,3 +140,18 @@ CTrampoline *CBlockMgr::TrampolineCreate(int type, D3DXVECTOR3 pos)
 
 	return pObj;
 }
+
+// ƒgƒ‰ƒ“ƒ|ƒŠƒ“
+CMeteo *CBlockMgr::MeteoCreate(int type, D3DXVECTOR3 pos)
+{
+	CMeteo *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CMeteo;
+
+	// ‰Šú‰»ˆ—
+	pObj->Init();
+	pObj->SetModelIdx(m_pBlockType[type].nModelIdx);
+
+	return pObj;
+}
