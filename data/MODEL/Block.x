@@ -177,7 +177,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTURE\\pillar000.jpg";
+    "data\\TEXTURE\\Object\\block.png";
    }
   }
  }
