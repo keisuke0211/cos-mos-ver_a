@@ -30,6 +30,7 @@ protected:
 private:
 	//========== [[[ •Ï”éŒ¾ ]]]
 	D3DXVECTOR3 m_pos;	// ˆÊ’u
+	D3DXVECTOR3 m_rot;	// Œü‚«
 	D3DXVECTOR3 m_move;	// ˆÚ“®—Ê
 	int ModelIdx;
 };
