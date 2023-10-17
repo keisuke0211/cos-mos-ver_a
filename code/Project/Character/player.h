@@ -21,7 +21,7 @@ public:
 		float		fJumpPower;		//ジャンプ量
 		float		fGravity;		//重力
 		float		fGravityCorr;	//重力係数
-		int			nModelID;		//モデル番号
+		int			nModelIdx;		//モデル番号
 	};
 
 	static const int SWAP_INTERVAL;	//スワップインターバル
