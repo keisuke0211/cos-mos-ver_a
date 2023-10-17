@@ -344,6 +344,9 @@
     <Text Include="data\_RNData\VisualSetting.txt" />
     <Text Include="Debug\cos-mos.log" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="data\FONT\851Gkktt_005.ttf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
