@@ -7,6 +7,7 @@
 #pragma once
 
 #include "draw-info.h"
+#include "polygon2D.h"
 #include "polygon3D.h"
 #include "model.h"
 #include "text3D.h"
@@ -57,6 +58,8 @@ public:
 		~CRegistInfoSum();
 
 		// [[[ ïœêîêÈåæ ]]]
+		CPolygon2D::CRegistInfo* m_polygon2DRegistInfos;
+		int                      m_polygon2DRegistInfoNum;
 		CPolygon3D::CRegistInfo* m_polygon3DRegistInfos; 
 		int                      m_polygon3DRegistInfoNum;
 		CText3D::CRegistInfo*    m_text3DRegistInfos;
@@ -74,6 +77,7 @@ public:
 	void Release(void);
 	bool StartDraw(void);
 	void Draw(LPDIRECT3DDEVICE9& device, const bool& isOnScreen);
+	CPolygon2D::CRegistInfo* PutPolygon2D(const D3DXVECTOR3& pos, const float& angle, const bool& isOnScreen);
 	CPolygon3D::CRegistInfo* PutPolygon3D(const D3DXMATRIX& mtx, const bool& isOnScreen);
 	CText3D::CRegistInfo*    PutText3D   (const D3DXMATRIX& mtx, const bool& isOnScreen);
 	CModel::CRegistInfo*     PutModel    (const D3DXMATRIX& mtx, const bool& isOnScreen);
@@ -85,7 +89,9 @@ private:
 	static void ConvRegistInfoToDrawInfo(CRegistInfoSum& resistInfoSum, CDrawInfoSum& drawInfoSum);
 	static void SortDrawInfo(CDrawInfoSum& drawInfoSum);
 	void AssignVertexInfo(void);
+	void ConvDrawInfoToVertex2DInfo(VERTEX_2D* vtxs, CDrawInfoSum& drawInfoSum);
 	void ConvDrawInfoToVertex3DInfo(VERTEX_3D* vtxs, CDrawInfoSum& drawInfoSum);
+	CPolygon2D::CRegistInfo& RegistPolygon2D(CRegistInfoSum& resistInfo);
 	CPolygon3D::CRegistInfo& RegistPolygon3D(CRegistInfoSum& resistInfo);
 	CText3D::CRegistInfo&    RegistText3D   (CRegistInfoSum& resistInfo);
 	CModel::CRegistInfo&     RegistModel    (CRegistInfoSum& resistInfo);

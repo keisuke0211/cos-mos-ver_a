@@ -84,12 +84,12 @@ enum class ANCHOR {
 // 構造体定義
 //****************************************
 // 頂点情報2Dの構造体
-typedef struct {
-	D3DXVECTOR3 pos;	// 頂点座標
-	float       rhw;	// 座標変換用係数(1.0fで固定)
-	D3DCOLOR    col;	// 頂点カラー
-	D3DXVECTOR2 tex;	// テクスチャ座標
-}VERTEX_2D;
+struct VERTEX_2D {
+	D3DXVECTOR3 pos = INITD3DXVECTOR3;	// 頂点座標
+	float       rhw = 0.0f;				// 座標変換用係数(1.0fで固定)
+	D3DCOLOR    col = INITD3DCOLOR;		// 頂点カラー
+	D3DXVECTOR2 tex = INITD3DXVECTOR2;	// テクスチャ座標
+};
 
 // 頂点情報3Dの構造体
 struct VERTEX_3D {

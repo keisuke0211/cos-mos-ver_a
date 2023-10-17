@@ -31,8 +31,6 @@ void Manager::Init(CMode::TYPE mode) {
 
 	// モード設定
 	SetMode(mode);
-
-	m_blockMgr.Init();
 }
 
 //========================================
@@ -43,8 +41,6 @@ void Manager::Uninit(void) {
 
 	// モードオブジェクト解放
 	RNLib::Memory()->Release(&m_modeObj);
-
-	m_blockMgr.Uninit();
 }
 
 //========================================
