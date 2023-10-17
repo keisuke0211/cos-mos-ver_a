@@ -25,6 +25,7 @@ CBlock::CBlock(void)
 	m_width  = SIZE_OF_1_SQUARE;
 	m_height = SIZE_OF_1_SQUARE;
 
+	m_modelIdx = RNLib::Model()->Load("data\\MODEL\\Block.x");
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.col  = INITD3DCOLOR;
 	m_Info.nType = 0;

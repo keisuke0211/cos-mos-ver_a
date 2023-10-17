@@ -30,6 +30,9 @@ CMeteor::CMeteor(void) {
 	m_height = SIZE_OF_1_SQUARE * 3;
 
 	// 各情報の初期化
+	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Meteorite.x");
+	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_fblink = 0.0f;
 	m_nblinlAnim = 0;
@@ -70,8 +73,16 @@ void CMeteor::Update(void) {
 	m_pos += m_move;			// 移動量の追加
 
 	// 点滅アニメーションの計算
-	m_fblink = m_nblinlAnim % (METEOR_BLINK_MAX + 1);
-
+	if (m_nblinlAnim <= METEOR_BLINK_MAX * 2)
+	{
+		m_nblinlAnim = m_nblinlAnim % (METEOR_BLINK_MAX + 1);
+		m_fblink -= METEOR_BLINK_MAX % -m_nblinlAnim;
+	}
+	else
+	{
+		m_nblinlAnim = 0;
+	}
+	
 
 	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
 		->SetOutLine(true)

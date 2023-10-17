@@ -45,6 +45,8 @@ void CMode_Game::Init(void) {
 	// ó‘ÔÝ’è
 	SetState((int)STATE::NONE);
 
+	Manager::BlockMgr()->Load();
+
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();
 
