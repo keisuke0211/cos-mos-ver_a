@@ -168,7 +168,7 @@
     <ClCompile Include="code\Project\Object\Block\block.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="code\Project\Object\Block\block-manager.cpp">
+    <ClCompile Include="code\Project\Object\stage-object-manager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp">
@@ -205,6 +205,45 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="code\_RNLib\_Basis\Mechanical\object.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Object\stage-object.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Mode\mode.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Mode\mode_game.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Object\Block\block.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Object\Block\block-manager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\System\csv_file.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\main.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\manager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\precompile.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Object\Gimmick\meteor.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Character\player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Object\Block\move-block.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -374,7 +413,7 @@
     <ClInclude Include="code\Project\Object\Block\block.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="code\Project\Object\Block\block-manager.h">
+    <ClInclude Include="code\Project\Object\stage-object-manager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="code\Project\Object\Gimmick\trampoline.h">
@@ -410,6 +449,39 @@
     <ClInclude Include="code\_RNLib\_Basis\Mechanical\object.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="code\Project\Object\Block\move-block.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="cos-mos.VC.db" />
+    <None Include="mqo\1P.mqo" />
+    <None Include="mqo\2P.mqo" />
+    <None Include="mqo\Block.mqo" />
+    <None Include="mqo\Lift.mqo" />
+    <None Include="mqo\Meteorite.mqo" />
+    <None Include="mqo\Spike Half.mqo" />
+    <None Include="mqo\Spike.mqo" />
+    <None Include="mqo\Spring Floor.mqo" />
+    <None Include="Debug\cos-mos.exe" />
+    <None Include="Debug\cos-mos.ilk" />
+    <None Include="Debug\cos-mos.pdb" />
+    <None Include="Debug\meteor.obj.enc" />
+    <None Include="Debug\vc140.idb" />
+    <None Include="Debug\vc140.pdb" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\TEXTURE\Object\block.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\meteo000.png">
+      <Filter>リソース ファイル</Filter>
+    </Image>
+    <Image Include="data\TEXTURE\pillar000.jpg">
+      <Filter>リソース ファイル</Filter>
+    </Image>
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\block.obj" />
@@ -440,6 +512,47 @@
     <Object Include="Debug\imgui_draw.obj" />
     <Object Include="Debug\imgui_impl_dx9.obj" />
     <Object Include="Debug\imgui_impl_win32.obj" />
+    <Object Include="Debug\imgui_draw.obj" />
+    <Object Include="Debug\block-manager.obj" />
+    <Object Include="Debug\imgui_main.obj" />
+    <Object Include="Debug\imgui_tables.obj" />
+    <Object Include="Debug\imgui_widgets.obj" />
+    <Object Include="Debug\input.obj" />
+    <Object Include="Debug\light3D.obj" />
+    <Object Include="Debug\line3D.obj" />
+    <Object Include="Debug\list.obj" />
+    <Object Include="Debug\list-manager.obj" />
+    <Object Include="Debug\main.obj" />
+    <Object Include="Debug\manager.obj" />
+    <Object Include="Debug\material.obj" />
+    <Object Include="Debug\matrix.obj" />
+    <Object Include="Debug\meteor.obj" />
+    <Object Include="Debug\mode.obj" />
+    <Object Include="Debug\mode_game.obj" />
+    <Object Include="Debug\model.obj" />
+    <Object Include="Debug\motion3D.obj" />
+    <Object Include="Debug\number.obj" />
+    <Object Include="Debug\object.obj" />
+    <Object Include="Debug\object-manager.obj" />
+    <Object Include="Debug\player.obj" />
+    <Object Include="Debug\polygon2D.obj" />
+    <Object Include="Debug\polygon3D.obj" />
+    <Object Include="Debug\precompile.obj" />
+    <Object Include="Debug\print.obj" />
+    <Object Include="Debug\regist.obj" />
+    <Object Include="Debug\RNlib.obj" />
+    <Object Include="Debug\setting.obj" />
+    <Object Include="Debug\setup3D.obj" />
+    <Object Include="Debug\shadow3D.obj" />
+    <Object Include="Debug\sound.obj" />
+    <Object Include="Debug\text.obj" />
+    <Object Include="Debug\text2D.obj" />
+    <Object Include="Debug\text3D.obj" />
+    <Object Include="Debug\texture.obj" />
+    <Object Include="Debug\trampoline.obj" />
+    <Object Include="Debug\transition.obj" />
+    <Object Include="Debug\visual.obj" />
+    <Object Include="Debug\window.obj" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\TEXTURE\meteo000.png">
@@ -478,5 +591,41 @@
     <Text Include="data\_RNData\SoundList.txt" />
     <Text Include="data\_RNData\VisualSetting.txt" />
     <Text Include="Debug\cos-mos.log" />
+    <ClInclude Include="code\Project\Object\stage-object.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Character\player.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Mode\mode.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Mode\mode_game.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Object\Block\block.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Object\Block\block-manager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Object\Gimmick\trampoline.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\System\csv_file.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\main.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\manager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\precompile.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Object\Gimmick\meteor.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

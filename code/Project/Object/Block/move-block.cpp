@@ -1,42 +1,41 @@
 //========================================
 // 
-// ブロック処理
-// Author:KEISUKE OTONO
+// 動くブロック処理 [move-block.h]
+// Author:HARUTO KIKUCHI
 // 
 //========================================
-// *** block.cpp ***
-//========================================
-#include "block.h"
+#include "../../manager.h"
+#include "move-block.h"
 #include "../../main.h"
 
 //========================================
 // 静的変数
 //========================================
-int CBlock::m_nNumAll = 0;
+int CMoveBlock::m_nNumAll = 0;
 
 //========================================
 // コンストラクタ
 //========================================
-CBlock::CBlock(void)
+CMoveBlock::CMoveBlock(void)
 {
 	Manager::BlockMgr()->AddList(this);
 
-	m_type   = TYPE::BLOCK;
-	m_width  = SIZE_OF_1_SQUARE;
-	m_height = SIZE_OF_1_SQUARE;
-
+	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_Info.posOld = INITD3DXVECTOR3;
 	m_Info.move = INITD3DXVECTOR3;
-	m_Info.col  = INITD3DCOLOR;
+	m_Info.rot = INITD3DXVECTOR3;
+	m_Info.size = INITD3DXVECTOR3;
+	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
-	m_Info.nModelIdx = 0;
 	m_Info.nID = m_nNumAll;
+	m_Info.nModelIdx = RNLib::Model()->Load("data\\MODEL\\Lift.x");
 	m_nNumAll++;
 }
 
 //========================================
 // デストラクタ
 //========================================
-CBlock::~CBlock()
+CMoveBlock::~CMoveBlock()
 {
 	m_nNumAll--;
 }
@@ -44,11 +43,8 @@ CBlock::~CBlock()
 //========================================
 // 初期化
 //========================================
-HRESULT CBlock::Init(void)
+HRESULT CMoveBlock::Init(void)
 {
-	m_Info.move = INITD3DXVECTOR3;
-	m_Info.col = INITD3DCOLOR;
-	m_Info.nType = 0;
 
 	return S_OK;
 }
@@ -56,7 +52,7 @@ HRESULT CBlock::Init(void)
 //========================================
 // 終了
 //========================================
-void CBlock::Uninit(void)
+void CMoveBlock::Uninit(void)
 {
 	
 }
@@ -64,16 +60,18 @@ void CBlock::Uninit(void)
 //========================================
 // 更新
 //========================================
-void CBlock::Update(void)
+void CMoveBlock::Update(void)
 {
-	// 過去の位置
-	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_Info.nModelIdx, false);
+	//m_Info.pos.y -= 1.0f;
+	//m_Info.nCntMove++;
+
+	RNLib::Model()->Put(m_Info.pos, m_Info.rot, m_Info.nModelIdx);
 }
 
 //========================================
 // 描画
 //========================================
-void CBlock::Draw(void)
+void CMoveBlock::Draw(void)
 {
 
 }

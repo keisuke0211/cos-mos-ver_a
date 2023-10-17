@@ -6,6 +6,7 @@
 //========================================
 #include "../main.h"
 #include "../Object/Block/block-manager.h"
+#include "../Character/player.h"
 #include "../System/StageEditor.h"
 
 //================================================================================
@@ -13,6 +14,8 @@
 //==========| CMode_Gameクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
+
+CPlayer *CMode_Game::s_pPlayer = NULL;
 
 //========================================
 // コンストラクタ
@@ -43,6 +46,8 @@ void CMode_Game::Init(void) {
 	// 状態設定
 	SetState((int)STATE::NONE);
 
+	if (s_pPlayer == NULL)
+		s_pPlayer = CPlayer::Create();
 	// ステージ生成
 	Manager::StgEd()->StageLoad(0);
 }
@@ -53,6 +58,12 @@ void CMode_Game::Init(void) {
 //========================================
 void CMode_Game::Uninit(void) {
 	CMode::Uninit();
+
+	if (s_pPlayer != NULL)	{
+		s_pPlayer->Uninit();
+		delete s_pPlayer;
+		s_pPlayer = NULL;
+	}
 }
 
 //========================================
@@ -61,6 +72,9 @@ void CMode_Game::Uninit(void) {
 //========================================
 void CMode_Game::Update(void) {
 	CMode::Update();
+
+	if (s_pPlayer != NULL)
+		s_pPlayer->Update();
 }
 
 //========================================

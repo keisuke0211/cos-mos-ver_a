@@ -1,23 +1,22 @@
 //========================================
 // 
-// ブロックマネージャー
+// ステージオブジェクトマネージャーの処理
 // Author:KEISUKE OTONO
+// Arrange:RIKU NISHIMURA
 // 
 //========================================
-// *** block-manager.h ***
-//========================================
-#include "block-manager.h"
+#include "../main.h"
 
 //========================================
 // 静的変数
 //========================================
-CBlockMgr::BlockType *CBlockMgr::m_pBlockType = NULL;
-const char* CBlockMgr::BLOCK_INFO_FILE = "data\\GAMEDATA\\BLOCK\\BLOCK_DATA.txt";
+CStageObjectMgr::BlockType *CStageObjectMgr::m_pBlockType = NULL;
+const char* CStageObjectMgr::BLOCK_INFO_FILE = "data\\GAMEDATA\\BLOCK\\BLOCK_DATA.txt";
 
 //========================================
 // コンストラクタ
 //========================================
-CBlockMgr::CBlockMgr(void)
+CStageObjectMgr::CStageObjectMgr(void)
 {
 	
 }
@@ -25,7 +24,7 @@ CBlockMgr::CBlockMgr(void)
 //========================================
 // デストラクタ
 //========================================
-CBlockMgr::~CBlockMgr()
+CStageObjectMgr::~CStageObjectMgr()
 {
 	delete m_pBlockType;
 	m_pBlockType = NULL;
@@ -34,7 +33,7 @@ CBlockMgr::~CBlockMgr()
 //========================================
 // 更新
 //========================================
-void CBlockMgr::Update(void)
+void CStageObjectMgr::Update(void)
 {
 	
 }
@@ -42,7 +41,7 @@ void CBlockMgr::Update(void)
 //========================================
 // 読み込み
 //========================================
-void CBlockMgr::Load(void)
+void CStageObjectMgr::Load(void)
 {
 	int nCntModel = 0;
 	char aDataSearch[TXT_MAX];	// データ検索用
@@ -95,8 +94,10 @@ void CBlockMgr::Load(void)
 // 各生成
 //========================================
 
+//========================================
 // ブロック
-CBlock *CBlockMgr::BlockCreate(int type, D3DXVECTOR3 pos)
+//========================================
+CBlock *CStageObjectMgr::BlockCreate(D3DXVECTOR3 pos)
 {
 	CBlock *pObj = NULL;
 
@@ -105,14 +106,15 @@ CBlock *CBlockMgr::BlockCreate(int type, D3DXVECTOR3 pos)
 
 	// 初期化処理
 	pObj->Init();
-	pObj->SetModelIdx(m_pBlockType[type].nModelIdx);
 	pObj->SetPos(pos);
 
 	return pObj;
 }
 
+//========================================
 // トランポリン
-CTrampoline *CBlockMgr::TrampolineCreate(int type, D3DXVECTOR3 pos)
+//========================================
+CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos)
 {
 	CTrampoline *pObj = NULL;
 
@@ -121,14 +123,15 @@ CTrampoline *CBlockMgr::TrampolineCreate(int type, D3DXVECTOR3 pos)
 
 	// 初期化処理
 	pObj->Init();
-	pObj->SetModelIdx(m_pBlockType[type].nModelIdx);
 	pObj->SetPos(pos);
 
 	return pObj;
 }
 
+//========================================
 // 隕石
-CMeteor *CBlockMgr::MeteorCreate(int type, D3DXVECTOR3 pos,D3DXVECTOR3 move)
+//========================================
+CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move)
 {
 	CMeteor *pObj = NULL;
 
@@ -137,9 +140,23 @@ CMeteor *CBlockMgr::MeteorCreate(int type, D3DXVECTOR3 pos,D3DXVECTOR3 move)
 
 	// 初期化処理
 	pObj->Init();
-	pObj->SetModelIdx(m_pBlockType[type].nModelIdx);
-	pObj->SetMove(D3DXVECTOR3(0.2f,0.0f,0.0f));
-	pObj->SetPos(pos);
+	pObj->SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
+
+	return pObj;
+}
+
+//========================================
+// 移動床
+//========================================
+CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move)
+{
+	CMoveBlock *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CMoveBlock;
+
+	// 初期化処理
+	pObj->Init();
 
 	return pObj;
 }
