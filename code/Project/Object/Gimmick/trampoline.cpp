@@ -29,7 +29,6 @@ CTrampoline::CTrampoline(void) {
 	m_bLand = false;
 	m_modelIdx[0] = RNLib::Model()->Load("data\\MODEL\\Block.x");
 	m_modelIdx[1] = RNLib::Model()->Load("data\\MODEL\\SpringFloor.x");
-	m_modelIdx[2] = m_modelIdx[1];
 }
 
 //========================================
@@ -80,11 +79,8 @@ void CTrampoline::Update(void) {
 
 	SetScale(m_scale);
 
-
 	RNLib::Model()->Put(D3DXVECTOR3(0.0f, 20.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false);
-	RNLib::Model()->Put(D3DXVECTOR3(0.0f, -20.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[2], false);
-
-
+	RNLib::Model()->Put(D3DXVECTOR3(0.0f, -20.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false);
 }
 
 //========================================
