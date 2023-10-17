@@ -30,6 +30,9 @@ CMeteor::CMeteor(void) {
 	m_height = SIZE_OF_1_SQUARE * 3;
 
 	// Šeî•ñ‚Ì‰Šú‰»
+	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Meteorite.x");
+	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_fblink = 0.0f;
 	m_nblinlAnim = 0;

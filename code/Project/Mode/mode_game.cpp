@@ -45,8 +45,15 @@ void CMode_Game::Init(void) {
 	// 状態設定
 	SetState((int)STATE::NONE);
 
+	Manager::BlockMgr()->Load();
+
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();
+
+	// 読込
+	/* ブロック	*/Manager::BlockMgr()->Load();
+	/* ステージ	*/Manager::StgEd()->FileLoad();
+
 	// ステージ生成
 	Manager::StgEd()->StageLoad(0);
 }

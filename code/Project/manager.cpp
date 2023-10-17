@@ -33,10 +33,6 @@ void Manager::Init(CMode::TYPE mode) {
 
 	// モード設定
 	SetMode(mode);
-
-	// 読込
-	/* ブロック	*/m_blockMgr.Load();
-	/* ステージ	*/m_StgEd.FileLoad();
 }
 
 //========================================

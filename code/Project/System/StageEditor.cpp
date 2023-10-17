@@ -6,6 +6,7 @@
 //========================================
 #include "../manager.h"
 #include "csv_file.h"
+#include "../Object/stage-object.h"
 #include "StageEditor.h"
 
 //========================================
@@ -100,6 +101,7 @@ void CStageEditor::StageLoad(int stage)
 	CSVFILE *pFile = new CSVFILE;
 
 	int nStage = stage;
+	bool bSet = false;
 
 	IntControl(&nStage, m_StageMax, 0);
 
@@ -113,9 +115,7 @@ void CStageEditor::StageLoad(int stage)
 	for (int nRow = 0; nRow < nRowMax; nRow++)
 	{
 		// 配置情報の生成
-		int nType;				// 種類
-		int nState;				// 状態
-		D3DXVECTOR3 pos;		// 位置
+		int nType = -1;				// 種類
 
 		// 列数の取得
 		int nLineMax = pFile->GetLineSize(nRow);
@@ -124,7 +124,12 @@ void CStageEditor::StageLoad(int stage)
 		{
 			string sData = pFile->GetData(nRow, nLine);
 
-			pFile->ToValue(nType, sData);
+			// ステージ生成
+			if (bSet)
+			{
+				pFile->ToValue(nType, sData);
+			}
+
 			break;
 		}
 
@@ -136,22 +141,28 @@ void CStageEditor::StageLoad(int stage)
 
 		if (nType >= 0)
 		{
+			D3DXVECTOR3 pos = INITD3DXVECTOR3;
+
 			// 配置
 			switch (nType)
 			{
-			case 0:
+			case TYPE_BLOCK:
+				Manager::BlockMgr()->BlockCreate(pos);
 				break;
-			case 1:
+			case TYPE_TRAMPOLINE:
+				Manager::BlockMgr()->TrampolineCreate(pos);
 				break;
-			case 2:
+			case TYPE_THORN:
+
 				break;
-			case 3:
+			case TYPE_LIFT:
+				Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+				break;
+			case TYPE_Meteor:
+				Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 				break;
 			}
 		}
-		//Manager::BlockMgr()->BlockCreate(0, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-		//Manager::BlockMgr()->TrampolineCreate(1, D3DXVECTOR3(40.0f, 0.0f, 0.0f));
-		//Manager::BlockMgr()->MeteorCreate(2, D3DXVECTOR3(80.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	}
 
 	// メモリ開放
