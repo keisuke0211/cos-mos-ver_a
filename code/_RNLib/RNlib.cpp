@@ -407,11 +407,7 @@ namespace {
 		m_input.SetWheelSpin(CInput::WHEELSPIN_NONE);
 	
 		if (m_bUseImGui)
-			ImGuiInitFlag();
-
-		RNLib::Polygon2D()->Put(D3DXVECTOR3(80.0f, 80.0f, 0.0f), 0.0f)
-			->SetSize(80.0f, 80.0f)
-			->SetCol(INITCOLOR);
+			ImGuiInitFlag();	
 	}
 
 	//========================================
