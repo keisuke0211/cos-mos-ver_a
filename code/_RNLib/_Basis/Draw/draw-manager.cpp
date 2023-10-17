@@ -80,6 +80,8 @@ void CDrawMng::CDrawInfoSum::Overwrite(CDrawInfoSum* pOvr) {
 //========================================
 CDrawMng::CRegistInfoSum::CRegistInfoSum() {
 
+	m_polygon2DRegistInfos   = NULL;
+	m_polygon2DRegistInfoNum = 0;
 	m_polygon3DRegistInfos   = NULL;
 	m_polygon3DRegistInfoNum = 0;
 	m_text3DRegistInfos      = NULL;
@@ -155,6 +157,7 @@ void CDrawMng::ConvRegistInfoToDrawInfo(CRegistInfoSum& resistInfoSum, CDrawInfo
 
 	{// 描画情報のメモリ確保
 		drawInfoSum.ms_drawInfoNum = 
+			resistInfoSum.m_polygon2DRegistInfoNum +	// ポリゴン2D
 			resistInfoSum.m_polygon3DRegistInfoNum +	// ポリゴン3D
 			resistInfoSum.m_modelRegistInfoNum +		// モデル
 			0;
@@ -182,6 +185,17 @@ void CDrawMng::ConvRegistInfoToDrawInfo(CRegistInfoSum& resistInfoSum, CDrawInfo
 	// 解放
 	resistInfoSum.m_modelRegistInfoNum = 0;
 	RNLib::Memory()->Release(&resistInfoSum.m_modelRegistInfos);
+
+	//----------------------------------------
+	// ポリゴン2D
+	//----------------------------------------
+	for (int cnt = 0; cnt < resistInfoSum.m_polygon2DRegistInfoNum; cnt++, cntDrawInfo++) {
+		drawInfoSum.ms_drawInfos[cntDrawInfo] = resistInfoSum.m_polygon2DRegistInfos[cnt].ConvToDrawInfo();
+	}
+
+	// 解放
+	resistInfoSum.m_polygon2DRegistInfoNum = 0;
+	RNLib::Memory()->Release(&resistInfoSum.m_polygon2DRegistInfos);
 }
 
 //========================================
@@ -216,11 +230,38 @@ void CDrawMng::SortDrawInfo(CDrawInfoSum& drawInfoSum) {
 			if (base.m_priority < target.m_priority) return true;	// 基準の方が優先度が低い
 			if (base.m_priority > target.m_priority) return false;	// 基準の方が優先度が高い
 
-			if (base.m_type == CDrawInfoBase::TYPE::POLYGON3D) {
+			if (base.m_type == CDrawInfoBase::TYPE::POLYGON2D) {
+				//----------------------------------------
+				// [[[ Base:ポリゴン2D ]]]
+				//----------------------------------------
+				if (target.m_type == CDrawInfoBase::TYPE::POLYGON2D)
+				{// [[[ Target::ポリゴン2D ]]]
+					CPolygon2D::CDrawInfo* castedBase   = (CPolygon2D::CDrawInfo*)&base;
+					CPolygon2D::CDrawInfo* castedTarget = (CPolygon2D::CDrawInfo*)&target;
+
+					if (castedBase->m_isZTest && !castedTarget->m_isZTest) return true;		// 基準のZテストがONで比較対象ののZテストがOFF
+					if (!castedBase->m_isZTest && castedTarget->m_isZTest) return false;	// 基準のZテストがOFFで比較対象のZテストがON
+					if (castedBase->m_distance > castedTarget->m_distance) return true;		// 基準の方が距離が遠い
+				}
+				else if (target.m_type == CDrawInfoBase::TYPE::POLYGON3D)
+				{// [[[ Target::ポリゴン3D ]]]
+					return true;
+				}
+				else if (target.m_type == CDrawInfoBase::TYPE::MODEL)
+				{// [[[ Target:モデル ]]]
+					return true;
+				}
+				else assert(false);
+			}
+			else if (base.m_type == CDrawInfoBase::TYPE::POLYGON3D) {
 				//----------------------------------------
 				// [[[ Base:ポリゴン3D ]]]
 				//----------------------------------------
-				if (target.m_type == CDrawInfoBase::TYPE::POLYGON3D)
+				if (target.m_type == CDrawInfoBase::TYPE::POLYGON2D) 
+				{// [[[ Target::ポリゴン2D ]]]
+					return false;
+				}
+				else if (target.m_type == CDrawInfoBase::TYPE::POLYGON3D)
 				{// [[[ Target::ポリゴン3D ]]]
 					CPolygon3D::CDrawInfo* castedBase   = (CPolygon3D::CDrawInfo*)&base;
 					CPolygon3D::CDrawInfo* castedTarget = (CPolygon3D::CDrawInfo*)&target;
@@ -239,7 +280,11 @@ void CDrawMng::SortDrawInfo(CDrawInfoSum& drawInfoSum) {
 				//----------------------------------------
 				// [[[ Base:モデル ]]]
 				//----------------------------------------
-				if (target.m_type == CDrawInfoBase::TYPE::POLYGON3D)
+				if (target.m_type == CDrawInfoBase::TYPE::POLYGON2D)
+				{// [[[ Target::ポリゴン2D ]]]
+					return false;
+				}
+				else if (target.m_type == CDrawInfoBase::TYPE::POLYGON3D)
 				{// [[[ Target::ポリゴン3D ]]]
 					return !FindPrioritizePolygon3DAndModel((CPolygon3D::CDrawInfo*)&target, (CModel::CDrawInfo*)&base);
 				}
@@ -325,6 +370,25 @@ CDrawMng::~CDrawMng() {
 }
 
 //========================================
+// 設置処理(ポリゴン2D)
+//========================================
+CPolygon2D::CRegistInfo* CDrawMng::PutPolygon2D(const D3DXVECTOR3& pos, const float& angle, const bool& isOnScreen) {
+
+	// 登録情報
+	CPolygon2D::CRegistInfo* registInfo = NULL;;
+
+	// スクリーン上フラグに応じて登録
+	if (isOnScreen) registInfo = &RegistPolygon2D(ms_resistInfoSumScreen);
+	else            registInfo = &RegistPolygon2D(ms_resistInfoSum);
+
+	// 情報を代入
+	registInfo->SetPos(pos);
+	registInfo->SetAngle(angle);
+
+	return registInfo;
+}
+
+//========================================
 // 設置処理(ポリゴン3D)
 //========================================
 CPolygon3D::CRegistInfo* CDrawMng::PutPolygon3D(const D3DXMATRIX& mtx, const bool& isOnScreen) {
@@ -387,6 +451,20 @@ CModel::CRegistInfo* CDrawMng::PutModel(const D3DXMATRIX& mtx, const bool& isOnS
 }
 
 //========================================
+// 登録処理(ポリゴン2D)
+//========================================
+CPolygon2D::CRegistInfo& CDrawMng::RegistPolygon2D(CRegistInfoSum& resistInfo) {
+
+	// 登録情報数を加算
+	int numOld = resistInfo.m_polygon2DRegistInfoNum++;
+
+	// 登録情報のメモリ再確保
+	RNLib::Memory()->ReAlloc<CPolygon2D::CRegistInfo>(&resistInfo.m_polygon2DRegistInfos, numOld, resistInfo.m_polygon2DRegistInfoNum);
+
+	return resistInfo.m_polygon2DRegistInfos[numOld];
+}
+
+//========================================
 // 登録処理(ポリゴン3D)
 //========================================
 CPolygon3D::CRegistInfo& CDrawMng::RegistPolygon3D(CRegistInfoSum& resistInfo) {
@@ -430,7 +508,7 @@ CModel::CRegistInfo& CDrawMng::RegistModel(CRegistInfoSum& resistInfo) {
 
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| CPolygon3Dクラスのメンバ関数
+//==========| 描画マネージャークラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
 
@@ -469,6 +547,7 @@ void CDrawMng::Release(void) {
 	RNLib::Memory()->Release(&ms_drawInfoSumScreenOvr.ms_drawInfos);
 
 	// 頂点バッファを破棄する
+	CPolygon2D::CDrawInfo::ReleaseVertexBuffer();
 	CPolygon3D::CDrawInfo::ReleaseVertexBuffer();
 }
 
@@ -489,6 +568,7 @@ bool CDrawMng::StartDraw(void) {
 		ms_drawInfoSumScreen.Overwrite(&ms_drawInfoSumScreenOvr);
 
 		// 頂点バッファを生成する
+		CPolygon2D::CDrawInfo::CreateVertexBuffer();
 		CPolygon3D::CDrawInfo::CreateVertexBuffer();
 
 		// 頂点情報を代入
@@ -508,6 +588,17 @@ bool CDrawMng::StartDraw(void) {
 //========================================
 void CDrawMng::AssignVertexInfo(void) {
 
+	// 頂点2D情報に変換
+	if (CPolygon2D::CDrawInfo::m_vtxBuff != NULL) {
+		VERTEX_2D* vtxs = NULL;
+		CPolygon2D::CDrawInfo::m_vtxBuff->Lock(0, 0, (void**)&vtxs, 0);
+
+		ConvDrawInfoToVertex2DInfo(vtxs, ms_drawInfoSum);
+		ConvDrawInfoToVertex2DInfo(vtxs, ms_drawInfoSumScreen);
+
+		CPolygon2D::CDrawInfo::m_vtxBuff->Unlock();
+	}
+
 	// 頂点3D情報に変換
 	if (CPolygon3D::CDrawInfo::m_vtxBuff != NULL) {
 		VERTEX_3D* vtxs = NULL;
@@ -517,6 +608,24 @@ void CDrawMng::AssignVertexInfo(void) {
 		ConvDrawInfoToVertex3DInfo(vtxs, ms_drawInfoSumScreen);
 
 		CPolygon3D::CDrawInfo::m_vtxBuff->Unlock();
+	}
+}
+
+//========================================
+// 描画情報を頂点2D情報に変換
+//========================================
+void CDrawMng::ConvDrawInfoToVertex2DInfo(VERTEX_2D* vtxs, CDrawInfoSum& drawInfoSum) {
+
+	for (int cntDrawInfo = 0; cntDrawInfo < drawInfoSum.ms_drawInfoNum; cntDrawInfo++) {
+		if (drawInfoSum.ms_drawInfos[cntDrawInfo]->m_type == CDrawInfoBase::TYPE::POLYGON2D) {
+			CPolygon2D::CDrawInfo& drawInfo = (CPolygon2D::CDrawInfo&)*drawInfoSum.ms_drawInfos[cntDrawInfo];
+			int vtxStartIdx = 4 * drawInfo.m_idx;
+
+			for (int cntVtx = 0; cntVtx < 4; cntVtx++) {
+				int vtxIdx = vtxStartIdx + cntVtx;
+				vtxs[vtxIdx] = drawInfo.m_vtxs[cntVtx];
+			}
+		}
 	}
 }
 

@@ -14,7 +14,7 @@
 //****************************************
 // ƒNƒ‰ƒX
 //****************************************
-class CBlock : public CList {
+class CBlock : public CObject {
 public:
 
 	// ‹¤’Êî•ñ

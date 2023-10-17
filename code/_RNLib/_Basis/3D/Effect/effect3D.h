@@ -9,13 +9,13 @@
 #ifndef _EFFECT3D_H_
 #define _EFFECT3D_H_
 
-#include "../../Other/list.h"
+#include "../../Mechanical/object.h"
 
 //****************************************
 // クラス定義
 //****************************************
 // エフェクト3Dクラス
-class CEff3D : public CList {
+class CEff3D : public CObject {
 public:
 	//========== [[[ 定数定義 ]]]
 	static const float GRAVITY_FORCE;
@@ -69,7 +69,6 @@ public:
 	virtual void Init(void);
 	virtual void Uninit(void);
 	virtual void Update(void);
-	virtual void Release(void);
 	// 設定取得
 	void SetPos (D3DXVECTOR3 pos) { m_pos = pos; }
 	void SetRot (D3DXVECTOR3 rot) { m_rot = rot; }

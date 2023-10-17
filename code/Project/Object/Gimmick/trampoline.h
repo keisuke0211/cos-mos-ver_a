@@ -12,7 +12,7 @@
 // クラス定義
 //****************************************
 // モードの情報構造体
-class CTrampoline : public CList {
+class CTrampoline : public CObject {
 public:
 	//========== [[[ 列挙型定義 ]]]
 	enum class TYPE {

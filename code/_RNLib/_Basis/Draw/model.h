@@ -40,6 +40,7 @@ public:
 		CDrawInfo();
 		~CDrawInfo();
 		void Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMtx);
+		void SetMaterial(LPDIRECT3DDEVICE9& device, D3DMATERIAL9* mat, const Color& col);
 
 		// [[[ ïœêîêÈåæ ]]]
 		D3DXMATRIX m_mtx;

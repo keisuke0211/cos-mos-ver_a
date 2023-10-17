@@ -12,7 +12,7 @@
 // クラス定義
 //****************************************
 // メテオの情報構造体
-class CMeteor : public CList {
+class CMeteor : public CObject {
 public:
 	//========== [[[ 関数宣言 ]]]
 	CMeteor();
