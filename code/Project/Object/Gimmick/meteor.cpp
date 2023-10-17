@@ -20,7 +20,8 @@ D3DXVECTOR3 static const METEOR_UNINIT_MAXPOS = { 1000.0f,1000.0f,0.0f };	// Å‘
 //========================================
 CMeteor::CMeteor(void) {
 	Manager::BlockMgr()->AddList(this);
-
+	
+	// Šeî•ñ‚Ì‰Šú‰»
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
