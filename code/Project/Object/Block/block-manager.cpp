@@ -26,7 +26,8 @@ CBlockMgr::CBlockMgr(void)
 //========================================
 CBlockMgr::~CBlockMgr()
 {
-	
+	delete m_pBlockType;
+	m_pBlockType = NULL;
 }
 
 //========================================
