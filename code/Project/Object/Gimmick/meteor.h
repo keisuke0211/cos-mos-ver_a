@@ -7,12 +7,12 @@
 #pragma once
 
 #include "../../../_RNLib/RNlib.h"
-
+#include"../stage-object.h"
 //****************************************
 // クラス定義
 //****************************************
 // メテオの情報構造体
-class CMeteor : public CObject {
+class CMeteor : public CStageObject {
 public:
 	//========== [[[ 関数宣言 ]]]
 	CMeteor();
@@ -21,6 +21,7 @@ public:
 	virtual void   Uninit(void);
 	virtual void   Update(void);
 	virtual void   Draw(void);
+
 	void	SetModelIdx(int idx) { ModelIdx = idx; }
 	void	SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 	void	SetMove(D3DXVECTOR3 move) { m_move = move; }
@@ -29,8 +30,6 @@ protected:
 
 private:
 	//========== [[[ 変数宣言 ]]]
-	D3DXVECTOR3 m_pos;	// 位置
-	D3DXVECTOR3 m_rot;	// 向き
 	D3DXVECTOR3 m_move;	// 移動量
 	float m_fblink;		// 点滅
 	int	  m_nblinlAnim;	// 点滅アニメーション
