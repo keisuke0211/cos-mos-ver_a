@@ -19,7 +19,7 @@ public:
 	//========================================
 	// メモリ確保処理
 	//========================================
-	template <class T>void Alloc(T** alloc, const int num = 1) {
+	template <class T>void Alloc(T** alloc, const int num = 1, const bool isMutex = true) {
 		
 		// 解放しておく
 		Release(alloc);
@@ -29,7 +29,8 @@ public:
 			return;
 
 		// 競合回避の為Mutexをロック
-		std::lock_guard<std::mutex> lock(m_memoryMutex);
+		if (isMutex)
+			std::lock_guard<std::mutex> lock(m_memoryMutex);
 
 		// メモリ確保する
 		*alloc = new T[num];
@@ -37,13 +38,14 @@ public:
 	//========================================
 	// メモリ確保処理(サイズ指定)
 	//========================================
-	void Alloc(void** alloc, size_t size, const int num = 1) {
+	void Alloc(void** alloc, size_t size, const int num = 1, const bool isMutex = true) {
 		
 		// 解放しておく
 		Release(alloc);
 
 		// 競合回避の為Mutexをロック
-		std::lock_guard<std::mutex> lock(m_memoryMutex);
+		if (isMutex)
+			std::lock_guard<std::mutex> lock(m_memoryMutex);
 
 		// メモリ確保する
 		*alloc = malloc(size);
@@ -51,7 +53,7 @@ public:
 	//========================================
 	// メモリ再確保処理
 	//========================================
-	template <class T>void ReAlloc(T** alloc, const int beforeNum, const int afterNum) {
+	template <class T>void ReAlloc(T** alloc, const int beforeNum, const int afterNum, const bool isMutex = true) {
 
 		// 新しい数が0以下の時、解放して終了
 		if (afterNum <= 0) {
@@ -66,7 +68,7 @@ public:
 
 		// 新しくメモリを確保する
 		T* newAlloc = NULL;
-		Alloc<T>(&newAlloc, afterNum);
+		Alloc<T>(&newAlloc, afterNum, isMutex);
 
 		// 過去の数が0を越えている時、メモリをコピーする
 		if (beforeNum > 0) {

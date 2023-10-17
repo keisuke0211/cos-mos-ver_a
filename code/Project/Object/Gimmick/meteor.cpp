@@ -15,6 +15,7 @@
 D3DXVECTOR3 static const METEOR_ADDROT = { 0.10f,0.02f,0.01f };	// 隕石の回転の移動量
 D3DXVECTOR3 static const METEOR_UNINIT_MINPOS = { -1000.0f,-1000.0f,0.0f };	// 最小の位置
 D3DXVECTOR3 static const METEOR_UNINIT_MAXPOS = { 1000.0f,1000.0f,0.0f };	// 最大の位置
+
 //========================================
 // コンストラクタ
 //========================================

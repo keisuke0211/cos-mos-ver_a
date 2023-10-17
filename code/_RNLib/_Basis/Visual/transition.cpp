@@ -44,10 +44,11 @@ CTransition::~CTransition() {
 // Author:RIKU NISHIMURA
 //========================================
 void CTransition::Update(void) {
+#if 0
 	//===== [[[ ƒ[ƒJƒ‹ŠÖ”éŒ¾ ]]]
 	struct LocalFunc {
 		static void FillScreen(void) {
-			RNLib::Polygon2D()->SetVtx(
+			RNLib::Polygon2D()->SetVtxPos(
 				D3DXVECTOR3(0.0f                       , 0.0f                        , 0.0f),
 				D3DXVECTOR3(RNLib::Window()->GetWidth(), 0.0f                        , 0.0f),
 				D3DXVECTOR3(0.0f                       , RNLib::Window()->GetHeight(), 0.0f),
@@ -139,6 +140,7 @@ void CTransition::Update(void) {
 		D3DXVECTOR3(fRightX     , fBottomY, 0.0f),
 		D3DXVECTOR3(fScreenWidth, fBottomY, 0.0f),
 		COLOR_BLACK);
+#endif
 }
 
 //========================================

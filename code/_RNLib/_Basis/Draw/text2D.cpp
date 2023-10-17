@@ -6,7 +6,7 @@
 //========================================
 // [[[ text2D.cpp ]]]
 //========================================
-#include "../../../RNlib.h"
+#include "../../RNlib.h"
 #include <wchar.h>
 #include <locale.h>
 
@@ -75,7 +75,7 @@ void CText2D::Set(
 		D3DXMATRIX resultMtx = MultiplyMatrix(baseMtx, txtMtx);
 
 		// É|ÉäÉSÉì2DÇê›íË
-		RNLib::Polygon2D()->Set(
+		/*RNLib::Polygon2D()->Set(
 			fScaleX,
 			fScaleY,
 			ConvMatrixToPos(resultMtx),
@@ -84,7 +84,7 @@ void CText2D::Set(
 			font.nTexIdx,
 			(int)wstr[nCntDigit] - font.nStartCode,
 			font.nPtnWidth,
-			font.nPtnHeight);
+			font.nPtnHeight);*/
 	}
 
 	// ÉÅÉÇÉäÇÃâï˙

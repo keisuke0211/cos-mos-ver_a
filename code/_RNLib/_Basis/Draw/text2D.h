@@ -9,7 +9,7 @@
 #ifndef _TEXT2D_H_
 #define _TEXT2D_H_
 
-#include "../../Draw/text.h"
+#include "text.h"
 
 //****************************************
 // ƒNƒ‰ƒX’è‹`

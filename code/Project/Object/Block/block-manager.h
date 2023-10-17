@@ -17,7 +17,7 @@
 //****************************************
 // クラス
 //****************************************
-class CBlockMgr : public CListMgr {
+class CBlockMgr : public CObjectMgr {
 
 	static const char* BLOCK_INFO_FILE;		// ブロック情報のファイルパス
 
@@ -26,8 +26,6 @@ public:
 	// *** 関数 ***
 	CBlockMgr();
 	virtual~CBlockMgr();
-	virtual void Init(void);
-	virtual void Uninit(void);
 	virtual void Update(void);
 	void Load(void);
 
