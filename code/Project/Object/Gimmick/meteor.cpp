@@ -25,6 +25,7 @@ CMeteor::CMeteor(void) {
 	Manager::BlockMgr()->AddList(this);
 	
 	// Šeî•ñ‚Ì‰Šú‰»
+	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Meteorite.x");
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
