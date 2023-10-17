@@ -54,7 +54,7 @@ void CTrampoline::Uninit(void) {
 //========================================
 void CTrampoline::Update(void) {
 
-	RNLib::Model()->Put(D3DXVECTOR3(40.0f, 0.0f, 40.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx, false);
+	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx, false);
 }
 
 //========================================
