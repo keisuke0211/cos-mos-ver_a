@@ -33,7 +33,6 @@ public:
 	void   SetState(STATE state) { m_state = state; }			//í—Şİ’è
 	STATE   GetState(void) { return m_state; }					//í—Şæ“¾
 	void   SetScale(D3DXVECTOR3 scale) { m_scale = scale; }	//Šgkİ’è
-	void	SetModelIdx(int idx) { m_modelIdx = idx; }
 
 protected:
 	
