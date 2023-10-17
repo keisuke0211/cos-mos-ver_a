@@ -7,6 +7,7 @@
 // *** block.cpp ***
 //========================================
 #include "block.h"
+#include "../../main.h"
 
 //========================================
 // Ã“I•Ï”
@@ -18,6 +19,7 @@ int CBlock::m_nNumAll = 0;
 //========================================
 CBlock::CBlock(void)
 {
+	Manager::BlockMgr()->AddList(this);
 	m_Info.pos = INITD3DXVECTOR3;
 	m_Info.posOld = INITD3DXVECTOR3;
 	m_Info.move = INITD3DXVECTOR3;
@@ -25,6 +27,7 @@ CBlock::CBlock(void)
 	m_Info.size = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
+	m_Info.nModelIdx = 0;
 	m_Info.nID = m_nNumAll;
 	m_nNumAll++;
 }
@@ -42,6 +45,13 @@ CBlock::~CBlock()
 //========================================
 HRESULT CBlock::Init(void)
 {
+	m_Info.pos = INITD3DXVECTOR3;
+	m_Info.posOld = INITD3DXVECTOR3;
+	m_Info.move = INITD3DXVECTOR3;
+	m_Info.rot = INITD3DXVECTOR3;
+	m_Info.size = INITD3DXVECTOR3;
+	m_Info.col = INITD3DCOLOR;
+	m_Info.nType = 0;
 
 	return S_OK;
 }
@@ -59,7 +69,10 @@ void CBlock::Uninit(void)
 //========================================
 void CBlock::Update(void)
 {
+	// ‰ß‹Ž‚ÌˆÊ’u
+	m_Info.posOld = m_Info.pos;
 
+	RNLib::Model()->Put(m_Info.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_Info.nModelIdx, false);
 }
 
 //========================================
@@ -71,17 +84,9 @@ void CBlock::Draw(void)
 }
 
 //========================================
-// ¶¬
+// “Ç‚Ýž‚Ý
 //========================================
-CBlock *CBlock::Create(void)
+void CBlock::Load(void)
 {
-	CBlock *pBlock = NULL;
 
-	if (pBlock != NULL){ return pBlock; }
-	pBlock = new CBlock;
-
-	// ‰Šú‰»ˆ—
-	pBlock->Init();
-
-	return pBlock;
 }
