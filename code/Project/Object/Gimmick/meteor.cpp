@@ -52,6 +52,9 @@ void CMeteor::Uninit(void) {
 //========================================
 void CMeteor::Update(void) {
 
+	// ˆÚ“®—Ê‚Ì’Ç‰Á
+	m_pos += m_move;
+
 	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), ModelIdx, false);
 }
 

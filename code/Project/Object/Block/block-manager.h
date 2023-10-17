@@ -34,7 +34,7 @@ public:
 	// -- 生成 ---------------------------------------------
 	/* ブロック		*/CBlock *BlockCreate(int type,D3DXVECTOR3 pos);
 	/* トランポリン	*/CTrampoline *TrampolineCreate(int type, D3DXVECTOR3 pos);
-	/* 隕石			*/CMeteor *MeteorCreate(int type, D3DXVECTOR3 pos);
+	/* 隕石			*/CMeteor *MeteorCreate(int type, D3DXVECTOR3 pos,D3DXVECTOR3 move);
 
 private:
 

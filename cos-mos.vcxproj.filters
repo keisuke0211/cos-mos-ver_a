@@ -207,6 +207,9 @@
     <ClCompile Include="code\Project\Object\Gimmick\meteor.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="code\Project\Character\player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="code\Project\Object\Block\move-block.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
