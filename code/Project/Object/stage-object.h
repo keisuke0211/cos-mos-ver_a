@@ -13,6 +13,9 @@
 //****************************************
 class CStageObject : public CObject {
 public:
+	//========== [[[ ’è”’è‹` ]]]
+	static const float SIZE_OF_1_SQUARE;
+
 	//========== [[[ —ñ‹“Œ^’è‹` ]]]
 	enum class TYPE {
 		NONE,
