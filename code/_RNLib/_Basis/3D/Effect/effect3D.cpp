@@ -62,16 +62,8 @@ void CEff3D::Uninit(void) {
 void CEff3D::Update(void) {
 	if (m_nLife > 0) {
 		if (--m_nLife <= 0) {
-			Release();
+			Delete();
 			return;
 		}
 	}
-}
-
-//========================================
-// ‰ð•úˆ—
-// Author:RIKU NISHIMURA
-//========================================
-void CEff3D::Release(void) {
-	CList::Release();
 }

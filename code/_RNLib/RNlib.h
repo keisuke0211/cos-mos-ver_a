@@ -9,11 +9,7 @@
 #ifndef _RNLIB_H_
 #define _RNLIB_H_
 
-#include "game-mode.h"
 #include "RNmain.h"
-//========== [[[ 2D ]]]
-#include "_Basis/2D/Draw/polygon2D.h"
-#include "_Basis/2D/Draw/text2D.h"
 //========== [[[ 3D ]]]
 #include "_Basis/3D/Body/collision3D.h"
 #include "_Basis/3D/Body/human-base3D.h"
@@ -22,7 +18,6 @@
 #include "_Basis/3D/Body/doll3D.h"
 #include "_Basis/3D/Camera/camera.h"
 #include "_Basis/3D/Draw/line3D.h"
-#include "_Basis/3D/Draw/material.h"
 #include "_Basis/3D/Effect/eff3D-fragment.h"
 #include "_Basis/3D/Effect/eff3D-polygon.h"
 #include "_Basis/3D/Effect/effect3D.h"
@@ -39,17 +34,19 @@
 #include "_Basis/Draw/draw-manager.h"
 #include "_Basis/Draw/draw-state.h"
 #include "_Basis/Draw/model.h"
+#include "_Basis/Draw/polygon2D.h"
 #include "_Basis/Draw/polygon3D.h"
 #include "_Basis/Draw/text.h"
+#include "_Basis/Draw/text2D.h"
 #include "_Basis/Draw/text3D.h"
 //========== [[[ Mechanical ]]]
 #include "_Basis/Mechanical/memory.h"
+#include "_Basis/Mechanical/object.h"
+#include "_Basis/Mechanical/object-manager.h"
 //========== [[[ Other ]]]
 #include "_Basis/Other/color.h"
 #include "_Basis/Other/file.h"
 #include "_Basis/Other/input.h"
-#include "_Basis/Other/list.h"
-#include "_Basis/Other/list-manager.h"
 #include "_Basis/Other/print.h"
 #include "_Basis/Other/regist.h"
 #include "_Basis/Other/setting.h"

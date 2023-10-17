@@ -287,7 +287,7 @@ void CModel::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMt
 			}
 			
 			// マテリアルを設定
-			SetMaterial(device, &mats[cntMat].MatD3D, setCol, m_isLighting);
+			SetMaterial(device, &mats[cntMat].MatD3D, setCol);
 		}
 
 		// [[[ テクスチャの設定 ]]]
@@ -309,7 +309,7 @@ void CModel::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMt
 		if (m_isOutLine) {
 
 			// マテリアルの設定
-			SetMaterial(device, &mats[cntMat].MatD3D, COLOR_BLACK, false);
+			SetMaterial(device, &mats[cntMat].MatD3D, COLOR_BLACK);
 
 			// 裏面を描画
 			RNLib::DrawStateMng()->SetCullingMode(CDrawState::CULLING_MODE::BACK_SIDE, device);
@@ -321,6 +321,33 @@ void CModel::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMt
 	// 一時的な描画モード設定を終了
 	//----------------------------------------
 	RNLib::DrawStateMng()->EndTemporarySetMode(device);
+}
+
+//========================================
+// マテリアル設定処理
+//========================================
+void CModel::CDrawInfo::SetMaterial(LPDIRECT3DDEVICE9& device, D3DMATERIAL9* mat, const Color& col) {
+
+	// マテリアルの材質パラメータを保存
+	D3DXCOLOR DiffuseTemp  = mat->Diffuse;
+	D3DXCOLOR EmissiveTemp = mat->Emissive;
+
+	// マテリアルの材質パラメータを設定
+	mat->Diffuse.r  = DiffuseTemp.r * ((float)col.r / 255);
+	mat->Diffuse.g  = DiffuseTemp.g * ((float)col.g / 255);
+	mat->Diffuse.b  = DiffuseTemp.b * ((float)col.b / 255);
+	mat->Diffuse.a  = DiffuseTemp.a * ((float)col.a / 255);
+	mat->Emissive.r = EmissiveTemp.r * ((float)col.r / 255);
+	mat->Emissive.g = EmissiveTemp.g * ((float)col.g / 255);
+	mat->Emissive.b = EmissiveTemp.b * ((float)col.b / 255);
+	mat->Emissive.a = EmissiveTemp.a * ((float)col.a / 255);
+
+	// マテリアルの設定
+	device->SetMaterial(mat);
+
+	// マテリアルの材質パラメータを元に戻す
+	mat->Diffuse  = DiffuseTemp;
+	mat->Emissive = EmissiveTemp;
 }
 
 //================================================================================

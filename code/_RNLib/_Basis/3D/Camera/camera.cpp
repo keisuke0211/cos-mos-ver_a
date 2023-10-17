@@ -132,16 +132,16 @@ void CCamera::Init(void) {
 	m_vtxBuffMT->Lock(0, 0, (void**)&vtxs, 0);
 
 	// [[[ 頂点位置の設定 ]]]
-	CPolygon2D::SetVtxPos_TopLeft(vtxs, INITD3DXVECTOR3, RNLib::Window()->GetWidth(), RNLib::Window()->GetHeight());
+	RNLib::Polygon2D()->SetVtxPos_TopLeft(vtxs, INITD3DXVECTOR3, RNLib::Window()->GetWidth(), RNLib::Window()->GetHeight());
 
 	// [[[ 頂点カラーの設定 ]]]
-	CPolygon2D::SetVtxCol(vtxs, FEEDBACK_POLYGON_COLOR);
+	RNLib::Polygon2D()->SetVtxCol(vtxs, FEEDBACK_POLYGON_COLOR);
 
 	// [[[ テクスチャ座標の設定 ]]]
-	CPolygon2D::SetVtxTex_Cut(vtxs, D3DXVECTOR2(0.5f, 0.5f), FEEDBACK_POLYGON_TEX_CUT_SCALE);
+	RNLib::Polygon2D()->SetVtxTex_Cut(vtxs, D3DXVECTOR2(0.5f, 0.5f), FEEDBACK_POLYGON_TEX_CUT_SCALE);
 
 	// [[[ RHWの設定 ]]]
-	CPolygon2D::SetVtxRHW(vtxs);
+	RNLib::Polygon2D()->SetVtxRHW(vtxs);
 
 	// 頂点座標をアンロックする
 	m_vtxBuffMT->Unlock();

@@ -11,19 +11,17 @@
 
 #include "effect3D.h"
 #include "eff3D-polygon.h"
-#include "../../Other/list-manager.h"
+#include "../../Mechanical/object-manager.h"
 
 //****************************************
 // クラス定義
 //****************************************
 // エフェクト3Dマネージャークラス
-class CEff3DMng : public CListMgr {
+class CEff3DMng : public CObjectMgr {
 public:
 	//========== [[[ 関数宣言 ]]]
 	CEff3DMng();
 	~CEff3DMng();
-	void Init(void);
-	void Uninit(void);
 	void Update(void);
 	void Load(void);
 	CEff3D_Polygon*          Create_Polygon     (CEff3D::POLYGON_TYPE  type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, CEff3D::POWER power, Color col);
