@@ -29,9 +29,22 @@ public:
 
 	// -- 読込 ---------------------------------------------
 	/* ファイルパス	*/void FileLoad(void);
-	/* ステージ読込	*/void StageLoad(const char *pFileName);
+	/* ステージ読込	*/void StageLoad(int stage);
 
 private:
+
+	// *** 列挙型 ***
+	enum Type
+	{
+		TYPE_BLOCK = 0,		// 床
+		TYPE_TRAMPOLINE,	// トランポリン
+		TYPE_THORN,			// 棘
+		TYPE_LIFT,			// リフト
+		TYPE_Meteor,		// 隕石
+		TYPE_MAX
+	};
+
 	// *** 変数宣言 ***
 	static StageType *m_StageType;
+	static int m_StageMax;
 };

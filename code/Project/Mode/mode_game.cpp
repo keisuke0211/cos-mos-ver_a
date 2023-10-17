@@ -5,8 +5,8 @@
 // 
 //========================================
 #include "../main.h"
-#include "../Object/Block/block-manager.h"
 #include "../Character/player.h"
+#include "../System/StageEditor.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -46,12 +46,19 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
-	Manager::BlockMgr()->BlockCreate(D3DXVECTOR3(0.0f,0.0f,0.0f));
-	Manager::BlockMgr()->TrampolineCreate(D3DXVECTOR3(40.0f, 0.0f, 0.0f));
-	Manager::BlockMgr()->MeteorCreate(D3DXVECTOR3(80.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+	Manager::BlockMgr()->BlockCreate(0,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	Manager::BlockMgr()->TrampolineCreate(1,D3DXVECTOR3(40.0f, 0.0f, 0.0f));
+	Manager::BlockMgr()->MeteorCreate(2, D3DXVECTOR3(80.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
 
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();
+
+	// 読込
+	/* ブロック	*/Manager::BlockMgr()->Load();
+	/* ステージ	*/Manager::StgEd()->FileLoad();
+
+	// ステージ生成
+	Manager::StgEd()->StageLoad(0);
 }
 
 //========================================

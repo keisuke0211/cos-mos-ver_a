@@ -14,6 +14,7 @@ namespace {
 	CMode*      m_modeObj;
 	CMode::TYPE m_reserveModeType;
 	CStageObjectMgr   m_blockMgr;
+	CStageEditor m_StgEd;
 }
 
 //================================================================================
@@ -22,6 +23,7 @@ namespace {
 //----------|---------------------------------------------------------------------
 //================================================================================
 CStageObjectMgr* Manager::BlockMgr(void) { return &m_blockMgr; }
+CStageEditor* Manager::StgEd(void) { return &m_StgEd; }
 
 //========================================
 // èâä˙âªèàóù
