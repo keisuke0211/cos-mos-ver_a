@@ -26,33 +26,8 @@ CStageEditor::CStageEditor(void)
 //========================================
 CStageEditor::~CStageEditor()
 {
-
-}
-
-//========================================
-// èâä˙âª
-//========================================
-HRESULT CStageEditor::Init(void)
-{
-	m_StageType = NULL;
-	return S_OK;
-}
-
-//========================================
-// èIóπ
-//========================================
-void CStageEditor::Uninit(void)
-{
 	delete m_StageType;
 	m_StageType = NULL;
-}
-
-//========================================
-// çXêV
-//========================================
-void CStageEditor::Update(void)
-{
-	
 }
 
 //========================================

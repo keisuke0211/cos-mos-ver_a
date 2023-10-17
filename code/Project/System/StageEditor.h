@@ -27,10 +27,6 @@ public:
 	CStageEditor();
 	~CStageEditor();
 
-	/* 初期化	*/HRESULT Init(void);
-	/* 終了		*/void Uninit(void);
-	/* 更新		*/void Update(void);
-
 	// -- 読込 ---------------------------------------------
 	/* ファイルパス	*/void FileLoad(void);
 	/* ステージ読込	*/void StageLoad(const char *pFileName);
