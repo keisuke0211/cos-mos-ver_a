@@ -137,8 +137,23 @@ CMeteor *CBlockMgr::MeteorCreate(int type, D3DXVECTOR3 pos,D3DXVECTOR3 move)
 	// ‰Šú‰»ˆ—
 	pObj->Init();
 	pObj->SetModelIdx(m_pBlockType[type].nModelIdx);
-	pObj->SetMove(D3DXVECTOR3(0.2f,0.0f,0.0f));
-	pObj->SetPos(pos);
+	pObj->SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
+
+	return pObj;
+}
+
+// ˆÚ“®°
+CMoveBlock *CBlockMgr::MoveBlockCreate(int type, D3DXVECTOR3 pos, D3DXVECTOR3 move)
+{
+	CMoveBlock *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CMoveBlock;
+
+	// ‰Šú‰»ˆ—
+	pObj->Init();
+	pObj->SetModelIdx(m_pBlockType[type].nModelIdx);
+	//pObj->SetMove(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	return pObj;
 }

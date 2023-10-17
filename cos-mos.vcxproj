@@ -161,6 +161,7 @@
     <ClCompile Include="code\Project\Mode\mode_game.cpp" />
     <ClCompile Include="code\Project\Object\Block\block-manager.cpp" />
     <ClCompile Include="code\Project\Object\Block\block.cpp" />
+    <ClCompile Include="code\Project\Object\Block\move-block.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\meteor.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp" />
     <ClCompile Include="code\Project\Object\stage-object.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="code\Project\Mode\mode_game.h" />
     <ClInclude Include="code\Project\Object\Block\block-manager.h" />
     <ClInclude Include="code\Project\Object\Block\block.h" />
+    <ClInclude Include="code\Project\Object\Block\move-block.h" />
     <ClInclude Include="code\Project\Object\Gimmick\meteor.h" />
     <ClInclude Include="code\Project\Object\Gimmick\trampoline.h" />
     <ClInclude Include="code\Project\Object\stage-object.h" />
