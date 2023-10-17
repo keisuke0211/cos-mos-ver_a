@@ -16,6 +16,7 @@ public:
 	// Ží—Þ
 	enum class TYPE {
 		NONE,
+		POLYGON2D,
 		POLYGON3D,
 		MODEL,
 	};

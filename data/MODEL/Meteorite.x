@@ -784,7 +784,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTER\\meteo000.png.png";
+    "data\\TEXTURE\\Meteorite000.png";
    }
   }
   Material {

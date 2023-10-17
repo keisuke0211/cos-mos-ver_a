@@ -31,28 +31,11 @@ CBlockMgr::~CBlockMgr()
 }
 
 //========================================
-// 初期化
-//========================================
-void CBlockMgr::Init(void)
-{
-	CListMgr::Init();
-}
-
-//========================================
-// 終了
-//========================================
-void CBlockMgr::Uninit(void)
-{
-	delete m_pBlockType;
-	m_pBlockType = NULL;
-}
-
-//========================================
 // 更新
 //========================================
 void CBlockMgr::Update(void)
 {
-	CListMgr::Update();
+	
 }
 
 //========================================
@@ -128,12 +111,12 @@ CBlock *CBlockMgr::BlockCreate(int type, D3DXVECTOR3 pos)
 }
 
 // トランポリン
-CStageEditor *CBlockMgr::TrampolineCreate(int type, D3DXVECTOR3 pos)
+CTrampoline *CBlockMgr::TrampolineCreate(int type, D3DXVECTOR3 pos)
 {
-	CStageEditor *pObj = NULL;
+	CTrampoline *pObj = NULL;
 
 	if (pObj != NULL) { return pObj; }
-	pObj = new CStageEditor;
+	pObj = new CTrampoline;
 
 	// 初期化処理
 	pObj->Init();
@@ -143,8 +126,8 @@ CStageEditor *CBlockMgr::TrampolineCreate(int type, D3DXVECTOR3 pos)
 	return pObj;
 }
 
-// トランポリン
-CMeteor *CBlockMgr::MeteorCreate(int type, D3DXVECTOR3 pos)
+// 隕石
+CMeteor *CBlockMgr::MeteorCreate(int type, D3DXVECTOR3 pos,D3DXVECTOR3 move)
 {
 	CMeteor *pObj = NULL;
 
@@ -154,6 +137,8 @@ CMeteor *CBlockMgr::MeteorCreate(int type, D3DXVECTOR3 pos)
 	// 初期化処理
 	pObj->Init();
 	pObj->SetModelIdx(m_pBlockType[type].nModelIdx);
+	pObj->SetMove(D3DXVECTOR3(0.2f,0.0f,0.0f));
+	pObj->SetPos(pos);
 
 	return pObj;
 }

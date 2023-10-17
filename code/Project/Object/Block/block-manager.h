@@ -16,7 +16,7 @@
 //****************************************
 // クラス
 //****************************************
-class CBlockMgr : public CListMgr {
+class CBlockMgr : public CObjectMgr {
 
 	static const char* BLOCK_INFO_FILE;		// ブロック情報のファイルパス
 
@@ -25,15 +25,13 @@ public:
 	// *** 関数 ***
 	CBlockMgr();
 	virtual~CBlockMgr();
-	virtual void Init(void);
-	virtual void Uninit(void);
 	virtual void Update(void);
 	void Load(void);
 
 	// -- 生成 ---------------------------------------------
 	/* ブロック		*/CBlock *BlockCreate(int type,D3DXVECTOR3 pos);
-	/* トランポリン	*/CStageEditor *TrampolineCreate(int type, D3DXVECTOR3 pos);
-	/* 隕石			*/CMeteor *MeteorCreate(int type, D3DXVECTOR3 pos);
+	/* トランポリン	*/CTrampoline *TrampolineCreate(int type, D3DXVECTOR3 pos);
+	/* 隕石			*/CMeteor *MeteorCreate(int type, D3DXVECTOR3 pos,D3DXVECTOR3 move);
 
 private:
 

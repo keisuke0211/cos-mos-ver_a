@@ -12,15 +12,23 @@
 //==========| CTrampolineクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
-
+D3DXVECTOR3 static const METEOR_ADDROT = { 0.10f,0.02f,0.01f };				// 隕石の回転の移動量
+D3DXVECTOR3 static const METEOR_UNINIT_MINPOS = { -150.0f,-150.0f,0.0f };	// 最小の位置
+D3DXVECTOR3 static const METEOR_UNINIT_MAXPOS = { 150.0f,150.0f,0.0f };		// 最大の位置
+int			static const METEOR_BLINK_MAX = { 5 };							// 点滅アニメーションの最大数
+int			static const METEOR_BLINK_ADJ = { 10 };							// 点滅アニメーションの調整
 //========================================
 // コンストラクタ
 //========================================
 CMeteor::CMeteor(void) {
 	Manager::BlockMgr()->AddList(this);
-
+	
+	// 各情報の初期化
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_fblink = 0.0f;
+	m_nblinlAnim = 0;
 }
 
 //========================================
@@ -52,7 +60,24 @@ void CMeteor::Uninit(void) {
 //========================================
 void CMeteor::Update(void) {
 
-	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), ModelIdx, false);
+	m_nblinlAnim++;	// 点滅アニメーションの増加
+
+	m_pos += m_move;			// 移動量の追加
+	m_rot += METEOR_ADDROT;		// 向きの移動量の追加
+
+	// 点滅アニメーションの計算
+	m_fblink = ((m_nblinlAnim % METEOR_BLINK_MAX) / METEOR_BLINK_ADJ) + METEOR_BLINK_MAX;
+
+	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
+		->SetOutLine(true)
+		->SetBrightnessOfEmissive(m_fblink)
+		;
+
+	if (m_pos.x >= METEOR_UNINIT_MAXPOS.x || m_pos.y >= METEOR_UNINIT_MAXPOS.y || m_pos.x <= METEOR_UNINIT_MINPOS.x || m_pos.y <= METEOR_UNINIT_MINPOS.y)
+	{
+		// 削除
+		Delete();
+	}
 }
 
 //========================================

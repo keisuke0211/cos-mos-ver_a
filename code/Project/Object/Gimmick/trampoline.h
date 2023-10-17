@@ -1,6 +1,6 @@
 //========================================
 // 
-// ギミックの処理
+// トランポリンの処理
 // Author:RYUKI FUJIWARA
 // 
 //========================================
@@ -12,7 +12,7 @@
 // クラス定義
 //****************************************
 // モードの情報構造体
-class CStageEditor : public CList {
+class CTrampoline : public CObject {
 public:
 	//========== [[[ 列挙型定義 ]]]
 	enum class TYPE {
@@ -23,8 +23,8 @@ public:
 	};
 
 	//========== [[[ 関数宣言 ]]]
-	CStageEditor();
-	virtual        ~CStageEditor();
+	CTrampoline();
+	virtual        ~CTrampoline();
 	virtual void   Init(void);
 	virtual void   Uninit(void);
 	virtual void   Update(void);

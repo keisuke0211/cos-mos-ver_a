@@ -76,9 +76,9 @@ CHECK_ARRAY_SIZE(c_aPowerLife      , (int)CEff3D::POWER       ::MAX);
 
 //========================================
 // コンストラクタ
-// Author:RIKU NISHIMURA
 //========================================
 CEff3DMng::CEff3DMng(void) {
+
 	for (int nCntType = 0; nCntType < (int)CEff3D::POLYGON_TYPE::MAX; nCntType++) {
 		m_aTypePolygon[nCntType] = {};
 	}
@@ -86,26 +86,8 @@ CEff3DMng::CEff3DMng(void) {
 
 //========================================
 // デストラクタ
-// Author:RIKU NISHIMURA
 //========================================
 CEff3DMng::~CEff3DMng(void) {
-
-}
-
-//========================================
-// 初期化処理
-// Author:RIKU NISHIMURA
-//========================================
-void CEff3DMng::Init(void) {
-	CListMgr::Init();
-}
-
-//========================================
-// 終了処理
-// Author:RIKU NISHIMURA
-//========================================
-void CEff3DMng::Uninit(void) {
-	CListMgr::ReleaseAll();
 
 	for (int nCntType = 0; nCntType < (int)CEff3D::POLYGON_TYPE::MAX; nCntType++) {
 		RNLib::Memory()->Release(&m_aTypePolygon[nCntType].pScalingStart);
@@ -116,15 +98,13 @@ void CEff3DMng::Uninit(void) {
 
 //========================================
 // 更新処理
-// Author:RIKU NISHIMURAS
 //========================================
 void CEff3DMng::Update(void) {
-	CListMgr::Update();
+	
 }
 
 //========================================
 // 読み込み処理
-// Author:RIKU NISHIMURAS
 //========================================
 void CEff3DMng::Load(void) {
 	if (!RNLib::File()->OpenLoadFile(EFFECT3DLIST_PATH))
@@ -189,7 +169,6 @@ void CEff3DMng::Load(void) {
 
 //========================================
 // 生成処理(ポリゴン)
-// Author:RIKU NISHIMURA
 //========================================
 CEff3D_Polygon* CEff3DMng::Create_Polygon(CEff3D::POLYGON_TYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, CEff3D::POWER power, Color col) {
 	CEff3D_Polygon* pEff = new CEff3D_Polygon;
@@ -210,7 +189,6 @@ CEff3D_Polygon* CEff3DMng::Create_Polygon(CEff3D::POLYGON_TYPE type, D3DXVECTOR3
 
 //========================================
 // 生成処理(欠片)
-// Author:RIKU NISHIMURA
 //========================================
 CEff3D_Fragment* CEff3DMng::Create_Fragment(CEff3D::FRAGMENT_TYPE type, D3DXVECTOR3 pos, D3DXVECTOR3 rot, CEff3D::POWER power, Color col, int nTexIdx) {
 	CEff3D_Fragment* pEff = new CEff3D_Fragment;

@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="code\Project\Character\player.cpp" />
     <ClCompile Include="code\Project\main.cpp" />
     <ClCompile Include="code\Project\manager.cpp" />
     <ClCompile Include="code\Project\Mode\mode.cpp" />
@@ -167,8 +168,6 @@
     <ClCompile Include="code\Project\System\StageEditor.cpp" />
     <ClCompile Include="code\_RNLib\game-mode.cpp" />
     <ClCompile Include="code\_RNLib\RNlib.cpp" />
-    <ClCompile Include="code\_RNLib\_Basis\2D\Draw\polygon2D.cpp" />
-    <ClCompile Include="code\_RNLib\_Basis\2D\Draw\text2D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\collision3D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\doll3D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\human-base3D.cpp" />
@@ -177,7 +176,6 @@
     <ClCompile Include="code\_RNLib\_Basis\3D\Camera\camera.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Camera\camera_control.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Draw\line3D.cpp" />
-    <ClCompile Include="code\_RNLib\_Basis\3D\Draw\material.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Effect\eff3D-cylinder.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Effect\eff3D-fragment.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Effect\eff3D-polygon.cpp" />
@@ -194,14 +192,16 @@
     <ClCompile Include="code\_RNLib\_Basis\Draw\draw-manager.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\draw-state.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\model.cpp" />
+    <ClCompile Include="code\_RNLib\_Basis\Draw\polygon2D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\polygon3D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\text.cpp" />
+    <ClCompile Include="code\_RNLib\_Basis\Draw\text2D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\text3D.cpp" />
+    <ClCompile Include="code\_RNLib\_Basis\Mechanical\object-manager.cpp" />
+    <ClCompile Include="code\_RNLib\_Basis\Mechanical\object.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\color.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\file.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\input.cpp" />
-    <ClCompile Include="code\_RNLib\_Basis\Other\list-manager.cpp" />
-    <ClCompile Include="code\_RNLib\_Basis\Other\list.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\print.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\regist.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\setting.cpp" />
@@ -236,8 +236,6 @@
     <ClInclude Include="code\_RNLib\game-mode.h" />
     <ClInclude Include="code\_RNLib\RNlib.h" />
     <ClInclude Include="code\_RNLib\RNmain.h" />
-    <ClInclude Include="code\_RNLib\_Basis\2D\Draw\polygon2D.h" />
-    <ClInclude Include="code\_RNLib\_Basis\2D\Draw\text2D.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Body\collision3D.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Body\doll3D.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Body\human-base3D.h" />
@@ -245,7 +243,6 @@
     <ClInclude Include="code\_RNLib\_Basis\3D\Body\setup3D.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Camera\camera.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Draw\line3D.h" />
-    <ClInclude Include="code\_RNLib\_Basis\3D\Draw\material.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Effect\eff3D-cylinder.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Effect\eff3D-fragment.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Effect\eff3D-polygon.h" />
@@ -262,15 +259,17 @@
     <ClInclude Include="code\_RNLib\_Basis\Draw\draw-manager.h" />
     <ClInclude Include="code\_RNLib\_Basis\Draw\draw-state.h" />
     <ClInclude Include="code\_RNLib\_Basis\Draw\model.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Draw\polygon2D.h" />
     <ClInclude Include="code\_RNLib\_Basis\Draw\polygon3D.h" />
     <ClInclude Include="code\_RNLib\_Basis\Draw\text.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Draw\text2D.h" />
     <ClInclude Include="code\_RNLib\_Basis\Draw\text3D.h" />
     <ClInclude Include="code\_RNLib\_Basis\Mechanical\memory.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Mechanical\object-manager.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Mechanical\object.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\color.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\file.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\input.h" />
-    <ClInclude Include="code\_RNLib\_Basis\Other\list-manager.h" />
-    <ClInclude Include="code\_RNLib\_Basis\Other\list.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\print.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\regist.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\setting.h" />
@@ -289,6 +288,68 @@
     <ClInclude Include="code\_RNLib\_ImGui\imstb_rectpack.h" />
     <ClInclude Include="code\_RNLib\_ImGui\imstb_textedit.h" />
     <ClInclude Include="code\_RNLib\_ImGui\imstb_truetype.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="cos-mos.VC.db" />
+    <None Include="Debug\cos-mos.exe" />
+    <None Include="Debug\cos-mos.ilk" />
+    <None Include="Debug\cos-mos.pdb" />
+    <None Include="mqo\1P.mqo" />
+    <None Include="mqo\2P.mqo" />
+    <None Include="mqo\Block.mqo" />
+    <None Include="mqo\Lift.mqo" />
+    <None Include="mqo\Meteorite.mqo" />
+    <None Include="mqo\Spike Half.mqo" />
+    <None Include="mqo\Spike.mqo" />
+    <None Include="mqo\Spring Floor.mqo" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\TEXTURE\meteo000.png" />
+    <Image Include="data\TEXTURE\Object\block.png" />
+    <Image Include="data\TEXTURE\pillar000.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Debug\block.obj" />
+    <Object Include="Debug\camera.obj" />
+    <Object Include="Debug\camera_control.obj" />
+    <Object Include="Debug\collision3D.obj" />
+    <Object Include="Debug\color.obj" />
+    <Object Include="Debug\csv_file.obj" />
+    <Object Include="Debug\data.obj" />
+    <Object Include="Debug\doll3D.obj" />
+    <Object Include="Debug\draw-info.obj" />
+    <Object Include="Debug\draw-manager.obj" />
+    <Object Include="Debug\draw-state.obj" />
+    <Object Include="Debug\easing.obj" />
+    <Object Include="Debug\eff3D-cylinder.obj" />
+    <Object Include="Debug\eff3D-fragment.obj" />
+    <Object Include="Debug\eff3D-polygon.obj" />
+    <Object Include="Debug\effect3D.obj" />
+    <Object Include="Debug\effect3D_manager.obj" />
+    <Object Include="Debug\file.obj" />
+    <Object Include="Debug\fog.obj" />
+    <Object Include="Debug\game-mode.obj" />
+    <Object Include="Debug\geometry.obj" />
+    <Object Include="Debug\human-base3D.obj" />
+    <Object Include="Debug\imgui.obj" />
+    <Object Include="Debug\imgui_crt-wgt.obj" />
+    <Object Include="Debug\imgui_demo.obj" />
+    <Object Include="Debug\imgui_draw.obj" />
+    <Object Include="Debug\imgui_impl_dx9.obj" />
+    <Object Include="Debug\imgui_impl_win32.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\_RNData\AmbientLight.txt" />
+    <Text Include="data\_RNData\Effect3DList.txt" />
+    <Text Include="data\_RNData\FontList.txt" />
+    <Text Include="data\_RNData\SoundList.txt" />
+    <Text Include="data\_RNData\VisualSetting.txt" />
+    <Text Include="Debug\cos-mos.log" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="data\FONT\851Gkktt_005.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

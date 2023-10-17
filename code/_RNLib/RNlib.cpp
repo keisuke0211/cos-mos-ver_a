@@ -74,7 +74,6 @@ namespace {
 	CVisual      m_visual;
 	CDrawMng     m_drawMng;
 	CDrawState   m_drawState;
-	CGameMode*   m_pGameMode;
 }
 
 //================================================================================
@@ -241,9 +240,6 @@ void RNLib::UninitScene(void) {
 	m_light3D .SetCol(INITCOLOR);
 	m_fog     .SetUse(false);
 	RNLib::Camera3D()->SetFixed(false);
-	if (m_pGameMode != NULL) {
-		m_pGameMode->UninitScene();
-	}
 	m_bSceneSwap = true;
 	m_bSpace3DStopRsrv = false;
 }
@@ -328,8 +324,6 @@ namespace {
 		// デバイスを取得
 		LPDIRECT3DDEVICE9 device = m_window.GetD3DDevice();
 
-		m_polygon2D.Init();
-		m_eff3DMng .Init();
 		m_drawMng  .Init();
 		m_drawState.Init(device);
 		m_line3D   .Init();
@@ -339,8 +333,6 @@ namespace {
 		m_camera   .Init();
 		m_input    .Init(hInstance);
 		m_sound    .Init();
-		if (m_pGameMode != NULL)
-			m_pGameMode->Init();
 	
 		//;;
 		InitSetting();
@@ -357,7 +349,6 @@ namespace {
 		m_motion3D   .Uninit();
 		m_human3DBase.Uninit();
 		m_modelSetUp .Uninit();
-		m_eff3DMng   .Uninit();
 		m_drawMng    .Uninit();
 		m_drawState  .Uninit();
 		m_line3D     .Uninit();
@@ -366,11 +357,6 @@ namespace {
 		m_text       .Uninit();
 		m_input      .Uninit();
 		m_window     .Uninit();
-		if (m_pGameMode != NULL) {
-			m_pGameMode->Uninit();
-			delete m_pGameMode;
-			m_pGameMode = NULL;
-		}
 	
 		//;;
 		UninitSetting();
@@ -399,13 +385,17 @@ namespace {
 		m_bBlinkF2 = (m_nCount % 4 < 2);
 		m_bBlinkF4 = (m_nCount % 8 < 4);
 
+		// 全オブジェクトマネージャーの更新処理
+		CObjectMgr::UpdateAllMgrs();
+
+		//----------------------------------------
+		// 各オプションの更新処理
+		//----------------------------------------
 		m_input   .Update();
 		m_sound   .Update();
-		if (m_pGameMode != NULL)
-			m_pGameMode->Update();
 		m_light3D .Update();
+
 		if (!m_bSpace3DStop) {
-			m_eff3DMng.Update();
 			m_camera.Update();
 		}
 
@@ -418,6 +408,10 @@ namespace {
 	
 		if (m_bUseImGui)
 			ImGuiInitFlag();
+
+		RNLib::Polygon2D()->Put(D3DXVECTOR3(80.0f, 80.0f, 0.0f), 0.0f)
+			->SetSize(80.0f, 80.0f)
+			->SetCol(INITCOLOR);
 	}
 
 	//========================================
@@ -436,7 +430,7 @@ namespace {
 			->SetSize(m_window.GetWidth() * 0.05f, m_window.GetHeight() * 0.05f)
 			->SetTex_Camera(&m_camera)
 			->SetLighting(false)
-			->SetPriority(1)
+			->SetPriority(0)
 			;
 
 		// 描画開始
@@ -496,7 +490,6 @@ namespace {
 			m_line3D.SetReset();
 			m_bSceneSwap = false;
 		}
-		m_polygon2D.SetReset();
 	}
 
 	//========================================
@@ -508,8 +501,6 @@ namespace {
 		m_text    .LoadFont();
 		m_visual  .Load();
 		m_eff3DMng.Load();
-		if (m_pGameMode != NULL)
-			m_pGameMode->Load();
 	}
 
 	//========================================
@@ -517,7 +508,6 @@ namespace {
 	// Author:RIKU NISHIMURA
 	//========================================
 	void Save(void) {
-	if (m_pGameMode != NULL)
-		m_pGameMode->Save();
+
 	}
 }

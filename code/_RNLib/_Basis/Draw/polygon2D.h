@@ -1,6 +1,6 @@
 //========================================
 // 
-// ポリゴン3Dの処理
+// ポリゴン2Dの処理
 // Author:RIKU NISHIMURA
 // 
 //========================================
@@ -12,8 +12,8 @@
 //****************************************
 // クラス定義
 //****************************************
-// ポリゴン3Dクラス
-class CPolygon3D {
+// ポリゴン2Dクラス
+class CPolygon2D {
 public:
 	//========== [[[ クラス定義 ]]]
 	// 描画情報
@@ -27,13 +27,12 @@ public:
 		static void ReleaseVertexBuffer(void);
 
 		// [[[ 変数宣言 ]]]
-		short      m_idx;
-		D3DXMATRIX m_mtx;
-		short      m_texIdx;
-		CCamera*   m_texCamera;
-		bool       m_isZTest, m_isLighting, m_isBillboard;
-		float      m_distance;
-		VERTEX_3D  m_vtxs[4];
+		short     m_idx;
+		short     m_texIdx;
+		CCamera*  m_texCamera;
+		bool      m_isZTest;
+		float     m_distance;
+		VERTEX_2D m_vtxs[4];
 
 		static LPDIRECT3DVERTEXBUFFER9 m_vtxBuff;
 		static int m_idxCount;
@@ -45,8 +44,9 @@ public:
 		// [[[ 関数宣言 ]]]
 		CRegistInfo();
 		~CRegistInfo();
-		CPolygon3D::CDrawInfo* ConvToDrawInfo(void);
-		CRegistInfo* SetMtx              (const D3DXMATRIX& mtx);
+		CPolygon2D::CDrawInfo* ConvToDrawInfo(void);
+		CRegistInfo* SetPos              (const D3DXVECTOR3& pos);
+		CRegistInfo* SetAngle            (const float& angle);
 		CRegistInfo* SetCol              (const Color& col);
 		CRegistInfo* SetTex              (const short& texIdx, const unsigned short& ptn = 0, const unsigned short& ptnX = 1, const unsigned short& ptnY = 1, const D3DXVECTOR3& ptnPos = INITD3DXVECTOR3);
 		CRegistInfo* SetTex_Camera       (CCamera* camera);
@@ -55,8 +55,6 @@ public:
 		CRegistInfo* ExtendFixedTexX     (const float& rateX);
 		CRegistInfo* ExtendFixedTexY     (const float& rateY);
 		CRegistInfo* SetZTest            (const bool& isZTest);
-		CRegistInfo* SetLighting         (const bool& isLighting);
-		CRegistInfo* SetBillboard        (const bool& isBillboard);
 		CRegistInfo* SetTexMirrorX       (const bool& isMirror);
 		CRegistInfo* SetPriority         (const short& priority);
 
@@ -68,7 +66,8 @@ public:
 		float          m_scaleX;
 		float          m_scaleY;
 		bool           m_isFactScale;
-		D3DXMATRIX     m_mtx;
+		D3DXVECTOR3    m_pos;
+		float          m_angle;
 		Color          m_col;
 		short          m_texIdx;
 		CCamera*       m_texCamera;
@@ -79,13 +78,19 @@ public:
 		float          m_ptnScaleY;
 		D3DXVECTOR3    m_ptnPos;
 		bool           m_isZtest;
-		bool           m_isLighting;
-		bool           m_isBillboard;
 		bool           m_isTexMirrorX;
 		short          m_priority;
 	};
 
-	//========== [[[ 設定関数 ]]]
-	CRegistInfo* Put(const D3DXMATRIX& mtx, const bool& isOnScreen = false);
-	CRegistInfo* Put(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const bool& isOnScreen = false);
+	//========== [[[ 関数宣言 ]]]
+	CRegistInfo* Put(const D3DXVECTOR3& pos, const float& angle, const bool& isOnScreen = false);
+	// 頂点情報設定系
+	void SetVtxPos        (VERTEX_2D* vtxs, const D3DXVECTOR3& pos, const float& angle, const float& width, const float& height);
+	void SetVtxPos        (VERTEX_2D* vtxs, const D3DXVECTOR3& pos0, const D3DXVECTOR3& pos1, const D3DXVECTOR3& pos2, const D3DXVECTOR3& pos3);
+	void SetVtxPos_TopLeft(VERTEX_2D* vtxs, const D3DXVECTOR3& pos, const float& width, const float& height);
+	void ApplyResolution  (VERTEX_2D* vtxs);
+	void SetVtxRHW        (VERTEX_2D* vtxs);
+	void SetVtxCol        (VERTEX_2D* vtxs, const Color& col);
+	void SetVtxTex_Cut    (VERTEX_2D* vtxs, const D3DXVECTOR2& cutPos, const float& width, const float& height);
+	void SetVtxTex_Cut    (VERTEX_2D* vtxs, const D3DXVECTOR2& cutPos, const float& size);
 };
