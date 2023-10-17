@@ -33,6 +33,9 @@ public:
 	TYPE   GetType(void) { return m_type; }					//éÌóﬁéÊìæ
 	void   SetPos(D3DXVECTOR3 pos) { m_pos = pos; }			//à íuê›íË
 	void   SetScale(D3DXVECTOR3 scale) { m_scale = scale; }	//ägèkê›íË
+	void   SetType(TYPE type) { m_type = type; }
+	void	SetModelIdx(int idx) { ModelIdx = idx; }
+	TYPE   GetType(void) { return m_type; }
 
 protected:
 	

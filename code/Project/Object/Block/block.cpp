@@ -27,6 +27,7 @@ CBlock::CBlock(void)
 	m_Info.size = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
+	m_Info.nModelIdx = 0;
 	m_Info.nID = m_nNumAll;
 	m_nNumAll++;
 }
@@ -39,7 +40,6 @@ CBlock::~CBlock()
 	m_nNumAll--;
 }
 
-int g_modelIdx = -1;
 //========================================
 // ‰Šú‰»
 //========================================
@@ -52,8 +52,6 @@ HRESULT CBlock::Init(void)
 	m_Info.size = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
-
-	g_modelIdx = RNLib::Model()->Load("data\\_RNData\\Model\\Effect\\Clod_M\\Body.x");
 
 	return S_OK;
 }
@@ -74,7 +72,7 @@ void CBlock::Update(void)
 	// ‰ß‹Ž‚ÌˆÊ’u
 	m_Info.posOld = m_Info.pos;
 
-	RNLib::Model()->Put(m_Info.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), g_modelIdx, false);
+	RNLib::Model()->Put(m_Info.pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_Info.nModelIdx, false);
 }
 
 //========================================

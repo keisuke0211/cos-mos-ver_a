@@ -42,8 +42,9 @@ void CMode_Game::Init(void) {
 	// ó‘ÔÝ’è
 	SetState((int)STATE::NONE);
 
-	Manager::BlockMgr()->Create(D3DXVECTOR3(0.0f,0.0f,0.0f));
-	Manager::BlockMgr()->TCreate(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	Manager::BlockMgr()->Load();
+	Manager::BlockMgr()->BlockCreate(0,D3DXVECTOR3(0.0f,0.0f,0.0f));
+	Manager::BlockMgr()->TrampolineCreate(1,D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 
 //========================================

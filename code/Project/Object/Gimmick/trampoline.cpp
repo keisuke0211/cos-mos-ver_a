@@ -38,7 +38,6 @@ CTrampoline::~CTrampoline(void) {
 //========================================
 void CTrampoline::Init(void) {
 
-	m_modelIdx = RNLib::Model()->Load("data\\_RNData\\Model\\Effect\\Clod_M\\Body.x");
 }
 
 //========================================
