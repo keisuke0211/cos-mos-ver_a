@@ -17,7 +17,7 @@ D3DXVECTOR3 static const METEOR_UNINIT_MINPOS = { -150.0f,-150.0f,0.0f };	// Å
 D3DXVECTOR3 static const METEOR_UNINIT_MAXPOS = { 150.0f,150.0f,0.0f };		// Å‘å‚ÌˆÊ’u
 float			static const METEOR_BLINK_MAX = { 5.0f };					// “_–ÅƒAƒjƒ[ƒVƒ‡ƒ“‚ÌÅ‘å”
 float			static const METEOR_BLINK_MIN = { 0.5f };					// “_–Å‚ÌÅ¬”
-float			static const METEOR_BLINK_ADJ = { 10.0f };					// “_–ÅƒAƒjƒ[ƒVƒ‡ƒ“‚Ì’²®
+int				static const METEOR_BLINK_ADJ = { 10 };						// “_–ÅƒAƒjƒ[ƒVƒ‡ƒ“‚Ì’²®
 //========================================
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
 //========================================
@@ -61,14 +61,15 @@ void CMeteor::Uninit(void) {
 //========================================
 void CMeteor::Update(void) {
 
+	int nBlink;
 
 	m_pos += m_move;			// ˆÚ“®—Ê‚Ì’Ç‰Á
 	m_rot += METEOR_ADDROT;		// Œü‚«‚ÌˆÚ“®—Ê‚Ì’Ç‰Á
 
 	// “_–ÅƒAƒjƒ[ƒVƒ‡ƒ“‚ÌŒvŽZ
-	m_fblink = (m_nblinlAnim % (int)METEOR_BLINK_MAX);
-	m_fblink = (m_fblink / (float)METEOR_BLINK_ADJ);
-	m_fblink =  m_fblink + METEOR_BLINK_MIN;
+	nBlink = (m_nblinlAnim % (int)METEOR_BLINK_MAX);
+	m_fblink = nBlink / METEOR_BLINK_ADJ;
+	m_fblink += METEOR_BLINK_MIN;
 
 	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
 		->SetOutLine(true)
