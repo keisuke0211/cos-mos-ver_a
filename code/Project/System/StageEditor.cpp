@@ -14,7 +14,7 @@
 //========================================
 CStageEditor::StageType *CStageEditor::m_StageType = NULL;
 int CStageEditor::m_StageMax = 0;
-const float CStageEditor::SIZE_OF_1_SQUARE = 23.0f;
+const float CStageEditor::SIZE_SPACE = 23.0f;
 const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.txt";
 
 //========================================
@@ -140,12 +140,12 @@ void CStageEditor::StageLoad(int stage)
 
 				if (nType >= 0)
 				{
-					D3DXVECTOR3 pos = D3DXVECTOR3(-480.0f,-280.0f,0.0f);
+					D3DXVECTOR3 pos = RNLib::Camera3D()->GetPosR();
 
-					float x = SIZE_OF_1_SQUARE / 2 + SIZE_OF_1_SQUARE * nLine;
-					float y = SIZE_OF_1_SQUARE / 2 + SIZE_OF_1_SQUARE * nRow;
+					pos.x += ((nLineMax * -0.5f) + nLine + 0.5f) * SIZE_SPACE;
+					pos.y += ((nRowMax * -0.5f) + nRow + 0.5f) * SIZE_SPACE;
 
-					pos += D3DXVECTOR3(x, y, 0.0f);
+					pos.z = 0.0f/* + fRand() * 4.0f*/;
 
 					// ”z’u
 					switch (nType)

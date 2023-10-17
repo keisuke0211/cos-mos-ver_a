@@ -15,7 +15,7 @@ public:
 
 	// 定数
 	static const char* STAGE_INFO_FILE;		// ステージ情報のファイルパス
-	static const float SIZE_OF_1_SQUARE;
+	static const float SIZE_SPACE;
 
 	// *** 情報構造体 ***
 
@@ -47,7 +47,7 @@ private:
 	};
 
 	// *** 関数宣言 ***
-	/* ステージ生成 */void SetStage();
+	///* ステージ生成 */void SetStage();
 
 	// *** 変数宣言 ***
 	static StageType *m_StageType;
