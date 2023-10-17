@@ -70,8 +70,16 @@ void CMeteor::Update(void) {
 	m_pos += m_move;			// 移動量の追加
 
 	// 点滅アニメーションの計算
-	m_fblink = m_nblinlAnim % (METEOR_BLINK_MAX + 1);
-
+	if (m_nblinlAnim <= METEOR_BLINK_MAX * 2)
+	{
+		m_nblinlAnim = m_nblinlAnim % (METEOR_BLINK_MAX + 1);
+		m_fblink -= METEOR_BLINK_MAX % -m_nblinlAnim;
+	}
+	else
+	{
+		m_nblinlAnim = 0;
+	}
+	
 
 	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
 		->SetOutLine(true)
