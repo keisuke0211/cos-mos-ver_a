@@ -40,7 +40,7 @@ void CMode_Game::Init(void) {
 	CMode::Init();
 
 	// ÉJÉÅÉâÇÃéãì_/íçéãì_Çê›íË
-	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(300.0f, 0.0f, -2000.0f), D3DXVECTOR3(300.0f, 0.0f, 0.0f));
+	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -700.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// èÛë‘ê›íË
 	SetState((int)STATE::NONE);

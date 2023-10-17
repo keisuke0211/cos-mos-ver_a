@@ -23,7 +23,7 @@ public:
 		D3DXVECTOR3 move;		// 移動量
 		D3DXCOLOR col;			// 頂点カラー
 		int nType;				// 種類
-		int nModelIdx;			// モデル番号
+		short nModelIdx;		// モデル番号
 		int nID;				// ID
 	};
 
@@ -47,8 +47,6 @@ private:
 
 	// *** 静的変数 ***
 	static int m_nNumAll;		// 総数
-
-	short m_modelIdx;
 
 	// *** 変数 ***
 	Info m_Info;		// 共通情報

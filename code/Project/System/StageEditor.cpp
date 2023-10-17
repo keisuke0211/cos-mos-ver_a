@@ -14,7 +14,7 @@
 //========================================
 CStageEditor::StageType *CStageEditor::m_StageType = NULL;
 int CStageEditor::m_StageMax = 0;
-const float CStageEditor::SIZE_OF_1_SQUARE = 40.0f;
+const float CStageEditor::SIZE_OF_1_SQUARE = 23.0f;
 const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.txt";
 
 //========================================
@@ -140,7 +140,7 @@ void CStageEditor::StageLoad(int stage)
 
 				if (nType >= 0)
 				{
-					D3DXVECTOR3 pos = D3DXVECTOR3(-120.0f,0.0f,0.0f);
+					D3DXVECTOR3 pos = D3DXVECTOR3(-480.0f,-280.0f,0.0f);
 
 					float x = SIZE_OF_1_SQUARE / 2 + SIZE_OF_1_SQUARE * nLine;
 					float y = SIZE_OF_1_SQUARE / 2 + SIZE_OF_1_SQUARE * nRow;
