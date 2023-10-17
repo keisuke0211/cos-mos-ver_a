@@ -166,7 +166,6 @@
     <ClCompile Include="code\Project\precompile.cpp" />
     <ClCompile Include="code\Project\System\csv_file.cpp" />
     <ClCompile Include="code\Project\System\StageEditor.cpp" />
-    <ClCompile Include="code\_RNLib\game-mode.cpp" />
     <ClCompile Include="code\_RNLib\RNlib.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\collision3D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\doll3D.cpp" />
