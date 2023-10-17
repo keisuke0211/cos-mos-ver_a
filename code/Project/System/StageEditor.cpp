@@ -7,6 +7,8 @@
 #include "../manager.h"
 #include "csv_file.h"
 #include "../Object/stage-object.h"
+#include "../Mode/mode_game.h"
+#include "../Character/player.h"
 #include "StageEditor.h"
 
 //========================================
@@ -143,7 +145,7 @@ void CStageEditor::StageLoad(int stage)
 					D3DXVECTOR3 pos = RNLib::Camera3D()->GetPosR();
 
 					pos.x += ((nLineMax * -0.5f) + nLine + 0.5f) * SIZE_SPACE;
-					pos.y += ((nRowMax * -0.5f) + nRow + 0.5f) * SIZE_SPACE;
+					pos.y -= ((23 * -0.5f) + nRow + 0.5f) * SIZE_SPACE;
 
 					pos.z = 0.0f/* + fRand() * 4.0f*/;
 
@@ -164,6 +166,17 @@ void CStageEditor::StageLoad(int stage)
 						break;
 					case TYPE_Meteor:
 						Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+						break;
+					case TYPE_PLAYER_0:
+						CMode_Game::GetPlayer()->SetPos(0, pos);
+						break;
+					case TYPE_PLAYER_1:
+						CMode_Game::GetPlayer()->SetPos(1, pos);
+
+						break;
+					case TYPE_PARTS:
+						break;
+					case TYPE_GOAL:
 						break;
 					}
 				}
