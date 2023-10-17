@@ -56,6 +56,8 @@ void CMode_Game::Uninit(void) {
 //========================================
 void CMode_Game::Update(void) {
 	CMode::Update();
+
+
 }
 
 //========================================
