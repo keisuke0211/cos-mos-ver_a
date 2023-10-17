@@ -163,8 +163,10 @@
     <ClCompile Include="code\Project\Object\Block\block.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\meteor.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp" />
+    <ClCompile Include="code\Project\Object\stage-object.cpp" />
     <ClCompile Include="code\Project\precompile.cpp" />
     <ClCompile Include="code\Project\System\csv_file.cpp" />
+    <ClCompile Include="code\Project\System\StageEditor.cpp" />
     <ClCompile Include="code\_RNLib\RNlib.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\collision3D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\doll3D.cpp" />
@@ -228,8 +230,11 @@
     <ClInclude Include="code\Project\Object\Block\block.h" />
     <ClInclude Include="code\Project\Object\Gimmick\meteor.h" />
     <ClInclude Include="code\Project\Object\Gimmick\trampoline.h" />
+    <ClInclude Include="code\Project\Object\stage-object.h" />
     <ClInclude Include="code\Project\precompile.h" />
     <ClInclude Include="code\Project\System\csv_file.h" />
+    <ClInclude Include="code\Project\System\StageEditor.h" />
+    <ClInclude Include="code\_RNLib\game-mode.h" />
     <ClInclude Include="code\_RNLib\RNlib.h" />
     <ClInclude Include="code\_RNLib\RNmain.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Body\collision3D.h" />

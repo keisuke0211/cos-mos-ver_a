@@ -63,10 +63,10 @@ CPlayer *CPlayer::Create(void)
 HRESULT CPlayer::Init(void)
 {	
 	m_aInfo[0].nModelIdx = RNLib::Model()->Load("data\\MODEL\\1P.x");
-	m_aInfo[0].pos = D3DXVECTOR3(640.0f, 300.0f, 0.0f);
+	m_aInfo[0].pos = D3DXVECTOR3(10.0f, 20.0f, 0.0f);
 
 	m_aInfo[1].nModelIdx = RNLib::Model()->Load("data\\MODEL\\2P.x");
-	m_aInfo[1].pos = D3DXVECTOR3(640.0f, 500.0f, 0.0f);
+	m_aInfo[1].pos = D3DXVECTOR3(-10.0f, -20.0f, 0.0f);
 
 	//‰Šú‰»¬Œ÷
 	return S_OK;

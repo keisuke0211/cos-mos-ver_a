@@ -1,10 +1,9 @@
 //========================================
 // 
-// ブロックマネージャー
+// ステージオブジェクトマネージャーの処理
 // Author:KEISUKE OTONO
+// Arrange:RIKU NISHIMURA
 // 
-//========================================
-// *** block-manager.h ***
 //========================================
 #include "block-manager.h"
 
@@ -27,7 +26,8 @@ CBlockMgr::CBlockMgr(void)
 //========================================
 CBlockMgr::~CBlockMgr()
 {
-	
+	delete m_pBlockType;
+	m_pBlockType = NULL;
 }
 
 //========================================
