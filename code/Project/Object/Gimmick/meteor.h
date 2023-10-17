@@ -12,11 +12,11 @@
 // クラス定義
 //****************************************
 // メテオの情報構造体
-class CMeteo : public CList {
+class CMeteor : public CList {
 public:
 	//========== [[[ 関数宣言 ]]]
-	CMeteo();
-	virtual        ~CMeteo();
+	CMeteor();
+	virtual        ~CMeteor();
 	virtual void   Init(void);
 	virtual void   Uninit(void);
 	virtual void   Update(void);
