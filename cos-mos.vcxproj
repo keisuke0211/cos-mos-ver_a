@@ -154,6 +154,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="code\Project\Character\player.cpp" />
     <ClCompile Include="code\Project\main.cpp" />
     <ClCompile Include="code\Project\manager.cpp" />
     <ClCompile Include="code\Project\Mode\mode.cpp" />

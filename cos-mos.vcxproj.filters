@@ -198,6 +198,9 @@
     <ClCompile Include="code\Project\Object\Block\block.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="code\Project\Character\player.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Project\System\csv_file.h">
