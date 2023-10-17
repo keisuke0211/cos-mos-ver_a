@@ -164,8 +164,10 @@
     <ClCompile Include="code\Project\Object\Block\move-block.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\meteor.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp" />
+    <ClCompile Include="code\Project\Object\stage-object.cpp" />
     <ClCompile Include="code\Project\precompile.cpp" />
     <ClCompile Include="code\Project\System\csv_file.cpp" />
+    <ClCompile Include="code\Project\System\StageEditor.cpp" />
     <ClCompile Include="code\_RNLib\RNlib.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\collision3D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\doll3D.cpp" />
@@ -230,8 +232,11 @@
     <ClInclude Include="code\Project\Object\Block\move-block.h" />
     <ClInclude Include="code\Project\Object\Gimmick\meteor.h" />
     <ClInclude Include="code\Project\Object\Gimmick\trampoline.h" />
+    <ClInclude Include="code\Project\Object\stage-object.h" />
     <ClInclude Include="code\Project\precompile.h" />
     <ClInclude Include="code\Project\System\csv_file.h" />
+    <ClInclude Include="code\Project\System\StageEditor.h" />
+    <ClInclude Include="code\_RNLib\game-mode.h" />
     <ClInclude Include="code\_RNLib\RNlib.h" />
     <ClInclude Include="code\_RNLib\RNmain.h" />
     <ClInclude Include="code\_RNLib\_Basis\3D\Body\collision3D.h" />
@@ -286,6 +291,111 @@
     <ClInclude Include="code\_RNLib\_ImGui\imstb_rectpack.h" />
     <ClInclude Include="code\_RNLib\_ImGui\imstb_textedit.h" />
     <ClInclude Include="code\_RNLib\_ImGui\imstb_truetype.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
+    <None Include="cos-mos.VC.db" />
+    <None Include="Debug\cos-mos.exe" />
+    <None Include="Debug\cos-mos.ilk" />
+    <None Include="Debug\cos-mos.pdb" />
+    <None Include="Debug\meteor.obj.enc" />
+    <None Include="Debug\vc140.idb" />
+    <None Include="Debug\vc140.pdb" />
+    <None Include="mqo\1P.mqo" />
+    <None Include="mqo\2P.mqo" />
+    <None Include="mqo\Block.mqo" />
+    <None Include="mqo\Lift.mqo" />
+    <None Include="mqo\Meteorite.mqo" />
+    <None Include="mqo\Spike Half.mqo" />
+    <None Include="mqo\Spike.mqo" />
+    <None Include="mqo\Spring Floor.mqo" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\TEXTURE\meteo000.png" />
+    <Image Include="data\TEXTURE\Object\block.png" />
+    <Image Include="data\TEXTURE\pillar000.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="Debug\block-manager.obj" />
+    <Object Include="Debug\block.obj" />
+    <Object Include="Debug\camera.obj" />
+    <Object Include="Debug\camera_control.obj" />
+    <Object Include="Debug\collision3D.obj" />
+    <Object Include="Debug\color.obj" />
+    <Object Include="Debug\csv_file.obj" />
+    <Object Include="Debug\data.obj" />
+    <Object Include="Debug\doll3D.obj" />
+    <Object Include="Debug\draw-info.obj" />
+    <Object Include="Debug\draw-manager.obj" />
+    <Object Include="Debug\draw-state.obj" />
+    <Object Include="Debug\easing.obj" />
+    <Object Include="Debug\eff3D-cylinder.obj" />
+    <Object Include="Debug\eff3D-fragment.obj" />
+    <Object Include="Debug\eff3D-polygon.obj" />
+    <Object Include="Debug\effect3D.obj" />
+    <Object Include="Debug\effect3D_manager.obj" />
+    <Object Include="Debug\file.obj" />
+    <Object Include="Debug\fog.obj" />
+    <Object Include="Debug\game-mode.obj" />
+    <Object Include="Debug\geometry.obj" />
+    <Object Include="Debug\human-base3D.obj" />
+    <Object Include="Debug\imgui.obj" />
+    <Object Include="Debug\imgui_crt-wgt.obj" />
+    <Object Include="Debug\imgui_demo.obj" />
+    <Object Include="Debug\imgui_draw.obj" />
+    <Object Include="Debug\imgui_impl_dx9.obj" />
+    <Object Include="Debug\imgui_impl_win32.obj" />
+    <Object Include="Debug\imgui_main.obj" />
+    <Object Include="Debug\imgui_tables.obj" />
+    <Object Include="Debug\imgui_widgets.obj" />
+    <Object Include="Debug\input.obj" />
+    <Object Include="Debug\light3D.obj" />
+    <Object Include="Debug\line3D.obj" />
+    <Object Include="Debug\list-manager.obj" />
+    <Object Include="Debug\list.obj" />
+    <Object Include="Debug\main.obj" />
+    <Object Include="Debug\manager.obj" />
+    <Object Include="Debug\material.obj" />
+    <Object Include="Debug\matrix.obj" />
+    <Object Include="Debug\meteor.obj" />
+    <Object Include="Debug\mode.obj" />
+    <Object Include="Debug\model.obj" />
+    <Object Include="Debug\mode_game.obj" />
+    <Object Include="Debug\motion3D.obj" />
+    <Object Include="Debug\number.obj" />
+    <Object Include="Debug\object-manager.obj" />
+    <Object Include="Debug\object.obj" />
+    <Object Include="Debug\player.obj" />
+    <Object Include="Debug\polygon2D.obj" />
+    <Object Include="Debug\polygon3D.obj" />
+    <Object Include="Debug\precompile.obj" />
+    <Object Include="Debug\print.obj" />
+    <Object Include="Debug\regist.obj" />
+    <Object Include="Debug\RNlib.obj" />
+    <Object Include="Debug\setting.obj" />
+    <Object Include="Debug\setup3D.obj" />
+    <Object Include="Debug\shadow3D.obj" />
+    <Object Include="Debug\sound.obj" />
+    <Object Include="Debug\text.obj" />
+    <Object Include="Debug\text2D.obj" />
+    <Object Include="Debug\text3D.obj" />
+    <Object Include="Debug\texture.obj" />
+    <Object Include="Debug\trampoline.obj" />
+    <Object Include="Debug\transition.obj" />
+    <Object Include="Debug\visual.obj" />
+    <Object Include="Debug\window.obj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="data\_RNData\AmbientLight.txt" />
+    <Text Include="data\_RNData\Effect3DList.txt" />
+    <Text Include="data\_RNData\FontList.txt" />
+    <Text Include="data\_RNData\SoundList.txt" />
+    <Text Include="data\_RNData\VisualSetting.txt" />
+    <Text Include="Debug\cos-mos.log" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="data\FONT\851Gkktt_005.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

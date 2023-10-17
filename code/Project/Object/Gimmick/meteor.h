@@ -32,5 +32,8 @@ private:
 	D3DXVECTOR3 m_pos;	// 位置
 	D3DXVECTOR3 m_rot;	// 向き
 	D3DXVECTOR3 m_move;	// 移動量
+	float m_fblink;		// 点滅
+	int	  m_nblinlAnim;	// 点滅アニメーション
+
 	int ModelIdx;
 };

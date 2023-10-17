@@ -6,12 +6,15 @@
 //========================================
 #include "../main.h"
 #include "../Object/Block/block-manager.h"
+#include "../Character/player.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
 //==========| CMode_Gameクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
+
+CPlayer *CMode_Game::s_pPlayer = NULL;
 
 //========================================
 // コンストラクタ
@@ -45,7 +48,10 @@ void CMode_Game::Init(void) {
 	Manager::BlockMgr()->Load();
 	Manager::BlockMgr()->BlockCreate(0,D3DXVECTOR3(0.0f,0.0f,0.0f));
 	Manager::BlockMgr()->TrampolineCreate(1,D3DXVECTOR3(40.0f, 0.0f, 0.0f));
-	Manager::BlockMgr()->MeteorCreate(2, D3DXVECTOR3(80.0f, 0.0f, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	Manager::BlockMgr()->MeteorCreate(2, D3DXVECTOR3(80.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
+
+	if (s_pPlayer == NULL)
+		s_pPlayer = CPlayer::Create();
 }
 
 //========================================
@@ -54,6 +60,12 @@ void CMode_Game::Init(void) {
 //========================================
 void CMode_Game::Uninit(void) {
 	CMode::Uninit();
+
+	if (s_pPlayer != NULL)	{
+		s_pPlayer->Uninit();
+		delete s_pPlayer;
+		s_pPlayer = NULL;
+	}
 }
 
 //========================================
@@ -63,7 +75,8 @@ void CMode_Game::Uninit(void) {
 void CMode_Game::Update(void) {
 	CMode::Update();
 
-
+	if (s_pPlayer != NULL)
+		s_pPlayer->Update();
 }
 
 //========================================

@@ -1,13 +1,11 @@
 //========================================
 // 
-// ブロック処理
+// ステージオブジェクトマネージャーの処理
 // Author:KEISUKE OTONO
+// Arrange:RIKU NISHIMURA
 // 
 //========================================
-// *** block.h ***
-//========================================
-#ifndef _BLOCK_MANAGER_H_
-#define _BLOCK_MANAGER_H_
+#pragma once
 
 #include "../../../_RNLib/RNlib.h"
 #include "block.h"
@@ -52,5 +50,3 @@ private:
 	// *** 変数 ***
 	static BlockType *m_pBlockType;	// 種類情報
 };
-
-#endif

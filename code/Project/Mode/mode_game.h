@@ -9,6 +9,11 @@
 #include "../../_RNLib/RNlib.h"
 
 //****************************************
+// 前方宣言
+//****************************************
+class CPlayer;
+
+//****************************************
 // クラス定義
 //****************************************
 // モード(ゲーム)クラス
@@ -25,5 +30,8 @@ public:
 	void  Init          (void);
 	void  Uninit        (void);
 	void  Update        (void);
-	void  ProcessState  (const PROCESS process);;
+	void  ProcessState  (const PROCESS process);
+
+private:
+	static CPlayer *s_pPlayer;
 };
