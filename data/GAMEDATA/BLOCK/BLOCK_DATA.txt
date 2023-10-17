@@ -6,13 +6,14 @@
 #========================================
 # 最大数
 #========================================
-NUM_MODEL = 2
+NUM_MODEL = 3
 
 #========================================
 # ファイル名
 #========================================
-MODEL = dataMODELBlock.x 							#00 床
-MODEL = data_RNDataModelEffectClod_MBody.x 	#01 トランポリン
+MODEL = data\\MODEL\\Block.x 							#00 床
+MODEL = data\\_RNData\\Model\\Effect\\Clod_M\\Body.x 	#01 トランポリン
+MODEL = data\\_RNData\\Model\\Effect\\Clod_S\\Body.x 	#02 隕石
 
 #========================================
 #
