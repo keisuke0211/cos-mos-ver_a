@@ -417,6 +417,9 @@
     <None Include="Debug\cos-mos.exe" />
     <None Include="Debug\cos-mos.ilk" />
     <None Include="Debug\cos-mos.pdb" />
+    <None Include="Debug\meteor.obj.enc" />
+    <None Include="Debug\vc140.idb" />
+    <None Include="Debug\vc140.pdb" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\TEXTURE\Object\block.png">
@@ -458,6 +461,46 @@
     <Object Include="Debug\imgui_impl_dx9.obj" />
     <Object Include="Debug\imgui_impl_win32.obj" />
     <Object Include="Debug\imgui_draw.obj" />
+    <Object Include="Debug\block-manager.obj" />
+    <Object Include="Debug\imgui_main.obj" />
+    <Object Include="Debug\imgui_tables.obj" />
+    <Object Include="Debug\imgui_widgets.obj" />
+    <Object Include="Debug\input.obj" />
+    <Object Include="Debug\light3D.obj" />
+    <Object Include="Debug\line3D.obj" />
+    <Object Include="Debug\list.obj" />
+    <Object Include="Debug\list-manager.obj" />
+    <Object Include="Debug\main.obj" />
+    <Object Include="Debug\manager.obj" />
+    <Object Include="Debug\material.obj" />
+    <Object Include="Debug\matrix.obj" />
+    <Object Include="Debug\meteor.obj" />
+    <Object Include="Debug\mode.obj" />
+    <Object Include="Debug\mode_game.obj" />
+    <Object Include="Debug\model.obj" />
+    <Object Include="Debug\motion3D.obj" />
+    <Object Include="Debug\number.obj" />
+    <Object Include="Debug\object.obj" />
+    <Object Include="Debug\object-manager.obj" />
+    <Object Include="Debug\player.obj" />
+    <Object Include="Debug\polygon2D.obj" />
+    <Object Include="Debug\polygon3D.obj" />
+    <Object Include="Debug\precompile.obj" />
+    <Object Include="Debug\print.obj" />
+    <Object Include="Debug\regist.obj" />
+    <Object Include="Debug\RNlib.obj" />
+    <Object Include="Debug\setting.obj" />
+    <Object Include="Debug\setup3D.obj" />
+    <Object Include="Debug\shadow3D.obj" />
+    <Object Include="Debug\sound.obj" />
+    <Object Include="Debug\text.obj" />
+    <Object Include="Debug\text2D.obj" />
+    <Object Include="Debug\text3D.obj" />
+    <Object Include="Debug\texture.obj" />
+    <Object Include="Debug\trampoline.obj" />
+    <Object Include="Debug\transition.obj" />
+    <Object Include="Debug\visual.obj" />
+    <Object Include="Debug\window.obj" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="Debug\cos-mos.log" />
