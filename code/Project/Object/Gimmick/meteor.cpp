@@ -4,7 +4,7 @@
 // Author:KOMURO HIROMU
 // 
 //========================================
-#include "meteo.h"
+#include "meteor.h"
 #include "../../main.h"
 
 //================================================================================
@@ -16,7 +16,7 @@
 //========================================
 // コンストラクタ
 //========================================
-CMeteo::CMeteo(void) {
+CMeteor::CMeteor(void) {
 	Manager::BlockMgr()->AddList(this);
 
 	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -26,7 +26,7 @@ CMeteo::CMeteo(void) {
 //========================================
 // デストラクタ
 //========================================
-CMeteo::~CMeteo(void) {
+CMeteor::~CMeteor(void) {
 
 }
 
@@ -34,7 +34,7 @@ CMeteo::~CMeteo(void) {
 // 初期化処理
 // Author:RYUKI FUJIWARA
 //========================================
-void CMeteo::Init(void) {
+void CMeteor::Init(void) {
 
 }
 
@@ -42,7 +42,7 @@ void CMeteo::Init(void) {
 // 終了処理
 // Author:RYUKI FUJIWARA
 //========================================
-void CMeteo::Uninit(void) {
+void CMeteor::Uninit(void) {
 
 }
 
@@ -50,7 +50,7 @@ void CMeteo::Uninit(void) {
 // 更新処理
 // Author:RYUKI FUJIWARA
 //========================================
-void CMeteo::Update(void) {
+void CMeteor::Update(void) {
 
 	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), ModelIdx, false);
 }
@@ -59,7 +59,7 @@ void CMeteo::Update(void) {
 // 描画処理
 // Author:RYUKI FUJIWARA
 //========================================
-void CMeteo::Draw(void) {
+void CMeteor::Draw(void) {
 
 
 }
