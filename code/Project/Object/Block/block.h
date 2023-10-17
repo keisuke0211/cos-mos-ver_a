@@ -6,8 +6,7 @@
 //========================================
 // *** block.h ***
 //========================================
-#ifndef _BLOCK_H_
-#define _BLOCK_H_
+#pragma once
 
 #include "../../../_RNLib/RNlib.h"
 
@@ -39,7 +38,6 @@ public:
 	/* 終了		*/void Uninit(void);
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
-	/* 読み込み	*/static void Load(void);
 
 	// -- 設定 ---------------------------------------------
 	/* 位置			*/void SetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
@@ -63,4 +61,3 @@ private:
 	Info m_Info;		// 共通情報
 
 };
-#endif

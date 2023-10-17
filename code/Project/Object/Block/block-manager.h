@@ -6,8 +6,7 @@
 //========================================
 // *** block.h ***
 //========================================
-#ifndef _BLOCK_MANAGER_H_
-#define _BLOCK_MANAGER_H_
+#pragma once
 
 #include "../../../_RNLib/RNlib.h"
 #include "block.h"
@@ -52,4 +51,3 @@ private:
 	static BlockType *m_pBlockType;	// éÌóﬁèÓïÒ
 };
 
-#endif
