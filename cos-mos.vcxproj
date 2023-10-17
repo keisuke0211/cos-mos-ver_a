@@ -163,6 +163,7 @@
     <ClCompile Include="code\Project\Object\Block\block.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\meteor.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp" />
+    <ClCompile Include="code\Project\Object\stage-object.cpp" />
     <ClCompile Include="code\Project\precompile.cpp" />
     <ClCompile Include="code\Project\System\csv_file.cpp" />
     <ClCompile Include="code\_RNLib\RNlib.cpp" />
@@ -228,6 +229,7 @@
     <ClInclude Include="code\Project\Object\Block\block.h" />
     <ClInclude Include="code\Project\Object\Gimmick\meteor.h" />
     <ClInclude Include="code\Project\Object\Gimmick\trampoline.h" />
+    <ClInclude Include="code\Project\Object\stage-object.h" />
     <ClInclude Include="code\Project\precompile.h" />
     <ClInclude Include="code\Project\System\csv_file.h" />
     <ClInclude Include="code\_RNLib\RNlib.h" />
