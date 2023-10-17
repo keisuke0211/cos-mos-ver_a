@@ -6,7 +6,7 @@
 #========================================
 # 最大数
 #========================================
-NUM_MODEL = 3
+NUM_MODEL = 4
 
 #========================================
 # ファイル名
@@ -14,6 +14,7 @@ NUM_MODEL = 3
 MODEL = data\\MODEL\\Block.x 							#00 床
 MODEL = data\\MODEL\\SpringFloor.x 	#01 トランポリン
 MODEL = data\\MODEL\\Meteorite.x 	#02 隕石
+MODEL = data\\MODEL\\Lift.x 	#03 リフト
 
 #========================================
 #

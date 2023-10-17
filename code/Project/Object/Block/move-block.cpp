@@ -18,12 +18,14 @@ int CMoveBlock::m_nNumAll = 0;
 //========================================
 CMoveBlock::CMoveBlock(void)
 {
+	m_type = TYPE::MOVE_BLOCK;
+
 	Manager::BlockMgr()->AddList(this);
 
-	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_Info.posOld = INITD3DXVECTOR3;
+	m_width  = SIZE_OF_1_SQUARE * 2;
+	m_height = SIZE_OF_1_SQUARE;
+
 	m_Info.move = INITD3DXVECTOR3;
-	m_Info.rot = INITD3DXVECTOR3;
 	m_Info.size = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
@@ -64,8 +66,9 @@ void CMoveBlock::Update(void)
 {
 	//m_Info.pos.y -= 1.0f;
 	//m_Info.nCntMove++;
+	m_pos.x += 1.0f;
 
-	RNLib::Model()->Put(m_Info.pos, m_Info.rot, m_Info.nModelIdx);
+	RNLib::Model()->Put(m_pos, m_rot, m_Info.nModelIdx);
 }
 
 //========================================
