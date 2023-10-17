@@ -1,6 +1,6 @@
 //========================================
 // 
-// ギミックの処理
+// トランポリンの処理
 // Author:RYUKI FUJIWARA
 // 
 //========================================
@@ -55,15 +55,20 @@ void CTrampoline::Uninit(void) {
 //========================================
 void CTrampoline::Update(void) {
 
-	
 	D3DXMATRIX mtx = ConvPosRotToMatrix(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 	D3DXMatrixScaling(&mtx, m_scale.x, m_scale.y, m_scale.z);
 	RNLib::Model()->Put(mtx, m_modelIdx, false);
 
-	if (RNLib::Input()->KeyTrigger(DIK_UPARROW))
+	if (RNLib::Input()->KeyPress(DIK_UPARROW))
 	{
-
+		m_scale.y += 0.1f;
 	}
+	if (RNLib::Input()->KeyPress(DIK_DOWNARROW))
+	{
+		m_scale.y -= 0.1f;
+	}
+
+	SetScale(m_scale);
 }
 
 //========================================

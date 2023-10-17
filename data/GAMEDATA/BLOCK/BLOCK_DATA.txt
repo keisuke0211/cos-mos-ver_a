@@ -12,7 +12,7 @@ NUM_MODEL = 3
 # ファイル名
 #========================================
 MODEL = data\\MODEL\\Block.x 							#00 床
-MODEL = data\\_RNData\\Model\\Effect\\Clod_M\\Body.x 	#01 トランポリン
+MODEL = data\\MODEL\\SpringFloor.x 					#01 トランポリン
 MODEL = data\\_RNData\\Model\\Effect\\Clod_S\\Body.x 	#02 隕石
 
 #========================================
