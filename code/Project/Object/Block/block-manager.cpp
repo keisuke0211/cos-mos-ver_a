@@ -137,7 +137,7 @@ CMeteor *CBlockMgr::MeteorCreate(int type, D3DXVECTOR3 pos,D3DXVECTOR3 move)
 	// ‰Šú‰»ˆ—
 	pObj->Init();
 	pObj->SetModelIdx(m_pBlockType[type].nModelIdx);
-	pObj->SetMove(D3DXVECTOR3(0.0f,0.0f,0.0f));
+	pObj->SetMove(D3DXVECTOR3(0.3f,0.0f,0.0f));
 
 	return pObj;
 }
