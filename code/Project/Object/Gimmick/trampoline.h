@@ -41,5 +41,8 @@ private:
 	STATE m_state;			//種類
 	int m_modelIdx[3];		//モデル番号
 	D3DXVECTOR3 m_scale;	//大きさ
+	float		m_fDifY;	//h
 	bool		m_bLand;	//着地した？
+	int			m_nCnt;		//カウント
+
 };
