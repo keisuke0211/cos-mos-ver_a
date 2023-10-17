@@ -4,8 +4,9 @@
 // Author:HARUTO KIKUCHI
 // 
 //========================================
-
+#include "../../manager.h"
 #include "move-block.h"
+#include "../../main.h"
 
 //========================================
 // Ã“I•Ï”
@@ -17,7 +18,9 @@ int CMoveBlock::m_nNumAll = 0;
 //========================================
 CMoveBlock::CMoveBlock(void)
 {
-	m_Info.pos = D3DXVECTOR3(2.0f, 2.0f, 2.0f);
+	Manager::BlockMgr()->AddList(this);
+
+	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.posOld = INITD3DXVECTOR3;
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.rot = INITD3DXVECTOR3;
@@ -62,7 +65,7 @@ void CMoveBlock::Update(void)
 	//m_Info.pos.y -= 1.0f;
 	//m_Info.nCntMove++;
 
-	RNLib::Model()->Put(m_Info.pos, m_Info.rot, m_Info.nModelIdx, false);
+	RNLib::Model()->Put(m_Info.pos, m_Info.rot, m_Info.nModelIdx);
 }
 
 //========================================
@@ -71,20 +74,4 @@ void CMoveBlock::Update(void)
 void CMoveBlock::Draw(void)
 {
 
-}
-
-//========================================
-// ¶¬
-//========================================
-CMoveBlock *CMoveBlock::Create(void)
-{
-	CMoveBlock *pMoveBlock = NULL;
-
-	if (pMoveBlock != NULL){ return pMoveBlock; }
-	pMoveBlock = new CMoveBlock;
-
-	// ‰Šú‰»ˆ—
-	pMoveBlock->Init();
-
-	return pMoveBlock;
 }

@@ -13,6 +13,7 @@
 #include "block.h"
 #include "../Gimmick/trampoline.h"
 #include "../Gimmick/meteor.h"
+#include "move-block.h"
 
 //****************************************
 // クラス
@@ -33,7 +34,7 @@ public:
 	/* ブロック		*/CBlock *BlockCreate(int type,D3DXVECTOR3 pos);
 	/* トランポリン	*/CTrampoline *TrampolineCreate(int type, D3DXVECTOR3 pos);
 	/* 隕石			*/CMeteor *MeteorCreate(int type, D3DXVECTOR3 pos,D3DXVECTOR3 move);
-
+	/* 移動床		*/CMoveBlock *MoveBlockCreate(int type, D3DXVECTOR3 pos, D3DXVECTOR3 move);
 private:
 
 	// *** 構造体 ***
