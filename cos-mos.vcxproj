@@ -203,6 +203,7 @@
     <ClCompile Include="code\_RNLib\_Basis\Draw\text3D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Mechanical\object-manager.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Mechanical\object.cpp" />
+    <ClCompile Include="code\_RNLib\_Basis\Mechanical\regist.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\color.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\file.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\input.cpp" />
@@ -275,6 +276,7 @@
     <ClInclude Include="code\_RNLib\_Basis\Mechanical\memory.h" />
     <ClInclude Include="code\_RNLib\_Basis\Mechanical\object-manager.h" />
     <ClInclude Include="code\_RNLib\_Basis\Mechanical\object.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Mechanical\regist.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\color.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\file.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\input.h" />

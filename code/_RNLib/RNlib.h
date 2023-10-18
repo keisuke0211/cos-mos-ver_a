@@ -43,12 +43,12 @@
 #include "_Basis/Mechanical/memory.h"
 #include "_Basis/Mechanical/object.h"
 #include "_Basis/Mechanical/object-manager.h"
+#include "_Basis/Mechanical/regist.h"
 //========== [[[ Other ]]]
 #include "_Basis/Other/color.h"
 #include "_Basis/Other/file.h"
 #include "_Basis/Other/input.h"
 #include "_Basis/Other/print.h"
-#include "_Basis/Other/regist.h"
 #include "_Basis/Other/setting.h"
 #include "_Basis/Other/sound.h"
 #include "_Basis/Other/window.h"
@@ -121,10 +121,10 @@ namespace RNLib {
 	bool   GetSceneSwap   (void);
 
 	CText2D*      Text2D      (void);
-	CPolygon2D*   Polygon2D   (void);				
-	CMotion3D*    Motion3D    (void);
+	CPolygon2D*   Polygon2D   (void);
+	//CMotion3D*    Motion3D    (void);
 	CHuman3DBase* Human3DBase (void);
-	CModelSetUp*  ModelSetUp  (void);
+	CSetUp3D*  ModelSetUp  (void);
 	CModel*       Model       (void);
 	CEff3DMng*    Eff3DMng    (void);
 	CText3D*      Text3D      (void);

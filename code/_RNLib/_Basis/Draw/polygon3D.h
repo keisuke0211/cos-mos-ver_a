@@ -47,6 +47,7 @@ public:
 		~CRegistInfo();
 		CPolygon3D::CDrawInfo* ConvToDrawInfo(void);
 		CRegistInfo* SetMtx              (const D3DXMATRIX& mtx);
+		CRegistInfo* SetVtxPos           (const D3DXVECTOR3 pos0, const D3DXVECTOR3 pos1, const D3DXVECTOR3 pos2, const D3DXVECTOR3 pos3);
 		CRegistInfo* SetCol              (const Color& col);
 		CRegistInfo* SetTex              (const short& texIdx, const unsigned short& ptn = 0, const unsigned short& ptnX = 1, const unsigned short& ptnY = 1, const D3DXVECTOR3& ptnPos = INITD3DXVECTOR3);
 		CRegistInfo* SetTex_Camera       (CCamera* camera);
@@ -69,6 +70,8 @@ public:
 		float          m_scaleY;
 		bool           m_isFactScale;
 		D3DXMATRIX     m_mtx;
+		D3DXVECTOR3    m_vtxPoses[4];
+		bool           m_isSetVtxPoses;
 		Color          m_col;
 		short          m_texIdx;
 		CCamera*       m_texCamera;

@@ -8,6 +8,7 @@
 //========================================
 #include "../../../RNlib.h"
 
+#if 0
 //****************************************
 // 静的メンバ定数宣言
 //****************************************
@@ -34,7 +35,7 @@ void CMotion3D::Uninit(void) {
 	CRegist::Uninit();	// 基底クラス終了処理
 
 	for (int nCntData = 0; nCntData < m_num; nCntData++) {
-		for (int nCntPF = 0; nCntPF < CModelSetUp::PLATFORM_MAX; nCntPF++) {
+		for (int nCntPF = 0; nCntPF < CSetUp3D::PLATFORM_MAX; nCntPF++) {
 			for (int nCntParts = 0; nCntParts < m_pData[nCntData].pfData[nCntPF].nPartsNum; nCntParts++) {
 				for (int nCntCmd = 0; nCntCmd < m_pData[nCntData].pfData[nCntPF].pPartsCmd[nCntParts].nCmdNum; nCntCmd++) {
 					// コマンドの引数を破棄
@@ -90,7 +91,7 @@ int CMotion3D::Load(const char *pLoadPath, short nIdx) {
 			else if (RNLib::File()->CheckIdentifier(/* ループフラグ */"LOOP:"))      { RNLib::File()->Scan(CFile::SCAN::BOOL, &m_pData[nIdx].bLoop); }
 			else if (RNLib::File()->CheckIdentifier(/* 構成毎データ */"PLATFORM_DATA{")) {
 				
-				CModelSetUp::PLATFORM pf; {
+				CSetUp3D::PLATFORM pf; {
 					char aPlatformName[TXT_MAX];
 					RNLib::File()->Scan(CFile::SCAN::STRING, aPlatformName);
 					pf = RNLib::ModelSetUp()->GetPlatformFromName(aPlatformName);
@@ -198,9 +199,9 @@ void CMotion3D::Save(const char *pPath, const int nIdx) {
 		fprintf(pFile, "LOOP: %d\n", (int)m_pData[nIdx].bLoop);
 
 		// モデル構成毎のモーション情報を書き込み
-		for (int nCntPF = 0; nCntPF < CModelSetUp::PLATFORM_MAX; nCntPF++) {
+		for (int nCntPF = 0; nCntPF < CSetUp3D::PLATFORM_MAX; nCntPF++) {
 			fprintf(pFile, "PLATFORM_DATA{ %s %d\n",
-				RNLib::ModelSetUp()->GetPlatformName((CModelSetUp::PLATFORM)nCntPF),
+				RNLib::ModelSetUp()->GetPlatformName((CSetUp3D::PLATFORM)nCntPF),
 				m_pData[nIdx].pfData[nCntPF].nPartsNum);
 
 			for (int nCntParts = 0; nCntParts < m_pData[nIdx].pfData[nCntPF].nPartsNum; nCntParts++) {
@@ -263,3 +264,4 @@ void CMotion3D::InitMemory(const int nNum) {
 		m_pData[nCntMotion] = {};
 	}
 }
+#endif
