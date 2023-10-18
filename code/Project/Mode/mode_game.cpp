@@ -14,6 +14,9 @@
 //----------|---------------------------------------------------------------------
 //================================================================================
 
+#define COLOR_UP   Color{45,212,140,255}
+#define COLOR_DOWN Color{206,54,112,255}
+
 CPlayer *CMode_Game::s_pPlayer = NULL;
 CPlayer* CMode_Game::GetPlayer(void) { return s_pPlayer; }
 
@@ -61,7 +64,7 @@ void CMode_Game::Init(void) {
 	// ƒXƒe[ƒW¶¬
 	Manager::StgEd()->StageLoad(0);
 
-	SetBGColor(Color{255,119,183,255});
+	SetBGColor(COLOR_UP);
 }
 
 //========================================
@@ -90,6 +93,17 @@ void CMode_Game::Update(void) {
 
 	if (RNLib::Input()->KeyTrigger(DIK_RETURN))
 		Manager::StgEd()->SwapStage(1);
+
+	// ”wŒi(‰¼)
+	{
+		float width = RNLib::Window()->GetWidth();
+		float height = RNLib::Window()->GetHeight();
+		RNLib::Polygon3D()->Put(D3DXVECTOR3(0.0f, -height*0.3f, 400.0f), INITD3DXVECTOR3)
+			->SetLighting(false)
+			->SetCol(COLOR_DOWN)
+			->SetSize(width * 2.0f, height * 0.5f)
+			->SetPriority(-2);
+	}
 }
 
 //========================================
