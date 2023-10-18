@@ -21,6 +21,7 @@ public:
 		NONE       = -1,
 		BLOCK      = 0,
 		TRAMPOLINE = 1,
+		SPIKE	   = 2,
 		MOVE_BLOCK = 3,
 		METEOR     = 4,
 		MAX,
