@@ -14,6 +14,20 @@ class CStageObject;
 class CPlayer
 {
 public:
+	//表裏どちらの世界に存在するか
+	enum class WORLD_SIDE	{
+		FACE = 0,	//表
+		BEHIND,		//裏
+		MAX,
+	};
+
+	//当たり判定の順番列挙
+	enum class COLLI_VEC {
+		X = 0,	//Ⅹベクトル
+		Y,		//Ｙベクトル
+		MAX
+	};
+
 	//プレイヤー情報
 	struct Info
 	{
@@ -26,13 +40,7 @@ public:
 		float		fGravity;		//重力
 		float		fGravityCorr;	//重力係数
 		int			nModelIdx;		//モデル番号
-	};
-
-	//当たり判定の順番列挙
-	enum class COLLI_VEC {
-		X = 0,	//Ⅹベクトル
-		Y,		//Ｙベクトル
-		MAX
+		WORLD_SIDE  side;			//どちらの世界に存在するか
 	};
 
 	static const int SWAP_INTERVAL;	//スワップインターバル
@@ -63,6 +71,14 @@ public:
 	// 位置設定
 	void SetPos(int idx, D3DXVECTOR3 pos) { m_aInfo[idx].pos = pos; }
 
+	//----------------------------
+	//プレイヤー情報取得
+	//関数を呼ぶ前にInfo構造体を二人分宣言し、
+	//順番に引数に入れてください。
+	//引数は参照型なので、引数に入れるだけで情報が代入されます。
+	//----------------------------
+	void GetInfo(Info& rP1, Info& rP2) { rP1 = m_aInfo[0]; rP2 = m_aInfo[1]; }
+	
 private:
 	static bool	s_bSwap;		//スワップしたかどうか
 	static int	s_nSwapInterval;//残りスワップインターバル

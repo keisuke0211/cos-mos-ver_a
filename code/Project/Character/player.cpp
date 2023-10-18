@@ -31,18 +31,19 @@ CPlayer::CPlayer()
 	s_bSwap = false;		//スワップしたかどうか
 	s_nSwapInterval = 0;	//残りスワップインターバル
 
-	for (int nCntPlayer = 0; nCntPlayer < NUM_PLAYER; nCntPlayer++)
+	for each (Info &Player in m_aInfo)
 	{
 		//情報クリア
-		m_aInfo[nCntPlayer].pos = INITD3DXVECTOR3;
-		m_aInfo[nCntPlayer].posOLd = INITD3DXVECTOR3;
-		m_aInfo[nCntPlayer].rot = INITD3DXVECTOR3;
-		m_aInfo[nCntPlayer].move = INITD3DXVECTOR3;
-		m_aInfo[nCntPlayer].bJump = false;
-		m_aInfo[nCntPlayer].fJumpPower = 0.0f;
-		m_aInfo[nCntPlayer].fGravity = 0.0f;
-		m_aInfo[nCntPlayer].fGravityCorr = 0.0f;
-		m_aInfo[nCntPlayer].nModelIdx = DATANONE;
+		Player.pos = INITD3DXVECTOR3;
+		Player.posOLd = INITD3DXVECTOR3;
+		Player.rot = INITD3DXVECTOR3;
+		Player.move = INITD3DXVECTOR3;
+		Player.bJump = false;
+		Player.fJumpPower = 0.0f;
+		Player.fGravity = 0.0f;
+		Player.fGravityCorr = 0.0f;
+		Player.nModelIdx = DATANONE;
+		Player.side = WORLD_SIDE::FACE;
 	}
 }
 
@@ -73,18 +74,22 @@ CPlayer *CPlayer::Create(void)
 //初期化処理
 //=======================================
 HRESULT CPlayer::Init(void)
-{	
+{
+	//１Ｐ初期情報
 	m_aInfo[0].nModelIdx = RNLib::Model()->Load("data\\MODEL\\1P.x");
 	m_aInfo[0].pos = D3DXVECTOR3(50.0f, UPPER_GROUND, 0.0f);
 	m_aInfo[0].fJumpPower = JUMP_POWER;
 	m_aInfo[0].fGravity = GRAVITY_POWER;
 	m_aInfo[0].fGravityCorr = GRAVITY_CORR;
+	m_aInfo[0].side = WORLD_SIDE::FACE;
 
+	//２Ｐ初期情報
 	m_aInfo[1].nModelIdx = RNLib::Model()->Load("data\\MODEL\\2P.x");
 	m_aInfo[1].pos = D3DXVECTOR3(-50.0f, DOWNER_GROUND, 0.0f);
 	m_aInfo[1].fJumpPower = -JUMP_POWER;
 	m_aInfo[1].fGravity = -GRAVITY_POWER;
 	m_aInfo[1].fGravityCorr = GRAVITY_CORR;
+	m_aInfo[1].side = WORLD_SIDE::BEHIND;
 
 	//初期化成功
 	return S_OK;
@@ -288,6 +293,9 @@ void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
 			{
 				Player.pos.y = MinPos.y;
 				Player.move.y = 0.0f;
+
+				//裏の世界にいるならジャンプ可能
+				if (Player.side == WORLD_SIDE::BEHIND)	Player.bJump = false;
 			}
 			//上の当たり判定
 			else if (Player.posOLd.y >= MaxPos.y &&
@@ -295,6 +303,9 @@ void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
 			{
 				Player.pos.y = MaxPos.y;
 				Player.move.y = 0.0f;
+
+				//表の世界にいるならジャンプ可能
+				if (Player.side == WORLD_SIDE::FACE)	Player.bJump = false;
 			}
 		}
 	}
