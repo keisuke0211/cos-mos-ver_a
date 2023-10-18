@@ -160,8 +160,8 @@ void CStageEditor::StageLoad(int stage)
 					case TYPE_TRAMPOLINE:
 						Manager::BlockMgr()->TrampolineCreate(pos);
 						break;
-					case TYPE_THORN:
-
+					case TYPE_SPIKE:
+						Manager::BlockMgr()->SpikeCreate(pos);
 						break;
 					case TYPE_LIFT:
 						Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));

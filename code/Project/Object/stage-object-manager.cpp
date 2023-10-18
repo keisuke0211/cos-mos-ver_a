@@ -112,6 +112,24 @@ CBlock *CStageObjectMgr::BlockCreate(D3DXVECTOR3 pos)
 }
 
 //========================================
+// ž™
+//========================================
+CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
+{
+	CSpike *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CSpike;
+
+	// ‰Šú‰»ˆ—
+	pObj->Init();
+	pObj->SetPos(pos);
+
+	return pObj;
+}
+
+
+//========================================
 // ƒgƒ‰ƒ“ƒ|ƒŠƒ“
 //========================================
 CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos)

@@ -39,7 +39,7 @@ private:
 	{
 		TYPE_BLOCK = 0,		// 床
 		TYPE_TRAMPOLINE,	// トランポリン
-		TYPE_THORN,			// 棘
+		TYPE_SPIKE,			// 棘
 		TYPE_LIFT,			// リフト
 		TYPE_Meteor,		// 隕石
 		TYPE_PLAYER_0 = 90,	// プレイヤー2
