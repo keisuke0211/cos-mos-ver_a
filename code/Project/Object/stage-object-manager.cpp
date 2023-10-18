@@ -206,7 +206,7 @@ CParts *CStageObjectMgr::PartsCreate(D3DXVECTOR3 pos)
 //========================================
 // ˜f¯
 //========================================
-CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos)
+CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos, CPlanet::STAR_TYPE type)
 {
 	CPlanet *pObj = NULL;
 
@@ -214,6 +214,7 @@ CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos)
 	pObj = new CPlanet;
 
 	// ‰Šú‰»ˆ—
+	pObj->SetType(type);
 	pObj->Init();
 	pObj->SetPos(pos);
 

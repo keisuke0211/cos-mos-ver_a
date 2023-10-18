@@ -14,6 +14,15 @@
 // ˜f¯‚Ìî•ñ\‘¢‘Ì
 class CPlanet : public CStageObject {
 public:
+	//========== [[[ —ñ‹“Œ^’è‹` ]]]
+	enum class STAR_TYPE {
+		COMET,
+		RED,
+		BLUE,
+		YELLOW,
+		MAX,
+	};
+
 	//========== [[[ ŠÖ”éŒ¾ ]]]
 	CPlanet();
 	virtual        ~CPlanet();
@@ -24,12 +33,12 @@ public:
 
 	void	SetModelIdx(int idx) { ModelIdx = idx; }
 	void	SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
-
+	void    SetType(STAR_TYPE type) { m_Star_type = type; }
 protected:
 
 private:
 	//========== [[[ •Ï”éŒ¾ ]]]
-	D3DXVECTOR3 m_move;	// ˆÚ“®—Ê
-
+	D3DXVECTOR3 m_move;			// ˆÚ“®—Ê
+	STAR_TYPE m_Star_type;		// í—Ş
 	int ModelIdx;
 };

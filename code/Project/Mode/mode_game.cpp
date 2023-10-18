@@ -47,6 +47,9 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
+	Manager::BlockMgr()->PlanetCreate(D3DXVECTOR3(00.0f, 00.0f, 300.0f), CPlanet::STAR_TYPE::BLUE);
+	Manager::BlockMgr()->PlanetCreate(D3DXVECTOR3(-100.0f, -300.0f, 300.0f), CPlanet::STAR_TYPE::YELLOW);
+	Manager::BlockMgr()->PlanetCreate(D3DXVECTOR3(200.0f, 300.0f, 300.0f),CPlanet::STAR_TYPE::RED);
 
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();
