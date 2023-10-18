@@ -15,7 +15,6 @@ public:
 
 	// 定数
 	static const char* STAGE_INFO_FILE;		// ステージ情報のファイルパス
-	static const float SIZE_SPACE;
 
 	// *** 情報構造体 ***
 
@@ -40,7 +39,7 @@ private:
 	{
 		TYPE_BLOCK = 0,		// 床
 		TYPE_TRAMPOLINE,	// トランポリン
-		TYPE_THORN,			// 棘
+		TYPE_SPIKE,			// 棘
 		TYPE_LIFT,			// リフト
 		TYPE_Meteor,		// 隕石
 		TYPE_PLAYER_0 = 90,	// プレイヤー2
