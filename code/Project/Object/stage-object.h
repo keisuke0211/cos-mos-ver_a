@@ -18,11 +18,11 @@ public:
 
 	//========== [[[ —ñ‹“Œ^’è‹` ]]]
 	enum class TYPE {
-		NONE,
-		BLOCK,
-		MOVE_BLOCK,
-		METEOR,
-		TRAMPOLINE,
+		NONE       = -1,
+		BLOCK      = 0,
+		TRAMPOLINE = 1,
+		MOVE_BLOCK = 3,
+		METEOR     = 4,
 		MAX,
 	};
 

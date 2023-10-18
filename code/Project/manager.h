@@ -8,7 +8,8 @@
 
 #include "Mode/mode.h"
 #include "../_RNLib/RNlib.h"
-#include "Object\Block\block-manager.h"
+#include "Object/stage-object-manager.h"
+#include "System\StageEditor.h"
 
 //****************************************
 // –¼‘O‹óŠÔ
@@ -23,5 +24,6 @@ namespace Manager {
 	void        SetMode    (const CMode::TYPE newMode);
 	CMode::TYPE GetMode    (void);
 	void        Transition (const CMode::TYPE newMode, const CTransition::TYPE transType);
-	CBlockMgr*  BlockMgr   (void);
+	CStageObjectMgr*  BlockMgr   (void);
+	CStageEditor* StgEd(void);
 };

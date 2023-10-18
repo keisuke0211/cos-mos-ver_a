@@ -9,24 +9,21 @@
 #pragma once
 
 #include "../../../_RNLib/RNlib.h"
+#include "../stage-object.h"
 
 //****************************************
 // クラス
 //****************************************
-class CBlock : public CObject {
+class CBlock : public CStageObject {
 public:
 
 	// 共通情報
 	struct Info
 	{
-		D3DXVECTOR3 pos;		// 位置
-		D3DXVECTOR3 posOld;		// 位置(過去)
 		D3DXVECTOR3 move;		// 移動量
-		D3DXVECTOR3 rot;		// 向き
-		D3DXVECTOR3	size;		// サイズ
 		D3DXCOLOR col;			// 頂点カラー
 		int nType;				// 種類
-		int nModelIdx;			// モデル番号
+		short nModelIdx;		// モデル番号
 		int nID;				// ID
 	};
 
@@ -40,17 +37,11 @@ public:
 	/* 描画		*/void Draw(void);
 
 	// -- 設定 ---------------------------------------------
-	/* 位置			*/void SetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
-	/* 向き			*/void SetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
 	/* 色			*/void SetColor(const D3DXCOLOR col) { m_Info.col = col; }
-	/* 大きさ		*/void SetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
 	/* モデル番号	*/void SetModelIdx(const int nIdx) { m_Info.nModelIdx = nIdx; }
 
 	// -- 所得 ---------------------------------------------
-	/* 位置		*/D3DXVECTOR3 GetPos(void) { return m_Info.pos; }
-	/* 向き		*/D3DXVECTOR3 GetRot(void) { return m_Info.rot; }
 	/* 色		*/D3DXCOLOR GetColor(void) { return m_Info.col; }
-	/* 大きさ	*/D3DXVECTOR3 GetSize(void) { return m_Info.size; }
 
 private:
 

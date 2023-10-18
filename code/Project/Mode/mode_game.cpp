@@ -5,8 +5,8 @@
 // 
 //========================================
 #include "../main.h"
-#include "../Object/Block/block-manager.h"
 #include "../Character/player.h"
+#include "../System/StageEditor.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -15,6 +15,7 @@
 //================================================================================
 
 CPlayer *CMode_Game::s_pPlayer = NULL;
+CPlayer* CMode_Game::GetPlayer(void) { return s_pPlayer; }
 
 //========================================
 // コンストラクタ
@@ -40,18 +41,22 @@ void CMode_Game::Init(void) {
 	CMode::Init();
 
 	// カメラの視点/注視点を設定
-	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -200.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -700.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// 状態設定
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
-	Manager::BlockMgr()->BlockCreate(0,D3DXVECTOR3(0.0f,0.0f,0.0f));
-	Manager::BlockMgr()->TrampolineCreate(1,D3DXVECTOR3(40.0f, 0.0f, 0.0f));
-	Manager::BlockMgr()->MeteorCreate(2, D3DXVECTOR3(80.0f, 0.0f, 0.0f),D3DXVECTOR3(0.0f,0.0f,0.0f));
 
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();
+
+	// 読込
+	/* ブロック	*/Manager::BlockMgr()->Load();
+	/* ステージ	*/Manager::StgEd()->FileLoad();
+
+	// ステージ生成
+	Manager::StgEd()->StageLoad(0);
 }
 
 //========================================

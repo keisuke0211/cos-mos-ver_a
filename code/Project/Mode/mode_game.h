@@ -32,6 +32,8 @@ public:
 	void  Update        (void);
 	void  ProcessState  (const PROCESS process);
 
+	static CPlayer* GetPlayer(void);
+
 private:
 	static CPlayer *s_pPlayer;
 };

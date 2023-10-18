@@ -51,6 +51,9 @@ public:
 	//----------------------------
 	void SetInfo(Info p1, Info p2);
 
+	// 位置設定
+	void SetPos(int idx, D3DXVECTOR3 pos) { m_aInfo[idx].pos = pos; }
+
 private:
 	static bool	s_bSwap;		//スワップしたかどうか
 	static int	s_nSwapInterval;//残りスワップインターバル

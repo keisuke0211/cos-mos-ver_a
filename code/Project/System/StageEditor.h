@@ -11,9 +11,11 @@
 //****************************************
 class CStageEditor {
 
-	static const char* STAGE_INFO_FILE;		// ステージ情報のファイルパス
-
 public:
+
+	// 定数
+	static const char* STAGE_INFO_FILE;		// ステージ情報のファイルパス
+	static const float SIZE_SPACE;
 
 	// *** 情報構造体 ***
 
@@ -29,9 +31,29 @@ public:
 
 	// -- 読込 ---------------------------------------------
 	/* ファイルパス	*/void FileLoad(void);
-	/* ステージ読込	*/void StageLoad(const char *pFileName);
+	/* ステージ読込	*/void StageLoad(int stage);
 
 private:
+
+	// *** 列挙型 ***
+	enum Type
+	{
+		TYPE_BLOCK = 0,		// 床
+		TYPE_TRAMPOLINE,	// トランポリン
+		TYPE_THORN,			// 棘
+		TYPE_LIFT,			// リフト
+		TYPE_Meteor,		// 隕石
+		TYPE_PLAYER_0 = 90,	// プレイヤー2
+		TYPE_PLAYER_1,		// プレイヤー1
+		TYPE_PARTS = 98,
+		TYPE_GOAL,
+		TYPE_MAX
+	};
+
+	// *** 関数宣言 ***
+	///* ステージ生成 */void SetStage();
+
 	// *** 変数宣言 ***
 	static StageType *m_StageType;
+	static int m_StageMax;
 };

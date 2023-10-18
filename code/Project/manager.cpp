@@ -13,7 +13,8 @@ namespace {
 	//========== [[[ •Ï”éŒ¾ ]]]
 	CMode*      m_modeObj;
 	CMode::TYPE m_reserveModeType;
-	CBlockMgr   m_blockMgr;
+	CStageObjectMgr   m_blockMgr;
+	CStageEditor m_StgEd;
 }
 
 //================================================================================
@@ -21,7 +22,8 @@ namespace {
 //==========| Manager‚ÌŠÖ”
 //----------|---------------------------------------------------------------------
 //================================================================================
-CBlockMgr* Manager::BlockMgr(void) { return &m_blockMgr; }
+CStageObjectMgr* Manager::BlockMgr(void) { return &m_blockMgr; }
+CStageEditor* Manager::StgEd(void) { return &m_StgEd; }
 
 //========================================
 // ‰Šú‰»ˆ—
