@@ -156,7 +156,7 @@ void CStageEditor::StageLoad(int stage)
 						Manager::BlockMgr()->BlockCreate(pos);
 						break;
 					case TYPE_TRAMPOLINE:
-						Manager::BlockMgr()->TrampolineCreate(pos);
+						Manager::BlockMgr()->TrampolineCreate(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 						break;
 					case TYPE_THORN:
 

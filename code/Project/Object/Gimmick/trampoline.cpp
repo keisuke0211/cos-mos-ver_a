@@ -29,6 +29,7 @@ CTrampoline::CTrampoline(void) {
 	m_bLand = false;
 	m_modelIdx[0] = RNLib::Model()->Load("data\\MODEL\\Block.x");
 	m_modelIdx[1] = RNLib::Model()->Load("data\\MODEL\\SpringFloor.x");
+	m_modelIdx[2] = RNLib::Model()->Load("data\\MODEL\\SpringFloor.x");
 	m_nCnt = 1;
 	m_fDifY = 0.0f;
 }
