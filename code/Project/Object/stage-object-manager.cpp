@@ -125,6 +125,11 @@ CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
 	pObj->Init();
 	pObj->SetPos(pos);
 
+	if (pos.y <= -10)
+	{
+		pObj->SetRot(D3DXVECTOR3(0.0f,0.0f, 3.24f));
+	}
+
 	return pObj;
 }
 
