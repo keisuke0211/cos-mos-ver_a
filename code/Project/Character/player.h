@@ -15,6 +15,7 @@ public:
 	struct Info
 	{
 		D3DXVECTOR3 pos;			//位置
+		D3DXVECTOR3 posOLd;			//前回位置
 		D3DXVECTOR3 rot;			//向き
 		D3DXVECTOR3 move;			//移動量
 		bool		bJump;			//ジャンプ
@@ -26,6 +27,9 @@ public:
 
 	static const int SWAP_INTERVAL;	//スワップインターバル
 	static const int NUM_PLAYER = 2;//プレイヤーの数
+
+	static const float UPPER_GROUND;	//上の世界の足場位置
+	static const float DOWNER_GROUND;	//下の世界の足場位置
 
 	CPlayer();
 	~CPlayer();
@@ -54,6 +58,17 @@ private:
 	static bool	s_bSwap;		//スワップしたかどうか
 	static int	s_nSwapInterval;//残りスワップインターバル
 
+	static const float MOVE_SPEED;		//移動量
+	static const float MAX_MOVE_SPEED;	//最大移動量
+
+	static const float JUMP_POWER;		//基本ジャンプ量
+	static const float GRAVITY_POWER;	//基本重力加速度
+	static const float GRAVITY_CORR;	//基本重力係数
+
+	void SetPosOld(void);
+	void ActionControl(void);
+	void Move(void);
+	void WholeCollision(void);
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
 };
 
