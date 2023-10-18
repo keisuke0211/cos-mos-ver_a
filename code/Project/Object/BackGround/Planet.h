@@ -20,6 +20,7 @@ public:
 		RED,
 		BLUE,
 		YELLOW,
+		SATURN,
 		MAX,
 	};
 

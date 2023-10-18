@@ -13,14 +13,14 @@
 const int	CPlayer::SWAP_INTERVAL = 30;	//スワップインターバル
 int			CPlayer::s_nSwapInterval = 0;	//残りスワップインターバル
 
-const float CPlayer::SIZE_WIDTH = 4.0f;	//横幅
-const float CPlayer::SIZE_HEIGHT = 4.0f;	//高さ
+const float CPlayer::SIZE_WIDTH  = 8.0f;	//横幅
+const float CPlayer::SIZE_HEIGHT = 8.0f;	//高さ
 
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 2.7f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 5.0f;		//基本ジャンプ量
-const float CPlayer::GRAVITY_POWER = -3.0f;	//基本重力加速度
+const float CPlayer::JUMP_POWER = 12.0f;		//基本ジャンプ量
+const float CPlayer::GRAVITY_POWER = -8.0f;	//基本重力加速度
 const float CPlayer::GRAVITY_CORR = 0.1f;	//基本重力係数
 
 //=======================================
@@ -293,8 +293,8 @@ void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
 {
 	//ブロックの当たり判定情報取得
 	const D3DXVECTOR3 POS = pObj->GetPos();
-	const float WIDTH = pObj->GetWidth();
-	const float HEIGHT = pObj->GetHeight();
+	const float WIDTH = pObj->GetWidth() * 0.5f;
+	const float HEIGHT = pObj->GetHeight() * 0.5f;
 
 	//ブロックの最小・最大位置
 	const D3DXVECTOR2 MinPos = D3DXVECTOR2(POS.x - WIDTH, POS.y - HEIGHT);
@@ -330,7 +330,7 @@ void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
 				if (Player.posOLd.y + SIZE_HEIGHT <= MinPos.y &&
 					Player.pos.y + SIZE_HEIGHT > MinPos.y)
 				{
-					Player.pos.y = MinPos.y- SIZE_HEIGHT;
+					Player.pos.y = MinPos.y - SIZE_HEIGHT;
 					Player.move.y = 0.0f;
 
 					//裏の世界にいるならジャンプ可能
@@ -347,8 +347,6 @@ void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
 					if (Player.side == WORLD_SIDE::FACE)	Player.bJump = false;
 				}
 			}
-
-			
 		}
 	}
 }

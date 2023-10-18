@@ -18,6 +18,7 @@ static const char* s_modelPaths[(int)CPlanet::STAR_TYPE::MAX] = {
 	"data\\MODEL\\Red_Star.x",
 	"data\\MODEL\\Comet_Star.x",
 	"data\\MODEL\\Yellow_Star.x",
+	"data\\MODEL\\Saturn_Star.x",
 };
 
 //========================================
