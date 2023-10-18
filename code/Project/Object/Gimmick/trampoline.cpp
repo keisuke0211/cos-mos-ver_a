@@ -26,8 +26,8 @@ CTrampoline::CTrampoline(void) {
 
 	//初期状態
 	m_type = TYPE::TRAMPOLINE;
-	m_width = SIZE_OF_1_SQUARE * 2.0f;
-	m_height = SIZE_OF_1_SQUARE;
+	m_width = SIZE_OF_1_SQUARE;
+	m_height = SIZE_OF_1_SQUARE * 0.5f;
 	m_state = STATE::NONE;
 	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_bLand = false;
@@ -122,20 +122,26 @@ void CTrampoline::Collision(void) {
 	pPlayer->GetInfo(p1, p2);
 
 	if (/*p1が着地で乗る*/
-		p1.pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1.pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		p1.pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p1.pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 		&& p1.pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
 	{//土台の範囲内に着地で入った
 
 		m_state = STATE::UP_LAND;
 		m_nCnt = MAX_COUNT;
-		
+
 		if (p2.pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2.pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 			&& p2.pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height)
 		{//2pが乗っているか
 
-		 //ジャンプ量を継承
-			p2.fJumpPower = p1.fJumpPower + p1.pos.y;
+			//ジャンプ量を継承
+			p2.move.y = p1.move.y;
+
+			p1.move.y = 0.0f;
 		}
+
+		p1.pos.y = p1.posOLd.y * 10.0f;
+
+		pPlayer->SetInfo(p1, p2);
 	}
 	else if (/*p2が着地で乗る*/
 		p2.pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2.pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
@@ -150,7 +156,13 @@ void CTrampoline::Collision(void) {
 		{//1pが乗っているか
 
 			//ジャンプ量を継承
-			p1.fJumpPower = p2.fJumpPower + p1.pos.y;
+			p1.move.y = p2.move.y * 10.0f;
+
+			p1.move.y = 0.0f;
 		}
+
+		p2.pos.y = p2.posOLd.y;
+
+		pPlayer->SetInfo(p1, p2);
 	}
 }
