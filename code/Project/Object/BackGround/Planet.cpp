@@ -1,10 +1,10 @@
 //========================================
 // 
-// パーツの処理
+// 惑星の処理
 // Author:KOMURO HIROMU
 // 
 //========================================
-#include "Parts.h"
+#include "Planet.h"
 #include "../../main.h"
 
 //================================================================================
@@ -12,29 +12,29 @@
 //==========| CTrampolineクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
-static const D3DXVECTOR3 PARTS_ADDROT = { 0.0f,0.02f,0.0f };				// パーツの回転の移動量
 
 //========================================
 // コンストラクタ
 //========================================
-CParts::CParts(void) {
+CPlanet::CPlanet(void) {
 	Manager::BlockMgr()->AddList(this);
 
-	m_type = TYPE::PARTS;	// 種類の設定
-							// 大きさの設定
-	m_width = SIZE_OF_1_SQUARE * 3;
-	m_height = SIZE_OF_1_SQUARE * 3;
+	m_type = TYPE::BACKGROUND;	// 種類の設定
+								// 大きさの設定
+	m_width = SIZE_OF_1_SQUARE * 5;
+	m_height = SIZE_OF_1_SQUARE * 5;
 
 	// 各情報の初期化
-	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Block.x");
+	ModelIdx = RNLib::Model()->Load("data\\MODEL\\comet_star.x");
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 }
 
 //========================================
 // デストラクタ
 //========================================
-CParts::~CParts(void) {
+CPlanet::~CPlanet(void) {
 
 }
 
@@ -42,7 +42,7 @@ CParts::~CParts(void) {
 // 初期化処理
 // Author:KOMURO HIROMU
 //========================================
-void CParts::Init(void) {
+void CPlanet::Init(void) {
 
 }
 
@@ -50,7 +50,7 @@ void CParts::Init(void) {
 // 終了処理
 // Author:KOMURO HIROMU
 //========================================
-void CParts::Uninit(void) {
+void CPlanet::Uninit(void) {
 
 }
 
@@ -58,35 +58,18 @@ void CParts::Uninit(void) {
 // 更新処理
 // Author:KOMURO HIROMU
 //========================================
-void CParts::Update(void) {
+void CPlanet::Update(void) {
 
-	m_rot += PARTS_ADDROT;	// 回転の移動量の増加
-	float fBrightness = fabsf(m_rot.y) / (D3DX_PI * 0.5f);
+	m_pos += m_move;
 
-	if (fBrightness >= 1.0f)
-	{
-		fBrightness = fBrightness - (fBrightness  - 1.0f);
-	}
-
-	if (fBrightness < 0)
-	{
-		fBrightness = fabsf(fBrightness);
-	}
-	if (m_rot.y > D3DX_PI)
-	{
-		m_rot.y = -D3DX_PI;
-	}
-
-	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
-		->SetCol(Color{ 0,(int)(255* fBrightness),255,255 })
-		;
+	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), ModelIdx, false);
 }
 
 //========================================
 // 描画処理
 // Author:KOMURO HIROMU
 //========================================
-void CParts::Draw(void) {
+void CPlanet::Draw(void) {
 
 
 }

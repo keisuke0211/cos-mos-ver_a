@@ -25,6 +25,7 @@ public:
 		MOVE_BLOCK = 3,
 		METEOR	   = 4,
 		PARTS      = 5,
+		BACKGROUND = 6,
 		MAX,
 	};
 
