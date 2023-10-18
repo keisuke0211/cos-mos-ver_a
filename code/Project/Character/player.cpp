@@ -10,8 +10,7 @@
 #include "../../_RNLib/_Basis/Calculation/number.h"
 
 //スワップインターバル
-const int	CPlayer::SWAP_INTERVAL = 0;
-bool		CPlayer::s_bSwap = false;		//スワップしたかどうか
+const int	CPlayer::SWAP_INTERVAL = 200;	//スワップインターバル
 int			CPlayer::s_nSwapInterval = 0;	//残りスワップインターバル
 const float CPlayer::UPPER_GROUND = 20.0f;	//上の世界の足場位置
 const float CPlayer::DOWNER_GROUND = -20.0f;//下の世界の足場位置
@@ -28,7 +27,6 @@ const float CPlayer::GRAVITY_CORR = 0.1f;	//基本重力係数
 //=======================================
 CPlayer::CPlayer()
 {
-	s_bSwap = false;		//スワップしたかどうか
 	s_nSwapInterval = 0;	//残りスワップインターバル
 
 	for each (Info &Player in m_aInfo)
@@ -125,6 +123,9 @@ void CPlayer::Update(void)
 	//操作処理
 	ActionControl();
 
+	//スワップ
+	Swap();
+
 	//移動処理
 	Move();
 
@@ -153,27 +154,65 @@ void CPlayer::SetInfo(Info p1, Info p2)
 //----------------------------
 void CPlayer::ActionControl(void)
 {
-	//１Ｐの情報を参照
-	Info& rInfo = m_aInfo[0];
+	//各プレイヤーのアクションキー
+	const int ACTION_KEY[NUM_PLAYER][3] = {
+		{ DIK_W , DIK_D , DIK_A },	//１Ｐの操作キー
+		{ DIK_UPARROW, DIK_RIGHTARROW, DIK_LEFTARROW}//２Ｐの操作キー
+	};
 
-	//ジャンプ入力（空中じゃない）
-	if (!rInfo.bJump && RNLib::Input()->Trigger(DIK_W, CInput::BUTTON_UP))
+	for (int nCntPlayer = 0; nCntPlayer < NUM_PLAYER; nCntPlayer++)
 	{
-		//ジャンプ量代入
-		rInfo.move.y = rInfo.fJumpPower;
+		//情報を参照
+		Info& rInfo = m_aInfo[nCntPlayer];
 
-		//ジャンプした
-		rInfo.bJump = true;
+		//ジャンプ入力（空中じゃない）
+		if (!rInfo.bJump && RNLib::Input()->Trigger(ACTION_KEY[nCntPlayer][0], CInput::BUTTON_UP))
+		{
+			//ジャンプ量代入
+			rInfo.move.y = rInfo.fJumpPower;
+
+			//ジャンプした
+			rInfo.bJump = true;
+		}
+
+		//右に移動
+		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][1], CInput::BUTTON_RIGHT))	rInfo.move.x += MOVE_SPEED;
+
+		//左に移動
+		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][2], CInput::BUTTON_LEFT))	rInfo.move.x -= MOVE_SPEED;
+	}
+}
+
+//############################
+//スワップ処理
+//############################
+void CPlayer::Swap(void)
+{
+	//インターバルがあれば減少させて終了
+	if (s_nSwapInterval > 0)
+	{
+		s_nSwapInterval--;
+		return;
 	}
 
-	//右に移動
-	if (RNLib::Input()->Press(DIK_D, CInput::BUTTON_UP))
+	//両者ともにスワップボタンを押している
+	if (RNLib::Input()->KeyPress(DIK_S) && RNLib::Input()->KeyPress(DIK_DOWNARROW))
 	{
-		rInfo.move.x += MOVE_SPEED;
-	}
+		//インターバル設定
+		s_nSwapInterval = SWAP_INTERVAL;
 
-	//左に移動
-	if (RNLib::Input()->Press(DIK_A, CInput::BUTTON_UP))	rInfo.move.x -= MOVE_SPEED;
+		for each (Info &Player in m_aInfo)
+		{
+			//位置・重力加速度・ジャンプ量・存在する世界を反転
+			Player.pos.y *= -1.0f;
+			Player.fGravity *= -1.0f;
+			Player.fJumpPower *= -1.0f;
+			Player.side = (WORLD_SIDE)(((int)Player.side + 1) % (int)WORLD_SIDE::MAX);
+		}
+
+		//前回位置更新
+		SetPosOld();
+	}
 }
 
 //----------------------------

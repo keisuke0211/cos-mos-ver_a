@@ -80,7 +80,6 @@ public:
 	void GetInfo(Info& rP1, Info& rP2) { rP1 = m_aInfo[0]; rP2 = m_aInfo[1]; }
 	
 private:
-	static bool	s_bSwap;		//スワップしたかどうか
 	static int	s_nSwapInterval;//残りスワップインターバル
 
 	static const float MOVE_SPEED;		//移動量
@@ -93,6 +92,7 @@ private:
 	void SetPosOld(void);
 	void ActionControl(void);
 	void Move(void);
+	void Swap(void);
 
 	void WholeCollision(void);
 	void CollisionBlock(CStageObject *pObj, COLLI_VEC value);
