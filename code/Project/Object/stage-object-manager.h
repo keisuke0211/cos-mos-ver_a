@@ -13,7 +13,8 @@
 #include "Block/move-block.h"
 #include "Gimmick/trampoline.h"
 #include "Gimmick/meteor.h"
-#include  "Item/Parts.h"
+#include "Item/Parts.h"
+#include "BackGround\Planet.h"
 //****************************************
 // ÉNÉâÉX
 //****************************************
@@ -25,14 +26,14 @@ public:
 	//========== [[[ ä÷êîêÈåæ ]]]
 	CStageObjectMgr();
 	virtual~CStageObjectMgr();
-	virtual void Update(void);
-	void Load(void);
+	virtual void Update(void);	void Load(void);
 	CBlock      *BlockCreate     (D3DXVECTOR3 pos);
 	CSpike      *SpikeCreate	 (D3DXVECTOR3 pos);
 	CTrampoline *TrampolineCreate(D3DXVECTOR3 pos);
 	CMeteor     *MeteorCreate    (D3DXVECTOR3 pos, D3DXVECTOR3 move);
 	CMoveBlock  *MoveBlockCreate (D3DXVECTOR3 pos, D3DXVECTOR3 move);
 	CParts      *PartsCreate	 (D3DXVECTOR3 pos);
+	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos);
 private:
 
 	// *** ç\ë¢ëÃ ***

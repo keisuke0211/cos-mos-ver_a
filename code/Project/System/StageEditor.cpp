@@ -15,7 +15,7 @@
 // 静的変数
 //========================================
 CStageEditor::StageType *CStageEditor::m_StageType = NULL;
-int CStageEditor::m_StageMax = 0;
+int CStageEditor::m_nStageMax = 0;
 const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.txt";
 
 //========================================
@@ -24,12 +24,13 @@ const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.t
 CStageEditor::CStageEditor(void)
 {
 	m_StageType = NULL;
-	m_StageMax = 0;
+	m_nStageMax = 0;
 
 	m_Info.nRow = 0;
 	m_Info.nLine = 0;
 	m_Info.nRowMax = 0;
 	m_Info.nLineMax = 0;
+	m_Info.nStageIdx = 0;
 }
 
 //========================================
@@ -88,7 +89,7 @@ void CStageEditor::FileLoad(void)
 			m_StageType = new StageType[nMaxType];
 			assert(m_StageType != NULL);
 
-			m_StageMax = nMaxType;	// 最大数の保存
+			m_nStageMax = nMaxType;	// 最大数の保存
 		}
 		else if (!strcmp(aDataSearch, "STAGE"))
 		{
@@ -107,14 +108,14 @@ void CStageEditor::StageLoad(int stage)
 {
 	CSVFILE *pFile = new CSVFILE;
 
-	int nStage = stage;
+	m_Info.nStageIdx = stage;
 	bool bSet = true;
 	bool bEnd = false;
 
-	IntControl(&nStage, m_StageMax, 0);
+	IntControl(&m_Info.nStageIdx, m_nStageMax, 0);
 
 	// 読み込み
-	pFile->FileLood(m_StageType[nStage].aFileName, false, false, ',');
+	pFile->FileLood(m_StageType[m_Info.nStageIdx].aFileName, false, false, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
@@ -139,6 +140,7 @@ void CStageEditor::StageLoad(int stage)
 				int nWidth;
 				
 				ToData(nWidth, pFile, nRow, nLine);
+				m_Info.nLine = 0;
 				m_Info.nLineMax = nWidth;
 			}
 			else if (!strcmp(aDataSearch, "StageHeight"))
@@ -147,6 +149,7 @@ void CStageEditor::StageLoad(int stage)
 				int nHeight;
 
 				ToData(nHeight, pFile, nRow, nLine);
+				m_Info.nRow = 0;
 				m_Info.nRowMax = nHeight;
 			}
 			else if (!strcmp(aDataSearch, "SetStage")) 
@@ -236,6 +239,22 @@ void CStageEditor::SetStage(int nType)
 			break;
 		case TYPE_GOAL:
 			break;
+		}
+	}
+}
+
+//========================================
+// ステージ切り替え
+//========================================
+void CStageEditor::SwapStage(int nStageIdx)
+{
+	if (m_Info.nStageIdx != nStageIdx)
+	{
+		Manager::BlockMgr()->ReleaseAll();
+
+		if (nStageIdx < m_nStageMax)
+		{
+			StageLoad(nStageIdx);
 		}
 	}
 }

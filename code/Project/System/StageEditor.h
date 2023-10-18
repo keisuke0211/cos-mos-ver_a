@@ -37,11 +37,14 @@ public:
 		int nLine;		// 列数
 		int nRowMax;	// 行数の最大
 		int nLineMax;	// 列数の最大
+		int nStageIdx;	// 現在のステージ番号
 	};
 
 	// *** 関数宣言 ***
 	CStageEditor();
 	~CStageEditor();
+
+	/* ステージ切り替え	*/void SwapStage(int nStageIdx);
 
 	// -- 取得 ---------------------------------------------
 	/* 変換 */bool ToData(char* &val, CSVFILE *pFile, int nRow, int nLine);
@@ -73,6 +76,6 @@ private:
 
 	// *** 変数宣言 ***
 	static StageType *m_StageType;	// ステージ種類
-	static int m_StageMax;			// ステージの最大値
+	static int m_nStageMax;			// ステージの最大値
 	StageInfo m_Info;				// ステージ情報
 };
