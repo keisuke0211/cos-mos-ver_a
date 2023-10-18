@@ -125,6 +125,11 @@ CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
 	pObj->Init();
 	pObj->SetPos(pos);
 
+	if (pos.y <= -10)
+	{
+		pObj->SetRot(D3DXVECTOR3(0.0f,0.0f, 3.24f));
+	}
+
 	return pObj;
 }
 
@@ -173,6 +178,23 @@ CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move)
 
 	if (pObj != NULL) { return pObj; }
 	pObj = new CMoveBlock;
+
+	// ‰Šú‰»ˆ—
+	pObj->Init();
+	pObj->SetPos(pos);
+
+	return pObj;
+}
+
+//========================================
+// ƒp[ƒc
+//========================================
+CParts *CStageObjectMgr::PartsCreate(D3DXVECTOR3 pos)
+{
+	CParts *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CParts;
 
 	// ‰Šú‰»ˆ—
 	pObj->Init();

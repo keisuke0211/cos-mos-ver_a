@@ -23,7 +23,8 @@ public:
 		TRAMPOLINE = 1,
 		SPIKE	   = 2,
 		MOVE_BLOCK = 3,
-		METEOR     = 4,
+		METEOR	   = 4,
+		PARTS      = 5,
 		MAX,
 	};
 

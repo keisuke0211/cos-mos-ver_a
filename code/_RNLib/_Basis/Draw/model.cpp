@@ -234,7 +234,7 @@ CModel::CDrawInfo::CDrawInfo() {
 	m_modelIdx             = DATANONE;
 	m_texIdx               = DATANONE;
 	m_isZTest              = true;
-	m_isLighting           = false;
+	m_isLighting           = true;
 	m_isOutLine            = false;
 	m_brightnessOfEmissive = 1.0f;
 	m_distance             = 0.0f;
@@ -268,6 +268,8 @@ void CModel::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMt
 	// 一時的な描画モード設定を開始
 	//----------------------------------------
 	RNLib::DrawStateMng()->StartTemporarySetMode();
+
+	RNLib::DrawStateMng()->SetLightingMode(m_isLighting, device);
 
 	for (int cntMat = 0; cntMat < modelData.m_matNum; cntMat++) {
 		
@@ -366,7 +368,7 @@ CModel::CRegistInfo::CRegistInfo() {
 	m_modelIdx             = DATANONE;
 	m_texIdx               = DATANONE;
 	m_isZTest              = false;
-	m_isLighting           = false;
+	m_isLighting           = true;
 	m_isOutLine            = false;
 	m_brightnessOfEmissive = 1.0f;
 	m_priority             = 0;

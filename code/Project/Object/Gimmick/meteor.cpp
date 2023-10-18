@@ -48,7 +48,7 @@ CMeteor::~CMeteor(void) {
 
 //========================================
 // èâä˙âªèàóù
-// Author:RYUKI FUJIWARA
+// Author:KOMURO HIROMU
 //========================================
 void CMeteor::Init(void) {
 
@@ -56,7 +56,7 @@ void CMeteor::Init(void) {
 
 //========================================
 // èIóπèàóù
-// Author:RYUKI FUJIWARA
+// Author:KOMURO HIROMU
 //========================================
 void CMeteor::Uninit(void) {
 
@@ -64,7 +64,7 @@ void CMeteor::Uninit(void) {
 
 //========================================
 // çXêVèàóù
-// Author:RYUKI FUJIWARA
+// Author:KOMURO HIROMU
 //========================================
 void CMeteor::Update(void) {
 
@@ -83,7 +83,7 @@ void CMeteor::Update(void) {
 
 		if (m_fblink < 0)
 		{
-			m_fblink *= -1;
+			m_fblink = fabsf(m_fblink);
 		}
 	}  
 	else
@@ -107,7 +107,7 @@ void CMeteor::Update(void) {
 
 //========================================
 // ï`âÊèàóù
-// Author:RYUKI FUJIWARA
+// Author:KOMURO HIROMU
 //========================================
 void CMeteor::Draw(void) {
 
