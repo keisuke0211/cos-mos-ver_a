@@ -474,6 +474,8 @@
     <None Include="Debug\meteor.obj.enc" />
     <None Include="Debug\vc140.idb" />
     <None Include="Debug\vc140.pdb" />
+    <None Include="data\GAMEDATA\STAGE\STAGE_EDITOR.xlsx" />
+    <None Include="data\GAMEDATA\STAGE\csv\STAGE00.csv" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\TEXTURE\Object\block.png">
@@ -627,5 +629,9 @@
     <ClInclude Include="code\Project\Object\Gimmick\meteor.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <Text Include="data\GAMEDATA\BLOCK\BLOCK_DATA.txt" />
+    <Text Include="data\GAMEDATA\SOUND\SOUND_DATA.txt" />
+    <Text Include="data\GAMEDATA\STAGE\STAGE_FILE.txt" />
+    <Text Include="data\GAMEDATA\TEXTURE\TEXTURE_DATA.txt" />
   </ItemGroup>
 </Project>

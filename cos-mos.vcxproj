@@ -298,6 +298,8 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="cos-mos.VC.db" />
+    <None Include="data\GAMEDATA\STAGE\csv\STAGE00.csv" />
+    <None Include="data\GAMEDATA\STAGE\STAGE_EDITOR.xlsx" />
     <None Include="Debug\cos-mos.exe" />
     <None Include="Debug\cos-mos.ilk" />
     <None Include="Debug\cos-mos.pdb" />
@@ -389,6 +391,10 @@
     <Object Include="Debug\window.obj" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="data\GAMEDATA\BLOCK\BLOCK_DATA.txt" />
+    <Text Include="data\GAMEDATA\SOUND\SOUND_DATA.txt" />
+    <Text Include="data\GAMEDATA\STAGE\STAGE_FILE.txt" />
+    <Text Include="data\GAMEDATA\TEXTURE\TEXTURE_DATA.txt" />
     <Text Include="data\_RNData\AmbientLight.txt" />
     <Text Include="data\_RNData\Effect3DList.txt" />
     <Text Include="data\_RNData\FontList.txt" />
