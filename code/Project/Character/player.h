@@ -43,11 +43,11 @@ public:
 		WORLD_SIDE  side;			//どちらの世界に存在するか
 	};
 
+	static const float SIZE_WIDTH;	//横幅
+	static const float SIZE_HEIGHT;	//高さ
+
 	static const int SWAP_INTERVAL;	//スワップインターバル
 	static const int NUM_PLAYER = 2;//プレイヤーの数
-
-	static const float UPPER_GROUND;	//上の世界の足場位置
-	static const float DOWNER_GROUND;	//下の世界の足場位置
 
 	CPlayer();
 	~CPlayer();
@@ -91,7 +91,7 @@ private:
 
 	void SetPosOld(void);
 	void ActionControl(void);
-	void Move(void);
+	void Move(COLLI_VEC vec);
 	void Swap(void);
 
 	void WholeCollision(void);

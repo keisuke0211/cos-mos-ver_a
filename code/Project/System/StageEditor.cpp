@@ -15,7 +15,7 @@
 // 静的変数
 //========================================
 CStageEditor::StageType *CStageEditor::m_StageType = NULL;
-int CStageEditor::m_StageMax = 0;
+int CStageEditor::m_nStageMax = 0;
 const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.txt";
 
 //========================================
@@ -24,7 +24,13 @@ const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.t
 CStageEditor::CStageEditor(void)
 {
 	m_StageType = NULL;
-	m_StageMax = 0;
+	m_nStageMax = 0;
+
+	m_Info.nRow = 0;
+	m_Info.nLine = 0;
+	m_Info.nRowMax = 0;
+	m_Info.nLineMax = 0;
+	m_Info.nStageIdx = 0;
 }
 
 //========================================
@@ -83,7 +89,7 @@ void CStageEditor::FileLoad(void)
 			m_StageType = new StageType[nMaxType];
 			assert(m_StageType != NULL);
 
-			m_StageMax = nMaxType;	// 最大数の保存
+			m_nStageMax = nMaxType;	// 最大数の保存
 		}
 		else if (!strcmp(aDataSearch, "STAGE"))
 		{
@@ -102,14 +108,14 @@ void CStageEditor::StageLoad(int stage)
 {
 	CSVFILE *pFile = new CSVFILE;
 
-	int nStage = stage;
+	m_Info.nStageIdx = stage;
 	bool bSet = true;
 	bool bEnd = false;
 
-	IntControl(&nStage, m_StageMax, 0);
+	IntControl(&m_Info.nStageIdx, m_nStageMax, 0);
 
 	// 読み込み
-	pFile->FileLood(m_StageType[nStage].aFileName, false, false, ',');
+	pFile->FileLood(m_StageType[m_Info.nStageIdx].aFileName, false, false, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
@@ -125,64 +131,52 @@ void CStageEditor::StageLoad(int stage)
 
 		for (int nLine = 0; nLine < nLineMax; nLine++)
 		{
-			string sData = pFile->GetData(nRow, nLine);
+			char *aDataSearch;	// データ検索用
+			ToData(aDataSearch, pFile, nRow, nLine);
 
-			//char *aDataSearch;	// データ検索用
-
-			/*pFile->ToValue(aDataSearch, sData);*/
-			/*if (!strcmp(aDataSearch, "SetStage")) { bSet = true; }
-			if (!strcmp(aDataSearch, "EndStage")) { bSet = false; }
-			if (!strcmp(aDataSearch, "End")) { bEnd = true; }*/
-
-			// ステージ生成
-			if (bSet)
+			if (!strcmp(aDataSearch, "StageWidth"))
 			{
-				int nSizeX = CStageObject::SIZE_OF_1_SQUARE;
-				int nSizeY = CStageObject::SIZE_OF_1_SQUARE;
+				nLine += 4;
+				int nWidth;
+				
+				ToData(nWidth, pFile, nRow, nLine);
+				m_Info.nLine = 0;
+				m_Info.nLineMax = nWidth;
+			}
+			else if (!strcmp(aDataSearch, "StageHeight"))
+			{
+				nLine += 4;
+				int nHeight;
 
-				pFile->ToValue(nType, sData);
-
-				if (nType >= 0)
+				ToData(nHeight, pFile, nRow, nLine);
+				m_Info.nRow = 0;
+				m_Info.nRowMax = nHeight;
+			}
+			else if (!strcmp(aDataSearch, "SetStage")) 
+			{ 
+				// ステージ生成
+				while (1)
 				{
-					D3DXVECTOR3 pos = RNLib::Camera3D()->GetPosR();
+					char *aDataSearch;	// データ検索用
+					ToData(aDataSearch, pFile, nRow, nLine);
 
-					pos.x += ((nLineMax * -0.5f) + nLine + 0.5f) * nSizeX;
-					pos.y -= ((23 * -0.5f) + nRow + 0.5f) * nSizeY;
-
-					pos.z = 0.0f/* + fRand() * 4.0f*/;
-
-					// 配置
-					switch (nType)
+					if (!strcmp(aDataSearch, "EndStage")) { break; }
+					else
 					{
-					case TYPE_BLOCK:
-						Manager::BlockMgr()->BlockCreate(pos);
-						break;
-					case TYPE_TRAMPOLINE:
-						Manager::BlockMgr()->TrampolineCreate(pos);
-						break;
-					case TYPE_SPIKE:
-						Manager::BlockMgr()->SpikeCreate(pos);
-						break;
-					case TYPE_LIFT:
-						Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-						break;
-					case TYPE_Meteor:
-						Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
-						break;
-					case TYPE_PLAYER_0:
-						CMode_Game::GetPlayer()->SetPos(0, pos);
-						break;
-					case TYPE_PLAYER_1:
-						CMode_Game::GetPlayer()->SetPos(1, pos);
-
-						break;
-					case TYPE_PARTS:
-						break;
-					case TYPE_GOAL:
-						break;
+						for (m_Info.nLine = 0; m_Info.nLine < m_Info.nLineMax; m_Info.nLine++)
+						{
+							int nType = -1;
+							ToData(nType, pFile, nRow, m_Info.nLine);
+							SetStage(nType);
+						}
+						nRow++;
+						m_Info.nRow++;
 					}
 				}
+				
 			}
+			
+			if (!strcmp(aDataSearch, "End")) { bEnd = true; }
 		}
 
 		// 最大数に達したら返す
@@ -195,4 +189,110 @@ void CStageEditor::StageLoad(int stage)
 	// メモリ開放
 	delete pFile;
 	pFile = NULL;
+}
+
+//========================================
+// ステージ生成
+//========================================
+void CStageEditor::SetStage(int nType)
+{
+	if (nType >= 0)
+	{
+		int nSizeX = CStageObject::SIZE_OF_1_SQUARE;
+		int nSizeY = CStageObject::SIZE_OF_1_SQUARE;
+		D3DXVECTOR3 pos = RNLib::Camera3D()->GetPosR();
+
+		pos.x += ((m_Info.nLineMax * -0.5f) + m_Info.nLine + 0.5f) * nSizeX;
+		pos.y -= ((m_Info.nRowMax * -0.5f) + m_Info.nRow + 0.5f) * nSizeY;
+
+		pos.z = 0.0f/* + fRand() * 4.0f*/;
+
+		// 配置
+		switch (nType)
+		{
+		case TYPE_BLOCK:
+			Manager::BlockMgr()->BlockCreate(pos);
+			break;
+		case TYPE_TRAMPOLINE:
+			pos.x += nSizeX / 2;
+			Manager::BlockMgr()->TrampolineCreate(pos);
+			break;
+		case TYPE_SPIKE:
+			Manager::BlockMgr()->SpikeCreate(pos);
+			break;
+		case TYPE_LIFT:
+			Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			break;
+		case TYPE_Meteor:
+			Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			break;
+		case TYPE_PLAYER_0:
+			pos.y += 10.0f;
+			CMode_Game::GetPlayer()->SetPos(0, pos);
+			break;
+		case TYPE_PLAYER_1:
+			pos.y += -10.0f;
+			CMode_Game::GetPlayer()->SetPos(1, pos);
+			break;
+		case TYPE_PARTS:
+			Manager::BlockMgr()->PartsCreate(pos);
+			break;
+		case TYPE_GOAL:
+			break;
+		}
+	}
+}
+
+//========================================
+// ステージ切り替え
+//========================================
+void CStageEditor::SwapStage(int nStageIdx)
+{
+	if (m_Info.nStageIdx != nStageIdx)
+	{
+		Manager::BlockMgr()->ReleaseAll();
+
+		if (nStageIdx < m_nStageMax)
+		{
+			StageLoad(nStageIdx);
+		}
+	}
+}
+
+//========================================
+// 変換
+//========================================
+
+// char型
+bool CStageEditor::ToData(char* &val, CSVFILE *pFile, int nRow, int nLine)
+{
+	try
+	{
+		string sData = pFile->GetData(nRow, nLine);
+		char* cstr = new char[sData.size() + 1]; // メモリ確保
+
+		char_traits<char>::copy(cstr, sData.c_str(), sData.size() + 1);
+
+		val = cstr;
+		return true;
+	}
+	catch (...)
+	{
+		return false;
+	}
+}
+
+// int
+bool CStageEditor::ToData(int &val, CSVFILE *pFile, int nRow, int nLine)
+{
+	try
+	{
+		string sData = pFile->GetData(nRow, nLine);
+		val = stoi(sData);
+		return true;
+	}
+	catch (...)
+	{
+		return false;
+	}
 }

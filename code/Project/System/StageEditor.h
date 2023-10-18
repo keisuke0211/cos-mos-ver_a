@@ -5,6 +5,12 @@
 // 
 //========================================
 #pragma once
+using namespace std;
+
+//****************************************
+// 前方宣言
+//****************************************
+class CSVFILE;
 
 //****************************************
 // クラス定義
@@ -24,9 +30,25 @@ public:
 		char	aFileName[0xff];	// ファイルパス
 	};
 
+	// ステージ情報
+	struct StageInfo
+	{
+		int nRow;		// 行数
+		int nLine;		// 列数
+		int nRowMax;	// 行数の最大
+		int nLineMax;	// 列数の最大
+		int nStageIdx;	// 現在のステージ番号
+	};
+
 	// *** 関数宣言 ***
 	CStageEditor();
 	~CStageEditor();
+
+	/* ステージ切り替え	*/void SwapStage(int nStageIdx);
+
+	// -- 取得 ---------------------------------------------
+	/* 変換 */bool ToData(char* &val, CSVFILE *pFile, int nRow, int nLine);
+	/* 変換 */bool ToData(int &val, CSVFILE *pFile, int nRow, int nLine);
 
 	// -- 読込 ---------------------------------------------
 	/* ファイルパス	*/void FileLoad(void);
@@ -44,15 +66,16 @@ private:
 		TYPE_Meteor,		// 隕石
 		TYPE_PLAYER_0 = 90,	// プレイヤー2
 		TYPE_PLAYER_1,		// プレイヤー1
-		TYPE_PARTS = 98,
-		TYPE_GOAL,
+		TYPE_PARTS = 98,	// パーツ
+		TYPE_GOAL,			// ゴール
 		TYPE_MAX
 	};
 
 	// *** 関数宣言 ***
-	///* ステージ生成 */void SetStage();
+	/* ステージ生成 */void SetStage(int nType);
 
 	// *** 変数宣言 ***
-	static StageType *m_StageType;
-	static int m_StageMax;
+	static StageType *m_StageType;	// ステージ種類
+	static int m_nStageMax;			// ステージの最大値
+	StageInfo m_Info;				// ステージ情報
 };

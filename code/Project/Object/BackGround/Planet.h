@@ -1,6 +1,6 @@
 //========================================
 // 
-// パーツの処理
+// 惑星の処理
 // Author:KOMURO HIROMU
 // 
 //========================================
@@ -11,12 +11,12 @@
 //****************************************
 // クラス定義
 //****************************************
-// パーツの情報構造体
-class CParts : public CStageObject {
+// 惑星の情報構造体
+class CPlanet : public CStageObject {
 public:
 	//========== [[[ 関数宣言 ]]]
-	CParts();
-	virtual        ~CParts();
+	CPlanet();
+	virtual        ~CPlanet();
 	virtual void   Init(void);
 	virtual void   Uninit(void);
 	virtual void   Update(void);
@@ -29,6 +29,7 @@ protected:
 
 private:
 	//========== [[[ 変数宣言 ]]]
+	D3DXVECTOR3 m_move;	// 移動量
 
 	int ModelIdx;
-}; 
+};
