@@ -197,3 +197,20 @@ CParts *CStageObjectMgr::PartsCreate(D3DXVECTOR3 pos)
 
 	return pObj;
 }
+
+//========================================
+// ˜f¯
+//========================================
+CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos)
+{
+	CPlanet *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CPlanet;
+
+	// ‰Šú‰»ˆ—
+	pObj->Init();
+	pObj->SetPos(pos);
+
+	return pObj;
+}
