@@ -198,8 +198,8 @@ void CStageEditor::SetStage(int nType)
 {
 	if (nType >= 0)
 	{
-		int nSizeX = CStageObject::SIZE_OF_1_SQUARE;
-		int nSizeY = CStageObject::SIZE_OF_1_SQUARE;
+		float nSizeX = CStageObject::SIZE_OF_1_SQUARE;
+		float nSizeY = CStageObject::SIZE_OF_1_SQUARE;
 		D3DXVECTOR3 pos = RNLib::Camera3D()->GetPosR();
 
 		pos.x += ((m_Info.nLineMax * -0.5f) + m_Info.nLine + 0.5f) * nSizeX;
