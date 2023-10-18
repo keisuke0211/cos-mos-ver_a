@@ -57,8 +57,6 @@ void CMode_Game::Init(void) {
 
 	// ステージ生成
 	Manager::StgEd()->StageLoad(0);
-
-	Manager::BlockMgr()->TrampolineCreate(D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 }
 
 //========================================
