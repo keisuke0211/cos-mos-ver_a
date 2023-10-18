@@ -25,7 +25,7 @@ Material 5 {
 	"mat5" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\OneDrive\デスクトップ\画像\卒業制作\IMG_5312.PNG")
 }
 Object "obj1" {
-	visible 15
+	visible 0
 	locking 0
 	shading 1
 	facet 59.5
@@ -57,7 +57,7 @@ Object "obj1" {
 	}
 }
 Object "obj2" {
-	visible 15
+	visible 0
 	locking 0
 	shading 1
 	facet 59.5

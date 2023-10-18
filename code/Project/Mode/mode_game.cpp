@@ -47,6 +47,7 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
+
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();
 
@@ -56,6 +57,8 @@ void CMode_Game::Init(void) {
 
 	// ステージ生成
 	Manager::StgEd()->StageLoad(0);
+
+	SetBGColor(Color{255,119,183,255});
 }
 
 //========================================
