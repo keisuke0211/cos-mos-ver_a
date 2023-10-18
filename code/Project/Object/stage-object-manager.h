@@ -33,7 +33,7 @@ public:
 	CMeteor     *MeteorCreate    (D3DXVECTOR3 pos, D3DXVECTOR3 move);
 	CMoveBlock  *MoveBlockCreate (D3DXVECTOR3 pos, D3DXVECTOR3 move);
 	CParts      *PartsCreate	 (D3DXVECTOR3 pos);
-	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos);
+	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos,CPlanet::STAR_TYPE type);
 private:
 
 	// *** ç\ë¢ëÃ ***

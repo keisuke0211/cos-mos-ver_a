@@ -324,7 +324,6 @@
     <Image Include="data\TEXTURE\pillar000.jpg" />
   </ItemGroup>
   <ItemGroup>
-    <Object Include="Debug\block-manager.obj" />
     <Object Include="Debug\block.obj" />
     <Object Include="Debug\camera.obj" />
     <Object Include="Debug\camera_control.obj" />
