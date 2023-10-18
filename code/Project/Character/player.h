@@ -28,6 +28,16 @@ public:
 		MAX
 	};
 
+	//当たり判定が働いた方向
+	enum class COLLI_ROT {
+		NONE = 0,	//何もなし
+		OVER,		//上
+		UNDER,		//下
+		LEFT,		//左
+		RIGHT,		//右
+		MAX
+	};
+
 	//プレイヤー情報
 	struct Info
 	{

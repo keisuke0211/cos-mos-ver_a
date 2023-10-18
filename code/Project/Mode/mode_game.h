@@ -32,6 +32,7 @@ public:
 	void  Update        (void);
 	void  ProcessState  (const PROCESS process);
 
+	void BackGroundPut  (void);
 	static CPlayer* GetPlayer(void);
 
 private:

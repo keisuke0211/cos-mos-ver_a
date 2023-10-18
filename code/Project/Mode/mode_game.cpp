@@ -13,6 +13,7 @@
 //==========| CMode_GameÉNÉâÉXÇÃÉÅÉìÉoä÷êî
 //----------|---------------------------------------------------------------------
 //================================================================================
+static const float DISTANCE = 100.0f;	// ãóó£
 
 #define COLOR_UP   Color{45,212,140,255}
 #define COLOR_DOWN Color{206,54,112,255}
@@ -50,9 +51,8 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
-	Manager::BlockMgr()->PlanetCreate(D3DXVECTOR3(00.0f, 00.0f, 300.0f), CPlanet::STAR_TYPE::BLUE);
-	Manager::BlockMgr()->PlanetCreate(D3DXVECTOR3(-100.0f, -300.0f, 300.0f), CPlanet::STAR_TYPE::YELLOW);
-	Manager::BlockMgr()->PlanetCreate(D3DXVECTOR3(200.0f, 300.0f, 300.0f),CPlanet::STAR_TYPE::RED);
+
+	BackGroundPut();
 
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();
@@ -131,5 +131,56 @@ void CMode_Game::ProcessState(const PROCESS process) {
 		}break;
 		}
 	}break;
+	}
+}
+
+//========================================
+// îwåiÇÃê∂ê¨èàóù
+// Author:KOMURO HIROMU
+//========================================
+void CMode_Game::BackGroundPut(void){
+
+	D3DXVECTOR3 *posOld[10] = {};
+	D3DXVECTOR3 pos;
+	CPlanet::STAR_TYPE *typeOld[(int)CPlanet::STAR_TYPE::MAX] = {};
+	CPlanet::STAR_TYPE type;
+
+
+	for (int nCntPut = 0; nCntPut < 10; nCntPut++)
+	{
+		bool bpos = false;
+		bool btype = false;
+		while (bpos != true)
+		{
+			pos = D3DXVECTOR3(rand() % 400 - 200, rand() % 400 - 200, 100);	// à íuÇÃê›íË
+
+			if (nCntPut == 0)
+			{
+				bpos = true;
+				posOld[nCntPut] = &pos;	// ë„ì¸
+			}
+			for (int nCntpos = 0; nCntpos < nCntPut; nCntpos++)
+			{
+				if (posOld[nCntpos] != NULL)
+				{
+					if (posOld[nCntpos]->x - DISTANCE >= pos.x + DISTANCE &&
+						posOld[nCntpos]->x + DISTANCE <= pos.x - DISTANCE &&
+						posOld[nCntpos]->y - DISTANCE >= pos.y + DISTANCE &&
+						posOld[nCntpos]->y + DISTANCE >= pos.y - DISTANCE)
+					{
+						bpos = false;
+					}
+					else
+					{
+						bpos = true;
+						posOld[nCntPut] = &pos;	// ë„ì¸
+					}
+				}
+			}
+		}
+		type = (CPlanet::STAR_TYPE)(rand() % (int)CPlanet::STAR_TYPE::MAX);	// éÌóﬁÇÃê›íË
+
+		Manager::BlockMgr()->PlanetCreate(pos, type);	// òfêØÇÃê∂ê¨
+	
 	}
 }
