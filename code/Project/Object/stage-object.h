@@ -31,6 +31,7 @@ public:
 	virtual ~CStageObject();
 	virtual void Uninit(void) = 0;
 	virtual void Update(void) = 0;
+	TYPE GetType(void) { return m_type; }
 	void SetPos(const D3DXVECTOR3& pos) { m_pos = m_posOld = pos; }
 	D3DXVECTOR3& GetPos(void) { return m_pos; }
 	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }

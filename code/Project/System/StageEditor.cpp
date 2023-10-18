@@ -16,7 +16,6 @@
 //========================================
 CStageEditor::StageType *CStageEditor::m_StageType = NULL;
 int CStageEditor::m_StageMax = 0;
-const float CStageEditor::SIZE_SPACE = 23.0f;
 const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.txt";
 
 //========================================
@@ -128,7 +127,7 @@ void CStageEditor::StageLoad(int stage)
 		{
 			string sData = pFile->GetData(nRow, nLine);
 
-			char *aDataSearch;	// データ検索用
+			//char *aDataSearch;	// データ検索用
 
 			/*pFile->ToValue(aDataSearch, sData);*/
 			/*if (!strcmp(aDataSearch, "SetStage")) { bSet = true; }
@@ -138,14 +137,17 @@ void CStageEditor::StageLoad(int stage)
 			// ステージ生成
 			if (bSet)
 			{
+				int nSizeX = CStageObject::SIZE_OF_1_SQUARE;
+				int nSizeY = CStageObject::SIZE_OF_1_SQUARE;
+
 				pFile->ToValue(nType, sData);
 
 				if (nType >= 0)
 				{
 					D3DXVECTOR3 pos = RNLib::Camera3D()->GetPosR();
 
-					pos.x += ((nLineMax * -0.5f) + nLine + 0.5f) * SIZE_SPACE;
-					pos.y -= ((23 * -0.5f) + nRow + 0.5f) * SIZE_SPACE;
+					pos.x += ((nLineMax * -0.5f) + nLine + 0.5f) * nSizeX;
+					pos.y -= ((23 * -0.5f) + nRow + 0.5f) * nSizeY;
 
 					pos.z = 0.0f/* + fRand() * 4.0f*/;
 
