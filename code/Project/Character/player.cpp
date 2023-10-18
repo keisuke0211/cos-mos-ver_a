@@ -19,7 +19,7 @@ const float CPlayer::DOWNER_GROUND = -20.0f;//下の世界の足場位置
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 3.0f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 3.0f;		//基本ジャンプ量
+const float CPlayer::JUMP_POWER = 8.0f;		//基本ジャンプ量
 const float CPlayer::GRAVITY_POWER = -3.0f;	//基本重力加速度
 const float CPlayer::GRAVITY_CORR = 0.1f;	//基本重力係数
 
@@ -133,14 +133,6 @@ void CPlayer::Update(void)
 	}
 }
 
-//=======================================
-//描画処理
-//=======================================
-void CPlayer::Draw(void)
-{
-
-}
-
 //----------------------------
 //プレイヤー情報設定
 //----------------------------
@@ -220,19 +212,90 @@ void CPlayer::Move(void)
 }
 
 //----------------------------
-//移動処理
+//当たり判定まとめ
 //----------------------------
 void CPlayer::WholeCollision(void)
 {
 	//オブジェクトのポインタを格納
 	CObject *obj = NULL;
 
+	//オブジェクトを取得
 	while (Manager::BlockMgr()->ListLoop(&obj)) {
+		//取得したオブジェクトをキャスト
 		CStageObject* stageObj = (CStageObject*)obj;
 	
-		switch (stageObj->GetType()) {
-			default:
-				break;
+		for (int nCntVec = 0; nCntVec < (int)COLLI_VEC::MAX; nCntVec++)
+		{
+			//種類ごとに関数分け
+			switch (stageObj->GetType())
+			{
+				case CStageObject::TYPE::BLOCK:		CollisionBlock(stageObj, (COLLI_VEC)nCntVec);	break;
+				case CStageObject::TYPE::TRAMPOLINE:	break;
+				case CStageObject::TYPE::MOVE_BLOCK:	break;
+				case CStageObject::TYPE::METEOR:		break;
+			}
+		}
+	}
+}
+
+//----------------------------
+//ブロックの当たり判定処理
+//----------------------------
+void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
+{
+	//ブロックの当たり判定情報取得
+	const D3DXVECTOR3 POS = pObj->GetPos();
+	const float WIDTH = pObj->GetWidth();
+	const float HEIGHT = pObj->GetHeight();
+
+	//ブロックの最小・最大位置
+	const D3DXVECTOR2 MinPos = D3DXVECTOR2(POS.x - WIDTH, POS.y - HEIGHT);
+	const D3DXVECTOR2 MaxPos = D3DXVECTOR2(POS.x + WIDTH, POS.y + HEIGHT);
+
+	for each (Info &Player in m_aInfo)
+	{
+		//Ｘベクトルの当たり判定
+		if (value == COLLI_VEC::X)
+		{
+			//最小位置より下  or  最大位置より上  ならスキップ
+			if (MinPos.y > Player.pos.y || Player.pos.y > MaxPos.y) continue;
+
+			//左の当たり判定
+			if (Player.posOLd.x <= MinPos.x &&
+				Player.pos.x > MinPos.x)
+			{
+				Player.pos.x = MinPos.x;
+				Player.move.x = 0.0f;
+			}
+			//右の当たり判定
+			else if(Player.posOLd.x >= MaxPos.x &&
+					Player.pos.x < MaxPos.x)
+			{
+				Player.pos.x = MaxPos.x;
+				Player.move.x = 0.0f;
+			}
+		}
+
+		//Ｙベクトルの当たり判定
+		else if (value == COLLI_VEC::Y)
+		{
+			//最小位置より左  or  最大位置より右  ならスキップ
+			if (MinPos.x > Player.pos.x || Player.pos.x > MaxPos.x) continue;
+
+			//下の当たり判定
+			if (Player.posOLd.y <= MinPos.y &&
+				Player.pos.y > MinPos.y)
+			{
+				Player.pos.y = MinPos.y;
+				Player.move.y = 0.0f;
+			}
+			//上の当たり判定
+			else if (Player.posOLd.y >= MaxPos.y &&
+					 Player.pos.y < MaxPos.y)
+			{
+				Player.pos.y = MaxPos.y;
+				Player.move.y = 0.0f;
+			}
 		}
 	}
 }

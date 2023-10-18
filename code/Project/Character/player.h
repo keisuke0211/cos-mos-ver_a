@@ -7,6 +7,9 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
+//前方宣言
+class CStageObject;
+
 //プレイヤークラス
 class CPlayer
 {
@@ -25,6 +28,13 @@ public:
 		int			nModelIdx;		//モデル番号
 	};
 
+	//当たり判定の順番列挙
+	enum class COLLI_VEC {
+		X = 0,	//Ⅹベクトル
+		Y,		//Ｙベクトル
+		MAX
+	};
+
 	static const int SWAP_INTERVAL;	//スワップインターバル
 	static const int NUM_PLAYER = 2;//プレイヤーの数
 
@@ -36,7 +46,6 @@ public:
 	HRESULT Init(void);
 	void Uninit(void);
 	void Update(void);
-	void Draw(void);
 
 	//----------------------------
 	//プレイヤー生成
@@ -68,7 +77,10 @@ private:
 	void SetPosOld(void);
 	void ActionControl(void);
 	void Move(void);
+
 	void WholeCollision(void);
+	void CollisionBlock(CStageObject *pObj, COLLI_VEC value);
+
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
 };
 
