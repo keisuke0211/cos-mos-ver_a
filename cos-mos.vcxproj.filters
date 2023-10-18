@@ -527,7 +527,6 @@
     <Object Include="Debug\imgui_impl_dx9.obj" />
     <Object Include="Debug\imgui_impl_win32.obj" />
     <Object Include="Debug\imgui_draw.obj" />
-    <Object Include="Debug\block-manager.obj" />
     <Object Include="Debug\imgui_main.obj" />
     <Object Include="Debug\imgui_tables.obj" />
     <Object Include="Debug\imgui_widgets.obj" />
