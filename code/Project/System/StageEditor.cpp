@@ -154,6 +154,7 @@ void CStageEditor::StageLoad(int stage)
 			}
 			else if (!strcmp(aDataSearch, "SetStage")) 
 			{ 
+				nRow++;
 				// ステージ生成
 				while (1)
 				{
@@ -227,11 +228,11 @@ void CStageEditor::SetStage(int nType)
 			Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			break;
 		case TYPE_PLAYER_0:
-			pos.y += 10.0f;
+			pos.y += nSizeY / 2;
 			CMode_Game::GetPlayer()->SetPos(0, pos);
 			break;
 		case TYPE_PLAYER_1:
-			pos.y += -10.0f;
+			pos.y += -nSizeY / 2;
 			CMode_Game::GetPlayer()->SetPos(1, pos);
 			break;
 		case TYPE_PARTS:
