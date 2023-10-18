@@ -208,7 +208,6 @@
     <ClCompile Include="code\_RNLib\_Basis\Other\file.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\input.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\print.cpp" />
-    <ClCompile Include="code\_RNLib\_Basis\Other\regist.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\setting.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\sound.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Other\window.cpp" />

@@ -108,9 +108,6 @@
     <ClCompile Include="code\_RNLib\_Basis\Other\print.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="code\_RNLib\_Basis\Other\regist.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="code\_RNLib\_Basis\Other\setting.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -503,7 +500,6 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\data.obj" />
-    <Object Include="Debug\imgui_draw.obj" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\TEXTURE\meteo000.png">
