@@ -81,7 +81,7 @@ public:
 		}
 
 		// 古いメモリを解放
-		delete[] *alloc;
+		delete[] * alloc;
 
 		// 新しいポインタに入れ替える
 		*alloc = newAlloc;
