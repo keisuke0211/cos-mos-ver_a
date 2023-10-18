@@ -91,7 +91,7 @@ private:
 
 	void SetPosOld(void);
 	void ActionControl(void);
-	void Move(void);
+	void Move(COLLI_VEC vec);
 	void Swap(void);
 
 	void WholeCollision(void);

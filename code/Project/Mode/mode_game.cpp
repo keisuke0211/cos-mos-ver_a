@@ -87,6 +87,9 @@ void CMode_Game::Update(void) {
 
 	if (s_pPlayer != NULL)
 		s_pPlayer->Update();
+
+	if (RNLib::Input()->KeyTrigger(DIK_RETURN))
+		Manager::StgEd()->SwapStage(1);
 }
 
 //========================================
