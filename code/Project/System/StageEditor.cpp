@@ -135,7 +135,7 @@ void CStageEditor::StageLoad(int stage)
 
 			if (!strcmp(aDataSearch, "StageWidth"))
 			{
-				nRow++;
+				nLine += 4;
 				int nWidth;
 				
 				ToData(nWidth, pFile, nRow, nLine);
@@ -143,7 +143,7 @@ void CStageEditor::StageLoad(int stage)
 			}
 			else if (!strcmp(aDataSearch, "StageHeight"))
 			{
-				nRow++;
+				nLine += 4;
 				int nHeight;
 
 				ToData(nHeight, pFile, nRow, nLine);
