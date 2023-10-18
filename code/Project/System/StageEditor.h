@@ -63,8 +63,8 @@ private:
 		TYPE_Meteor,		// 隕石
 		TYPE_PLAYER_0 = 90,	// プレイヤー2
 		TYPE_PLAYER_1,		// プレイヤー1
-		TYPE_PARTS = 98,
-		TYPE_GOAL,
+		TYPE_PARTS = 98,	// パーツ
+		TYPE_GOAL,			// ゴール
 		TYPE_MAX
 	};
 

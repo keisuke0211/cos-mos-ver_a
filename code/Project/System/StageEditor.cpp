@@ -232,6 +232,7 @@ void CStageEditor::SetStage(int nType)
 			CMode_Game::GetPlayer()->SetPos(1, pos);
 			break;
 		case TYPE_PARTS:
+			Manager::BlockMgr()->PartsCreate(pos);
 			break;
 		case TYPE_GOAL:
 			break;
