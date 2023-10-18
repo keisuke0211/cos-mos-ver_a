@@ -104,7 +104,7 @@ void CPlayer::Uninit(void)
 void CPlayer::SetPosOld(void)
 {
 	//プレイヤーの前回位置更新
-	for each (Info Player in m_aInfo)
+	for each (Info &Player in m_aInfo)
 	{
 		Player.posOLd = Player.pos;
 	}
@@ -122,6 +122,9 @@ void CPlayer::Update(void)
 
 	//移動処理
 	Move();
+
+	//当たり判定まとめ
+	WholeCollision();
 
 	//プレイヤーの位置更新
 	for each (Info &Player in m_aInfo)
@@ -177,13 +180,16 @@ void CPlayer::ActionControl(void)
 }
 
 //----------------------------
-//操作処理
+//移動処理
 //----------------------------
 void CPlayer::Move(void)
 {
 	//プレイヤーの位置更新
 	for each (Info &Player in m_aInfo)
 	{
+		//慣性処理
+		Player.move.x += (0.0f - Player.move.x) * 0.1f;
+
 		//Ⅹの移動量を修正
 		FloatControl(&Player.move.x, MAX_MOVE_SPEED, -MAX_MOVE_SPEED);
 
@@ -195,7 +201,7 @@ void CPlayer::Move(void)
 
 		//上の世界にいる
 		if (Player.posOLd.y >= UPPER_GROUND &&
-			Player.pos.y < UPPER_GROUND)		//上の地面にめり込んだ
+			Player.pos.y <= UPPER_GROUND)		//上の地面にめり込んだ
 		{
 			Player.pos.y = UPPER_GROUND;//地面に戻す
 			Player.move.y = 0.0f;		//重力を消す
@@ -204,11 +210,29 @@ void CPlayer::Move(void)
 
 		//下の世界にいる
 		else if (Player.posOLd.y <= DOWNER_GROUND &&
-				 Player.pos.y > DOWNER_GROUND)		//下の地面にめり込んだ
+				 Player.pos.y >= DOWNER_GROUND)		//下の地面にめり込んだ
 		{
 			Player.pos.y = DOWNER_GROUND;	//地面に戻す
 			Player.move.y = 0.0f;			//重力を消す
 			Player.bJump = false;			//ジャンプ可能
 		}
 	}	
+}
+
+//----------------------------
+//移動処理
+//----------------------------
+void CPlayer::WholeCollision(void)
+{
+	//オブジェクトのポインタを格納
+	CObject *obj = NULL;
+
+	while (Manager::BlockMgr()->ListLoop(&obj)) {
+		CStageObject* stageObj = (CStageObject*)obj;
+	
+		switch (stageObj->GetType()) {
+			default:
+				break;
+		}
+	}
 }

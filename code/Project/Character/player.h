@@ -68,7 +68,7 @@ private:
 	void SetPosOld(void);
 	void ActionControl(void);
 	void Move(void);
-
+	void WholeCollision(void);
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
 };
 
