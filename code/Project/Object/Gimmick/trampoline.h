@@ -36,9 +36,15 @@ public:
 
 	STATE  GetState(void) { return m_state; }					//í—Şæ“¾
 
+	
+
 protected:
 	
 private:
+
+	//========== [[[ ŠÖ”éŒ¾ ]]]
+	void   Collision(void);	//“–‚½‚è”»’èˆ—
+
 	//========== [[[ •Ï”éŒ¾ ]]]
 	STATE m_state;			//í—Ş
 	int m_modelIdx[3];		//ƒ‚ƒfƒ‹”Ô†
