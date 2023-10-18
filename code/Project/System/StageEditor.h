@@ -15,7 +15,6 @@ public:
 
 	// 定数
 	static const char* STAGE_INFO_FILE;		// ステージ情報のファイルパス
-	static const float SIZE_SPACE;
 
 	// *** 情報構造体 ***
 

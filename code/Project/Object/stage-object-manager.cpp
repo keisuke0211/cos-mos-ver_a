@@ -140,6 +140,7 @@ CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move)
 
 	// ‰Šú‰»ˆ—
 	pObj->Init();
+	pObj->SetPos(pos);
 	pObj->SetMove(D3DXVECTOR3(0.3f,0.0f,0.0f));
 
 	return pObj;
@@ -157,6 +158,7 @@ CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move)
 
 	// ‰Šú‰»ˆ—
 	pObj->Init();
+	pObj->SetPos(pos);
 
 	return pObj;
 }
