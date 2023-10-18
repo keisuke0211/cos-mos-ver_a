@@ -185,3 +185,20 @@ CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move)
 
 	return pObj;
 }
+
+//========================================
+// ƒp[ƒc
+//========================================
+CParts *CStageObjectMgr::PartsCreate(D3DXVECTOR3 pos)
+{
+	CParts *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CParts;
+
+	// ‰Šú‰»ˆ—
+	pObj->Init();
+	pObj->SetPos(pos);
+
+	return pObj;
+}

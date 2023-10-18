@@ -10,8 +10,7 @@
 #include "../../_RNLib/_Basis/Calculation/number.h"
 
 //スワップインターバル
-const int	CPlayer::SWAP_INTERVAL = 0;
-bool		CPlayer::s_bSwap = false;		//スワップしたかどうか
+const int	CPlayer::SWAP_INTERVAL = 200;	//スワップインターバル
 int			CPlayer::s_nSwapInterval = 0;	//残りスワップインターバル
 const float CPlayer::UPPER_GROUND = 20.0f;	//上の世界の足場位置
 const float CPlayer::DOWNER_GROUND = -20.0f;//下の世界の足場位置
@@ -19,7 +18,7 @@ const float CPlayer::DOWNER_GROUND = -20.0f;//下の世界の足場位置
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 3.0f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 3.0f;		//基本ジャンプ量
+const float CPlayer::JUMP_POWER = 8.0f;		//基本ジャンプ量
 const float CPlayer::GRAVITY_POWER = -3.0f;	//基本重力加速度
 const float CPlayer::GRAVITY_CORR = 0.1f;	//基本重力係数
 
@@ -28,21 +27,21 @@ const float CPlayer::GRAVITY_CORR = 0.1f;	//基本重力係数
 //=======================================
 CPlayer::CPlayer()
 {
-	s_bSwap = false;		//スワップしたかどうか
 	s_nSwapInterval = 0;	//残りスワップインターバル
 
-	for (int nCntPlayer = 0; nCntPlayer < NUM_PLAYER; nCntPlayer++)
+	for each (Info &Player in m_aInfo)
 	{
 		//情報クリア
-		m_aInfo[nCntPlayer].pos = INITD3DXVECTOR3;
-		m_aInfo[nCntPlayer].posOLd = INITD3DXVECTOR3;
-		m_aInfo[nCntPlayer].rot = INITD3DXVECTOR3;
-		m_aInfo[nCntPlayer].move = INITD3DXVECTOR3;
-		m_aInfo[nCntPlayer].bJump = false;
-		m_aInfo[nCntPlayer].fJumpPower = 0.0f;
-		m_aInfo[nCntPlayer].fGravity = 0.0f;
-		m_aInfo[nCntPlayer].fGravityCorr = 0.0f;
-		m_aInfo[nCntPlayer].nModelIdx = DATANONE;
+		Player.pos = INITD3DXVECTOR3;
+		Player.posOLd = INITD3DXVECTOR3;
+		Player.rot = INITD3DXVECTOR3;
+		Player.move = INITD3DXVECTOR3;
+		Player.bJump = false;
+		Player.fJumpPower = 0.0f;
+		Player.fGravity = 0.0f;
+		Player.fGravityCorr = 0.0f;
+		Player.nModelIdx = DATANONE;
+		Player.side = WORLD_SIDE::FACE;
 	}
 }
 
@@ -73,18 +72,22 @@ CPlayer *CPlayer::Create(void)
 //初期化処理
 //=======================================
 HRESULT CPlayer::Init(void)
-{	
+{
+	//１Ｐ初期情報
 	m_aInfo[0].nModelIdx = RNLib::Model()->Load("data\\MODEL\\1P.x");
 	m_aInfo[0].pos = D3DXVECTOR3(50.0f, UPPER_GROUND, 0.0f);
 	m_aInfo[0].fJumpPower = JUMP_POWER;
 	m_aInfo[0].fGravity = GRAVITY_POWER;
 	m_aInfo[0].fGravityCorr = GRAVITY_CORR;
+	m_aInfo[0].side = WORLD_SIDE::FACE;
 
+	//２Ｐ初期情報
 	m_aInfo[1].nModelIdx = RNLib::Model()->Load("data\\MODEL\\2P.x");
 	m_aInfo[1].pos = D3DXVECTOR3(-50.0f, DOWNER_GROUND, 0.0f);
 	m_aInfo[1].fJumpPower = -JUMP_POWER;
 	m_aInfo[1].fGravity = -GRAVITY_POWER;
 	m_aInfo[1].fGravityCorr = GRAVITY_CORR;
+	m_aInfo[1].side = WORLD_SIDE::BEHIND;
 
 	//初期化成功
 	return S_OK;
@@ -120,6 +123,9 @@ void CPlayer::Update(void)
 	//操作処理
 	ActionControl();
 
+	//スワップ
+	Swap();
+
 	//移動処理
 	Move();
 
@@ -131,14 +137,6 @@ void CPlayer::Update(void)
 	{
 		RNLib::Model()->Put(Player.pos, Player.rot, Player.nModelIdx, false);
 	}
-}
-
-//=======================================
-//描画処理
-//=======================================
-void CPlayer::Draw(void)
-{
-
 }
 
 //----------------------------
@@ -156,27 +154,65 @@ void CPlayer::SetInfo(Info p1, Info p2)
 //----------------------------
 void CPlayer::ActionControl(void)
 {
-	//１Ｐの情報を参照
-	Info& rInfo = m_aInfo[0];
+	//各プレイヤーのアクションキー
+	const int ACTION_KEY[NUM_PLAYER][3] = {
+		{ DIK_W , DIK_D , DIK_A },	//１Ｐの操作キー
+		{ DIK_UPARROW, DIK_RIGHTARROW, DIK_LEFTARROW}//２Ｐの操作キー
+	};
 
-	//ジャンプ入力（空中じゃない）
-	if (!rInfo.bJump && RNLib::Input()->Trigger(DIK_W, CInput::BUTTON_UP))
+	for (int nCntPlayer = 0; nCntPlayer < NUM_PLAYER; nCntPlayer++)
 	{
-		//ジャンプ量代入
-		rInfo.move.y = rInfo.fJumpPower;
+		//情報を参照
+		Info& rInfo = m_aInfo[nCntPlayer];
 
-		//ジャンプした
-		rInfo.bJump = true;
+		//ジャンプ入力（空中じゃない）
+		if (!rInfo.bJump && RNLib::Input()->Trigger(ACTION_KEY[nCntPlayer][0], CInput::BUTTON_UP))
+		{
+			//ジャンプ量代入
+			rInfo.move.y = rInfo.fJumpPower;
+
+			//ジャンプした
+			rInfo.bJump = true;
+		}
+
+		//右に移動
+		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][1], CInput::BUTTON_RIGHT))	rInfo.move.x += MOVE_SPEED;
+
+		//左に移動
+		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][2], CInput::BUTTON_LEFT))	rInfo.move.x -= MOVE_SPEED;
+	}
+}
+
+//############################
+//スワップ処理
+//############################
+void CPlayer::Swap(void)
+{
+	//インターバルがあれば減少させて終了
+	if (s_nSwapInterval > 0)
+	{
+		s_nSwapInterval--;
+		return;
 	}
 
-	//右に移動
-	if (RNLib::Input()->Press(DIK_D, CInput::BUTTON_UP))
+	//両者ともにスワップボタンを押している
+	if (RNLib::Input()->KeyPress(DIK_S) && RNLib::Input()->KeyPress(DIK_DOWNARROW))
 	{
-		rInfo.move.x += MOVE_SPEED;
-	}
+		//インターバル設定
+		s_nSwapInterval = SWAP_INTERVAL;
 
-	//左に移動
-	if (RNLib::Input()->Press(DIK_A, CInput::BUTTON_UP))	rInfo.move.x -= MOVE_SPEED;
+		for each (Info &Player in m_aInfo)
+		{
+			//位置・重力加速度・ジャンプ量・存在する世界を反転
+			Player.pos.y *= -1.0f;
+			Player.fGravity *= -1.0f;
+			Player.fJumpPower *= -1.0f;
+			Player.side = (WORLD_SIDE)(((int)Player.side + 1) % (int)WORLD_SIDE::MAX);
+		}
+
+		//前回位置更新
+		SetPosOld();
+	}
 }
 
 //----------------------------
@@ -220,19 +256,96 @@ void CPlayer::Move(void)
 }
 
 //----------------------------
-//移動処理
+//当たり判定まとめ
 //----------------------------
 void CPlayer::WholeCollision(void)
 {
 	//オブジェクトのポインタを格納
 	CObject *obj = NULL;
 
+	//オブジェクトを取得
 	while (Manager::BlockMgr()->ListLoop(&obj)) {
+		//取得したオブジェクトをキャスト
 		CStageObject* stageObj = (CStageObject*)obj;
 	
-		switch (stageObj->GetType()) {
-			default:
-				break;
+		for (int nCntVec = 0; nCntVec < (int)COLLI_VEC::MAX; nCntVec++)
+		{
+			//種類ごとに関数分け
+			switch (stageObj->GetType())
+			{
+				case CStageObject::TYPE::BLOCK:		CollisionBlock(stageObj, (COLLI_VEC)nCntVec);	break;
+				case CStageObject::TYPE::TRAMPOLINE:	break;
+				case CStageObject::TYPE::MOVE_BLOCK:	break;
+				case CStageObject::TYPE::METEOR:		break;
+			}
+		}
+	}
+}
+
+//----------------------------
+//ブロックの当たり判定処理
+//----------------------------
+void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
+{
+	//ブロックの当たり判定情報取得
+	const D3DXVECTOR3 POS = pObj->GetPos();
+	const float WIDTH = pObj->GetWidth();
+	const float HEIGHT = pObj->GetHeight();
+
+	//ブロックの最小・最大位置
+	const D3DXVECTOR2 MinPos = D3DXVECTOR2(POS.x - WIDTH, POS.y - HEIGHT);
+	const D3DXVECTOR2 MaxPos = D3DXVECTOR2(POS.x + WIDTH, POS.y + HEIGHT);
+
+	for each (Info &Player in m_aInfo)
+	{
+		//Ｘベクトルの当たり判定
+		if (value == COLLI_VEC::X)
+		{
+			//最小位置より下  or  最大位置より上  ならスキップ
+			if (MinPos.y > Player.pos.y || Player.pos.y > MaxPos.y) continue;
+
+			//左の当たり判定
+			if (Player.posOLd.x <= MinPos.x &&
+				Player.pos.x > MinPos.x)
+			{
+				Player.pos.x = MinPos.x;
+				Player.move.x = 0.0f;
+			}
+			//右の当たり判定
+			else if(Player.posOLd.x >= MaxPos.x &&
+					Player.pos.x < MaxPos.x)
+			{
+				Player.pos.x = MaxPos.x;
+				Player.move.x = 0.0f;
+			}
+		}
+
+		//Ｙベクトルの当たり判定
+		else if (value == COLLI_VEC::Y)
+		{
+			//最小位置より左  or  最大位置より右  ならスキップ
+			if (MinPos.x > Player.pos.x || Player.pos.x > MaxPos.x) continue;
+
+			//下の当たり判定
+			if (Player.posOLd.y <= MinPos.y &&
+				Player.pos.y > MinPos.y)
+			{
+				Player.pos.y = MinPos.y;
+				Player.move.y = 0.0f;
+
+				//裏の世界にいるならジャンプ可能
+				if (Player.side == WORLD_SIDE::BEHIND)	Player.bJump = false;
+			}
+			//上の当たり判定
+			else if (Player.posOLd.y >= MaxPos.y &&
+					 Player.pos.y < MaxPos.y)
+			{
+				Player.pos.y = MaxPos.y;
+				Player.move.y = 0.0f;
+
+				//表の世界にいるならジャンプ可能
+				if (Player.side == WORLD_SIDE::FACE)	Player.bJump = false;
+			}
 		}
 	}
 }
