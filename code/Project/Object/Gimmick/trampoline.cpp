@@ -139,7 +139,7 @@ void CTrampoline::Collision(void) {
 			p1.move.y = 0.0f;
 		}
 
-		p1.pos.y = p1.posOLd.y * 10.0f;
+		p1.pos.y = p1.posOLd.y;
 
 		pPlayer->SetInfo(p1, p2);
 	}
@@ -156,7 +156,7 @@ void CTrampoline::Collision(void) {
 		{//1p‚ªæ‚Á‚Ä‚¢‚é‚©
 
 			//ƒWƒƒƒ“ƒv—Ê‚ğŒp³
-			p1.move.y = p2.move.y * 10.0f;
+			p1.move.y = p2.move.y;
 
 			p1.move.y = 0.0f;
 		}
