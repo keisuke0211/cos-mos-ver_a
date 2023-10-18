@@ -47,6 +47,7 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
+	Manager::BlockMgr()->PartsCreate(D3DXVECTOR3(0.0f, 100.0f, 0.0f));
 
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();

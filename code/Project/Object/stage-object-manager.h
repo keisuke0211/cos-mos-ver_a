@@ -12,7 +12,7 @@
 #include "Block/move-block.h"
 #include "Gimmick/trampoline.h"
 #include "Gimmick/meteor.h"
-
+#include  "Item/Parts.h"
 //****************************************
 // ÉNÉâÉX
 //****************************************
@@ -30,7 +30,7 @@ public:
 	CTrampoline *TrampolineCreate(D3DXVECTOR3 pos);
 	CMeteor     *MeteorCreate    (D3DXVECTOR3 pos, D3DXVECTOR3 move);
 	CMoveBlock  *MoveBlockCreate (D3DXVECTOR3 pos, D3DXVECTOR3 move);
-
+	CParts      *PartsCreate	 (D3DXVECTOR3 pos);
 private:
 
 	// *** ç\ë¢ëÃ ***

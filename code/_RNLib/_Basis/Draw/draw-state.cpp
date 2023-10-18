@@ -96,6 +96,7 @@ void CDrawState::EndTemporarySetMode(LPDIRECT3DDEVICE9& device) {
 	SetZTestMode(m_formerMode.ZTest, device);
 	SetCullingMode(m_formerMode.Culling, device);
 	SetTextureAlphaMode(m_formerMode.TextureAlpha, device);
+	SetLightingMode(m_formerMode.Lighting, device);
 
 	// 元のモード代入フラグを真にする
 	m_isAssignFormerMode = true;
@@ -204,13 +205,11 @@ void CDrawState::SetLightingMode(const LIGHTING_MODE& mode, LPDIRECT3DDEVICE9& d
 	switch (mode) {
 		// [[[ 有効 ]]]
 	case LIGHTING_MODE::ENABLED: {
-		device->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
-		device->SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
+		device->SetRenderState(D3DRS_LIGHTING, TRUE);
 	}break;
 		// [[[ 無効 ]]]
 	case LIGHTING_MODE::DISABLED: {
-		device->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
-		device->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+		device->SetRenderState(D3DRS_LIGHTING, FALSE);
 	}break;
 	}
 }
