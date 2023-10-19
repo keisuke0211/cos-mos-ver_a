@@ -64,7 +64,7 @@ void CMode_Title::Update(void) {
 
 	RNLib::Polygon2D()->Put(D3DXVECTOR3(640.0f, 360.0f, -1.0f), 0.0f, false)
 		->SetSize(1280.0f,720.0f)
-		->SetCol(Color{255,0,0,255});
+		->SetCol(Color{200,0,0,255});
 
 	if (RNLib::Input()->KeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
 		Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::NONE);
