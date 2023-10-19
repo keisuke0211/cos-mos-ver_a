@@ -324,7 +324,7 @@ void CCamera::EndRendering(LPDIRECT3DDEVICE9 device) {
 	// デバイスの取得
 	LPDIRECT3DDEVICE9 pDevice = RNLib::Window()->GetD3DDevice();
 
-	if (RNLib::Input()->KeyPress(DIK_F)) {
+	if (RNLib::Input()->GetKeyPress(DIK_F)) {
 
 		// 頂点フォーマットの設定
 		pDevice->SetFVF(FVF_VERTEX_2D);

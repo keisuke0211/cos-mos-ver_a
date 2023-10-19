@@ -42,7 +42,7 @@ void CCamera::ProcessState(const PROCESS process) {
 				return;
 			
 			// [[[ カーソルの移動量に応じて回転させる ]]]
-			if (RNLib::Input()->MousePress(CInput::MOUSEBUTTON::RIGHT)) {
+			if (RNLib::Input()->GetMousePress(CInput::MOUSEBUTTON::RIGHT)) {
 				D3DXVECTOR2 cursorMove = RNLib::Input()->GetCursorMove();
 				m_spin.x += cursorMove.y * SPIN_RATE.x * info->spinForce;
 				m_spin.y += cursorMove.x * SPIN_RATE.y * info->spinForce;
@@ -53,7 +53,7 @@ void CCamera::ProcessState(const PROCESS process) {
 				float rotXRate = m_rot.x / D3DX_PI_HALF;
 
 				// [[[ カーソルの移動量に応じて移動させる ]]]
-				if (RNLib::Input()->MousePress(CInput::MOUSEBUTTON::LEFT)) {
+				if (RNLib::Input()->GetMousePress(CInput::MOUSEBUTTON::LEFT)) {
 					D3DXVECTOR3 move = INITD3DXVECTOR3;					// 移動量
 					D3DXVECTOR2 cursorMove = RNLib::Input()->GetCursorMove();	// カーソルの移動量
 					float       moveAngleX = m_rot.y - D3DX_PI_HALF;			// 移動向きX
@@ -71,14 +71,14 @@ void CCamera::ProcessState(const PROCESS process) {
 				}
 
 				// [[[ ホイールの回転に応じてズームイン/アウト ]]]
-				if (RNLib::Input()->WheelSpin() == CInput::WHEELSPIN::FRONT) {
+				if (RNLib::Input()->GetWheelSpin() == CInput::WHEELSPIN::FRONT) {
 					float XZPlaneRate = 1.0f - fabsf(rotXRate);
 					
 					m_posR.x += sinf(m_rot.y) * info->zoomForce * XZPlaneRate;
 					m_posR.z += cosf(m_rot.y) * info->zoomForce * XZPlaneRate;
 					m_posR.y += info->zoomForce * rotXRate;
 				}
-				else if (RNLib::Input()->WheelSpin() == CInput::WHEELSPIN::BACK) {
+				else if (RNLib::Input()->GetWheelSpin() == CInput::WHEELSPIN::BACK) {
 					float XZPlaneRate = 1.0f - fabsf(rotXRate);
 
 					m_posR.x -= sinf(m_rot.y) * info->zoomForce * XZPlaneRate;

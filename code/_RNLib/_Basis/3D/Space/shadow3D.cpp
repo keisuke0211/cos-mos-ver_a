@@ -12,7 +12,7 @@
 // ‰Šú‰»ˆ—
 //========================================
 void CShadow3D::Init(void) {
-	m_nTexIdx = RNLib::Texture()->Load("data\\Texture\\Effect\\shadow_00.png");
+	//m_nTexIdx = RNLib::Texture()->Load("data\\Texture\\Effect\\shadow_00.png");
 }
 
 //========================================

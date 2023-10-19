@@ -156,7 +156,7 @@ void CPlayer::ActionControl(void)
 		Info& Player = m_aInfo[nCntPlayer];
 
 		//ジャンプ入力（空中じゃない）
-		if (!Player.bJump && RNLib::Input()->Trigger(ACTION_KEY[nCntPlayer][(int)Player.side], (int)CInput::BUTTON::UP))
+		if (!Player.bJump && RNLib::Input()->GetTrigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON::UP))
 		{
 			//ジャンプ量代入
 			Player.move.y = Player.fJumpPower;
@@ -166,11 +166,11 @@ void CPlayer::ActionControl(void)
 		}
 
 		//右に移動
-		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][2], (int)CInput::BUTTON::RIGHT))
+		if (RNLib::Input()->GetPress(ACTION_KEY[nCntPlayer][2], CInput::BUTTON::RIGHT))
 			Player.move.x += MOVE_SPEED;
 
 		//左に移動
-		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][3], (int)CInput::BUTTON::LEFT))
+		if (RNLib::Input()->GetPress(ACTION_KEY[nCntPlayer][3], CInput::BUTTON::LEFT))
 			Player.move.x -= MOVE_SPEED;
 	}
 }
@@ -194,7 +194,7 @@ void CPlayer::Swap(void)
 	};
 
 	//両者ともにスワップボタンを押している
-	if (RNLib::Input()->KeyPress(ACTION_KEY[0][(int)m_aInfo[0].side]) && RNLib::Input()->KeyPress(ACTION_KEY[1][(int)m_aInfo[1].side]))
+	if (RNLib::Input()->GetKeyPress(ACTION_KEY[0][(int)m_aInfo[0].side]) && RNLib::Input()->GetKeyPress(ACTION_KEY[1][(int)m_aInfo[1].side]))
 	{
 		//インターバル設定
 		s_nSwapInterval = SWAP_INTERVAL;
