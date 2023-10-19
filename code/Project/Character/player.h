@@ -84,6 +84,12 @@ public:
 	//----------------------------
 	void SetInfo(Info p1, Info p2);
 
+	//----------------------------
+	//プレイヤー情報設定
+	//指定された番号のプレイヤー情報を設定します。
+	//----------------------------
+	void SetInfo(const Info info, const int nNum);
+
 	// 位置設定
 	void SetPos(int idx, D3DXVECTOR3 pos) { m_aInfo[idx].pos = pos; }
 

@@ -33,16 +33,7 @@ CPlayer::CPlayer()
 	for each (Info &Player in m_aInfo)
 	{
 		//情報クリア
-		Player.pos = INITD3DXVECTOR3;
-		Player.posOLd = INITD3DXVECTOR3;
-		Player.rot = INITD3DXVECTOR3;
-		Player.move = INITD3DXVECTOR3;
-		Player.bJump = false;
-		Player.fJumpPower = 0.0f;
-		Player.fGravity = 0.0f;
-		Player.fGravityCorr = 0.0f;
-		Player.nModelIdx = DATANONE;
-		Player.side = WORLD_SIDE::FACE;
+		Player = FormatInfo();
 	}
 }
 
@@ -348,6 +339,19 @@ void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
 				}
 			}
 		}
+	}
+}
+
+//----------------------------
+//プレイヤー情報設定
+//指定された番号のプレイヤー情報を設定します。
+//----------------------------
+void CPlayer::SetInfo(const Info info, const int nNum)
+{
+	if (0 <= nNum || nNum < NUM_PLAYER)
+	{
+		//情報代入
+		m_aInfo[nNum] = info;
 	}
 }
 
