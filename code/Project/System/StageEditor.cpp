@@ -222,7 +222,7 @@ void CStageEditor::SetStage(int nType)
 			Manager::BlockMgr()->SpikeCreate(pos);
 			break;
 		case TYPE_LIFT:
-			Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),0.0f);
 			break;
 		case TYPE_Meteor:
 			pos.x += nSizeX;

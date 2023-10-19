@@ -39,8 +39,10 @@ protected:
 
 private:
 	//========== [[[ 変数宣言 ]]]
-	Color m_col;				// 色
+	D3DXVECTOR3 m_posOld;		// 前の位置
 	D3DXVECTOR3 m_move;			// 移動量
+	Color m_col;				// 色
 	STAR_TYPE m_Star_type;		// 種類
+	int m_moveCounter;			// 移動量のカウンター
 	int ModelIdx;
 };
