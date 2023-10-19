@@ -30,10 +30,19 @@ CPlayer::CPlayer()
 {
 	s_nSwapInterval = 0;	//残りスワップインターバル
 
-	for each (Info &Player in m_aInfo)
+	for each(Info &Player in m_aInfo)
 	{
-		//情報クリア
-		Player = FormatInfo();
+		Player.StartPos = INITD3DXVECTOR3;	//開始位置
+		Player.pos = INITD3DXVECTOR3;		//位置
+		Player.posOLd = INITD3DXVECTOR3;	//前回位置
+		Player.rot = INITD3DXVECTOR3;		//向き
+		Player.move = INITD3DXVECTOR3;		//移動量
+		Player.bJump = false;				//ジャンプ
+		Player.fJumpPower = 0.0f;			//ジャンプ量
+		Player.fGravity = 0.0f;				//重力
+		Player.fGravityCorr = 0.0f;			//重力係数
+		Player.nModelIdx = DATANONE;		//モデル番号
+		Player.side = WORLD_SIDE::FACE;		//どちらの世界に存在するか
 	}
 }
 
@@ -131,16 +140,6 @@ void CPlayer::Update(void)
 }
 
 //----------------------------
-//プレイヤー情報設定
-//----------------------------
-void CPlayer::SetInfo(Info p1, Info p2)
-{
-	//各プレイヤー情報設定
-	m_aInfo[0] = p1;
-	m_aInfo[1] = p2;
-}
-
-//----------------------------
 //操作処理
 //----------------------------
 void CPlayer::ActionControl(void)
@@ -157,7 +156,7 @@ void CPlayer::ActionControl(void)
 		Info& Player = m_aInfo[nCntPlayer];
 
 		//ジャンプ入力（空中じゃない）
-		if (!Player.bJump && RNLib::Input()->Trigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON_UP))
+		if (!Player.bJump && RNLib::Input()->Trigger(ACTION_KEY[nCntPlayer][(int)Player.side], (int)CInput::BUTTON::UP))
 		{
 			//ジャンプ量代入
 			Player.move.y = Player.fJumpPower;
@@ -167,11 +166,11 @@ void CPlayer::ActionControl(void)
 		}
 
 		//右に移動
-		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][2], CInput::BUTTON_RIGHT))
+		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][2], (int)CInput::BUTTON::RIGHT))
 			Player.move.x += MOVE_SPEED;
 
 		//左に移動
-		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][3], CInput::BUTTON_LEFT))
+		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][3], (int)CInput::BUTTON::LEFT))
 			Player.move.x -= MOVE_SPEED;
 	}
 }
@@ -348,29 +347,20 @@ void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
 //----------------------------
 void CPlayer::SetInfo(const Info info, const int nNum)
 {
-	if (0 <= nNum || nNum < NUM_PLAYER)
+	if (0 <= nNum && nNum < NUM_PLAYER)
 	{
-		//情報代入
+		//各プレイヤー情報設定
 		m_aInfo[nNum] = info;
+		m_aInfo[nNum].StartPos = info.pos;
 	}
 }
 
 //----------------------------
-//プレイヤー情報の初期化処理
-//プレイヤー情報を初期状態にします。
+//プレイヤー情報設定
 //----------------------------
-CPlayer::Info CPlayer::FormatInfo(void)
+void CPlayer::SetInfo(Info p1, Info p2)
 {
-	return{
-		INITD3DXVECTOR3,	//位置
-		INITD3DXVECTOR3,	//前回位置
-		INITD3DXVECTOR3,	//向き
-		INITD3DXVECTOR3,	//移動量
-		false,				//ジャンプ
-		JUMP_POWER,			//ジャンプ量
-		GRAVITY_POWER,		//重力
-		GRAVITY_CORR ,		//重力係数
-		DATANONE,			//モデル番号
-		WORLD_SIDE::FACE,	//どちらの世界に存在するか
-	};
+	//各プレイヤー情報設定
+	m_aInfo[0] = p1;	m_aInfo[0].StartPos = p1.pos;
+	m_aInfo[1] = p2;	m_aInfo[1].StartPos = p2.pos;
 }

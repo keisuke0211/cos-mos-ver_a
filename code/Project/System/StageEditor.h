@@ -47,7 +47,6 @@ public:
 	/* ステージ切り替え	*/void SwapStage(int nStageIdx);
 
 	// -- 取得 ---------------------------------------------
-	/* 変換 */bool ToData(char* &val, CSVFILE *pFile, int nRow, int nLine);
 	/* 変換 */bool ToData(int &val, CSVFILE *pFile, int nRow, int nLine);
 
 	// -- 読込 ---------------------------------------------

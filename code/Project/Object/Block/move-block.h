@@ -26,6 +26,7 @@ public:
 		D3DXVECTOR3 rot;		// 向き
 		D3DXVECTOR3	size;		// サイズ
 		D3DXCOLOR col;			// 頂点カラー
+		float frefdef;			// 反射する距離
 		int nCntMove;			// 移動カウント
 		int nType;				// 種類
 		int nID;				// ID
@@ -44,6 +45,8 @@ public:
 
 	//設定
 	void SetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
+	void SetMove(const D3DXVECTOR3 move) { m_Info.move = move; }
+	void SetRefdef(const float refdef) { m_Info.frefdef = refdef; }
 	void SetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
 	void SetColor(const D3DXCOLOR col) { m_Info.col = col; }
 	void SetSize(const D3DXVECTOR3 size) { m_Info.size = size; }
@@ -62,6 +65,9 @@ private:
 
 	//変数
 	Info m_Info;		// 共通情報
+
+	D3DXVECTOR3 m_rot;
+	int nModelIdx;
 
 };
 #endif

@@ -21,7 +21,7 @@ public:
 	};
 	enum class TYPE {
 		NONE,
-		HOLE,
+		FADE,
 	};
 
 	//========== [[[ ŠÖ”éŒ¾ ]]]

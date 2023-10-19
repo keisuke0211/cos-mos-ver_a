@@ -41,6 +41,8 @@ public:
 	//プレイヤー情報
 	struct Info
 	{
+		D3DXVECTOR3 StartPos;		//開始位置
+
 		D3DXVECTOR3 pos;			//位置
 		D3DXVECTOR3 posOLd;			//前回位置
 		D3DXVECTOR3 rot;			//向き
@@ -72,10 +74,10 @@ public:
 	static CPlayer *Create(void);
 
 	//----------------------------
-	//プレイヤー情報の初期化処理
-	//プレイヤー情報を初期状態を返します
+	//プレイヤー情報設定
+	//指定された番号のプレイヤー情報を設定します。
 	//----------------------------
-	Info FormatInfo(void);
+	void SetInfo(const Info info, const int nNum);
 
 	//----------------------------
 	//プレイヤー情報設定
@@ -85,13 +87,10 @@ public:
 	void SetInfo(Info p1, Info p2);
 
 	//----------------------------
-	//プレイヤー情報設定
-	//指定された番号のプレイヤー情報を設定します。
+	//プレイヤー位置情報設定
+	//指定したプレイヤーの位置情報を引数に渡してください。
 	//----------------------------
-	void SetInfo(const Info info, const int nNum);
-
-	// 位置設定
-	void SetPos(int idx, D3DXVECTOR3 pos) { m_aInfo[idx].pos = pos; }
+	void SetPos(const int nNum, D3DXVECTOR3 pos) { m_aInfo[nNum].pos = pos; }
 
 	//----------------------------
 	//プレイヤー情報取得

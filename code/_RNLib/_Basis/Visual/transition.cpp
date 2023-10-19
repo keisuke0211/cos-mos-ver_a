@@ -44,16 +44,13 @@ CTransition::~CTransition() {
 // Author:RIKU NISHIMURA
 //========================================
 void CTransition::Update(void) {
-#if 0
+
 	//===== [[[ ƒ[ƒJƒ‹ŠÖ”éŒ¾ ]]]
 	struct LocalFunc {
-		static void FillScreen(void) {
-			RNLib::Polygon2D()->SetVtxPos(
-				D3DXVECTOR3(0.0f                       , 0.0f                        , 0.0f),
-				D3DXVECTOR3(RNLib::Window()->GetWidth(), 0.0f                        , 0.0f),
-				D3DXVECTOR3(0.0f                       , RNLib::Window()->GetHeight(), 0.0f),
-				D3DXVECTOR3(RNLib::Window()->GetWidth(), RNLib::Window()->GetHeight(), 0.0f),
-				COLOR_BLACK);
+		static void FillScreen(const float& fRate) {
+			RNLib::Polygon2D()->Put(RNLib::Window()->GetCenterPos(), 0.0f)
+				->SetCol(Color{0,0,0,(int)(255 * fRate)})
+				->SetSize(RNLib::Window()->GetWidth(), RNLib::Window()->GetHeight());
 		}
 	};
 
@@ -61,7 +58,7 @@ void CTransition::Update(void) {
 		return;
 	}
 	else if (m_state == STATE::WAIT_SET_MODE) {
-		LocalFunc::FillScreen();
+		LocalFunc::FillScreen(1.0f);
 		return;
 	}
 	else if (m_state == STATE::OPEN_WAIT) {
@@ -69,17 +66,17 @@ void CTransition::Update(void) {
 			m_nStateCtr = 0;
 			m_state = STATE::OPEN;
 		}
-		LocalFunc::FillScreen();
+		LocalFunc::FillScreen(1.0f);
 		return;
 	}
 	else if (++m_nStateCtr >= TIME) {
 		if (m_state == STATE::CLOSE) {
 			m_state = STATE::WAIT_SET_MODE;
-			LocalFunc::FillScreen();
 		}
 		else {
 			m_state = STATE::NONE;
 		}
+		LocalFunc::FillScreen(1.0f);
 		return;
 	}
 
@@ -89,58 +86,7 @@ void CTransition::Update(void) {
 	}
 	float fRateOpp = 1.0f - fRate;
 
-	// [    ]
-	//  œ 
-	// [    ]
-	
-	float fSetScale      = fRate * HOLE_SCALE_MAX;
-	int   nTexIdx        = RNLib::Visual()->GetTextureIdx(CVisual::TEXTURE::TRANSITION_HOLE);
-	float fTexWidthHalf  = RNLib::Texture()->GetWidth2D (nTexIdx) * fSetScale * 0.5f;
-	float fTexHeightHalf = RNLib::Texture()->GetHeight2D(nTexIdx) * fSetScale * 0.5f;
-	float fLeftX         = RNLib::Window()->GetCenterX() - fTexWidthHalf;
-	float fRightX        = RNLib::Window()->GetCenterX() + fTexWidthHalf;
-	float fTopY          = RNLib::Window()->GetCenterY() - fTexHeightHalf;
-	float fBottomY       = RNLib::Window()->GetCenterY() + fTexHeightHalf;
-	float fScreenWidth   = RNLib::Window()->GetWidth();
-	float fScreenHeight  = RNLib::Window()->GetHeight();
-
-	{// [[[ ’†‰›‚ÌŒŠ ]]]
-		RNLib::Polygon2D()->Set(
-			fSetScale, fSetScale,
-			RNLib::Window()->GetCenterPos(),
-			INITD3DXVECTOR3,
-			COLOR_BLACK,
-			nTexIdx);
-	}
-	// [[[ ã ]]]
-	RNLib::Polygon2D()->SetVtx(
-		D3DXVECTOR3(0.0f        , 0.0f , 0.0f),
-		D3DXVECTOR3(fScreenWidth, 0.0f , 0.0f),
-		D3DXVECTOR3(0.0f        , fTopY, 0.0f),
-		D3DXVECTOR3(fScreenWidth, fTopY, 0.0f),
-		COLOR_BLACK);
-	// [[[ ‰º ]]]
-	RNLib::Polygon2D()->SetVtx(
-		D3DXVECTOR3(0.0f        , fBottomY    , 0.0f),
-		D3DXVECTOR3(fScreenWidth, fBottomY    , 0.0f),
-		D3DXVECTOR3(0.0f        , fScreenWidth, 0.0f),
-		D3DXVECTOR3(fScreenWidth, fScreenWidth, 0.0f),
-		COLOR_BLACK);
-	// [[[ ¶ ]]]
-	RNLib::Polygon2D()->SetVtx(
-		D3DXVECTOR3(0.0f  , fTopY   , 0.0f),
-		D3DXVECTOR3(fLeftX, fTopY   , 0.0f),
-		D3DXVECTOR3(0.0f  , fBottomY, 0.0f),
-		D3DXVECTOR3(fLeftX, fBottomY, 0.0f),
-		COLOR_BLACK);
-	// [[[ ‰º ]]]
-	RNLib::Polygon2D()->SetVtx(
-		D3DXVECTOR3(fRightX     , fTopY   , 0.0f),
-		D3DXVECTOR3(fScreenWidth, fTopY   , 0.0f),
-		D3DXVECTOR3(fRightX     , fBottomY, 0.0f),
-		D3DXVECTOR3(fScreenWidth, fBottomY, 0.0f),
-		COLOR_BLACK);
-#endif
+	LocalFunc::FillScreen(fRateOpp);
 }
 
 //========================================

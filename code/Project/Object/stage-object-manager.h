@@ -33,7 +33,7 @@ public:
 	CSpike      *SpikeCreate	 (D3DXVECTOR3 pos);
 	CTrampoline *TrampolineCreate(D3DXVECTOR3 pos);
 	CMeteor     *MeteorCreate    (D3DXVECTOR3 pos, D3DXVECTOR3 move);
-	CMoveBlock  *MoveBlockCreate (D3DXVECTOR3 pos, D3DXVECTOR3 move);
+	CMoveBlock  *MoveBlockCreate (D3DXVECTOR3 pos, D3DXVECTOR3 move,float fRefdef);
 	CParts      *PartsCreate	 (D3DXVECTOR3 pos);
 	CRocket     *RocketCreate    (D3DXVECTOR3 pos);
 	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos, D3DXVECTOR3 rot,CPlanet::STAR_TYPE type,Color col);

@@ -120,6 +120,8 @@ void CTrampoline::Collision(void) {
 	//プレイヤー情報取得
 	CPlayer::Info *p1, *p2;
 	CPlayer *pPlayer = CMode_Game::GetPlayer();
+	if (pPlayer == NULL)
+		return;
 	pPlayer->GetInfo(p1, p2);
 
 	if (/*p1が着地で乗る*/
