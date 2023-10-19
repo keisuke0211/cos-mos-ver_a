@@ -52,7 +52,7 @@ void CMode_Game::Init(void) {
 
 	Manager::BlockMgr()->Load();
 
-	BackGroundPut();
+	//BackGroundPut();
 
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();
@@ -79,6 +79,8 @@ void CMode_Game::Uninit(void) {
 		delete s_pPlayer;
 		s_pPlayer = NULL;
 	}
+
+	Manager::BlockMgr()->ReleaseAll();
 }
 
 //========================================
@@ -93,6 +95,9 @@ void CMode_Game::Update(void) {
 
 	if (RNLib::Input()->KeyTrigger(DIK_RETURN))
 		Manager::StgEd()->SwapStage(1);
+
+	if (RNLib::Input()->KeyTrigger(DIK_SPACE))
+		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::HOLE);
 
 	// îwåi(âº)
 	{
