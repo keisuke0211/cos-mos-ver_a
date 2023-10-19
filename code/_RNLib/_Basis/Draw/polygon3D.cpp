@@ -166,7 +166,7 @@ void CPolygon3D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& vi
 
 	// [[[ テクスチャの設定 ]]]
 	if (m_texCamera != NULL) {
-		m_texCamera->SetUpTexture(device);
+		m_texCamera->SetTexture(device);
 		RNLib::DrawStateMng()->SetTextureAlphaMode(false, device);	// テクスチャの透過を無効化
 	}
 	else
@@ -198,24 +198,27 @@ CPolygon3D::CRegistInfo::CRegistInfo() {
 
 	m_resistCount++;
 
-	m_scaleX       = 1.0f;
-	m_scaleY       = 1.0f;
-	m_isFactScale  = false;
-	m_mtx          = INITD3DXMATRIX;
-	m_col          = INITCOLOR;
-	m_texIdx       = DATANONE;
-	m_texCamera    = NULL;
-	m_ptn          = 0;
-	m_ptnX         = 1;
-	m_ptnY         = 1;
-	m_ptnScaleX    = 1.0f;
-	m_ptnScaleY    = 1.0f;
-	m_ptnPos       = INITD3DXVECTOR3;
-	m_isZtest      = true;
-	m_isLighting   = true;
-	m_isBillboard  = false;
-	m_isTexMirrorX = false;
-	m_priority     = 0;
+	m_scaleX        = 1.0f;
+	m_scaleY        = 1.0f;
+	m_isFactScale   = false;
+	m_mtx           = INITD3DXMATRIX;
+	for (int cnt = 0; cnt < 4; cnt++)
+		m_vtxPoses[cnt] = INITD3DXVECTOR3;
+	m_isSetVtxPoses = false;
+	m_col           = INITCOLOR;
+	m_texIdx        = DATANONE;
+	m_texCamera     = NULL;
+	m_ptn           = 0;
+	m_ptnX          = 1;
+	m_ptnY          = 1;
+	m_ptnScaleX     = 1.0f;
+	m_ptnScaleY     = 1.0f;
+	m_ptnPos        = INITD3DXVECTOR3;
+	m_isZtest       = true;
+	m_isLighting    = true;
+	m_isBillboard   = false;
+	m_isTexMirrorX  = false;
+	m_priority      = 0;
 }
 
 //========================================
@@ -251,7 +254,14 @@ CPolygon3D::CDrawInfo* CPolygon3D::CRegistInfo::ConvToDrawInfo(void) {
 	//----------------------------------------
 	// 頂点情報の設定
 	//----------------------------------------
-	{// [[[ 位置 ]]]
+	// [[[ 位置 ]]]
+	if (m_isSetVtxPoses) {
+		drawInfo->m_vtxs[0].pos = m_vtxPoses[0];
+		drawInfo->m_vtxs[1].pos = m_vtxPoses[1];
+		drawInfo->m_vtxs[2].pos = m_vtxPoses[2];
+		drawInfo->m_vtxs[3].pos = m_vtxPoses[3];
+	}
+	else {
 		float widthHalf;
 		float heightHalf;
 
@@ -335,6 +345,23 @@ CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetMtx(const D3DXMATRIX& mtx) 
 		return NULL;
 
 	m_mtx = mtx;
+
+	return this;
+}
+
+//========================================
+// 頂点位置を設定
+//========================================
+CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetVtxPos(const D3DXVECTOR3 pos0, const D3DXVECTOR3 pos1, const D3DXVECTOR3 pos2, const D3DXVECTOR3 pos3) {
+
+	if (this == NULL)
+		return NULL;
+
+	m_vtxPoses[0] = pos0;
+	m_vtxPoses[1] = pos1;
+	m_vtxPoses[2] = pos2;
+	m_vtxPoses[3] = pos3;
+	m_isSetVtxPoses = true;
 
 	return this;
 }

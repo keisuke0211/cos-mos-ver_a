@@ -7,7 +7,7 @@
 #pragma once
 
 #include "draw-info.h"
-#include "../Other/regist.h"
+#include "../Mechanical/regist.h"
 
 //****************************************
 // ƒNƒ‰ƒX’è‹`
@@ -87,7 +87,6 @@ public:
 	//========== [[[ ŠÖ”éŒ¾ ]]]
 	CModel();
 	~CModel();
-	void Uninit(void);
 	void Release(void);
 	short Load(const char* loadPath, short idx = DATANONE);
 	CData& GetData(const int& idx) { return m_datas[idx]; }

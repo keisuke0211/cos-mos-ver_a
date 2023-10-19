@@ -9,7 +9,7 @@
 //****************************************
 // 定数定義
 //****************************************
-#define OUTLINE_ADD_DIST (1.0f)
+#define OUTLINE_ADD_DIST (0.2f)
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -30,14 +30,6 @@ CModel::CModel() {
 //========================================
 CModel::~CModel() {
 
-}
-
-//========================================
-// 終了処理
-//========================================
-void CModel::Uninit(void) {
-	CRegist::Uninit();
-
 	// 解放処理
 	Release();
 }
@@ -47,9 +39,9 @@ void CModel::Uninit(void) {
 //========================================
 void CModel::Release(void) {
 
-	// データの破棄
-	for (int nCnt = 0; nCnt < m_num; nCnt++) {
-		m_datas[nCnt].Release();
+	// データの解放
+	for (int cnt = 0; cnt < m_num; cnt++) {
+		m_datas[cnt].Release();
 	}
 	RNLib::Memory()->Release<CData>(&m_datas);
 }
@@ -57,19 +49,18 @@ void CModel::Release(void) {
 //========================================
 // 読み込み処理
 //========================================
-short CModel::Load(const char *loadPath, short idx) {
+short CModel::Load(const char* loadPath, short idx) {
 
 	unsigned short numOld = m_num;
+	short idxOld = idx;
 
-	if (CRegist::Load(loadPath, &idx)) 
+	if (CRegist::Load(loadPath, idx)) 
 	{// 読み込み成功
 		// データのメモリ再確保
 		RNLib::Memory()->ReAlloc<CData>(&m_datas, numOld, m_num);
 
 		// データの破棄(番号指定の場合)
-		if (idx != DATANONE) {
-			m_datas[idx].Release();
-		}
+		//if (idxOld != DATANONE)m_datas[idxOld].Release();
 
 		// Xファイルの読み込み
 		LPDIRECT3DDEVICE9 device = RNLib::Window()->GetD3DDevice();
@@ -79,7 +70,7 @@ short CModel::Load(const char *loadPath, short idx) {
 			RNLib::Memory()->ReAlloc<CData>(&m_datas, m_num, numOld);
 
 			// 読み込み済パスのメモリリセット
-			RNLib::Memory()->ReAlloc<char*>(&m_ppLoadPath, m_num, numOld);
+			RNLib::Memory()->ReAlloc<char*>(&m_loadPaths, m_num, numOld);
 
 			// 数をリセット
 			m_num = numOld;
@@ -234,7 +225,7 @@ CModel::CDrawInfo::CDrawInfo() {
 	m_modelIdx             = DATANONE;
 	m_texIdx               = DATANONE;
 	m_isZTest              = true;
-	m_isLighting           = true;
+	m_isLighting           = false;
 	m_isOutLine            = false;
 	m_brightnessOfEmissive = 1.0f;
 	m_distance             = 0.0f;
@@ -269,6 +260,7 @@ void CModel::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMt
 	//----------------------------------------
 	RNLib::DrawStateMng()->StartTemporarySetMode();
 
+	// [[[ ライティングのオンオフ ]]]
 	RNLib::DrawStateMng()->SetLightingMode(m_isLighting, device);
 
 	for (int cntMat = 0; cntMat < modelData.m_matNum; cntMat++) {

@@ -30,19 +30,28 @@ CPolygon2D::CRegistInfo* CPolygon2D::Put(const D3DXVECTOR3& pos, const float& an
 void CPolygon2D::SetVtxPos(VERTEX_2D* vtxs, const D3DXVECTOR3& pos, const float& angle, const float& width, const float& height) {
 
 	// 対角線の長さと向き
-	float length   = sqrtf((width * width) + (height * height)) * 0.5f;
-	float vtxAngle = atan2f(width, height);
+	float length          = sqrtf((width * width) + (height * height)) * 0.5f;
+	float vtxAngle        = atan2f(width, height);
+	float inverseVtxAngle = D3DX_PI - vtxAngle;
 
 	// 頂点座標を設定
-	float inverseAngle = D3DX_PI - vtxAngle;
-	vtxs[0].pos.x = pos.x + sinf(angle - inverseAngle) * length;
-	vtxs[0].pos.y = pos.y + cosf(angle - inverseAngle) * length;
-	vtxs[1].pos.x = pos.x + sinf(angle + inverseAngle) * length;
-	vtxs[1].pos.y = pos.y + cosf(angle + inverseAngle) * length;
-	vtxs[2].pos.x = pos.x + sinf(angle - vtxAngle) * length;
-	vtxs[2].pos.y = pos.y + cosf(angle - vtxAngle) * length;
-	vtxs[3].pos.x = pos.x + sinf(angle + vtxAngle) * length;
-	vtxs[3].pos.y = pos.y + cosf(angle + vtxAngle) * length;
+	{
+		float angle0 = angle - inverseVtxAngle;
+		vtxs[0].pos.x = pos.x + sinf(angle0) * length;
+		vtxs[0].pos.y = pos.y + cosf(angle0) * length;
+	} {
+		float angle1 = angle + inverseVtxAngle;
+		vtxs[1].pos.x = pos.x + sinf(angle1) * length;
+		vtxs[1].pos.y = pos.y + cosf(angle1) * length;
+	} {
+		float angle2 = angle - vtxAngle;
+		vtxs[2].pos.x = pos.x + sinf(angle2) * length;
+		vtxs[2].pos.y = pos.y + cosf(angle2) * length;
+	} {
+		float angle3 = angle + vtxAngle;
+		vtxs[3].pos.x = pos.x + sinf(angle3) * length;
+		vtxs[3].pos.y = pos.y + cosf(angle3) * length;
+	}
 
 	// 解像度を適用
 	ApplyResolution(vtxs);
@@ -234,7 +243,7 @@ void CPolygon2D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& vi
 
 	// [[[ テクスチャの設定 ]]]
 	if (m_texCamera != NULL) {
-		m_texCamera->SetUpTexture(device);
+		m_texCamera->SetTexture(device);
 		RNLib::DrawStateMng()->SetTextureAlphaMode(false, device);	// テクスチャの透過を無効化
 	}
 	else

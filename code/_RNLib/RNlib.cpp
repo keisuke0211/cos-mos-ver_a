@@ -51,9 +51,9 @@ namespace {
 	//----- Items
 	CText2D      m_text2D;
 	CPolygon2D   m_polygon2D;
-	CMotion3D    m_motion3D;
-	CHuman3DBase m_human3DBase;
-	CModelSetUp  m_modelSetUp;
+	//CMotion3D    m_motion3D;
+	//CHuman3DBase m_human3DBase;
+	CSetUp3D  m_modelSetUp;
 	CModel       m_model;
 	CEff3DMng    m_eff3DMng;
 	CText3D      m_text3D;
@@ -97,9 +97,9 @@ bool           RNLib::GetSpace3DStop(void)       { return m_bSpace3DStop;  }
 bool           RNLib::GetSceneSwap  (void)       { return m_bSceneSwap;    }
 CText2D*       RNLib::Text2D        (void)       { return &m_text2D;       }
 CPolygon2D*    RNLib::Polygon2D     (void)       { return &m_polygon2D;    }
-CMotion3D*     RNLib::Motion3D      (void)       { return &m_motion3D;     }
-CHuman3DBase*  RNLib::Human3DBase   (void)       { return &m_human3DBase;  }
-CModelSetUp*   RNLib::ModelSetUp    (void)       { return &m_modelSetUp;   }
+//CMotion3D*     RNLib::Motion3D      (void)       { return &m_motion3D;     }
+//CHuman3DBase*  RNLib::Human3DBase   (void)       { return &m_human3DBase;  }
+CSetUp3D*   RNLib::ModelSetUp    (void)       { return &m_modelSetUp;   }
 CModel*        RNLib::Model         (void)       { return &m_model;        }
 CEff3DMng*     RNLib::Eff3DMng      (void)       { return &m_eff3DMng;     }
 CText3D*       RNLib::Text3D        (void)       { return &m_text3D;       }
@@ -346,9 +346,9 @@ namespace {
 	// Author:RIKU NISHIMURA
 	//========================================
 	void Uninit(void) {
-		m_motion3D   .Uninit();
-		m_human3DBase.Uninit();
-		m_modelSetUp .Uninit();
+		//m_motion3D   .Uninit();
+		//m_human3DBase.Uninit();
+		//m_modelSetUp .Uninit();
 		m_drawMng    .Uninit();
 		m_drawState  .Uninit();
 		m_line3D     .Uninit();
@@ -362,8 +362,6 @@ namespace {
 		UninitSetting();
 		UninitPrint();
 	
-		m_texture.Uninit();
-		m_model  .Uninit();
 		m_sound  .Uninit();
 
 		if (m_bUseImGui)
@@ -407,7 +405,7 @@ namespace {
 		m_input.SetWheelSpin(CInput::WHEELSPIN_NONE);
 	
 		if (m_bUseImGui)
-			ImGuiInitFlag();	
+			ImGuiInitFlag();
 	}
 
 	//========================================

@@ -30,7 +30,7 @@ public:
 	void Init(void);
 	void Uninit(void);
 	void Update(void);
-	void SetUpTexture(LPDIRECT3DDEVICE9 device) { device->SetTexture(0, m_texturesMT[0]); }
+	void SetTexture(LPDIRECT3DDEVICE9 device) { device->SetTexture(0, m_texturesMT[0]); }
 	// ê›íËån
 	static void StartRenderingScreen(LPDIRECT3DDEVICE9 device);
 	void StartRendering (LPDIRECT3DDEVICE9 device);

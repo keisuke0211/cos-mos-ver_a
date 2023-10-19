@@ -10,8 +10,9 @@
 #define _MOTION3D_H_
 
 #include "setup3D.h"
-#include "../../Other/regist.h"
+#include "../../Mechanical/regist.h"
 
+#if 0
 //****************************************
 // クラス定義
 //****************************************
@@ -57,7 +58,7 @@ public:
 	typedef struct Data_ {
 		int  nLoopTime = 0;		// ループ時間
 		bool bLoop     = false;	// ループするかフラグ
-		PlatformData pfData[CModelSetUp::PLATFORM_MAX] = {};
+		PlatformData pfData[CSetUp3D::PLATFORM_MAX] = {};
 	}Data;
 
 	//========== [[[ 関数宣言 ]]]
@@ -65,7 +66,7 @@ public:
 	/* 読み込み処理         */int       Load(const char* pPath, short nIdx = DATANONE);
 	/* 書き込み処理         */void      Save(const char* pPath, const int nIdx);
 	/* データ取得           */Data*     GetData(void)                                               { return m_pData; }
-	/* 部品毎のコマンド取得 */PartsCmd* GetPartsCmd(int nIdx, CModelSetUp::PLATFORM pf, int nParts) { return &m_pData[nIdx].pfData[pf].pPartsCmd[nParts]; }
+	/* 部品毎のコマンド取得 */PartsCmd* GetPartsCmd(int nIdx, CSetUp3D::PLATFORM pf, int nParts) { return &m_pData[nIdx].pfData[pf].pPartsCmd[nParts]; }
 	/* コマンドデータ取得   */CmdData   GetCmdData(CMD_LABEL cmd)                                   { return CMD_DATA[cmd]; }
 	/* メモリ初期化処理     */void      InitMemory(const int nNum);
 
@@ -76,5 +77,6 @@ private:
 	//========== [[[ 静的定数宣言 ]]]
 	static const CmdData CMD_DATA[CMD_LABEL_MAX];	// コマンドデータ
 };
+#endif
 
 #endif

@@ -6,7 +6,7 @@
 //========================================
 #pragma once
 
-#include "../Other/regist.h"
+#include "../Mechanical/regist.h"
 #include "../../RNmain.h"
 
 //****************************************
@@ -19,7 +19,6 @@ public:
 	CTexture();
 	~CTexture();
 	void Init(void);
-	void Uninit(void);
 	int Load(const char *loadPath);
 	void Set(LPDIRECT3DDEVICE9 pDevice, int nTex);
 
