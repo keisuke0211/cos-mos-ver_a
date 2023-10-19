@@ -335,6 +335,7 @@ bool CSVFILE::ToValue(char* &val, const string &str)
 		char_traits<char>::copy(cstr, str.c_str(), str.size() + 1);
 
 		val = cstr;
+
 		return true;
 	}
 	catch (...)

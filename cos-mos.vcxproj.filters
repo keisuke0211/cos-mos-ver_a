@@ -249,10 +249,16 @@
     <ClCompile Include="code\Project\Object\BackGround\Planet.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="code\Project\Object\Gimmick\rocket.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="code\_RNLib\_Basis\Mechanical\regist.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="code\Project\Object\Gimmick\rocket.cpp">
+    <ClCompile Include="code\Project\Mode\mode_title.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Mode\mode_result.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -476,6 +482,12 @@
     <ClInclude Include="code\_RNLib\_Basis\Mechanical\regist.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="code\Project\Mode\mode_title.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Mode\mode_result.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -509,6 +521,7 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\data.obj" />
+    <Object Include="Debug\imgui_draw.obj" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\TEXTURE\meteo000.png">
