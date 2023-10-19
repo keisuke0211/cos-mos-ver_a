@@ -40,6 +40,9 @@ CModel::~CModel() {
 void CModel::Release(void) {
 
 	// ƒf[ƒ^‚Ì‰ğ•ú
+	for (int cnt = 0; cnt < m_num; cnt++) {
+		m_datas[cnt].Release();
+	}
 	RNLib::Memory()->Release<CData>(&m_datas);
 }
 
@@ -177,8 +180,6 @@ CModel::CData::CData() {
 //========================================
 CModel::CData::~CData() {
 
-	// ‰ğ•úˆ—
-	Release();
 }
 
 //========================================

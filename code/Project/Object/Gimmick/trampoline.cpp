@@ -134,7 +134,7 @@ void CTrampoline::Collision(void) {
 		{//2pが乗っているか
 
 			//ジャンプ量を継承
-			p2.move.y = p1.move.y;
+			p2.move.y = p1.move.y * 2;
 
 			p1.move.y = 0.0f;
 		}
@@ -156,7 +156,7 @@ void CTrampoline::Collision(void) {
 		{//1pが乗っているか
 
 			//ジャンプ量を継承
-			p1.move.y = p2.move.y;
+			p1.move.y = p2.move.y * 2;
 
 			p1.move.y = 0.0f;
 		}
