@@ -1,10 +1,8 @@
 //========================================
 // 
-// 部品3Dセットアップの処理
+// ドール3Dの処理
 // Author:RIKU NISHIMURA
 // 
-//========================================
-// [[[ parts3D.cpp ]]]
 //========================================
 #include "../../../RNlib.h"
 
@@ -13,20 +11,48 @@
 //****************************************
 #define PAUSE_RESET_TIME (10)
 
+#if 0
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| CParts3Dクラスのメンバ関数
+//==========| ボーン状態クラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
 
 //========================================
 // コンストラクタ
-// Author:RIKU NISHIMURA
 //========================================
-CParts3DSetUp::CParts3DSetUp(void) {
+CDoll3D::CBoneState::CBoneState() {
+
+	m_pos			= INITD3DXVECTOR3;
+	m_rot			= INITD3DXVECTOR3;
+	m_scale			= D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	m_resultMtx		= INITD3DXMATRIX;
+	m_animeStateSum = {};
+}
+
+//========================================
+// デストラクタ
+//========================================
+CDoll3D::CBoneState::~CBoneState() {
+
+}
+
+//================================================================================
+//----------|---------------------------------------------------------------------
+//==========| ドール3Dクラスのメンバ関数
+//----------|---------------------------------------------------------------------
+//================================================================================
+
+//========================================
+// コンストラクタ
+//========================================
+CDoll3D::CDoll3D(void) {
+
 	m_pos			 = INITD3DXVECTOR3;
 	m_rot			 = INITD3DXVECTOR3;
-	m_bMotionStop	 = false;		
+	m_boneStates     = NULL;
+
+	m_bMotionStop	 = false;
 	m_bDrawCollision = false;		
 	m_nModelSetUp	 = 0;			
 	m_nMotion		 = 0;			
@@ -35,23 +61,40 @@ CParts3DSetUp::CParts3DSetUp(void) {
 	m_col			 = CLEARCOLOR;	
 	m_fBrOfEm        = 1.0f;
 	m_fScale         = 1.0f;
-	m_pParts		 = NULL;
-	m_pCLParts       = NULL;
 }
 
 //========================================
 // デストラクタ
-// Author:RIKU NISHIMURA
 //========================================
-CParts3DSetUp::~CParts3DSetUp(void) {
+CDoll3D::~CDoll3D(void) {
 
+	// 部品情報のメモリ解放
+	RNLib::Memory()->Release(&m_boneStates);
+}
+
+//========================================
+// 初期化処理
+//========================================
+void CDoll3D::SetUp(const short& setUpIdx) {
+
+	// セットアップデータ取得
+	CSetUp3D::CData& setUp = RNLib::ModelSetUp()->GetData(setUpIdx);
+
+	//----------------------------------------
+	// ボーン状態メモリ
+	// 部品数が0を越えている > メモリ確保
+	//----------------------------------------
+	if (setUp.m_boneDataSum.boneDataNum > 0)
+		RNLib::Memory()->Alloc<CBoneState>(&m_boneStates, setUp.m_boneDataSum.boneDataNum);
+	else
+		RNLib::Memory()->Release<CBoneState>(&m_boneStates);
 }
 
 //========================================
 // モデル設定処理
-// Author:RIKU NISHIMURA
 //========================================
-void CParts3DSetUp::ModelSet(Data *pPartsSet) {
+void CDoll3D::ModelSet(Data *pPartsSet) {
+
 	// 部品数0以下の時、処理を終了する
 	if (pPartsSet->nPartsNum <= 0)return;
 
@@ -78,7 +121,7 @@ void CParts3DSetUp::ModelSet(Data *pPartsSet) {
 	pDevice->SetTransform(D3DTS_WORLD, &mtxSelf);
 
 	for (int nCntParts = 0; nCntParts < pPartsSet->nPartsNum; nCntParts++) {
-		PartsState *pParts = &m_pParts[nCntParts];	// 部品の情報のポインタ
+		CBoneState *pParts = &m_boneStates[nCntParts];	// 部品の情報のポインタ
 		PartsData *pPartsType = &pPartsSet->pPartsData[nCntParts];	// 部品の種類毎の情報のポインタ
 		D3DXVECTOR3 posResult;	// 位置(結果)
 		D3DXVECTOR3 rotResult;	// 向き(結果)
@@ -87,7 +130,7 @@ void CParts3DSetUp::ModelSet(Data *pPartsSet) {
 			if (pParts->bPosAnim)
 			{// 位置アニメフラグが真の時、カウンターの進行率に応じて位置を更新
 				float fRate = Easing(pParts->easePos, pParts->nCounterPosAnim, pParts->nPosAnimTime - 1);
-				pParts->pos = (pParts->posOld * (1.0f - fRate)) + (pParts->targetPos * fRate);
+				pParts->pos = (pParts->oldPos * (1.0f - fRate)) + (pParts->targetPos * fRate);
 			}
 
 			// 結果位置を求める
@@ -117,7 +160,7 @@ void CParts3DSetUp::ModelSet(Data *pPartsSet) {
 			else if (pParts->bRotAnim)
 			{// 向きアニメフラグが真の時、カウンターの進行率に応じて向きを更新
 				float fRate = Easing(pParts->easeRot, pParts->nCounterRotAnim, pParts->nRotAnimTime - 1);
-				pParts->rot = (pParts->rotOld * (1.0f - fRate)) + (pParts->targetRot * fRate);
+				pParts->rot = (pParts->oldRot * (1.0f - fRate)) + (pParts->targetRot * fRate);
 			}
 
 			// 結果位置を求める
@@ -202,7 +245,7 @@ void CParts3DSetUp::ModelSet(Data *pPartsSet) {
 			->SetBrightnessOfEmissive(m_fBrOfEm);
 
 		// マトリックスを部品に保存
-		pParts->mtx = pMtxParts[nCntParts];
+		pParts->resultMtx = pMtxParts[nCntParts];
 	}
 
 	// 部品毎のマトリックスのメモリ解放
@@ -210,7 +253,7 @@ void CParts3DSetUp::ModelSet(Data *pPartsSet) {
 
 	if (m_pCLParts != NULL) 
 	{// コリジョン部品が存在する時、コリジョン部品の位置計算
-		CModelSetUp::Data* pModelSetUp = RNLib::ModelSetUp()->GetData(m_nModelSetUp);
+		CSetUp3D::Data* pModelSetUp = RNLib::ModelSetUp()->GetData(m_nModelSetUp);
 		for (int nCntCLParts = 0; nCntCLParts < pModelSetUp->collSet.nPartsNum; nCntCLParts++) {
 			CCollision3D::Parts collParts = pModelSetUp->collSet.pParts[nCntCLParts];
 			D3DXVECTOR3 pos = INITD3DXVECTOR3;
@@ -221,11 +264,11 @@ void CParts3DSetUp::ModelSet(Data *pPartsSet) {
 				rot = m_rot;
 			}
 			else {
-				CParts3DSetUp::PartsState parts = {};	// 部品情報
+				CDoll3D::CBoneState parts = {};	// 部品情報
 
 				if (GetPartsState_Idx(pModelSetUp->collSet.pParts[nCntCLParts].nParent, &parts)) {
-					pos = ConvMatrixToPos(parts.mtx);
-					rot = ConvMatrixToRot(parts.mtx);
+					pos = ConvMatrixToPos(parts.resultMtx);
+					rot = ConvMatrixToRot(parts.resultMtx);
 				}
 				else {
 					pos = m_pos;
@@ -242,91 +285,28 @@ void CParts3DSetUp::ModelSet(Data *pPartsSet) {
 	}
 }
 
-//========================================
-// 初期化処理
-// Author:RIKU NISHIMURA
-//========================================
-void CParts3DSetUp::Init(int nSetUpNum) {
-	// モデルセットアップ情報
-	CModelSetUp::Data setUp = *RNLib::ModelSetUp()->GetData(nSetUpNum);
-
-	// 初期化
-	m_nModelSetUp	 = nSetUpNum;		// モデルセットアップ番号を設定
-	m_pos			 = INITD3DXVECTOR3;	// 本体位置
-	m_rot			 = INITD3DXVECTOR3;	// 本体向き
-	m_bMotionStop	 = false;			// 停止フラグ
-	m_bDrawCollision = false;			// 当たり判定描画フラグ
-	m_nMotion		 = DATANONE;		// モーション番号
-	m_nMotionOld	 = DATANONE;		// モーション番号(過去)
-	m_nMotionCounter = 0;				// モーションカウンター
-	m_col			 = INITCOLOR;		// 色
-
-	if (setUp.partsSet.nPartsNum > 0) 
-	{// 部品数が0を超えていた時、
-		// 部品情報のポインタのメモリを部品数分確保する
-		if (m_pParts != NULL) {
-			delete m_pParts;
-		}
-		m_pParts = new PartsState[setUp.partsSet.nPartsNum];
-
-		// ポーズ初期化
-		InitPause();
-	}
-	else 
-	{// 部品数が0を超えていなかった時、
-		if (m_pParts != NULL) {
-			delete[] m_pParts;
-			m_pParts = NULL;
-		}
-	}
-
-	if (setUp.collSet.nPartsNum > 0) 
-	{// コリジョン部品数が0を越えていた時、
-		// コリジョン部品の情報ポインタのメモリを部品数分確保する
-		if (m_pCLParts != NULL) {
-			delete m_pCLParts;
-		}
-		m_pCLParts = new CLParts[setUp.collSet.nPartsNum];
-	}
-	else
-	{// 部品数が0を超えていなかった時、
-		if (m_pCLParts != NULL) {
-			delete[] m_pCLParts;
-			m_pCLParts = NULL;
-		}
-	}
-}
-
-//========================================
-// 終了処理
-// Author:RIKU NISHIMURA
-//========================================
-void CParts3DSetUp::Uninit(void) {
-	RNLib::Memory()->Release(&m_pParts);		// 部品情報のメモリ解放
-	RNLib::Memory()->Release(&m_pCLParts);		// コリジョン部品情報のメモリ解放
-}
 
 //========================================
 // 更新処理
 // Author:RIKU NISHIMURA
 //========================================
-void CParts3DSetUp::Update(void) {
+void CDoll3D::Update(void) {
 	// モデルセットアップ情報
-	CModelSetUp::Data setUp = *RNLib::ModelSetUp()->GetData(m_nModelSetUp);
+	CSetUp3D::Data setUp = *RNLib::ModelSetUp()->GetData(m_nModelSetUp);
 
 	if (m_nModelSetUp != DATANONE)
 	{// モデルセットアップ番号が-1 or の時、
 		if (!m_bMotionStop)
 		{// 停止していない時、
 			// モーション設定
-			MotionSet(setUp.partsSet);
+			MotionSet(setUp.boneDataSum);
 
 			// モーションの更新処理
-			MotionUpdate(m_nMotion, setUp.partsSet);
+			MotionUpdate(m_nMotion, setUp.boneDataSum);
 		}
 
 		// モデルの設定処理
-		ModelSet(&setUp.partsSet);
+		ModelSet(&setUp.boneDataSum);
 
 		if (m_bDrawCollision)
 			DrawCollision();
@@ -340,7 +320,7 @@ void CParts3DSetUp::Update(void) {
 // モーション終了取得
 // Author:RIKU NISHIMURA
 //========================================
-bool CParts3DSetUp::GetMotionEnd(void) {
+bool CDoll3D::GetMotionEnd(void) {
 	return m_nMotionCounter >= RNLib::Motion3D()->GetData()[m_nMotion].nLoopTime;
 }
 
@@ -348,18 +328,18 @@ bool CParts3DSetUp::GetMotionEnd(void) {
 // モーション踏み取得
 // Author:RIKU NISHIMURA
 //========================================
-bool CParts3DSetUp::GetMotionStep(void) {
-	CModelSetUp::Data modelSetUp = *RNLib::ModelSetUp()->GetData(m_nModelSetUp);
+bool CDoll3D::GetMotionStep(void) {
+	CSetUp3D::Data modelSetUp = *RNLib::ModelSetUp()->GetData(m_nModelSetUp);
 	CMotion3D  ::Data motion     =  RNLib::Motion3D  ()->GetData()[m_nMotion];
 
-	for (int nCntParts = 0; nCntParts < modelSetUp.partsSet.nPartsNum; nCntParts++) {
-		if (m_pParts[nCntParts].bStepReaction)
+	for (int nCntParts = 0; nCntParts < modelSetUp.boneDataSum.nPartsNum; nCntParts++) {
+		if (m_boneStates[nCntParts].bStepReaction)
 		{// 足踏反応フラグが真の時、
 			return true;
 		}
-		else if (m_pParts[nCntParts].bStep)
+		else if (m_boneStates[nCntParts].bStep)
 		{// 足踏フラグが真の時、
-			if (m_pParts[nCntParts].nCounterRotAnim == m_pParts[nCntParts].nRotAnimTime) {
+			if (m_boneStates[nCntParts].nCounterRotAnim == m_boneStates[nCntParts].nRotAnimTime) {
 				return true;
 			}
 		}
@@ -369,37 +349,16 @@ bool CParts3DSetUp::GetMotionStep(void) {
 }
 
 //========================================
-// ポーズ初期化
-// Author:RIKU NISHIMURA
-//========================================
-void CParts3DSetUp::InitPause(void) {
-	if (m_nModelSetUp == DATANONE)
-		return;
-
-	// モデルセットアップ情報
-	CModelSetUp::Data setUp = *RNLib::ModelSetUp()->GetData(m_nModelSetUp);
-
-	for (int nCntParts = 0; nCntParts < setUp.partsSet.nPartsNum; nCntParts++) {
-		PartsData* pPartsType = &setUp.partsSet.pPartsData[nCntParts];	// 部品の種類毎の情報のポインタ
-
-		m_pParts[nCntParts] = {};	// 部品の情報を初期化
-
-		// マトリックスに相対位置/向きを適用
-		m_pParts[nCntParts].mtx = ConvPosRotToMatrix(pPartsType->fixedRelativePos, pPartsType->fixedRelativeRot);
-	}
-}
-
-//========================================
 // 部品情報取得(番号指定)
 // Author:RIKU NISHIMURA
 //========================================
-bool CParts3DSetUp::GetPartsState_Idx(int nIdx, PartsState* pParts) {
+bool CDoll3D::GetPartsState_Idx(int nIdx, CBoneState* pParts) {
 	// モデルセットアップ情報
-	CModelSetUp::Data setUp = *RNLib::ModelSetUp()->GetData(m_nModelSetUp);
+	CSetUp3D::Data setUp = *RNLib::ModelSetUp()->GetData(m_nModelSetUp);
 
-	for (int nCntParts = 0; nCntParts < setUp.partsSet.nPartsNum; nCntParts++) {
-		if (setUp.partsSet.pPartsData[nCntParts].nIdx == nIdx) {
-			*pParts = m_pParts[nCntParts];
+	for (int nCntParts = 0; nCntParts < setUp.boneDataSum.nPartsNum; nCntParts++) {
+		if (setUp.boneDataSum.pPartsData[nCntParts].nIdx == nIdx) {
+			*pParts = m_boneStates[nCntParts];
 			return true;
 		}
 	}
@@ -411,21 +370,21 @@ bool CParts3DSetUp::GetPartsState_Idx(int nIdx, PartsState* pParts) {
 // 部品情報取得(部位指定)
 // Author:RIKU NISHIMURA
 //========================================
-bool CParts3DSetUp::GetPartsState_Part(int nPart, PartsState* pParts) {
+bool CDoll3D::GetPartsState_Part(int nPart, CBoneState* pParts) {
 	// モデルセットアップ情報
-	CModelSetUp::Data setUp = *RNLib::ModelSetUp()->GetData(m_nModelSetUp);
+	CSetUp3D::Data setUp = *RNLib::ModelSetUp()->GetData(m_nModelSetUp);
 
 	// モデル構成に応じた部位番号取得
-	int nIdx = RNLib::ModelSetUp()->GetPlatformPartIdx(setUp.platform, (CModelSetUp::PART)nPart);
+	int nIdx = RNLib::ModelSetUp()->GetPlatformPartIdx(setUp.platform, (CSetUp3D::PART)nPart);
 
-	for (int nCntParts = 0; nCntParts < setUp.partsSet.nPartsNum; nCntParts++) {
-		if (setUp.partsSet.pPartsData[nCntParts].nIdx == nIdx) {
-			*pParts = m_pParts[nCntParts];
+	for (int nCntParts = 0; nCntParts < setUp.boneDataSum.nPartsNum; nCntParts++) {
+		if (setUp.boneDataSum.pPartsData[nCntParts].nIdx == nIdx) {
+			*pParts = m_boneStates[nCntParts];
 			return true;
 		}
 	}
 
-	*pParts = m_pParts[0];
+	*pParts = m_boneStates[0];
 
 	return false;
 }
@@ -434,7 +393,7 @@ bool CParts3DSetUp::GetPartsState_Part(int nPart, PartsState* pParts) {
 // モーション3Dの設定処理
 // Author:RIKU NISHIMURA
 //========================================
-void CParts3DSetUp::MotionSet(Data partsSet) {
+void CDoll3D::MotionSet(Data partsSet) {
 	if (m_nMotion == m_nMotionOld)
 	{// 既にそのモーション番号に設定されている時、
 		return;	// 処理を終了する
@@ -454,7 +413,7 @@ void CParts3DSetUp::MotionSet(Data partsSet) {
 // モーション3Dの更新処理
 // Author:RIKU NISHIMURA
 //========================================
-bool CParts3DSetUp::MotionUpdate(int nMotion, Data partsSet) {
+bool CDoll3D::MotionUpdate(int nMotion, Data partsSet) {
 	if (nMotion == DATANONE) {
 		return false;
 	}
@@ -501,13 +460,13 @@ bool CParts3DSetUp::MotionUpdate(int nMotion, Data partsSet) {
 // モーション3Dのアニメ読み込み処理
 // Author:RIKU NISHIMURA
 //========================================
-void CParts3DSetUp::LoadMotionAnim(Data partsSet) {
-	CModelSetUp::PLATFORM platform = RNLib::ModelSetUp()->GetData(m_nModelSetUp)->platform;
+void CDoll3D::LoadMotionAnim(Data partsSet) {
+	CSetUp3D::PLATFORM platform = RNLib::ModelSetUp()->GetData(m_nModelSetUp)->platform;
 	CMotion3D::Data       motion   = RNLib::Motion3D()->GetData()[m_nMotion];
 
 	// 部品全ての一部情報初期化
 	for (int nCntParts = 0; nCntParts < partsSet.nPartsNum; nCntParts++) {
-		m_pParts[nCntParts].bStepReaction = false;
+		m_boneStates[nCntParts].bStepReaction = false;
 	}
 
 	// 部品毎のアニメの読み込み
@@ -517,7 +476,7 @@ void CParts3DSetUp::LoadMotionAnim(Data partsSet) {
 
 		for (int nCntCmd = 0; nCntCmd < partsMotion3D.nCmdNum; nCntCmd++) {
 			CMotion3D::Cmd cmd = partsMotion3D.pCmd[nCntCmd];	// コマンド情報
-			PartsState *pParts = m_pParts;	// 部品3Dの情報
+			CBoneState *pParts = m_boneStates;	// 部品3Dの情報
 
 			{// 一致した部品番号までポインタを進める
 				bool bFind = false;	// 一致部品確認フラグ
@@ -549,7 +508,7 @@ void CParts3DSetUp::LoadMotionAnim(Data partsSet) {
 				else
 				{// 移動にかかる時間が0でない時、
 					pParts->easePos         = ease;			// 位置補間を設定
-					pParts->posOld          = pParts->pos;	// 元の位置を設定
+					pParts->oldPos          = pParts->pos;	// 元の位置を設定
 					pParts->targetPos       = pos;			// 目標位置を代入
 					pParts->nPosAnimTime    = nMoveTime;	// 位置アニメにかかる時間を代入
 					pParts->nCounterPosAnim = 0;			// 位置アニメカウンターを初期化
@@ -569,7 +528,7 @@ void CParts3DSetUp::LoadMotionAnim(Data partsSet) {
 				else
 				{// 回転にかかる時間が0でない時、
 					pParts->easeRot         = ease;			// 向き補間を設定
-					pParts->rotOld          = pParts->rot;	// 元の向きを設定
+					pParts->oldRot          = pParts->rot;	// 元の向きを設定
 					pParts->targetRot       = rot;			// 目標向きを代入
 					pParts->nRotAnimTime    = nSpinTime;	// 向きアニメにかかる時間を代入
 					pParts->nCounterRotAnim = 0;			// 向きアニメカウンターを初期化
@@ -622,10 +581,10 @@ void CParts3DSetUp::LoadMotionAnim(Data partsSet) {
 // モーション3Dのアニメ処理
 // Author:RIKU NISHIMURA
 //========================================
-void CParts3DSetUp::MotionAnim(Data partsSet) {
+void CDoll3D::MotionAnim(Data partsSet) {
 	for (int nCntParts = 0; nCntParts < partsSet.nPartsNum; nCntParts++) {
 		// 部品の情報のポインタ
-		PartsState *pParts = &m_pParts[nCntParts];
+		CBoneState *pParts = &m_boneStates[nCntParts];
 
 		if (pParts->bPosAnim)
 		{// 位置アニメフラグが真の時、
@@ -664,45 +623,45 @@ void CParts3DSetUp::MotionAnim(Data partsSet) {
 // モーションのクリア処理
 // Author:RIKU NISHIMURA
 //========================================
-void CParts3DSetUp::MotionClear(Data partsSet, int nMotion) {
+void CDoll3D::MotionClear(Data partsSet, int nMotion) {
 	if (nMotion == DATANONE)
 		return;
 
 	CMotion3D::Data motion = RNLib::Motion3D()->GetData()[nMotion];
-	CModelSetUp::PLATFORM platform = RNLib::ModelSetUp()->GetData(m_nModelSetUp)->platform;
+	CSetUp3D::PLATFORM platform = RNLib::ModelSetUp()->GetData(m_nModelSetUp)->platform;
 
 	for (int nCntParts = 0; nCntParts < partsSet.nPartsNum; nCntParts++) {
-		m_pParts[nCntParts].bScaleAnim = false;
-		m_pParts[nCntParts].bStep      = false;
+		m_boneStates[nCntParts].bScaleAnim = false;
+		m_boneStates[nCntParts].bStep      = false;
 
 		if (motion.pfData[platform].pPartsCmd == NULL) {
-			m_pParts[nCntParts].bPosAnim = false;
+			m_boneStates[nCntParts].bPosAnim = false;
 		}
 		else if (motion.pfData[platform].pPartsCmd[nCntParts].bMove) {
-			m_pParts[nCntParts].bPosAnim = false;
+			m_boneStates[nCntParts].bPosAnim = false;
 		}
 		else {
-			m_pParts[nCntParts].easePos         = EASE_LINEAR;
-			m_pParts[nCntParts].bPosAnim        = true;
-			m_pParts[nCntParts].nCounterPosAnim = 0;
-			m_pParts[nCntParts].nPosAnimTime    = PAUSE_RESET_TIME;
-			m_pParts[nCntParts].posOld          = m_pParts[nCntParts].pos;	
-			m_pParts[nCntParts].targetPos       = INITD3DXVECTOR3;
+			m_boneStates[nCntParts].easePos         = EASE_LINEAR;
+			m_boneStates[nCntParts].bPosAnim        = true;
+			m_boneStates[nCntParts].nCounterPosAnim = 0;
+			m_boneStates[nCntParts].nPosAnimTime    = PAUSE_RESET_TIME;
+			m_boneStates[nCntParts].oldPos          = m_boneStates[nCntParts].pos;	
+			m_boneStates[nCntParts].targetPos       = INITD3DXVECTOR3;
 		}
 
 		if (motion.pfData[platform].pPartsCmd == NULL) {
-			m_pParts[nCntParts].bRotAnim = false;
+			m_boneStates[nCntParts].bRotAnim = false;
 		}
 		else if (motion.pfData[platform].pPartsCmd[nCntParts].bSpin) {
-			m_pParts[nCntParts].bRotAnim = false;
+			m_boneStates[nCntParts].bRotAnim = false;
 		}
 		else {
-			m_pParts[nCntParts].easeRot         = EASE_LINEAR;
-			m_pParts[nCntParts].bRotAnim        = true;
-			m_pParts[nCntParts].nCounterRotAnim = 0;
-			m_pParts[nCntParts].nRotAnimTime    = PAUSE_RESET_TIME;
-			m_pParts[nCntParts].rotOld          = m_pParts[nCntParts].rot;	
-			m_pParts[nCntParts].targetRot       = INITD3DXVECTOR3;
+			m_boneStates[nCntParts].easeRot         = EASE_LINEAR;
+			m_boneStates[nCntParts].bRotAnim        = true;
+			m_boneStates[nCntParts].nCounterRotAnim = 0;
+			m_boneStates[nCntParts].nRotAnimTime    = PAUSE_RESET_TIME;
+			m_boneStates[nCntParts].oldRot          = m_boneStates[nCntParts].rot;	
+			m_boneStates[nCntParts].targetRot       = INITD3DXVECTOR3;
 		}
 	}
 }
@@ -711,8 +670,8 @@ void CParts3DSetUp::MotionClear(Data partsSet, int nMotion) {
 // コリジョン描画処理
 // Author:RIKU NISHIMURA
 //========================================
-void CParts3DSetUp::DrawCollision(void) {
-	CModelSetUp::Data* pModelSetUp = RNLib::ModelSetUp()->GetData(m_nModelSetUp);
+void CDoll3D::DrawCollision(void) {
+	CSetUp3D::Data* pModelSetUp = RNLib::ModelSetUp()->GetData(m_nModelSetUp);
 
 	for (int nCntCollParts = 0; nCntCollParts < pModelSetUp->collSet.nPartsNum; nCntCollParts++) {
 		CCollision3D::Parts collParts = pModelSetUp->collSet.pParts[nCntCollParts];
@@ -724,11 +683,11 @@ void CParts3DSetUp::DrawCollision(void) {
 			rot = m_rot;
 		}
 		else {
-			CParts3DSetUp::PartsState parts = {};	// 部品情報
+			CDoll3D::CBoneState parts = {};	// 部品情報
 
 			if (GetPartsState_Idx(pModelSetUp->collSet.pParts[nCntCollParts].nParent, &parts)) {
-				pos = ConvMatrixToPos(parts.mtx);
-				rot = ConvMatrixToRot(parts.mtx);
+				pos = ConvMatrixToPos(parts.resultMtx);
+				rot = ConvMatrixToRot(parts.resultMtx);
 			}
 			else {
 				pos = m_pos;
@@ -785,72 +744,16 @@ void CParts3DSetUp::DrawCollision(void) {
 // 部品設定情報3Dの読み込み処理
 // Author:RIKU NISHIMURA
 //========================================
-void CParts3DSetUp::LoadData(Data *pPartsSet) {
+void CDoll3D::LoadData(Data *pPartsSet) {
 
-	// 部品設定情報を初期化
-	if (pPartsSet->pPartsData != NULL) {
-		delete[] pPartsSet->pPartsData;
-		pPartsSet->pPartsData = NULL;
-	}
-	*pPartsSet = {};
-
-	// 部品数読み込み
-	RNLib::File()->Scan(CFile::SCAN::INT,&pPartsSet->nPartsNum);
-
-	// 部品の種類毎の情報のメモリ確保
-	if (pPartsSet->nPartsNum > 0) {
-		pPartsSet->pPartsData = new PartsData[pPartsSet->nPartsNum];
-	}
-
-	int nCntParts = 0;	// 部品のカウント
-
-	// 部品設定情報の読み込みを開始
-	while (RNLib::File()->SearchLoop("}")) {
-		if (false) {}
-		else if (RNLib::File()->CheckIdentifier(/* 部品情報 */"PARTS{")) {
-			// 部品の種類毎の情報のポインタ
-			pPartsSet->pPartsData[nCntParts] = {};
-			PartsData& parts = pPartsSet->pPartsData[nCntParts];
-
-			// 部品情報の読み込みを開始
-			while (RNLib::File()->SearchLoop("}")) {
-				if (false) {}
-				else if (RNLib::File()->CheckIdentifier(/* 部品番号   */"INDEX:"))        { RNLib::File()->Scan(CFile::SCAN::INT, &parts.nIdx); }
-				else if (RNLib::File()->CheckIdentifier(/* モデルパス */"MODEL_PATH:"))   { RNLib::File()->Scan(CFile::SCAN::MODELIDX, &parts.nModelIdx); }
-				else if (RNLib::File()->CheckIdentifier(/* 親部品番号 */"PARENT:"))       { RNLib::File()->Scan(CFile::SCAN::INT, &parts.nParent); }
-				else if (RNLib::File()->CheckIdentifier(/* 相対位置   */"RELATIVE_POS:")) { RNLib::File()->Scan(CFile::SCAN::POS3D, &parts.fixedRelativePos); }
-				else if (RNLib::File()->CheckIdentifier(/* 相対角度   */"RELATIVE_ROT:")) { RNLib::File()->Scan(CFile::SCAN::POS3D, &parts.fixedRelativeRot); }
-				else if (RNLib::File()->CheckIdentifier(/* 親部品番号 */"LIGHTING:"))     { RNLib::File()->Scan(CFile::SCAN::BOOL, &parts.bLighting); }
-			}
-
-			nCntParts++;	// 部品のカウントを加算
-			assert(nCntParts <= pPartsSet->nPartsNum);
-		}
-	}
-
-	for (int nCntParts = 0; nCntParts < pPartsSet->nPartsNum; nCntParts++) {
-		PartsData& parts = pPartsSet->pPartsData[nCntParts];
-		if (parts.nParent == DATANONE)
-			continue;
-
-		int nCntParts2;
-		for (nCntParts2 = 0; nCntParts2 < pPartsSet->nPartsNum; nCntParts2++) {
-			if (parts.nParent == pPartsSet->pPartsData[nCntParts2].nIdx) {
-				parts.nParent = nCntParts2;
-				break;
-			}
-		}
-
-		if (nCntParts2 == pPartsSet->nPartsNum)
-			parts.nParent = DATANONE;
-	}
+	
 }
 
 //========================================
 // 部品設定情報3Dの書き込み処理
 // Author:RIKU NISHIMURA
 //========================================
-void CParts3DSetUp::SaveData(Data *pPartsSet) {
+void CDoll3D::SaveData(Data *pPartsSet) {
 	FILE* pFile = RNLib::File()->GetFile();
 	fprintf(pFile, "PARTSSET{ %d\n", pPartsSet->nPartsNum);
 
@@ -874,3 +777,4 @@ void CParts3DSetUp::SaveData(Data *pPartsSet) {
 	}
 	fprintf(pFile, "}\n");
 }
+#endif

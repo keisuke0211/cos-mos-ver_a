@@ -78,6 +78,8 @@ CVisual::~CVisual() {
 // Author:RIKU NISHIMURA
 //========================================
 void CVisual::Load(void) {
+	return;
+
 	if (!RNLib::File()->OpenLoadFile(VISUALFILE_PATH))
 		return;
 

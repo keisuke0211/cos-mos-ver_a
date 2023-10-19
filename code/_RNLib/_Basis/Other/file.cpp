@@ -382,7 +382,7 @@ void CFile::ScanExecution(const SCAN scan, void* data, bool isCSV, bool isEnd) {
 		char motion3DPath[TXT_MAX];
 		ScanExecution(SCAN::STRING, motion3DPath, isCSV, isEnd);
 		int* castData = (int*)data;
-		*castData = RNLib::Motion3D()->Load(motion3DPath);
+		//*castData = RNLib::Motion3D()->Load(motion3DPath);
 	}break;
 	}
 }

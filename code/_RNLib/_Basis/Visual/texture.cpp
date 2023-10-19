@@ -24,21 +24,6 @@ CTexture::CTexture() {
 //========================================
 CTexture::~CTexture() {
 
-}
-
-//========================================
-// 初期化処理
-//========================================
-void CTexture::Init(void) {
-	
-}
-
-//========================================
-// 終了処理
-//========================================
-void CTexture::Uninit(void) {
-	CRegist::Uninit();
-
 	// テクスチャ解放
 	if (m_texs != NULL) {
 		for (int nCntTex = 0; nCntTex < m_num; nCntTex++) {
@@ -53,6 +38,13 @@ void CTexture::Uninit(void) {
 }
 
 //========================================
+// 初期化処理
+//========================================
+void CTexture::Init(void) {
+	
+}
+
+//========================================
 // 読み込み処理
 //========================================
 int CTexture::Load(const char* loadPath) {
@@ -60,7 +52,7 @@ int CTexture::Load(const char* loadPath) {
 	unsigned short numOld = m_num;
 	short idx = DATANONE;
 
-	if (CRegist::Load(loadPath, &idx))
+	if (CRegist::Load(loadPath, idx))
 	{// 読み込み成功
 		// テクスチャのメモリ再確保
 		RNLib::Memory()->ReAlloc<LPDIRECT3DTEXTURE9>(&m_texs, numOld, m_num);
@@ -74,7 +66,7 @@ int CTexture::Load(const char* loadPath) {
 			RNLib::Memory()->ReAlloc<LPDIRECT3DTEXTURE9>(&m_texs, m_num, numOld);
 
 			// 読み込み済パスのメモリリセット
-			RNLib::Memory()->ReAlloc<char*>(&m_ppLoadPath, m_num, numOld);
+			RNLib::Memory()->ReAlloc<char*>(&m_loadPaths, m_num, numOld);
 
 			// 数をリセット
 			m_num = numOld;

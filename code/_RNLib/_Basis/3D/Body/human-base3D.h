@@ -8,7 +8,7 @@
 //========================================
 #pragma once
 
-#include "../../Other/regist.h"
+#include "../../Mechanical/regist.h"
 #include "../../../RNmain.h"
 
 //****************************************
