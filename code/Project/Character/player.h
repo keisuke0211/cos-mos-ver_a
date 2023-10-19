@@ -116,7 +116,20 @@ private:
 	void Swap(void);
 
 	void WholeCollision(void);
-	void CollisionBlock(CStageObject *pObj, COLLI_VEC value);
+	//========================
+	//対象物の中にめり込んでいるかどうか判定
+	//------------------------
+	// 引数１	pos				：現在位置
+	// 引数２	posOld			：前回位置
+	// 引数３	fWidth			：幅
+	// 引数４	fHeight			：高さ
+	// 引数５	TargetMinPos	：対象物の最小位置
+	// 引数６	TargetMaxPos	：対象物の最大位置
+	// 返り値	対象物にめりこんでいる方向を返す（NONEなら当たっていない
+	//========================
+	COLLI_ROT IsBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, float fWidth, float fHeight, D3DXVECTOR3 TargetMinPos, D3DXVECTOR3 TargetMaxPos, COLLI_VEC value);
+
+	void CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
 };
