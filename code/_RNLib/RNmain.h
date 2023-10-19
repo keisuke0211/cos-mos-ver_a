@@ -56,7 +56,7 @@
 #define PIXEL3D_SIZE    (0.4f)
 
 //========== [[[ その他定数 ]]]
-#define TXT_MAX  (1024)	// 文字列の最大数(汎用)
+#define TXT_MAX  (512)	// 文字列の最大数(汎用)
 #define DATANONE (-1)	// データ無し番号
 
 //========== [[[ 関数形式 ]]]

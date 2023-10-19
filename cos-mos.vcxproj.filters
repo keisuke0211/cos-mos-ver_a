@@ -108,9 +108,6 @@
     <ClCompile Include="code\_RNLib\_Basis\Other\print.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="code\_RNLib\_Basis\Other\regist.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="code\_RNLib\_Basis\Other\setting.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
@@ -250,6 +247,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="code\Project\Object\BackGround\Planet.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\_RNLib\_Basis\Mechanical\regist.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -464,6 +464,9 @@
     <ClInclude Include="code\Project\Object\BackGround\Planet.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="code\_RNLib\_Basis\Mechanical\regist.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -497,7 +500,6 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\data.obj" />
-    <Object Include="Debug\imgui_draw.obj" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\TEXTURE\meteo000.png">
