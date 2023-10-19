@@ -206,7 +206,7 @@ CParts *CStageObjectMgr::PartsCreate(D3DXVECTOR3 pos)
 //========================================
 // ˜f¯
 //========================================
-CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos, CPlanet::STAR_TYPE type)
+CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CPlanet::STAR_TYPE type, Color col)
 {
 	CPlanet *pObj = NULL;
 
@@ -217,6 +217,8 @@ CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos, CPlanet::STAR_TYPE type)
 	pObj->SetType(type);
 	pObj->Init();
 	pObj->SetPos(pos);
+	pObj->SetCol(col);
+	pObj->SetRot(rot);
 
 	return pObj;
 }
