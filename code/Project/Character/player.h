@@ -97,8 +97,10 @@ public:
 	//プレイヤー情報取得
 	//各引数にプレイヤー情報のアドレスを渡します
 	//----------------------------
-	void GetInfo(Info *pP1, Info *pP2) { pP1 = &m_aInfo[0]; pP2 = &m_aInfo[1]; }
-	
+	void GetInfo(Info*& pP1, Info*& pP2) { pP1 = &m_aInfo[0]; pP2 = &m_aInfo[1]; }
+
+	Info *GetInfo(int nNum) { return &m_aInfo[nNum]; }
+
 private:
 	static int	s_nSwapInterval;//残りスワップインターバル
 
