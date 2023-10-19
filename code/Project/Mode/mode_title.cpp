@@ -36,6 +36,9 @@ CMode_Title::~CMode_Title(void) {
 void CMode_Title::Init(void) {
 	CMode::Init();
 
+	// ‘JˆÚÝ’è
+	RNLib::Transition()->Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
+
 	// ƒJƒƒ‰‚ÌŽ‹“_/’Ž‹“_‚ðÝ’è
 	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
@@ -59,11 +62,11 @@ void CMode_Title::Uninit(void) {
 void CMode_Title::Update(void) {
 	CMode::Update();
 
-	RNLib::Polygon2D()->Put(D3DXVECTOR3(640.0f, 360.0f, 0.0f), 0.0f, false)
+	RNLib::Polygon2D()->Put(D3DXVECTOR3(640.0f, 360.0f, -1.0f), 0.0f, false)
 		->SetSize(1280.0f,720.0f)
 		->SetCol(Color{255,0,0,255});
 
-	if (RNLib::Input()->KeyTrigger(DIK_SPACE))
+	if (RNLib::Input()->KeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
 		Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::NONE);
 }
 

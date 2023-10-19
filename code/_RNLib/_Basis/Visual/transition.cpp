@@ -76,6 +76,7 @@ void CTransition::Update(void) {
 		else {
 			m_state = STATE::NONE;
 		}
+		LocalFunc::FillScreen(1.0f);
 		return;
 	}
 
@@ -85,7 +86,7 @@ void CTransition::Update(void) {
 	}
 	float fRateOpp = 1.0f - fRate;
 
-	LocalFunc::FillScreen(fRate);
+	LocalFunc::FillScreen(fRateOpp);
 }
 
 //========================================

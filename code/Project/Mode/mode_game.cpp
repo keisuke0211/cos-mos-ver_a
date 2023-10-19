@@ -53,6 +53,9 @@ CMode_Game::~CMode_Game(void) {
 void CMode_Game::Init(void) {
 	CMode::Init();
 
+	// ëJà⁄ê›íË
+	RNLib::Transition()->Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
+
 	// ÉJÉÅÉâÇÃéãì_/íçéãì_Çê›íË
 	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
@@ -105,8 +108,8 @@ void CMode_Game::Update(void) {
 	if (RNLib::Input()->KeyTrigger(DIK_RETURN))
 		Manager::StgEd()->SwapStage(1);
 
-	/*if (RNLib::Input()->KeyTrigger(DIK_SPACE))
-		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::FADE);*/
+	if (RNLib::Input()->KeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::FADE);
 
 	// îwåi(âº)
 	{
