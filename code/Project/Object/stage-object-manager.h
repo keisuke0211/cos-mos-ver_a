@@ -36,7 +36,7 @@ public:
 	CMoveBlock  *MoveBlockCreate (D3DXVECTOR3 pos, D3DXVECTOR3 move);
 	CParts      *PartsCreate	 (D3DXVECTOR3 pos);
 	CRocket     *RocketCreate    (D3DXVECTOR3 pos);
-	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos,CPlanet::STAR_TYPE type);
+	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos, D3DXVECTOR3 rot,CPlanet::STAR_TYPE type,Color col);
 
 private:
 

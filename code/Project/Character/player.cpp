@@ -30,19 +30,19 @@ CPlayer::CPlayer()
 {
 	s_nSwapInterval = 0;	//残りスワップインターバル
 
-	for each (Info &Player in m_aInfo)
+	for each(Info &Player in m_aInfo)
 	{
-		//情報クリア
-		Player.pos = INITD3DXVECTOR3;
-		Player.posOLd = INITD3DXVECTOR3;
-		Player.rot = INITD3DXVECTOR3;
-		Player.move = INITD3DXVECTOR3;
-		Player.bJump = false;
-		Player.fJumpPower = 0.0f;
-		Player.fGravity = 0.0f;
-		Player.fGravityCorr = 0.0f;
-		Player.nModelIdx = DATANONE;
-		Player.side = WORLD_SIDE::FACE;
+		Player.StartPos = INITD3DXVECTOR3;	//開始位置
+		Player.pos = INITD3DXVECTOR3;		//位置
+		Player.posOLd = INITD3DXVECTOR3;	//前回位置
+		Player.rot = INITD3DXVECTOR3;		//向き
+		Player.move = INITD3DXVECTOR3;		//移動量
+		Player.bJump = false;				//ジャンプ
+		Player.fJumpPower = 0.0f;			//ジャンプ量
+		Player.fGravity = 0.0f;				//重力
+		Player.fGravityCorr = 0.0f;			//重力係数
+		Player.nModelIdx = DATANONE;		//モデル番号
+		Player.side = WORLD_SIDE::FACE;		//どちらの世界に存在するか
 	}
 }
 
@@ -137,16 +137,6 @@ void CPlayer::Update(void)
 		RNLib::Model()->Put(Player.pos, Player.rot, Player.nModelIdx, false)
 			->SetOutLine(true);
 	}
-}
-
-//----------------------------
-//プレイヤー情報設定
-//----------------------------
-void CPlayer::SetInfo(Info p1, Info p2)
-{
-	//各プレイヤー情報設定
-	m_aInfo[0] = p1;
-	m_aInfo[1] = p2;
 }
 
 //----------------------------
@@ -349,4 +339,28 @@ void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
 			}
 		}
 	}
+}
+
+//----------------------------
+//プレイヤー情報設定
+//指定された番号のプレイヤー情報を設定します。
+//----------------------------
+void CPlayer::SetInfo(const Info info, const int nNum)
+{
+	if (0 <= nNum && nNum < NUM_PLAYER)
+	{
+		//各プレイヤー情報設定
+		m_aInfo[nNum] = info;
+		m_aInfo[nNum].StartPos = info.pos;
+	}
+}
+
+//----------------------------
+//プレイヤー情報設定
+//----------------------------
+void CPlayer::SetInfo(Info p1, Info p2)
+{
+	//各プレイヤー情報設定
+	m_aInfo[0] = p1;	m_aInfo[0].StartPos = p1.pos;
+	m_aInfo[1] = p2;	m_aInfo[1].StartPos = p2.pos;
 }
