@@ -38,8 +38,11 @@ CStageEditor::CStageEditor(void)
 //========================================
 CStageEditor::~CStageEditor()
 {
-	delete m_StageType;
-	m_StageType = NULL;
+	if (m_StageType != NULL)
+	{
+		delete m_StageType;
+		m_StageType = NULL;
+	}
 }
 
 //========================================
@@ -131,10 +134,16 @@ void CStageEditor::StageLoad(int stage)
 
 		for (int nLine = 0; nLine < nLineMax; nLine++)
 		{
-			char *aDataSearch;	// データ検索用
-			ToData(aDataSearch, pFile, nRow, nLine);
+			if (bEnd) { break; }
+			char *aDataSearch = NULL;	// データ検索用
+			string sData = pFile->GetData(nRow, nLine);
+			char* cstr = new char[sData.size() + 1]; // メモリ確保
+			std::char_traits<char>::copy(cstr, sData.c_str(), sData.size() + 1);
+			aDataSearch = cstr;
+			
 
-			if (!strcmp(aDataSearch, "StageWidth"))
+			if (!strcmp(aDataSearch, "End")) { bEnd = true;}
+			else if (!strcmp(aDataSearch, "StageWidth"))
 			{
 				nLine += 4;
 				int nWidth;
@@ -158,10 +167,19 @@ void CStageEditor::StageLoad(int stage)
 				// ステージ生成
 				while (1)
 				{
-					char *aDataSearch;	// データ検索用
-					ToData(aDataSearch, pFile, nRow, nLine);
+					char *aDataSearch = NULL;	// データ検索用
+					string sData = pFile->GetData(nRow, nLine);
+					char* cstr = new char[sData.size() + 1]; // メモリ確保
+					std::char_traits<char>::copy(cstr, sData.c_str(), sData.size() + 1);
+					aDataSearch = cstr;
 
-					if (!strcmp(aDataSearch, "EndStage")) { break; }
+					if (!strcmp(aDataSearch, "EndStage")) {
+						if (cstr != NULL){
+							delete[] cstr;
+							cstr = NULL;
+						}
+						break; 
+					}
 					else
 					{
 						for (m_Info.nLine = 0; m_Info.nLine < m_Info.nLineMax; m_Info.nLine++)
@@ -173,17 +191,27 @@ void CStageEditor::StageLoad(int stage)
 						nRow++;
 						m_Info.nRow++;
 					}
+
+					if (cstr != NULL)
+					{
+						delete[] cstr;
+						cstr = NULL;
+					}
 				}
 				
 			}
-			
-			if (!strcmp(aDataSearch, "End")) { bEnd = true; }
+
+			if (cstr != NULL)
+			{
+				delete[] cstr;
+				cstr = NULL;
+			}
 		}
 
 		// 最大数に達したら返す
-		if (nRow == nRowMax)
+		if (nRow == nRowMax || bEnd)
 		{
-			bEnd = true;
+			break;
 		}
 	}
 
@@ -222,7 +250,7 @@ void CStageEditor::SetStage(int nType)
 			Manager::BlockMgr()->SpikeCreate(pos);
 			break;
 		case TYPE_LIFT:
-			Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+			Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),0.0f);
 			break;
 		case TYPE_Meteor:
 			pos.x += nSizeX;
@@ -268,25 +296,6 @@ void CStageEditor::SwapStage(int nStageIdx)
 //========================================
 // 変換
 //========================================
-
-// char型
-bool CStageEditor::ToData(char* &val, CSVFILE *pFile, int nRow, int nLine)
-{
-	try
-	{
-		string sData = pFile->GetData(nRow, nLine);
-		char* cstr = new char[sData.size() + 1]; // メモリ確保
-
-		char_traits<char>::copy(cstr, sData.c_str(), sData.size() + 1);
-
-		val = cstr;
-		return true;
-	}
-	catch (...)
-	{
-		return false;
-	}
-}
 
 // int
 bool CStageEditor::ToData(int &val, CSVFILE *pFile, int nRow, int nLine)

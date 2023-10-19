@@ -17,14 +17,14 @@
 #define COLOR_DOWN Color{206,54,112,255}
 static const int s_MaxSummon = 8;		// 出現する位置の最大数
 static const D3DXVECTOR3 s_SummonPos[s_MaxSummon] = {	// 出現する位置
-	D3DXVECTOR3(-200.0f, 300.0f, 300.0f),
-	D3DXVECTOR3(0.0f,	 300.0f, 300.0f),
+	D3DXVECTOR3(-300.0f, 300.0f, 300.0f),
+	D3DXVECTOR3(0.0f,	 200.0f, 300.0f),
 	D3DXVECTOR3(200.0f,  300.0f, 300.0f),
 	D3DXVECTOR3(-100.0f, 100.0f,   300.0f),
 	D3DXVECTOR3(100.0f,	 100.0f,   300.0f),
-	D3DXVECTOR3(-200.0f, -200.0f,300.0f),
+	D3DXVECTOR3(-300.0f, -200.0f,300.0f),
 	D3DXVECTOR3(0.0f,	 -200.0f,300.0f),
-	D3DXVECTOR3(200.0f,  -200.0f,300.0f),
+	D3DXVECTOR3(100.0f,  -300.0f,300.0f),
 };
 
 CPlayer *CMode_Game::s_pPlayer = NULL;
@@ -52,6 +52,9 @@ CMode_Game::~CMode_Game(void) {
 //========================================
 void CMode_Game::Init(void) {
 	CMode::Init();
+
+	// 遷移設定
+	RNLib::Transition()->Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
 
 	// カメラの視点/注視点を設定
 	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
@@ -88,6 +91,8 @@ void CMode_Game::Uninit(void) {
 		delete s_pPlayer;
 		s_pPlayer = NULL;
 	}
+
+	Manager::BlockMgr()->ReleaseAll();
 }
 
 //========================================
@@ -102,6 +107,9 @@ void CMode_Game::Update(void) {
 
 	if (RNLib::Input()->KeyTrigger(DIK_RETURN))
 		Manager::StgEd()->SwapStage(1);
+
+	if (RNLib::Input()->KeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::FADE);
 
 	// 背景(仮)
 	{
@@ -157,7 +165,7 @@ void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 	for (int nCntPut = 0; nCntPut < s_MaxSummon; nCntPut++)
 	{
 		pos = s_SummonPos[nCntPut];	// 出現する位置の設定
-		pos += D3DXVECTOR3(rand() % 50 - 50, rand() % 50 - 50, rand() % 150 - 50);	// 位置の設定
+		pos += D3DXVECTOR3(rand() % 100 - 100, rand() % 100 - 100, rand() % 150 - 50);	// 位置の設定
 
 		type = (CPlanet::STAR_TYPE)(rand() % (int)CPlanet::STAR_TYPE::MAX);	// 種類の設定
 		col = Color{mincol.r + rand() % addcol.r,mincol.g + rand() % addcol.g,mincol.b + rand() % addcol.b,255 };	// 色の設定
