@@ -252,6 +252,9 @@
     <ClCompile Include="code\_RNLib\_Basis\Mechanical\regist.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="code\Project\Object\Gimmick\rocket.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\_RNLib\_Basis\3D\Body\collision3D.h">
@@ -462,6 +465,12 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="code\Project\Object\BackGround\Planet.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Object\Gimmick\rocket.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="code\Project\Object\Gimmick\Spike.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="code\_RNLib\_Basis\Mechanical\regist.h">

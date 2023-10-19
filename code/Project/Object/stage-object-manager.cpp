@@ -125,14 +125,13 @@ CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
 	pObj->Init();
 	pObj->SetPos(pos);
 
-	if (pos.y <= -10)
+	if (pos.y <= 0)
 	{
 		pObj->SetRot(D3DXVECTOR3(0.0f,0.0f, 3.24f));
 	}
 
 	return pObj;
 }
-
 
 //========================================
 // トランポリン
@@ -199,6 +198,28 @@ CParts *CStageObjectMgr::PartsCreate(D3DXVECTOR3 pos)
 	// 初期化処理
 	pObj->Init();
 	pObj->SetPos(pos);
+
+	return pObj;
+}
+
+//========================================
+// ロケット
+//========================================
+CRocket *CStageObjectMgr::RocketCreate(D3DXVECTOR3 pos)
+{
+	CRocket *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CRocket;
+
+	// 初期化処理
+	pObj->Init();
+	pObj->SetPos(pos);
+
+	if (pos.y <= 0)
+	{
+		pObj->SetRot(D3DXVECTOR3(0.0f, 0.0f, 3.24f));
+	}
 
 	return pObj;
 }

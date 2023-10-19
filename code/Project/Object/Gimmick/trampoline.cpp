@@ -78,7 +78,8 @@ void CTrampoline::Update(void) {
 	}
 
 	if (m_state != STATE::NONE)
-	{
+	{//トランポリンが作動している
+
 		//割合計算
 		float fCountRate = Easing(EASE_IN, m_nCnt, MAX_COUNT);
 		
@@ -94,13 +95,13 @@ void CTrampoline::Update(void) {
 		}
 	}
 	else if (m_state == STATE::NONE)
-	{
-		//当たり判定
-		Collision();
-
+	{//トランポリンが作動していない
 		RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false);
 		RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[2], false);
 	}
+
+	//当たり判定
+	Collision();
 }
 //========================================
 // 描画処理
@@ -117,52 +118,64 @@ void CTrampoline::Draw(void) {
 void CTrampoline::Collision(void) {
 
 	//プレイヤー情報取得
-	CPlayer::Info p1, p2;
+	CPlayer::Info *p1, *p2;
 	CPlayer *pPlayer = CMode_Game::GetPlayer();
 	pPlayer->GetInfo(p1, p2);
 
 	if (/*p1が着地で乗る*/
-		p1.pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p1.pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
-		&& p1.pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
+		p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height)
 	{//土台の範囲内に着地で入った
 
-		m_state = STATE::UP_LAND;
-		m_nCnt = MAX_COUNT;
+		if (m_state == STATE::NONE)
+		{//トランポリンが作動していない
 
-		if (p2.pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2.pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
-			&& p2.pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height)
+			m_state = STATE::UP_LAND;
+			m_nCnt = MAX_COUNT;
+			p1->bJump = false;
+		}
+	
+		if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+			&& p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
 		{//2pが乗っているか
 
 			//ジャンプ量を継承
-			p2.move.y = p1.move.y * 2;
-
-			p1.move.y = 0.0f;
+			p2->move.y = p1->move.y * 2;
 		}
 
-		p1.pos.y = p1.posOLd.y;
+		//移動量（縦）を消す
+		p1->move.y = 0.0f;
 
-		pPlayer->SetInfo(p1, p2);
+		//ブロックの立つ位置に戻す
+		p1->pos.y = m_pos.y + m_height * 2;
+
+
 	}
 	else if (/*p2が着地で乗る*/
-		p2.pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2.pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
-		&& p2.pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height)
+		p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		&& p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
 	{//土台の範囲内に着地で入った
 
-		m_state = STATE::DOWN_LAND;
-		m_nCnt = MAX_COUNT;
+		if (m_state == STATE::NONE)
+		{//トランポリンが作動していない
 
-		if (p1.pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1.pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
-			&& p1.pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
+			m_state = STATE::DOWN_LAND;
+			m_nCnt = MAX_COUNT;
+			p2->bJump = false;
+		}
+
+		if (p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+			&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height)
 		{//1pが乗っているか
 
 			//ジャンプ量を継承
-			p1.move.y = p2.move.y * 2;
-
-			p1.move.y = 0.0f;
+			p1->move.y = p2->move.y * 2;
 		}
 
-		p2.pos.y = p2.posOLd.y;
+		//移動量（縦）を消す
+		p2->move.y = 0.0f;
 
-		pPlayer->SetInfo(p1, p2);
+		//ブロックの立つ位置に戻す
+		p2->pos.y = m_pos.y - m_height * 2;
 	}
 }

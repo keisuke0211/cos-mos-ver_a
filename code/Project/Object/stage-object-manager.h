@@ -13,8 +13,10 @@
 #include "Block/move-block.h"
 #include "Gimmick/trampoline.h"
 #include "Gimmick/meteor.h"
+#include "Gimmick\rocket.h"
 #include "Item/Parts.h"
 #include "BackGround\Planet.h"
+
 //****************************************
 // ÉNÉâÉX
 //****************************************
@@ -33,7 +35,9 @@ public:
 	CMeteor     *MeteorCreate    (D3DXVECTOR3 pos, D3DXVECTOR3 move);
 	CMoveBlock  *MoveBlockCreate (D3DXVECTOR3 pos, D3DXVECTOR3 move);
 	CParts      *PartsCreate	 (D3DXVECTOR3 pos);
-	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos, D3DXVECTOR3 rot,CPlanet::STAR_TYPE type,Color col);
+	CRocket     *RocketCreate    (D3DXVECTOR3 pos);
+	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos,CPlanet::STAR_TYPE type);
+
 private:
 
 	// *** ç\ë¢ëÃ ***

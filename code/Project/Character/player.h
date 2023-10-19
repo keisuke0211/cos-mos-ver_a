@@ -72,23 +72,35 @@ public:
 	static CPlayer *Create(void);
 
 	//----------------------------
+	//プレイヤー情報の初期化処理
+	//プレイヤー情報を初期状態を返します
+	//----------------------------
+	Info FormatInfo(void);
+
+	//----------------------------
 	//プレイヤー情報設定
 	//各プレイヤーの位置情報などを引数に渡してください。
 	//構造体「Info」に関してはplayer.hのクラス宣言を確認してください。
 	//----------------------------
 	void SetInfo(Info p1, Info p2);
 
+	//----------------------------
+	//プレイヤー情報設定
+	//指定された番号のプレイヤー情報を設定します。
+	//----------------------------
+	void SetInfo(const Info info, const int nNum);
+
 	// 位置設定
 	void SetPos(int idx, D3DXVECTOR3 pos) { m_aInfo[idx].pos = pos; }
 
 	//----------------------------
 	//プレイヤー情報取得
-	//関数を呼ぶ前にInfo構造体を二人分宣言し、
-	//順番に引数に入れてください。
-	//引数は参照型なので、引数に入れるだけで情報が代入されます。
+	//各引数にプレイヤー情報のアドレスを渡します
 	//----------------------------
-	void GetInfo(Info& rP1, Info& rP2) { rP1 = m_aInfo[0]; rP2 = m_aInfo[1]; }
-	
+	void GetInfo(Info*& pP1, Info*& pP2) { pP1 = &m_aInfo[0]; pP2 = &m_aInfo[1]; }
+
+	Info *GetInfo(int nNum) { return &m_aInfo[nNum]; }
+
 private:
 	static int	s_nSwapInterval;//残りスワップインターバル
 
