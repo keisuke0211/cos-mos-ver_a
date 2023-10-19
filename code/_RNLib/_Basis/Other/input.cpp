@@ -9,9 +9,7 @@
 //****************************************
 // マクロ定義
 //****************************************
-#define REPEATE_INTERVAL   (60)
 #define VIBRATION_SUBTRACT (0.02f)
-#define CURSOR_DIST_BASE   (10.0f)
 
 //****************************************
 // 静的メンバ定数定義
@@ -34,12 +32,12 @@ const int CInput::m_aButtonMask[(int)BUTTON::MAX] = {
 	XINPUT_GAMEPAD_RIGHT_THUMB,
 	XINPUT_GAMEPAD_LEFT_SHOULDER,
 	XINPUT_GAMEPAD_RIGHT_SHOULDER,
+	-1,
+	-1,
 	XINPUT_GAMEPAD_A,
 	XINPUT_GAMEPAD_B,
 	XINPUT_GAMEPAD_X,
 	XINPUT_GAMEPAD_Y,
-	-1,
-	-1,
 };
 
 //================================================================================
@@ -52,6 +50,13 @@ const int CInput::m_aButtonMask[(int)BUTTON::MAX] = {
 // コンストラクタ
 //========================================
 CInput::CInput() {
+
+	m_joyPads = NULL;
+	m_joyPadNum = 0;
+	m_inputDevice = NULL;
+	m_keyboardDevice = NULL;
+	m_activeDevice = ACTIVE_DEVICE::KEYBOARD;
+	m_isFixedCursor = false;
 
 	// 入力情報をクリア
 	Clear();
@@ -67,27 +72,30 @@ CInput::~CInput() {
 //========================================
 // 初期化処理
 //========================================
-void CInput::Init(HINSTANCE hInstance) {
+void CInput::Init(HINSTANCE& instanceHandle) {
 
 	// マウスカーソルを表示
 	// (※最初からtrueだと、後から要求を無視される為一度falseにしてからtrueにする)
 	ShowCursor(false);
 	ShowCursor(true);
 
+	// XInputを開く
+	XInputEnable(true);
+
 	// DirectInputオブジェクトの生成
-	DirectInput8Create(hInstance, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_inputDevice, NULL);
+	DirectInput8Create(instanceHandle, DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&m_inputDevice, NULL);
 
 	// 入力デバイス(キーボード)の生成
-	m_inputDevice->CreateDevice(GUID_SysKeyboard, &m_pDevKeyboard, NULL);
+	m_inputDevice->CreateDevice(GUID_SysKeyboard, &m_keyboardDevice, NULL);
 
 	// データフォーマットを設定
-	m_pDevKeyboard->SetDataFormat(&c_dfDIKeyboard);
+	m_keyboardDevice->SetDataFormat(&c_dfDIKeyboard);
 
 	// 協調フォーマット
-	m_pDevKeyboard->SetCooperativeLevel(RNLib::Window()->GetHandle(), (DISCL_FOREGROUND | DISCL_NONEXCLUSIVE));
+	m_keyboardDevice->SetCooperativeLevel(RNLib::Window()->GetHandle(), (DISCL_FOREGROUND | DISCL_NONEXCLUSIVE));
 
 	// キーボードへのアクセス権を獲得
-	m_pDevKeyboard->Acquire();
+	m_keyboardDevice->Acquire();
 }
 
 //========================================
@@ -99,10 +107,10 @@ void CInput::Uninit(void) {
 	XInputEnable(false);
 
 	// 入力デバイス(キーボード)の破棄
-	if (m_pDevKeyboard != NULL) {
-		m_pDevKeyboard->Unacquire();	// キーボードへのアクセス権を放棄
-		m_pDevKeyboard->Release();
-		m_pDevKeyboard = NULL;
+	if (m_keyboardDevice != NULL) {
+		m_keyboardDevice->Unacquire();	// キーボードへのアクセス権を放棄
+		m_keyboardDevice->Release();
+		m_keyboardDevice = NULL;
 	}
 
 	// DirectInputオブジェクトの破棄
@@ -110,6 +118,9 @@ void CInput::Uninit(void) {
 		m_inputDevice->Release();
 		m_inputDevice = NULL;
 	}
+
+	// ジョイパッド解放
+	RNLib::Memory()->Release(&m_joyPads);
 }
 
 //========================================
@@ -118,11 +129,9 @@ void CInput::Uninit(void) {
 void CInput::Update(void) {
 
 	UpdateKeyboard();
-	UpdateButton();
 	UpdateCursor();
 	UpdateMouseButton();
-	UpdateStick();
-	UpdateController();
+	UpdateJoyPad();
 }
 
 //========================================
@@ -137,30 +146,7 @@ void CInput::Clear(void) {
 		m_mouseButtonInputs[cntMouseButton] = {};
 
 	m_cursorInfo = {};
-
-	m_wheelSpin = WHEELSPIN::NONE;			// ホイール回転状態
-
-	// コントローラー
-	for (int nCnt = 0; nCnt < (int)BUTTON::MAX; nCnt++) {
-		m_aButtonPress[nCnt] = 0;
-		m_aButtonTrigger[nCnt] = 0;
-		m_aButtonRelease[nCnt] = 0;
-		m_aButtonRepeat[nCnt] = 0;
-	}
-	// スティック
-	for (int nCnt = 0; nCnt < (int)STICK::MAX; nCnt++) {
-		for (int nCntAngle = 0; nCntAngle < (int)INPUT_ANGLE::MAX; nCntAngle++) {
-			m_aStick[nCnt].aAnglePress[nCntAngle] = 0;
-			m_aStick[nCnt].aAngleTrigger[nCntAngle] = 0;
-			m_aStick[nCnt].aAngleRelease[nCntAngle] = 0;
-			m_aStick[nCnt].aAngleRepeat[nCntAngle] = 0;
-		}
-		m_aStick[nCnt].fTiltAngle = 0.0f;
-	}
-
-	m_nCounterVibration = 0;		// 振動カウンター
-	m_nCounterVibrationMax = 0;		// 振動カウンターMAX
-	m_fVibration = 0.0f;	// 振動倍率
+	m_wheelSpin = WHEELSPIN::NONE;
 }
 
 //========================================
@@ -172,7 +158,7 @@ void CInput::UpdateKeyboard(void) {
 	BYTE keyInputs[NUM_KEY_MAX];
 
 	// 入力デバイスからデータを取得
-	if (SUCCEEDED(m_pDevKeyboard->GetDeviceState(sizeof(keyInputs), &keyInputs[0]))) {
+	if (SUCCEEDED(m_keyboardDevice->GetDeviceState(sizeof(keyInputs), &keyInputs[0]))) {
 		for (int cntKey = 0; cntKey < NUM_KEY_MAX; cntKey++) {
 			// キーボードのトリガー情報を保存
 			m_keyInputs[cntKey].trigger = (m_keyInputs[cntKey].press ^ keyInputs[cntKey]) & keyInputs[cntKey];
@@ -185,12 +171,12 @@ void CInput::UpdateKeyboard(void) {
 
 			// 入力が行われた時、動的なデバイスをキーボードにする
 			if (keyInputs[cntKey])
-				m_activeInputType = ACTIVE_DEVICE::KEYBOARD;
+				m_activeDevice = ACTIVE_DEVICE::KEYBOARD;
 		}
 	}
 	else
 	{// 入力デバイスからデータを取得できなかった時、
-		m_pDevKeyboard->Acquire();	// キーボードへのアクセス権を取得
+		m_keyboardDevice->Acquire();	// キーボードへのアクセス権を取得
 	}
 }
 
@@ -218,7 +204,7 @@ void CInput::UpdateMouseButton(void) {
 
 		// 入力が行われた時、動的なデバイスをキーボードにする
 		if (mouseState)
-			m_activeInputType = ACTIVE_DEVICE::KEYBOARD;
+			m_activeDevice = ACTIVE_DEVICE::KEYBOARD;
 	}
 }
 
@@ -251,7 +237,7 @@ void CInput::UpdateCursor(void) {
 	m_cursorInfo.move = m_cursorInfo.pos - oldCursorPos;
 
 	// カーソルの固定
-	if (m_bFixedCursor) {
+	if (m_isFixedCursor) {
 
 		// マウス座標の設定
 		SetCursorPos(rc.right * 0.5f, rc.bottom * 0.5f);
@@ -264,372 +250,235 @@ void CInput::UpdateCursor(void) {
 }
 
 //========================================
+// ジョイパッド数設定処理
+//========================================
+void CInput::SetJoyPadNum(const unsigned short& num) {
+
+	// メモリ再確保
+	RNLib::Memory()->ReAlloc(&m_joyPads, m_joyPadNum, num);
+
+	// 数を代入
+	m_joyPadNum = num;
+
+	// 番号を代入していく
+	for (int cntJoyPad = 0; cntJoyPad < m_joyPadNum; cntJoyPad++)
+		m_joyPads[cntJoyPad].SetIdx(cntJoyPad);
+}
+
+//========================================
+// コントローラーの更新処理
+//========================================
+void CInput::UpdateJoyPad(void) {
+
+	for (int cntJoyPad = 0; cntJoyPad < m_joyPadNum; cntJoyPad++)
+		m_joyPads[cntJoyPad].Update();
+}
+
+//================================================================================
+//----------|---------------------------------------------------------------------
+//==========| ジョイパッドクラスのメンバ関数
+//----------|---------------------------------------------------------------------
+//================================================================================
+
+//========================================
+// コンストラクタ
+//========================================
+CInput::CJoyPad::CJoyPad() {
+
+	m_idx = DATANONE;
+	for (int cntButton = 0; cntButton < (int)BUTTON::MAX; cntButton++)
+		m_buttonInputs[cntButton] = {};
+	for (int cntStick = 0; cntStick < (int)STICK::MAX; cntStick++)
+		m_sticInputs[cntStick] = {};
+	m_vibrationCounter = 0;
+	m_vibrationCounterMax = 0;
+	m_vibration = 0.0f;
+	memset(&m_xInputState, 0, sizeof(XINPUT_STATE));
+}
+
+//========================================
+// デストラクタ
+//========================================
+CInput::CJoyPad::~CJoyPad() {
+
+}
+
+//========================================
+// 更新処理
+//========================================
+void CInput::CJoyPad::Update(void) {
+
+	// XInputの状態を取得
+	XInputGetState(m_idx, &m_xInputState);
+
+	UpdateButton();
+	UpdateStick();
+	UpdateVibration();
+}
+
+//========================================
 // ボタンの更新処理
 //========================================
-void CInput::UpdateButton(void) {
-	// ボタンの入力情報
-	BYTE m_aButton[(int)BUTTON::MAX] = {};
+void CInput::CJoyPad::UpdateButton(void) {
 
-	for (int nCntButton = 0; nCntButton < (int)BUTTON::MAX; nCntButton++) {
-		if (nCntButton == (int)BUTTON::LEFT_TRIGGER)
-		{// カウントが左トリガーの時、
-			if (GetXInputState()->Gamepad.bLeftTrigger > 0)
-			{// 押し込まれている
-				m_aButton[nCntButton] = true;
-			}
-		}
-		else if (nCntButton == (int)BUTTON::RIGHT_TRIGGER)
-		{// カウントが右トリガーの時、
-			if (GetXInputState()->Gamepad.bRightTrigger > 0)
-			{// 押し込まれている
-				m_aButton[nCntButton] = true;
-			}
-		}
-		else if (GetXInputState()->Gamepad.wButtons & m_aButtonMask[nCntButton])
-		{// 入力情報を更新
-			m_aButton[nCntButton] = true;
-		}
+	for (int cntButton = 0; cntButton < (int)BUTTON::MAX; cntButton++) {
+
+		// ボタンの入力情報
+		BYTE button = 0;
+
+		//----------------------------------------
+		// 入力判定
+		//----------------------------------------
+		// [[[ 左トリガーの時 ]]]
+		if (cntButton == (int)BUTTON::LEFT_TRIGGER)
+			button = (BYTE)(m_xInputState.Gamepad.bLeftTrigger > 0);	// 押されてるか
+		// [[[ 右トリガーの時 ]]]
+		else if (cntButton == (int)BUTTON::RIGHT_TRIGGER)
+			button = (BYTE)(m_xInputState.Gamepad.bRightTrigger > 0);	// 押されてるか
+		// [[[ それ以外のボタンで押されている時 ]]]
+		else if (m_xInputState.Gamepad.wButtons & m_aButtonMask[cntButton])
+			button = 1;
 
 		// ボタンのトリガー情報を保存
-		m_aButtonTrigger[nCntButton] = (m_aButtonPress[nCntButton] ^ m_aButton[nCntButton]) & m_aButton[nCntButton];
+		m_buttonInputs[cntButton].trigger = (m_buttonInputs[cntButton].press ^ button) & button;
 
 		// ボタンのリリース情報を保存
-		m_aButtonRelease[nCntButton] = (m_aButtonPress[nCntButton] ^ m_aButton[nCntButton]) & ~m_aButton[nCntButton];
-
-		// 現在の時間を取得
-		m_aButtonCurrentTime[nCntButton] = timeGetTime();
-
-		if (m_aButton[nCntButton] && ((m_aButtonCurrentTime[nCntButton] - m_aButtonExecLastTime[nCntButton]) > REPEATE_INTERVAL))
-		{// キーが入力されていて、かつ現在の時間と最後に真を返した時間の差がリピートの間隔を越えていた時、
-			// 最後に真を返した時間を保存
-			m_aButtonExecLastTime[nCntButton] = m_aButtonCurrentTime[nCntButton];
-
-			// ボタンのリピート情報を保存
-			m_aButtonRepeat[nCntButton] = m_aButton[nCntButton];
-		}
-		else {
-			// ボタンのリピート情報を保存
-			m_aButtonRepeat[nCntButton] = 0;
-		}
+		m_buttonInputs[cntButton].release = (m_buttonInputs[cntButton].press ^ button) & ~button;
 
 		// ボタンのプレス情報を保存
-		m_aButtonPress[nCntButton] = m_aButton[nCntButton];
+		m_buttonInputs[cntButton].press = button;
 
-		if (m_aButton[nCntButton])
-		{// 入力が行われた時、
-			// 動的なデバイスをコントローラーにする
-			m_activeInputType = ACTIVE_DEVICE::CONTROLLER;
-		}
+		// 入力が行われた時、動的なデバイスをジョイパッドにする(※0番目限定)
+		if (m_idx == 0)
+			if (button != 0)
+				RNLib::Input()->SetActiveDevice(ACTIVE_DEVICE::JOYPAD);
 	}
 }
 
 //========================================
 // スティックの更新処理
 //========================================
-void CInput::UpdateStick(void) {
+void CInput::CJoyPad::UpdateStick(void) {
 
 	// スティックの入力情報
 	BYTE aAngle[(int)INPUT_ANGLE::MAX];
 
-	// XInputの状態を取得
-	m_xInputState.dwPacketNumber = XInputGetState(m_xInputState.dwPacketNumber, &m_xInputState);
-
-	for (int nCntStick = 0; nCntStick < (int)STICK::MAX; nCntStick++) {
-		float X;	// スティックのX軸
-		float Y;	// スティックのY軸
+	for (int cntStick = 0; cntStick < (int)STICK::MAX; cntStick++) {
+		float X = 0.0f;	// スティックのX軸
+		float Y = 0.0f;	// スティックのY軸
 
 		// 種類に応じたスティックの軸の値を取得
-		switch ((STICK)nCntStick) {
+		switch ((STICK)cntStick) {
 		case STICK::LEFT:
-			X = GetXInputState()->Gamepad.sThumbLX;
-			Y = GetXInputState()->Gamepad.sThumbLY;
+			X = m_xInputState.Gamepad.sThumbLX;
+			Y = m_xInputState.Gamepad.sThumbLY;
 			break;
 		case STICK::RIGHT:
-			X = GetXInputState()->Gamepad.sThumbRX;
-			Y = GetXInputState()->Gamepad.sThumbRY;
-			break;
-		default:
-			assert(false);
-			X = 0.0f;
-			Y = 0.0f;
+			X = m_xInputState.Gamepad.sThumbRX;
+			Y = m_xInputState.Gamepad.sThumbRY;
 			break;
 		}
 
 		// 角度を取得
-		m_aStick[nCntStick].fTiltAngle = Find_Angle_LookFront(D3DXVECTOR3(X, Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f)) * -1;
+		m_sticInputs[cntStick].tiltAngle = Find_Angle_LookFront(D3DXVECTOR3(X, Y, 0.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f)) * -1;
 
 		// スティックの倒し具合を取得
-		m_aStick[nCntStick].fTiltRate = fabsf(X);
-		if (m_aStick[nCntStick].fTiltRate < fabsf(Y)) {
-			m_aStick[nCntStick].fTiltRate = fabsf(Y);
+		m_sticInputs[cntStick].tiltRate = fabsf(X);
+		if (m_sticInputs[cntStick].tiltRate < fabsf(Y)) {
+			m_sticInputs[cntStick].tiltRate = fabsf(Y);
 		}
-		m_aStick[nCntStick].fTiltRate /= 32768.0f;
+		m_sticInputs[cntStick].tiltRate /= 32768.0f;
 
 		// 方向入力フラグを初期化
 		for (int nCntAngle = 0; nCntAngle < (int)INPUT_ANGLE::MAX; nCntAngle++) {
 			aAngle[nCntAngle] = false;
 		}
 
-		if (m_aStick[nCntStick].fTiltRate > 0)
+		if (m_sticInputs[cntStick].tiltRate > 0)
 		{// スティックが倒されている時、
-			// 動的なデバイスをコントローラーにする
-			m_activeInputType = ACTIVE_DEVICE::CONTROLLER;
-
-			if (false) {}
-			else if ((m_aStick[nCntStick].fTiltAngle < D3DX_PI * -0.75)
-				|| (m_aStick[nCntStick].fTiltAngle > D3DX_PI * 0.75))
-			{// 角度が四分割で上に位置する時、上フラグを真にする
+			// 角度が四分割で上に位置する
+			if ((m_sticInputs[cntStick].tiltAngle < D3DX_PI_LEFT_UP)
+				|| (m_sticInputs[cntStick].tiltAngle > D3DX_PI_RIGHT_UP))
 				aAngle[(int)INPUT_ANGLE::UP] = true;
-			}
-			else if ((m_aStick[nCntStick].fTiltAngle > D3DX_PI * -0.25)
-				&& (m_aStick[nCntStick].fTiltAngle < D3DX_PI * 0.25))
-			{// 角度が四分割で下に位置する時、下フラグを真にする
+
+			// 角度が四分割で下に位置する
+			else if ((m_sticInputs[cntStick].tiltAngle > D3DX_PI_LEFT_DOWN)
+				&& (m_sticInputs[cntStick].tiltAngle < D3DX_PI_RIGHT_DOWN))
 				aAngle[(int)INPUT_ANGLE::DOWN] = true;
-			}
-			else if ((m_aStick[nCntStick].fTiltAngle > D3DX_PI * -0.75)
-				&& (m_aStick[nCntStick].fTiltAngle < D3DX_PI * -0.25))
-			{// 角度が四分割で左に位置する時、左フラグを真にする
+
+			// 角度が四分割で左に位置する
+			else if ((m_sticInputs[cntStick].tiltAngle > D3DX_PI_LEFT_UP)
+				&& (m_sticInputs[cntStick].tiltAngle < D3DX_PI_LEFT_DOWN))
 				aAngle[(int)INPUT_ANGLE::LEFT] = true;
-			}
-			else if ((m_aStick[nCntStick].fTiltAngle > D3DX_PI * 0.25)
-				&& (m_aStick[nCntStick].fTiltAngle < D3DX_PI * 0.75))
-			{// 角度が四分割で右に位置する時、右フラグを真にする
+
+			// 角度が四分割で右に位置する
+			else if ((m_sticInputs[cntStick].tiltAngle < D3DX_PI_RIGHT_UP)
+				&& (m_sticInputs[cntStick].tiltAngle > D3DX_PI_RIGHT_DOWN))
 				aAngle[(int)INPUT_ANGLE::RIGHT] = true;
-			}
+
+			// 動的なデバイスをジョイパッドにする(※0番目限定)
+			if (m_idx == 0)
+				RNLib::Input()->SetActiveDevice(ACTIVE_DEVICE::JOYPAD);
 		}
 
-		for (int nCntAngle = 0; nCntAngle < (int)INPUT_ANGLE::MAX; nCntAngle++) {
+		for (int cntAngle = 0; cntAngle < (int)INPUT_ANGLE::MAX; cntAngle++) {
+
 			// スティックのトリガー情報を保存
-			m_aStick[nCntStick].aAngleTrigger[nCntAngle] = (m_aStick[nCntStick].aAnglePress[nCntAngle] ^ aAngle[nCntAngle]) & aAngle[nCntAngle];
+			m_sticInputs[cntStick].angleInputs[cntAngle].trigger = (m_sticInputs[cntStick].angleInputs[cntAngle].press ^ aAngle[cntAngle]) & aAngle[cntAngle];
 
 			// スティックのリリース情報を保存
-			m_aStick[nCntStick].aAngleRelease[nCntAngle] = (m_aStick[nCntStick].aAnglePress[nCntAngle] ^ aAngle[nCntAngle]) & ~aAngle[nCntAngle];
-
-			// 現在の時間を取得
-			m_aStick[nCntStick].aStickCurrentTime[nCntAngle] = timeGetTime();
-
-			if (aAngle[nCntAngle] && ((m_aStick[nCntStick].aStickCurrentTime[nCntAngle] - m_aStick[nCntStick].aStickExecLastTime[nCntAngle]) > REPEATE_INTERVAL))
-			{// キーが入力されていて、かつ現在の時間と最後に真を返した時間の差がリピートの間隔を越えていた時、
-				// 最後に真を返した時間を保存
-				m_aStick[nCntStick].aStickExecLastTime[nCntAngle] = m_aStick[nCntStick].aStickCurrentTime[nCntAngle];
-
-				// スティックのリピート情報を保存
-				m_aStick[nCntStick].aAngleRepeat[nCntAngle] = aAngle[nCntAngle];
-			}
-			else {
-				// スティックのリピート情報を保存
-				m_aStick[nCntStick].aAngleRepeat[nCntAngle] = 0;
-			}
+			m_sticInputs[cntStick].angleInputs[cntAngle].release = (m_sticInputs[cntStick].angleInputs[cntAngle].press ^ aAngle[cntAngle]) & ~aAngle[cntAngle];
 
 			// スティックのプレス情報を保存
-			m_aStick[nCntStick].aAnglePress[nCntAngle] = aAngle[nCntAngle];
-
-			if (aAngle[nCntAngle])
-			{// 入力が行われた時、
-				// 動的なデバイスをコントローラーにする
-				m_activeInputType = ACTIVE_DEVICE::CONTROLLER;
-			}
+			m_sticInputs[cntStick].angleInputs[cntAngle].press = aAngle[cntAngle];
 		}
 	}
 }
 
 //========================================
-// コントローラーの振動更新処理
+// 振動の更新処理
 //========================================
-void CInput::UpdateController(void) {
-	if (m_fVibration > 0)
+void CInput::CJoyPad::UpdateVibration(void) {
+
+	if (m_vibration > 0.0f)
 	{// 振動倍率が0を上回っている時、
 		// 振動倍率を減算
-		m_fVibration -= VIBRATION_SUBTRACT;
+		m_vibration -= VIBRATION_SUBTRACT;
 
 		// 振動倍率を制御
-		FloatControl(&m_fVibration, 1.0f, 0);
+		if (m_vibration < 0.0f)
+			m_vibration = 0.0f;
 
 		{// 振動フラグが真の時、
-			XINPUT_STATE state;			//XINPUT_STATE型 stateを作成
-			XInputGetState(0, &state);	//stateに習得したコントローラの状態を格納
-			XINPUT_VIBRATION vibration;	//XINPUT_VIBRATION vibrationを作成
+			XINPUT_VIBRATION vibration;	// XINPUT_VIBRATION vibrationを作成
 
 			//vibrationメンバーwLeftMotorSpeedに値を代入 モータースピード100%
-			vibration.wLeftMotorSpeed = 65535 * m_fVibration;
+			vibration.wLeftMotorSpeed = 65535 * m_vibration;
 
 			//vibrationメンバーwRightMotorSpeedに値を代入 モータースピード0%
-			vibration.wRightMotorSpeed = 65535 * m_fVibration;
+			vibration.wRightMotorSpeed = 65535 * m_vibration;
 
 			//ジョイスティックにバイブレーターデータを送信
-			XInputSetState(0, &vibration);
+			XInputSetState(m_idx, &vibration);
 		}
 	}
-}
-
-//========================================
-// 画面上のカーソルの位置を取得
-//=======================================
-D3DXVECTOR2 CInput::GetCursorPosOnScreen(void) {
-	// カーソルの現在位置を取得
-	POINT cursorPos;
-	GetCursorPos(&cursorPos);
-
-	// クライアント領域のサイズを取得
-	RECT rc;
-	GetClientRect(RNLib::Window()->GetHandle(), &rc);
-
-	D3DXVECTOR3 windowPos = RNLib::Window()->GetPos();	// ウィンドウの位置
-
-	return D3DXVECTOR2(
-		(cursorPos.x - windowPos.x) * (RNLib::Window()->GetWidth() / (float)rc.right),
-		(cursorPos.y - windowPos.y) * (RNLib::Window()->GetHeight() / (float)rc.bottom));
 }
 
 //========================================
 // コントローラーの振動設定処理
 //========================================
-void CInput::SetVibration(float fVibration, int nTime) {
-	if (m_activeInputType != ACTIVE_DEVICE::CONTROLLER)
-	{// 動的なデバイスがコントローラーで無い時、
-		// 処理を終了
-		return;
+void CInput::CJoyPad::SetVibration(const float& vibration) {
+
+	// 自身がジョイパッド0番でアクティブでない時、処理を終了
+	if (m_idx == 0)
+		if (RNLib::Input()->GetActiveDevice() != ACTIVE_DEVICE::JOYPAD)
+			return;
+
+	// 振動倍率が元の振動倍率を上回っている時、振動倍率を代入
+	if (m_vibration < vibration) {
+		m_vibration = vibration;
+
+		if (m_vibration > 1.0f)
+			m_vibration = 1.0f;
 	}
-
-	if (fVibration > fVibration)
-	{// 振動倍率が元の振動倍率を上回っている時、
-		// 振動倍率を代入
-		fVibration = fVibration;
-	}
-
-	// 振動倍率を制御
-	FloatControl(&fVibration, 1.0f, 0);
-}
-
-//========================================
-// 移動角度取得
-//========================================
-float CInput::GetMoveAngle(float* pRate) {
-	float fAngle = GetLeftAngle(pRate) + RNLib::Camera3D()->GetRot().y;
-	Limit_Angle(&fAngle);
-	return fAngle;
-}
-
-//========================================
-// 左入力角度取得
-//========================================
-float CInput::GetLeftAngle(float* pRate) {
-	float fMoveAngle = 0.0f;
-	if (pRate != NULL)
-		*pRate = 1.0f;
-
-	if (KeyPress(DIK_W)) {
-		if (KeyPress(DIK_A)) { fMoveAngle = ANGLE_UP_LEFT; }
-		else if (KeyPress(DIK_D)) { fMoveAngle = ANGLE_UP_RIGHT; }
-		else { fMoveAngle = ANGLE_UP; }
-	}
-	else if (KeyPress(DIK_S)) {
-		if (KeyPress(DIK_A)) { fMoveAngle = ANGLE_DOWN_LEFT; }
-		else if (KeyPress(DIK_D)) { fMoveAngle = ANGLE_DOWN_RIGHT; }
-		else { fMoveAngle = ANGLE_DOWN; }
-	}
-	else if (KeyPress(DIK_A)) { fMoveAngle = ANGLE_LEFT; }
-	else if (KeyPress(DIK_D)) { fMoveAngle = ANGLE_RIGHT; }
-	else if (StickTiltRate(STICK::LEFT) > 0.0f) {
-		if (pRate != NULL)
-			*pRate = StickTiltRate(STICK::LEFT);
-		fMoveAngle = -StickTiltAngle(STICK::LEFT) + D3DX_PI;
-	}
-	else {
-		if (pRate != NULL)
-			*pRate = 0.0f;
-		return 0.0f;
-	}
-
-	return fMoveAngle;
-}
-
-//========================================
-// 角度入力取得
-//========================================
-bool CInput::GetAngleTrigger(INPUT_ANGLE angle) {
-	return (GetLeftAngleTrigger(angle) || GetRightAngleTrigger(angle));
-}
-
-//========================================
-// 左入力角度取得
-//========================================
-bool CInput::GetLeftAngleTrigger(INPUT_ANGLE angle) {
-	switch (angle) {
-	case INPUT_ANGLE::UP:
-		return (KeyTrigger(DIK_W) || StickAngleTrigger(STICK::LEFT, INPUT_ANGLE::UP));
-	case INPUT_ANGLE::DOWN:
-		return (KeyTrigger(DIK_S) || StickAngleTrigger(STICK::LEFT, INPUT_ANGLE::DOWN));
-	case INPUT_ANGLE::LEFT:
-		return (KeyTrigger(DIK_A) || StickAngleTrigger(STICK::LEFT, INPUT_ANGLE::LEFT));
-	case INPUT_ANGLE::RIGHT:
-		return (KeyTrigger(DIK_D) || StickAngleTrigger(STICK::LEFT, INPUT_ANGLE::RIGHT));
-	}
-
-	return false;
-}
-
-//========================================
-// 右入力角度取得
-//========================================
-bool CInput::GetRightAngleTrigger(INPUT_ANGLE angle) {
-	switch (angle) {
-	case INPUT_ANGLE::UP:
-		return (KeyTrigger(DIK_UP) || StickAngleTrigger(STICK::RIGHT, INPUT_ANGLE::UP));
-	case INPUT_ANGLE::DOWN:
-		return (KeyTrigger(DIK_DOWN) || StickAngleTrigger(STICK::RIGHT, INPUT_ANGLE::DOWN));
-	case INPUT_ANGLE::LEFT:
-		return (KeyTrigger(DIK_LEFT) || StickAngleTrigger(STICK::RIGHT, INPUT_ANGLE::LEFT));
-	case INPUT_ANGLE::RIGHT:
-		return (KeyTrigger(DIK_RIGHT) || StickAngleTrigger(STICK::RIGHT, INPUT_ANGLE::RIGHT));
-	}
-
-	return false;
-}
-
-//========================================
-// 右入力角度取得
-//========================================
-float CInput::GetRightAngle(float* pRate) {
-	float fMoveAngle = 0.0f;
-	*pRate = 1.0f;
-
-	D3DXVECTOR2 cursorMove = GetCursorMove();
-
-	if (KeyPress(DIK_UP)) {
-		if (KeyPress(DIK_LEFT)) { fMoveAngle = ANGLE_UP_LEFT; }
-		else if (KeyPress(DIK_RIGHT)) { fMoveAngle = ANGLE_UP_RIGHT; }
-		else { fMoveAngle = ANGLE_UP; }
-	}
-	else if (KeyPress(DIK_DOWN)) {
-		if (KeyPress(DIK_LEFT)) { fMoveAngle = ANGLE_DOWN_LEFT; }
-		else if (KeyPress(DIK_RIGHT)) { fMoveAngle = ANGLE_DOWN_RIGHT; }
-		else { fMoveAngle = ANGLE_DOWN; }
-	}
-	else if (KeyPress(DIK_LEFT)) { fMoveAngle = ANGLE_LEFT; }
-	else if (KeyPress(DIK_RIGHT)) { fMoveAngle = ANGLE_RIGHT; }
-	else if (StickTiltRate(STICK::RIGHT) > 0.0f) {
-		*pRate = StickTiltRate(STICK::RIGHT);
-		fMoveAngle = -StickTiltAngle(STICK::RIGHT) + D3DX_PI;
-	}
-	else if (cursorMove.x + cursorMove.y != 0.0f) {
-		float fMoveDist = Find_Dist(INITD3DXVECTOR3, D3DXVECTOR3(cursorMove.x, cursorMove.y, 0.0f));
-		if (fMoveDist > CURSOR_DIST_BASE)
-			fMoveDist = CURSOR_DIST_BASE;
-		*pRate = fMoveDist / CURSOR_DIST_BASE;
-		fMoveAngle = Find_Angle_LookFront(INITD3DXVECTOR3, D3DXVECTOR3(cursorMove.x, cursorMove.y, 0.0f));
-	}
-	else {
-		*pRate = 0.0f;
-		return 0.0f;
-	}
-
-	return fMoveAngle;
-}
-
-//========================================
-// 決定取得
-//========================================
-bool CInput::GetDecide(void) {
-	return (KeyTrigger(DIK_RETURN) || ButtonTrigger((int)BUTTON::A));
 }

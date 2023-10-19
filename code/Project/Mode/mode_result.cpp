@@ -66,7 +66,7 @@ void CMode_Result::Update(void) {
 		->SetSize(1280.0f, 720.0f)
 		->SetCol(Color{ 0,200,0,255 });
 
-	if (RNLib::Input()->KeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+	if (RNLib::Input()->GetKeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
 		Manager::Transition(CMode::TYPE::TITLE, CTransition::TYPE::FADE);
 
 }

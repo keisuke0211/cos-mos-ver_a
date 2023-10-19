@@ -49,8 +49,12 @@
 #define INITCOLOR       Color{255,255,255,255}		// Colorの初期値
 #define CLEARCOLOR      Color{0  ,0  ,0  ,0  }		// Colorのクリア値
 #define COLORNONE       Color{-1 ,-1 ,-1 ,-1 }		// Colorのクリア値
-#define D3DX_PI_HALF    (D3DX_PI*0.5f)
-#define D3DX_PI_DOUBLE  (D3DX_PI*2.0f)
+#define D3DX_PI_HALF       (D3DX_PI* 0.5f)
+#define D3DX_PI_DOUBLE     (D3DX_PI* 2.0f)
+#define D3DX_PI_LEFT_UP    (D3DX_PI*-0.75)
+#define D3DX_PI_RIGHT_UP   (D3DX_PI* 0.75)
+#define D3DX_PI_LEFT_DOWN  (D3DX_PI*-0.25)
+#define D3DX_PI_RIGHT_DOWN (D3DX_PI* 0.25)
 #define COUNT_MAX       (INT_MAX*0.5f)
 #define PIXEL2D_SIZE    (2.0f)
 #define PIXEL3D_SIZE    (0.4f)

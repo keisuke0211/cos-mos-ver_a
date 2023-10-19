@@ -127,7 +127,7 @@ void UpdateSetting(void)
 		}
 	}
 
-	if (RNLib::Input()->KeyTrigger(DIK_F11) && !RNLib::GetUseImGui())
+	if (RNLib::Input()->GetKeyTrigger(DIK_F11) && !RNLib::GetUseImGui())
 	{// F11キーが入力された時、
 		// 全画面フラグを切り替える
 		g_setting.bFullScreen ^= 1;

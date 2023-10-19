@@ -16,80 +16,93 @@ public:
 	static const int NUM_KEY_MAX = 256;
 
 	//========== [[[ 列挙型の定義 ]]]
-	enum class ACTIVE_DEVICE { KEYBOARD, CONTROLLER, MAX, };
+	enum class ACTIVE_DEVICE { KEYBOARD, JOYPAD, MAX, };
 	enum class INPUT_ANGLE { UP, DOWN, LEFT, RIGHT, MAX, };
 	enum class MOUSEBUTTON { LEFT, RIGHT, MAX, };
-	enum class BUTTON { UP, DOWN, LEFT, RIGHT, START, BACK, LEFT_THUMB, RIGHT_THUMB, LEFT_SHOULDER, RIGHT_SHOULDER, A, B, X, Y, LEFT_TRIGGER, RIGHT_TRIGGER, MAX, };
+	enum class BUTTON { UP, DOWN, LEFT, RIGHT, START, BACK, LEFT_THUMB, RIGHT_THUMB, LEFT_SHOULDER, RIGHT_SHOULDER, LEFT_TRIGGER, RIGHT_TRIGGER, A, B, X, Y, MAX, };
 	enum class STICK { LEFT, RIGHT, MAX, };
 	enum class WHEELSPIN { NONE, FRONT, BACK, };
 
-	//========== [[[ 構造体の定義 ]]]
-	// スティックの入力情報構造体
-	typedef struct {
-		float fTiltRate;	// 倒し具合
-		float fTiltAngle;	// 倒れ角度
-		BYTE  aAnglePress[(int)INPUT_ANGLE::MAX];	// 方向プレス情報
-		BYTE  aAngleTrigger[(int)INPUT_ANGLE::MAX];	// 方向トリガー情報
-		BYTE  aAngleRepeat[(int)INPUT_ANGLE::MAX];	// 方向リピート情報
-		BYTE  aAngleRelease[(int)INPUT_ANGLE::MAX];	// 方向リリース情報
-		DWORD aStickCurrentTime[(int)INPUT_ANGLE::MAX];	// 現在時間
-		DWORD aStickExecLastTime[(int)INPUT_ANGLE::MAX];	// 最後時間
-	}StickInput;
+	//========== [[[ クラス定義 ]]]
+	// ジョイパッドクラス
+	class CJoyPad {
+	public:
+		CJoyPad();
+		~CJoyPad();
+		void  Update(void);
+		void  SetIdx(const unsigned short& idx) { m_idx = idx; }
+		void  SetVibration(const float& vibration);
+		bool  GetButtonPress(const BUTTON& btn) { return m_buttonInputs[(int)btn].press != 0; }
+		bool  GetButtonTrigger(const BUTTON& btn) { return m_buttonInputs[(int)btn].trigger != 0; }
+		bool  GetButtonRelease(const BUTTON& btn) { return m_buttonInputs[(int)btn].release != 0; }
+		float GetStickTiltRate(const STICK& stick) { return m_sticInputs[(int)stick].tiltRate; }
+		float GetStickTiltAngle(const STICK& stick) { return m_sticInputs[(int)stick].tiltAngle; }
+		bool  GetStickAnglePress(const STICK& stick, const INPUT_ANGLE& angle) { return m_sticInputs[(int)stick].angleInputs[(int)angle].press != 0; }
+		bool  GetStickAngleTrigger(const STICK& stick, const INPUT_ANGLE& angle) { return m_sticInputs[(int)stick].angleInputs[(int)angle].trigger != 0; }
+		bool  GetStickAngleRelease(const STICK& stick, const INPUT_ANGLE& angle) { return m_sticInputs[(int)stick].angleInputs[(int)angle].release != 0; }
+
+	private:
+		// [[[ 構造体定義 ]]]
+		struct Input {
+			BYTE press = 0;
+			BYTE trigger = 0;
+			BYTE release = 0;
+		};
+		struct StickInput {
+			float tiltRate;
+			float tiltAngle;
+			Input angleInputs[(int)INPUT_ANGLE::MAX];
+		};
+
+		// [[[ 関数宣言 ]]]
+		void UpdateButton(void);
+		void UpdateStick(void);
+		void UpdateVibration(void);
+
+		// [[[ 変数宣言 ]]]
+		unsigned short m_idx;
+		Input          m_buttonInputs[(int)BUTTON::MAX];
+		StickInput     m_sticInputs[(int)STICK::MAX];
+		int            m_vibrationCounter;
+		int            m_vibrationCounterMax;
+		float          m_vibration;
+		XINPUT_STATE   m_xInputState;
+	};
 
 	//========== [[[ 関数宣言 ]]]
 	CInput();
 	~CInput();
-	void  Init(HINSTANCE hInstance);
-	void  Uninit(void);
-	void  Update(void);
-	void  Clear(void);
-
-	void  SetVibration(float fVibration, int nTime);
-	float GetMoveAngle(float* pRate = NULL);
-	float GetLeftAngle(float* pRate = NULL);
-	bool  GetAngleTrigger(INPUT_ANGLE angle);
-	bool  GetLeftAngleTrigger(INPUT_ANGLE angle);
-	bool  GetRightAngleTrigger(INPUT_ANGLE angle);
-	float GetRightAngle(float* pRate);
-	bool  GetDecide(void);
-	void  FixedCursor(bool bFixed) {// カーソル固定
-		m_bFixedCursor = bFixed;
-		ShowCursor(!bFixed);
-	}
-	bool  GetPause(void) { return (KeyTrigger(DIK_P) || ButtonTrigger((int)BUTTON::START)); }
-	// 取得
-	XINPUT_STATE* GetXInputState(void) { return &m_xInputState; }
-	D3DXVECTOR2        GetCursorPosOnScreen(void);
-	D3DXVECTOR2        GetCursorMove(void) { return m_cursorInfo.move; }
-	StickInput         GetStick(STICK stick) { return m_aStick[(int)stick]; }
-	ACTIVE_DEVICE GetActiveInputType(void) { return m_activeInputType; }
-	// 統合
-	bool Press(int nKey, int nButton) { return KeyPress(nKey) || ButtonPress(nButton); }
-	bool Trigger(int nKey, int nButton) { return KeyTrigger(nKey) || ButtonTrigger(nButton); }
-	bool Release(int nKey, int nButton) { return KeyRelease(nKey) || ButtonRelease(nButton); }
-	// キーボード
-	bool KeyPress(int nKey) { return m_keyInputs[nKey].press != 0; }
-	bool KeyTrigger(int nKey) { return m_keyInputs[nKey].trigger != 0; }
-	bool KeyRelease(int nKey) { return m_keyInputs[nKey].release != 0; }
-	// マウス
-	bool MousePress(MOUSEBUTTON btn) { return m_mouseButtonInputs[(int)btn].press != 0; }
-	bool MouseTrigger(MOUSEBUTTON btn) { return m_mouseButtonInputs[(int)btn].trigger != 0; }
-	bool MouseRelease(MOUSEBUTTON btn) { return m_mouseButtonInputs[(int)btn].release != 0; }
-	WHEELSPIN WheelSpin(void) { return m_wheelSpin; }
-	// ボタン
-	bool ButtonPress(int nButton) { return m_aButtonPress[nButton] != 0; }
-	bool ButtonTrigger(int nButton) { return m_aButtonTrigger[nButton] != 0; }
-	bool ButtonRepeat(int nButton) { return m_aButtonRepeat[nButton] != 0; }
-	bool ButtonRelease(int nButton) { return m_aButtonRelease[nButton] != 0; }
-	// スティック
-	float StickTiltRate(STICK stick) { return m_aStick[(int)stick].fTiltRate; }
-	float StickTiltAngle(STICK stick) { return m_aStick[(int)stick].fTiltAngle; }
-	bool  StickAnglePress(STICK stick, INPUT_ANGLE angle) { return m_aStick[(int)stick].aAnglePress[(int)angle] != 0; }
-	bool  StickAngleTrigger(STICK stick, INPUT_ANGLE angle) { return m_aStick[(int)stick].aAngleTrigger[(int)angle] != 0; }
-	bool  StickAngleRepeat(STICK stick, INPUT_ANGLE angle) { return m_aStick[(int)stick].aAngleRepeat[(int)angle] != 0; }
-	bool  StickAngleRelease(STICK stick, INPUT_ANGLE angle) { return m_aStick[(int)stick].aAngleRelease[(int)angle] != 0; }
-	// 設定
-	void SetWheelSpin(WHEELSPIN wheelSpin) { m_wheelSpin = wheelSpin; }
+	void          Init(HINSTANCE& instanceHandle);
+	void          Uninit(void);
+	void          Update(void);
+	void          Clear(void);
+	void          SetActiveDevice(const ACTIVE_DEVICE& device) { m_activeDevice = device; }
+	ACTIVE_DEVICE GetActiveDevice(void) { return m_activeDevice; }
+	bool          GetPress(const int& key, const BUTTON& button, const unsigned short& idx = 0) { return GetKeyPress(key) || GetButtonPress(button, idx); }
+	bool          GetTrigger(const int& key, const BUTTON& button, const unsigned short& idx = 0) { return GetKeyTrigger(key) || GetButtonTrigger(button, idx); }
+	bool          GetRelease(const int& key, const BUTTON& button, const unsigned short& idx = 0) { return GetKeyRelease(key) || GetButtonRelease(button, idx); }
+	bool          GetKeyPress(const int& key) { return m_keyInputs[key].press != 0; }
+	bool          GetKeyTrigger(const int& key) { return m_keyInputs[key].trigger != 0; }
+	bool          GetKeyRelease(const int& key) { return m_keyInputs[key].release != 0; }
+	bool          GetMousePress(const MOUSEBUTTON& btn) { return m_mouseButtonInputs[(int)btn].press != 0; }
+	bool          GetMouseTrigger(const MOUSEBUTTON& btn) { return m_mouseButtonInputs[(int)btn].trigger != 0; }
+	bool          GetMouseRelease(const MOUSEBUTTON& btn) { return m_mouseButtonInputs[(int)btn].release != 0; }
+	void          FixedCursor(const bool& isFixed) { m_isFixedCursor = isFixed; ShowCursor(!isFixed); }
+	D3DXVECTOR2   GetCursorPosOnWindow(void) { return m_cursorInfo.pos; }
+	D3DXVECTOR2   GetCursorMove(void) { return m_cursorInfo.move; }
+	WHEELSPIN     GetWheelSpin(void) { return m_wheelSpin; }
+	void          SetWheelSpin(WHEELSPIN wheelSpin) { m_wheelSpin = wheelSpin; }
+	void          SetJoyPadNum(const unsigned short& num);
+	CJoyPad& GetJoyPad(const unsigned short& idx) { return m_joyPads[idx]; }
+	void          SetVibration(const float& vibration, const unsigned short& idx = 0) { if (CheckJoyPadConnected(idx))  m_joyPads[idx].SetVibration(vibration); }
+	bool          GetButtonPress(const BUTTON& btn, const unsigned short& idx = 0) { return CheckJoyPadConnected(idx) ? m_joyPads[idx].GetButtonPress(btn) : false; }
+	bool          GetButtonTrigger(const BUTTON& btn, const unsigned short& idx = 0) { return CheckJoyPadConnected(idx) ? m_joyPads[idx].GetButtonTrigger(btn) : false; }
+	bool          GetButtonRelease(const BUTTON& btn, const unsigned short& idx = 0) { return CheckJoyPadConnected(idx) ? m_joyPads[idx].GetButtonRelease(btn) : false; }
+	float         GetStickTiltRate(const STICK& stick, const unsigned short& idx = 0) { return CheckJoyPadConnected(idx) ? m_joyPads[idx].GetStickTiltRate(stick) : 0.0f; }
+	float         GetStickTiltAngle(const STICK& stick, const unsigned short& idx = 0) { return CheckJoyPadConnected(idx) ? m_joyPads[idx].GetStickTiltAngle(stick) : 0.0f; }
+	bool          GetStickAnglePress(const STICK& stick, const INPUT_ANGLE& angle, const unsigned short& idx = 0) { return CheckJoyPadConnected(idx) ? m_joyPads[idx].GetStickAnglePress(stick, angle) : false; }
+	bool          GetStickAngleTrigger(const STICK& stick, const INPUT_ANGLE& angle, const unsigned short& idx = 0) { return CheckJoyPadConnected(idx) ? m_joyPads[idx].GetStickAngleTrigger(stick, angle) : false; }
+	bool          GetStickAngleRelease(const STICK& stick, const INPUT_ANGLE& angle, const unsigned short& idx = 0) { return CheckJoyPadConnected(idx) ? m_joyPads[idx].GetStickAngleRelease(stick, angle) : false; }
 
 private:
 	//========== [[[ 定数宣言 ]]]
@@ -111,32 +124,18 @@ private:
 	void UpdateKeyboard(void);
 	void UpdateMouseButton(void);
 	void UpdateCursor(void);
-	void UpdateButton(void);
-	void UpdateStick(void);
-	void UpdateController(void);
+	void UpdateJoyPad(void);
+	bool CheckJoyPadConnected(const unsigned short& idx) { return (idx < m_joyPadNum); }
 
 	//========== [[[ 変数宣言 ]]]
-	Input m_keyInputs[NUM_KEY_MAX];
-	Input m_mouseButtonInputs[(int)MOUSEBUTTON::MAX];
-	CursorInfo m_cursorInfo;
-	WHEELSPIN m_wheelSpin;
-
-	//----------コントローラー----------
-	/* プレス情報        */BYTE  m_aButtonPress[(int)BUTTON::MAX];
-	/* トリガー情報      */BYTE  m_aButtonTrigger[(int)BUTTON::MAX];
-	/* リリース情報      */BYTE  m_aButtonRelease[(int)BUTTON::MAX];
-	/* リピート情報      */BYTE  m_aButtonRepeat[(int)BUTTON::MAX];
-	/* 現在の時間        */DWORD m_aButtonCurrentTime[(int)BUTTON::MAX];
-	/* 最後の時間        */DWORD m_aButtonExecLastTime[(int)BUTTON::MAX];
-	/* スティック情報    */StickInput m_aStick[(int)STICK::MAX];
-	/* 振動カウンター    */int m_nCounterVibration;
-	/* 振動カウンターMAX */int m_nCounterVibrationMax;
-	/* 振動倍率          */float m_fVibration;
-	/* XInputの状態      */XINPUT_STATE m_xInputState;
-
-	//========== [[[ 変数宣言 ]]]
-	LPDIRECTINPUT8       m_inputDevice;			// DirectInputオブジェクトへのポインタ
-	LPDIRECTINPUTDEVICE8 m_pDevKeyboard;	// 入力デバイス(キーボード)へのポインタ
-	ACTIVE_DEVICE        m_activeInputType;	// 動的なデバイス
-	bool                 m_bFixedCursor;	// カーソル固定フラグ
+	Input                m_keyInputs[NUM_KEY_MAX];
+	Input                m_mouseButtonInputs[(int)MOUSEBUTTON::MAX];
+	CursorInfo           m_cursorInfo;
+	WHEELSPIN            m_wheelSpin;
+	CJoyPad* m_joyPads;
+	unsigned short       m_joyPadNum;
+	LPDIRECTINPUT8       m_inputDevice;
+	LPDIRECTINPUTDEVICE8 m_keyboardDevice;
+	ACTIVE_DEVICE        m_activeDevice;
+	bool                 m_isFixedCursor;
 };
