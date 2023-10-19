@@ -350,3 +350,23 @@ void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
 		}
 	}
 }
+
+//----------------------------
+//プレイヤー情報の初期化処理
+//プレイヤー情報を初期状態にします。
+//----------------------------
+CPlayer::Info CPlayer::FormatInfo(void)
+{
+	return{
+		INITD3DXVECTOR3,	//位置
+		INITD3DXVECTOR3,	//前回位置
+		INITD3DXVECTOR3,	//向き
+		INITD3DXVECTOR3,	//移動量
+		false,				//ジャンプ
+		JUMP_POWER,			//ジャンプ量
+		GRAVITY_POWER,		//重力
+		GRAVITY_CORR ,		//重力係数
+		DATANONE,			//モデル番号
+		WORLD_SIDE::FACE,	//どちらの世界に存在するか
+	};
+}
