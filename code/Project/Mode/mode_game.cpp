@@ -13,10 +13,19 @@
 //==========| CMode_Gameクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
-static const float DISTANCE = 100.0f;	// 距離
-
 #define COLOR_UP   Color{45,212,140,255}
 #define COLOR_DOWN Color{206,54,112,255}
+static const int s_MaxSummon = 8;		// 出現する位置の最大数
+static const D3DXVECTOR3 s_SummonPos[s_MaxSummon] = {	// 出現する位置
+	D3DXVECTOR3(-200.0f, 300.0f, 300.0f),
+	D3DXVECTOR3(0.0f,	 300.0f, 300.0f),
+	D3DXVECTOR3(200.0f,  300.0f, 300.0f),
+	D3DXVECTOR3(-100.0f, 100.0f,   300.0f),
+	D3DXVECTOR3(100.0f,	 100.0f,   300.0f),
+	D3DXVECTOR3(-200.0f, -200.0f,300.0f),
+	D3DXVECTOR3(0.0f,	 -200.0f,300.0f),
+	D3DXVECTOR3(200.0f,  -200.0f,300.0f),
+};
 
 CPlayer *CMode_Game::s_pPlayer = NULL;
 CPlayer* CMode_Game::GetPlayer(void) { return s_pPlayer; }
@@ -52,7 +61,7 @@ void CMode_Game::Init(void) {
 
 	Manager::BlockMgr()->Load();
 
-	BackGroundPut();
+	BackGroundPut(Color{ 100,100,100,255 }, Color{ 100,100,100,255 });
 
 	if (s_pPlayer == NULL)
 		s_pPlayer = CPlayer::Create();
@@ -102,7 +111,8 @@ void CMode_Game::Update(void) {
 			->SetLighting(false)
 			->SetCol(COLOR_DOWN)
 			->SetSize(width * 2.0f, height * 0.5f)
-			->SetPriority(-2);
+			->SetPriority(-2)
+			->SetZTest(false);
 	}
 }
 
@@ -138,49 +148,21 @@ void CMode_Game::ProcessState(const PROCESS process) {
 // 背景の生成処理
 // Author:KOMURO HIROMU
 //========================================
-void CMode_Game::BackGroundPut(void){
+void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 
-	D3DXVECTOR3 *posOld[10] = {};
-	D3DXVECTOR3 pos;
-	CPlanet::STAR_TYPE *typeOld[(int)CPlanet::STAR_TYPE::MAX] = {};
+	D3DXVECTOR3 pos,rot;
+	Color col;
 	CPlanet::STAR_TYPE type;
 
-
-	for (int nCntPut = 0; nCntPut < 10; nCntPut++)
+	for (int nCntPut = 0; nCntPut < s_MaxSummon; nCntPut++)
 	{
-		bool bpos = false;
-		bool btype = false;
-		while (bpos != true)
-		{
-			pos = D3DXVECTOR3(rand() % 400 - 200, rand() % 400 - 200, 100);	// 位置の設定
+		pos = s_SummonPos[nCntPut];	// 出現する位置の設定
+		pos += D3DXVECTOR3(rand() % 50 - 50, rand() % 50 - 50, rand() % 150 - 50);	// 位置の設定
 
-			if (nCntPut == 0)
-			{
-				bpos = true;
-				posOld[nCntPut] = &pos;	// 代入
-			}
-			for (int nCntpos = 0; nCntpos < nCntPut; nCntpos++)
-			{
-				if (posOld[nCntpos] != NULL)
-				{
-					if (posOld[nCntpos]->x - DISTANCE >= pos.x + DISTANCE &&
-						posOld[nCntpos]->x + DISTANCE <= pos.x - DISTANCE &&
-						posOld[nCntpos]->y - DISTANCE >= pos.y + DISTANCE &&
-						posOld[nCntpos]->y + DISTANCE >= pos.y - DISTANCE)
-					{
-						bpos = false;
-					}
-					else
-					{
-						bpos = true;
-						posOld[nCntPut] = &pos;	// 代入
-					}
-				}
-			}
-		}
 		type = (CPlanet::STAR_TYPE)(rand() % (int)CPlanet::STAR_TYPE::MAX);	// 種類の設定
+		col = Color{mincol.r + rand() % addcol.r,mincol.g + rand() % addcol.g,mincol.b + rand() % addcol.b,255 };	// 色の設定
+		rot = D3DXVECTOR3(rand() % 6 - 3, rand() % 6 - 3, rand() % 6 - 3);	// 向きの設定
 
-		Manager::BlockMgr()->PlanetCreate(pos, type);	// 惑星の生成
-	
+		Manager::BlockMgr()->PlanetCreate(pos,rot, type, col);	// 惑星の生成
 	}
 }

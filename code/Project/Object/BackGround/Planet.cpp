@@ -14,12 +14,12 @@
 //================================================================================
 
 static const char* s_modelPaths[(int)CPlanet::STAR_TYPE::MAX] = {
-	"data\\MODEL\\Blue_Star.x",
-	"data\\MODEL\\Red_Star.x",
-	"data\\MODEL\\Comet_Star.x",
-	"data\\MODEL\\Yellow_Star.x",
 	"data\\MODEL\\Saturn_Star.x",
+	"data\\MODEL\\Saturn_2_Star.x",
+	"data\\MODEL\\Saturn_4_Star.x",
+	"data\\MODEL\\Saturn_8_Star.x",
 };
+static const D3DXVECTOR3 s_moveRot = D3DXVECTOR3(0.0005f, 0.0005f, 0.0f);
 
 //========================================
 // コンストラクタ
@@ -35,7 +35,8 @@ CPlanet::CPlanet(void) {
 	// 各情報の初期化
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+	m_col = Color{ 255,255,255,255 };
+	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 }
 
 //========================================
@@ -69,8 +70,11 @@ void CPlanet::Uninit(void) {
 void CPlanet::Update(void) {
 
 	m_pos += m_move;
+	m_rot += s_moveRot;
 
-	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false);
+	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
+		->SetCol(m_col);
+		
 }
 
 //========================================
