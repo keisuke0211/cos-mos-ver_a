@@ -124,8 +124,19 @@ void CTrampoline::Collision(void) {
 
 	if (/*p1が着地で乗る*/
 		p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
-		&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height)
+		&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
 	{//土台の範囲内に着地で入った
+	
+		if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+			&& p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
+		{//2pが乗っているか
+			
+			//ジャンプ量を継承
+			p2->move.y = p1->move.y * 2.625f;
+		
+			//ブロックの立つ位置に戻す
+			p2->pos.y = m_pos.y - m_height * 2.0f;
+		}
 
 		if (m_state == STATE::NONE)
 		{//トランポリンが作動していない
@@ -134,30 +145,28 @@ void CTrampoline::Collision(void) {
 			m_nCnt = MAX_COUNT;
 			p1->bJump = false;
 		}
-	
-		if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
-			&& p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
-		{//2pが乗っているか
-
-			//ジャンプ量を継承
-			p2->move.y = p1->move.y * 2;
-
-			//ブロックの立つ位置に戻す
-			p2->pos.y = m_pos.y - m_height * 2;
-		}
 
 		//移動量（縦）を消す
 		p1->move.y = 0.0f;
 
 		//ブロックの立つ位置に戻す
-		p1->pos.y = m_pos.y + m_height * 2;
-
-
+		p1->pos.y = m_pos.y + m_height * 2.0f;
 	}
 	else if (/*p2が着地で乗る*/
 		p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
-		&& p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
+		&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
 	{//土台の範囲内に着地で入った
+
+		if (p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+			&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height)
+		{//1pが乗っているか
+
+			//ジャンプ量を継承
+			p1->move.y = p2->move.y * 2.625f;			
+
+			//ブロックの立つ位置に戻す
+			p1->pos.y = m_pos.y + m_height * 2.0f;
+		}
 
 		if (m_state == STATE::NONE)
 		{//トランポリンが作動していない
@@ -167,21 +176,10 @@ void CTrampoline::Collision(void) {
 			p2->bJump = false;
 		}
 
-		if (p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
-			&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height)
-		{//1pが乗っているか
-
-			//ジャンプ量を継承
-			p1->move.y = p2->move.y * 2;
-
-			//ブロックの立つ位置に戻す
-			p1->pos.y = m_pos.y + m_height * 2;
-		}
-
 		//移動量（縦）を消す
 		p2->move.y = 0.0f;
 
 		//ブロックの立つ位置に戻す
-		p2->pos.y = m_pos.y - m_height * 2;
+		p2->pos.y = m_pos.y - m_height * 2.0f;
 	}
 }
