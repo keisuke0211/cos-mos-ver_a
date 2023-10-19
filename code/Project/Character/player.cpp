@@ -253,8 +253,11 @@ void CPlayer::WholeCollision(void)
 {
 	for (int nCntVec = 0; nCntVec < (int)COLLI_VEC::MAX; nCntVec++) {
 
+		//衝突ベクトルをキャスト
+		const COLLI_VEC vec = (COLLI_VEC)nCntVec;
+
 		//移動処理
-		Move((COLLI_VEC)nCntVec);
+		Move(vec);
 
 		//オブジェクトのポインタを格納
 		CObject *obj = NULL;
@@ -264,13 +267,28 @@ void CPlayer::WholeCollision(void)
 			//取得したオブジェクトをキャスト
 			CStageObject* stageObj = (CStageObject*)obj;
 
-			//種類ごとに関数分け
-			switch (stageObj->GetType())
+			//オブジェクトの当たり判定情報取得
+			const D3DXVECTOR3 POS = stageObj->GetPos();
+			const float WIDTH = stageObj->GetWidth() * 0.5f;
+			const float HEIGHT = stageObj->GetHeight() * 0.5f;
+
+			//オブジェクトの最小・最大位置
+			const D3DXVECTOR3 MinPos = D3DXVECTOR3(POS.x - WIDTH, POS.y - HEIGHT, 0.0f);
+			const D3DXVECTOR3 MaxPos = D3DXVECTOR3(POS.x + WIDTH, POS.y + HEIGHT, 0.0f);
+
+			for each(Info& Player in m_aInfo)
 			{
-				case CStageObject::TYPE::BLOCK:		CollisionBlock(stageObj, (COLLI_VEC)nCntVec);	break;
-				case CStageObject::TYPE::TRAMPOLINE:	break;
-				case CStageObject::TYPE::MOVE_BLOCK:	break;
-				case CStageObject::TYPE::METEOR:		break;
+				//当たった方向を格納
+				const COLLI_ROT ColliRot = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
+
+				//種類ごとに関数分け
+				switch (stageObj->GetType())
+				{
+					case CStageObject::TYPE::BLOCK:		CollisionBlock(&Player, MinPos, MaxPos, ColliRot);	break;
+					case CStageObject::TYPE::TRAMPOLINE:	break;
+					case CStageObject::TYPE::MOVE_BLOCK:	break;
+					case CStageObject::TYPE::METEOR:		break;
+				}
 			}
 		}
 	}
@@ -279,66 +297,106 @@ void CPlayer::WholeCollision(void)
 //----------------------------
 //ブロックの当たり判定処理
 //----------------------------
-void CPlayer::CollisionBlock(CStageObject *pObj, COLLI_VEC value)
+void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot)
 {
-	//ブロックの当たり判定情報取得
-	const D3DXVECTOR3 POS = pObj->GetPos();
-	const float WIDTH = pObj->GetWidth() * 0.5f;
-	const float HEIGHT = pObj->GetHeight() * 0.5f;
-
-	//ブロックの最小・最大位置
-	const D3DXVECTOR2 MinPos = D3DXVECTOR2(POS.x - WIDTH, POS.y - HEIGHT);
-	const D3DXVECTOR2 MaxPos = D3DXVECTOR2(POS.x + WIDTH, POS.y + HEIGHT);
-
-	for each (Info &Player in m_aInfo)
+	//当たった方向ごとに処理を切り替え
+	switch (ColliRot)
 	{
-		if (value == COLLI_VEC::X)
-		{//Ｘベクトルの当たり判定
-			if (MinPos.y < Player.pos.y + SIZE_HEIGHT && Player.pos.y - SIZE_HEIGHT < MaxPos.y)
-			{// 上下で重なっている
-				//左の当たり判定
-				if (Player.posOLd.x + SIZE_WIDTH <= MinPos.x &&
-					Player.pos.x + SIZE_WIDTH> MinPos.x)
-				{
-					Player.pos.x = MinPos.x - SIZE_WIDTH;
-					Player.move.x = 0.0f;
-				}
-				//右の当たり判定
-				else if (Player.posOLd.x - SIZE_WIDTH >= MaxPos.x &&
-						 Player.pos.x - SIZE_WIDTH < MaxPos.x)
-				{
-					Player.pos.x = MaxPos.x + SIZE_WIDTH;
-					Player.move.x = 0.0f;
-				}
-			}
-		}
-		else if (value == COLLI_VEC::Y)
-		{//Ｙベクトルの当たり判定
-			if (MinPos.x < Player.pos.x + SIZE_WIDTH  && Player.pos.x - SIZE_WIDTH < MaxPos.x)
-			{// 左右で重なっている
-				//下の当たり判定
-				if (Player.posOLd.y + SIZE_HEIGHT <= MinPos.y &&
-					Player.pos.y + SIZE_HEIGHT > MinPos.y)
-				{
-					Player.pos.y = MinPos.y - SIZE_HEIGHT;
-					Player.move.y = 0.0f;
+			//*********************************
+			//上に当たった
+			//*********************************
+		case COLLI_ROT::OVER:
+			//位置・移動量修正
+			pInfo->pos.y = MaxPos.y + SIZE_HEIGHT;
+			pInfo->move.y = 0.0f;
 
-					//裏の世界にいるならジャンプ可能
-					if (Player.side == WORLD_SIDE::BEHIND)	Player.bJump = false;
-				}
-				//上の当たり判定
-				else if (Player.posOLd.y - SIZE_HEIGHT >= MaxPos.y &&
-						 Player.pos.y - SIZE_HEIGHT < MaxPos.y)
-				{
-					Player.pos.y = MaxPos.y + SIZE_HEIGHT;
-					Player.move.y = 0.0f;
+			//表の世界のプレイヤーならジャンプ可能
+			if (pInfo->side == WORLD_SIDE::FACE) pInfo->bJump = false;
+			break;
 
-					//表の世界にいるならジャンプ可能
-					if (Player.side == WORLD_SIDE::FACE)	Player.bJump = false;
-				}
-			}
+			//*********************************
+			//下に当たった
+			//*********************************
+		case COLLI_ROT::UNDER:
+			//位置・移動量修正
+			pInfo->pos.y = MinPos.y - SIZE_HEIGHT;
+			pInfo->move.y = 0.0f;
+
+			//裏の世界のプレイヤーならジャンプ可能
+			if (pInfo->side == WORLD_SIDE::BEHIND) pInfo->bJump = false;
+			break;
+
+			//*********************************
+			//左に当たった
+			//*********************************
+		case COLLI_ROT::LEFT:
+			//位置・移動量修正
+			pInfo->pos.x = MinPos.x - SIZE_WIDTH;
+			pInfo->move.x = 0.0f;
+			break;
+
+			//*********************************
+			//右に当たった
+			//*********************************
+		case COLLI_ROT::RIGHT:
+			//位置・移動量修正
+			pInfo->pos.x = MaxPos.x + SIZE_WIDTH;
+			pInfo->move.x = 0.0f;
+			break;
+	}
+}
+
+//========================
+//対象物の中にめり込んでいるかどうか判定
+//------------------------
+// 引数１	pos				：現在位置
+// 引数２	posOld			：前回位置
+// 引数３	fWidth			：幅
+// 引数４	fHeight			：高さ
+// 引数５	TargetMinPos	：対象物の最小位置
+// 引数６	TargetMaxPos	：対象物の最大位置
+// 返り値	対象物にめりこんでいる方向を返す（NONEなら当たっていない
+//========================
+CPlayer::COLLI_ROT CPlayer::IsBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, float fWidth, float fHeight, D3DXVECTOR3 TargetMinPos, D3DXVECTOR3 TargetMaxPos, COLLI_VEC value)
+{
+	//当たった方向
+	COLLI_ROT ColliRot = COLLI_ROT::NONE;
+
+	//自分の現在の最小・最大位置
+	const D3DXVECTOR2 MINPOS = D3DXVECTOR2(pos.x - fWidth, pos.y - fHeight);
+	const D3DXVECTOR2 MAXPOS = D3DXVECTOR2(pos.x + fWidth, pos.y + fHeight);
+
+	//めり込んでいるか判定
+	if (MINPOS.x < TargetMaxPos.x && TargetMinPos.x < MAXPOS.x &&
+		MINPOS.y < TargetMaxPos.y && TargetMinPos.y < MAXPOS.y)
+	{
+		//自分の過去の最小・最大位置
+		const D3DXVECTOR2 OLD_MINPOS = D3DXVECTOR2(posOld.x - fWidth, posOld.y - fHeight);
+		const D3DXVECTOR2 OLD_MAXPOS = D3DXVECTOR2(posOld.x + fWidth, posOld.y + fHeight);
+
+		//衝突ベクトルで処理分け
+		switch (value)
+		{
+			case COLLI_VEC::X:
+				//前回は左からめり込んでいない（今はめり込んだ
+				if (OLD_MAXPOS.x <= TargetMinPos.x)		ColliRot = COLLI_ROT::LEFT;
+
+				//前回は右からめり込んでいない（今はめり込んだ
+				else if (OLD_MINPOS.x >= TargetMaxPos.x)		ColliRot = COLLI_ROT::RIGHT;
+				break;
+
+			case COLLI_VEC::Y:
+				//前回は上からめり込んでいない（今はめり込んだ
+				if (OLD_MINPOS.y >= TargetMaxPos.y)		ColliRot = COLLI_ROT::OVER;
+
+				//前回は下からめり込んでいない（今はめり込んだ
+				else if (OLD_MAXPOS.y <= TargetMinPos.y)		ColliRot = COLLI_ROT::UNDER;
+				break;
 		}
 	}
+
+	//当たった方向を返す
+	return ColliRot;
 }
 
 //----------------------------
