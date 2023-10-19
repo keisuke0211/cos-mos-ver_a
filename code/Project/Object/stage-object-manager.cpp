@@ -112,6 +112,23 @@ CBlock *CStageObjectMgr::BlockCreate(D3DXVECTOR3 pos)
 }
 
 //========================================
+// ブロック(判定　無)
+//========================================
+CFillBlock *CStageObjectMgr::FillBlockCreate(D3DXVECTOR3 pos)
+{
+	CFillBlock *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CFillBlock;
+
+	// 初期化処理
+	pObj->Init();
+	pObj->SetPos(pos);
+
+	return pObj;
+}
+
+//========================================
 // 棘
 //========================================
 CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)

@@ -9,6 +9,7 @@
 
 #include "../../_RNLib/RNlib.h"
 #include "Block/block.h"
+#include "Block\fill-block.h"
 #include "Gimmick\Spike.h"
 #include "Block/move-block.h"
 #include "Gimmick/trampoline.h"
@@ -30,6 +31,7 @@ public:
 	virtual~CStageObjectMgr();
 	virtual void Update(void);	void Load(void);
 	CBlock      *BlockCreate     (D3DXVECTOR3 pos);
+	CFillBlock  *FillBlockCreate(D3DXVECTOR3 pos);
 	CSpike      *SpikeCreate	 (D3DXVECTOR3 pos);
 	CTrampoline *TrampolineCreate(D3DXVECTOR3 pos);
 	CMeteor     *MeteorCreate    (D3DXVECTOR3 pos, D3DXVECTOR3 move);

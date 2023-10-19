@@ -58,7 +58,8 @@ private:
 	// *** 列挙型 ***
 	enum Type
 	{
-		TYPE_BLOCK = 0,		// 床
+		TYPE_BLOCK = 0,		// ブロック
+		TYPE_FILL_BLOCK,	// ブロック(判定 無)
 		TYPE_TRAMPOLINE,	// トランポリン
 		TYPE_SPIKE,			// 棘
 		TYPE_LIFT,			// リフト

@@ -20,12 +20,13 @@ public:
 	enum class TYPE {
 		NONE       = -1,
 		BLOCK      = 0,
-		TRAMPOLINE = 1,
-		SPIKE	   = 2,
-		MOVE_BLOCK = 3,
-		METEOR	   = 4,
-		PARTS      = 5,
-		BACKGROUND = 6,
+		FILLBLOCK  = 1,
+		TRAMPOLINE = 2,
+		SPIKE	   = 3,
+		MOVE_BLOCK = 4,
+		METEOR	   = 5,
+		PARTS      = 6,
+		BACKGROUND = 7,
 		MAX,
 	};
 

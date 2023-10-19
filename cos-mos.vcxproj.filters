@@ -261,6 +261,9 @@
     <ClCompile Include="code\Project\Mode\mode_result.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="code\Project\Object\Block\fill-block.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\_RNLib\_Basis\3D\Body\collision3D.h">
@@ -488,6 +491,9 @@
     <ClInclude Include="code\Project\Mode\mode_result.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="code\Project\Object\Block\fill-block.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />
@@ -521,7 +527,6 @@
   </ItemGroup>
   <ItemGroup>
     <Object Include="Debug\data.obj" />
-    <Object Include="Debug\imgui_draw.obj" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\TEXTURE\meteo000.png">
