@@ -141,6 +141,9 @@ void CTrampoline::Collision(void) {
 
 			//ジャンプ量を継承
 			p2->move.y = p1->move.y * 2;
+
+			//ブロックの立つ位置に戻す
+			p2->pos.y = m_pos.y - m_height * 2;
 		}
 
 		//移動量（縦）を消す
@@ -170,6 +173,9 @@ void CTrampoline::Collision(void) {
 
 			//ジャンプ量を継承
 			p1->move.y = p2->move.y * 2;
+
+			//ブロックの立つ位置に戻す
+			p1->pos.y = m_pos.y + m_height * 2;
 		}
 
 		//移動量（縦）を消す
