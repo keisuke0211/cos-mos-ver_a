@@ -157,7 +157,7 @@ void CPlayer::ActionControl(void)
 		Info& Player = m_aInfo[nCntPlayer];
 
 		//ジャンプ入力（空中じゃない）
-		if (!Player.bJump && RNLib::Input()->Trigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON_UP))
+		if (!Player.bJump && RNLib::Input()->Trigger(ACTION_KEY[nCntPlayer][(int)Player.side], (int)CInput::BUTTON::UP))
 		{
 			//ジャンプ量代入
 			Player.move.y = Player.fJumpPower;
@@ -167,11 +167,11 @@ void CPlayer::ActionControl(void)
 		}
 
 		//右に移動
-		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][2], CInput::BUTTON_RIGHT))
+		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][2], (int)CInput::BUTTON::RIGHT))
 			Player.move.x += MOVE_SPEED;
 
 		//左に移動
-		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][3], CInput::BUTTON_LEFT))
+		if (RNLib::Input()->Press(ACTION_KEY[nCntPlayer][3], (int)CInput::BUTTON::LEFT))
 			Player.move.x -= MOVE_SPEED;
 	}
 }

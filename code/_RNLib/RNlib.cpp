@@ -279,9 +279,9 @@ LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) 
 	case WM_MOUSEWHEEL:
 		// マウスホイールの前回転/後回転 状態設定
 		if (HIWORD(wParam) == WHEEL_DELTA)
-			m_input.SetWheelSpin(CInput::WHEELSPIN_FRONT);
+			m_input.SetWheelSpin(CInput::WHEELSPIN::FRONT);
 		else
-			m_input.SetWheelSpin(CInput::WHEELSPIN_BACK);
+			m_input.SetWheelSpin(CInput::WHEELSPIN::BACK);
 		break;
 
 	case WM_LBUTTONDOWN:
@@ -402,7 +402,7 @@ namespace {
 	
 		m_window.Update();
 		
-		m_input.SetWheelSpin(CInput::WHEELSPIN_NONE);
+		m_input.SetWheelSpin(CInput::WHEELSPIN::NONE);
 	
 		if (m_bUseImGui)
 			ImGuiInitFlag();
