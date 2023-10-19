@@ -225,6 +225,8 @@ void CStageEditor::SetStage(int nType)
 			Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			break;
 		case TYPE_Meteor:
+			pos.x += nSizeX;
+			pos.y -= nSizeY;
 			Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			break;
 		case TYPE_PLAYER_0:
@@ -239,6 +241,9 @@ void CStageEditor::SetStage(int nType)
 			Manager::BlockMgr()->PartsCreate(pos);
 			break;
 		case TYPE_GOAL:
+			pos.x += nSizeX;
+			pos.y -= nSizeY;
+			Manager::BlockMgr()->RocketCreate(pos);
 			break;
 		}
 	}
