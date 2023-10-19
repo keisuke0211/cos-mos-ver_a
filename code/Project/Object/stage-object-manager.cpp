@@ -171,7 +171,7 @@ CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move)
 //========================================
 // ˆÚ“®°
 //========================================
-CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move)
+CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move, float fRefdef)
 {
 	CMoveBlock *pObj = NULL;
 
@@ -181,6 +181,8 @@ CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move)
 	// ‰Šú‰»ˆ—
 	pObj->Init();
 	pObj->SetPos(pos);
+	pObj->SetMove(move);
+	pObj->SetRefdef(fRefdef);
 
 	return pObj;
 }
@@ -236,10 +238,11 @@ CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CPlanet
 
 	// ‰Šú‰»ˆ—
 	pObj->SetType(type);
-	pObj->Init();
 	pObj->SetPos(pos);
 	pObj->SetCol(col);
 	pObj->SetRot(rot);
+	pObj->Init();
+	
 
 	return pObj;
 }
