@@ -130,5 +130,5 @@ void Manager::Transition(CMode::TYPE newMode, CTransition::TYPE transType) {
 	m_reserveModeType = newMode;
 
 	// ‘JˆÚÝ’è
-	RNLib::Transition()->Set(CTransition::STATE::WAIT_SET_MODE, transType);
+	RNLib::Transition()->Set(CTransition::STATE::CLOSE, transType);
 }

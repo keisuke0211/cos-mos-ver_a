@@ -105,8 +105,8 @@ void CMode_Game::Update(void) {
 	if (RNLib::Input()->KeyTrigger(DIK_RETURN))
 		Manager::StgEd()->SwapStage(1);
 
-	if (RNLib::Input()->KeyTrigger(DIK_SPACE))
-		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::HOLE);
+	/*if (RNLib::Input()->KeyTrigger(DIK_SPACE))
+		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::FADE);*/
 
 	// îwåi(âº)
 	{

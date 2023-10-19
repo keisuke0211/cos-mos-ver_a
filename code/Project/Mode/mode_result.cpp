@@ -64,7 +64,7 @@ void CMode_Result::Update(void) {
 		->SetCol(Color{ 0,255,0,255 });
 
 	if (RNLib::Input()->KeyTrigger(DIK_SPACE))
-		Manager::Transition(CMode::TYPE::TITLE, CTransition::TYPE::HOLE);
+		Manager::Transition(CMode::TYPE::TITLE, CTransition::TYPE::FADE);
 
 }
 
