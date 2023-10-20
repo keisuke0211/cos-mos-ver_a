@@ -1,7 +1,7 @@
 //========================================
 // 
 // ìÆÇ≠ÉuÉçÉbÉNèàóù [move-block.h]
-// Author:HARUTO KIKUCHI
+// Author:HIROMU KOMURO
 // 
 //========================================
 #include "../../manager.h"
@@ -20,6 +20,12 @@ int CMoveBlock::m_nNumAll = 0;
 CMoveBlock::CMoveBlock(void)
 {
 	Manager::BlockMgr()->AddList(this);
+
+	m_type = TYPE::MOVE_BLOCK;	// éÌóﬁÇÃê›íË
+
+	// ëÂÇ´Ç≥ÇÃê›íË
+	m_width = SIZE_OF_1_SQUARE * 2;
+	m_height = SIZE_OF_1_SQUARE * 1 * 0.5f;
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 	m_Info.posOld = INITD3DXVECTOR3;
@@ -67,14 +73,19 @@ void CMoveBlock::Uninit(void)
 //========================================
 void CMoveBlock::Update(void)
 {
-	//m_Info.pos.y -= 1.0f;
-	//m_Info.nCntMove++;
-
 	m_Info.pos += m_Info.move;	// à⁄ìÆó ÇÃëùâ¡
+
 	if (m_Info.move.y != 0.0f)
 	{
-		m_rot.z += (m_Info.move.y + 1.0f) * ROT_MAG;
+		float fConv = m_Info.move.y;
+		if (fConv < 0.0f)
+			fConv -= 1.0f;
+		else
+			fConv += 1.0f;
+
+		m_rot.z += fConv * ROT_MAG * -1;
 	}
+
 	if (m_Info.move.x != 0.0f)
 	{
 		float f = m_Info.move.x;

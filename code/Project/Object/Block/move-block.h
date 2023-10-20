@@ -1,7 +1,7 @@
 //========================================
 // 
 // 動くブロック処理 [move-block.h]
-// Author:HARUTO KIKUCHI
+// Author:HIROMU KOMURO
 // 
 //========================================
 
@@ -13,7 +13,7 @@
 //========================================
 // クラス
 //========================================
-class CMoveBlock : public CObject
+class CMoveBlock : public CStageObject
 {
 public:
 
@@ -32,7 +32,6 @@ public:
 		int nID;				// ID
 		int nModelIdx;
 	};
-
 
 	//関数
 	CMoveBlock();
