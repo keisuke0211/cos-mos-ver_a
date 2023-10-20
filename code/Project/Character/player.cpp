@@ -19,9 +19,9 @@ const float CPlayer::SIZE_HEIGHT = 8.0f;	//高さ
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 2.7f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 11.0f;		//基本ジャンプ量
-const float CPlayer::GRAVITY_POWER = -11.0f;	//基本重力加速度
-const float CPlayer::GRAVITY_CORR = 0.06f;	//基本重力係数
+const float CPlayer::JUMP_POWER = 8.0f;		//基本ジャンプ量
+const float CPlayer::GRAVITY_POWER = -8.0f;	//基本重力加速度
+const float CPlayer::GRAVITY_CORR = 0.07f;	//基本重力係数
 
 //=======================================
 //コンストラクタ
@@ -275,7 +275,7 @@ void CPlayer::Move(COLLI_VEC vec)
 void CPlayer::WholeCollision(void)
 {
 	//一旦両プレイヤーともにジャンプ不可
-	m_aInfo[0].bJump = m_aInfo[1].bJump = true;
+	//m_aInfo[0].bJump = m_aInfo[1].bJump = true;
 
 	for (int nCntVec = 0; nCntVec < (int)COLLI_VEC::MAX; nCntVec++) {
 
@@ -319,7 +319,7 @@ void CPlayer::WholeCollision(void)
 					case CStageObject::TYPE::BLOCK:			CollisionBlock(&Player, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::FILLBLOCK:		break;
 					case CStageObject::TYPE::TRAMPOLINE:	break;
-					case CStageObject::TYPE::SPIKE:			CollisionSpike();	break;
+					case CStageObject::TYPE::SPIKE:			CollisionSpike(&Player, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::MOVE_BLOCK:	break;
 					case CStageObject::TYPE::METEOR:		break;
 					case CStageObject::TYPE::PARTS:			break;
@@ -391,10 +391,38 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 //----------------------------
 //トゲの当たり判定処理
 //----------------------------
-void CPlayer::CollisionSpike(void)
+void CPlayer::CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot)
 {
-	//死亡処理
-	Death(NULL);
+	//当たった方向ごとに処理を切り替え
+	switch (ColliRot)
+	{
+		//*********************************
+		//上下どちらかに当たった
+		//*********************************
+		case COLLI_ROT::OVER:
+		case COLLI_ROT::UNDER:
+			//死亡処理
+			Death(NULL);
+			break;
+
+			//*********************************
+			//左に当たった
+			//*********************************
+		case COLLI_ROT::LEFT:
+			//位置・移動量修正
+			pInfo->pos.x = MinPos.x - SIZE_WIDTH;
+			pInfo->move.x = 0.0f;
+			break;
+
+			//*********************************
+			//右に当たった
+			//*********************************
+		case COLLI_ROT::RIGHT:
+			//位置・移動量修正
+			pInfo->pos.x = MaxPos.x + SIZE_WIDTH;
+			pInfo->move.x = 0.0f;
+			break;
+	}
 }
 
 //========================
