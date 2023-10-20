@@ -90,7 +90,7 @@ public:
 	//プレイヤー位置情報設定
 	//指定したプレイヤーの位置情報を引数に渡してください。
 	//----------------------------
-	void SetPos(const int nNum, D3DXVECTOR3 pos) { m_aInfo[nNum].pos = pos; }
+	void SetPos(const int nNum, D3DXVECTOR3 pos) { m_aInfo[nNum].StartPos = m_aInfo[nNum].pos = pos; }
 
 	//----------------------------
 	//プレイヤー情報取得
@@ -130,6 +130,7 @@ private:
 	COLLI_ROT IsBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, float fWidth, float fHeight, D3DXVECTOR3 TargetMinPos, D3DXVECTOR3 TargetMaxPos, COLLI_VEC value);
 
 	void CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
+	void CollisionSpike(Info *pInfo);
 
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
 };
