@@ -281,13 +281,18 @@ void CPlayer::WholeCollision(void)
 				//“–‚½‚Á‚½•ûŒü‚ðŠi”[
 				const COLLI_ROT ColliRot = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
 
+				if (ColliRot == COLLI_ROT::NONE) continue;
+
 				//Ží—Þ‚²‚Æ‚ÉŠÖ”•ª‚¯
 				switch (stageObj->GetType())
 				{
-					case CStageObject::TYPE::BLOCK:		CollisionBlock(&Player, MinPos, MaxPos, ColliRot);	break;
+					case CStageObject::TYPE::BLOCK:			CollisionBlock(&Player, MinPos, MaxPos, ColliRot);	break;
+					case CStageObject::TYPE::FILLBLOCK:		break;
 					case CStageObject::TYPE::TRAMPOLINE:	break;
+					case CStageObject::TYPE::SPIKE:			CollisionSpike(&Player);	break;
 					case CStageObject::TYPE::MOVE_BLOCK:	break;
 					case CStageObject::TYPE::METEOR:		break;
+					case CStageObject::TYPE::PARTS:			break;
 				}
 			}
 		}
@@ -344,6 +349,15 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 			pInfo->move.x = 0.0f;
 			break;
 	}
+}
+
+//----------------------------
+//ƒgƒQ‚Ì“–‚½‚è”»’èˆ—
+//----------------------------
+void CPlayer::CollisionSpike(Info *pInfo)
+{
+	//‰ŠúˆÊ’u–ß‚·
+	pInfo->pos = pInfo->posOLd = pInfo->StartPos;
 }
 
 //========================
