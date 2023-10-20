@@ -16,7 +16,7 @@ CSpike::CSpike(void)
 {
 	Manager::BlockMgr()->AddList(this);
 
-	m_type = TYPE::BLOCK;
+	m_type = TYPE::SPIKE;
 	m_width = SIZE_OF_1_SQUARE;
 	m_height = SIZE_OF_1_SQUARE;
 

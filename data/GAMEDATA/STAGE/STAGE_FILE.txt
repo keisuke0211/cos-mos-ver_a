@@ -11,8 +11,8 @@ NUM_STAGE = 2
 #========================================
 # ファイル名
 #========================================
-STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE00.csv
 STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE01.csv
+STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE00.csv
 
 
 #========================================
