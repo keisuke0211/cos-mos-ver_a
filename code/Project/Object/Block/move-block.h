@@ -1,7 +1,7 @@
 //========================================
 // 
 // ìÆÇ≠ÉuÉçÉbÉNèàóù [move-block.h]
-// Author:HARUTO KIKUCHI
+// Author:HIROMU KOMURO
 // 
 //========================================
 
@@ -32,7 +32,6 @@ public:
 		int nID;				// ID
 		int nModelIdx;
 	};
-
 
 	//ä÷êî
 	CMoveBlock();

@@ -1,7 +1,7 @@
 //========================================
 // 
 // “®‚­ƒuƒƒbƒNˆ— [move-block.h]
-// Author:HARUTO KIKUCHI
+// Author:HIROMU KOMURO
 // 
 //========================================
 #include "../../manager.h"
