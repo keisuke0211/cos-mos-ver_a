@@ -1,31 +1,38 @@
 //========================================
 // 
-// モード:タイトル処理
+// モード:ロゴ
 // Author:KEISUKE OTONO
 // 
 //========================================
 #include "../main.h"
-#include "mode_title.h"
+#include "mode_logo.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| CMode_Titleクラスのメンバ関数
+//==========| CMode_Logoクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
+
+//========================================
+// 静的変数
+//========================================
+int CMode_Logo::m_TexLogo = 0;
 
 //========================================
 // コンストラクタ
 // Author:KEISUKE OTONO
 //========================================
-CMode_Title::CMode_Title(void) {
-	m_TexIdx = 0;
+CMode_Logo::CMode_Logo(void) {
+	m_TexLogo = 0;
+	m_nStateCtr = TIME;
+	m_state = STATE::NONE;
 }
 
 //========================================
 // デストラクタ
 // Author:KEISUKE OTONO
 //========================================
-CMode_Title::~CMode_Title(void) {
+CMode_Logo::~CMode_Logo(void) {
 
 }
 
@@ -33,11 +40,13 @@ CMode_Title::~CMode_Title(void) {
 // 初期化処理
 // Author:KEISUKE OTONO
 //========================================
-void CMode_Title::Init(void) {
+void CMode_Logo::Init(void) {
 	CMode::Init();
 
-	m_TexIdx = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\title.jpg");
+	m_TexLogo = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\title-logo.PNG");
 
+	// 状態設定
+	SetState((int)STATE::NONE);
 	// 遷移設定
 	RNLib::Transition()->Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
 
@@ -46,13 +55,15 @@ void CMode_Title::Init(void) {
 
 	// 状態設定
 	SetState((int)STATE::NONE);
+
+	m_state = STATE::OPEN_WAIT;
 }
 
 //========================================
 // 終了処理
 // Author:KEISUKE OTONO
 //========================================
-void CMode_Title::Uninit(void) {
+void CMode_Logo::Uninit(void) {
 	CMode::Uninit();
 
 }
@@ -61,23 +72,73 @@ void CMode_Title::Uninit(void) {
 // 更新処理
 // Author:KEISUKE OTONO
 //========================================
-void CMode_Title::Update(void) {
+void CMode_Logo::Update(void) {
 	CMode::Update();
 
-	RNLib::Polygon2D()->Put(D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, RNLib::Window()->GetCenterPos().y, -1.0f), 0.0f, false)
-		->SetSize(1280.0f,720.0f)
-		->SetCol(Color{255,255,255,255})
-		->SetTex(m_TexIdx);
+	//===== [[[ ローカル関数宣言 ]]]
+	struct LocalFunc {
+		static void FillScreen(const float& fRate) {
+			RNLib::Polygon2D()->Put(RNLib::Window()->GetCenterPos(), 0.0f)
+				->SetCol(Color{ 255,255,255,(int)(255 * fRate) })
+				->SetSize(RNLib::Window()->GetWidth(), RNLib::Window()->GetHeight())
+				->SetTex(m_TexLogo);
+		}
+	};
 
-	if (RNLib::Input()->GetKeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
-		Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::NONE);
+	if (m_state == STATE::NONE)
+	{
+		return;
+	}
+	else if (m_state == STATE::OPEN_WAIT) {
+		if (++m_nStateCtr >= WAIT_TIME) {
+			m_nStateCtr = TIME;
+			m_state = STATE::OPEN;
+		}
+		LocalFunc::FillScreen(0.0f);
+		return;
+	}
+	else if (m_state == STATE::CLOSE_WAIT)
+	{
+		if (++m_nStateCtr >= WAIT_TIME) {
+			m_nStateCtr = 0;
+
+			m_state = STATE::CLOSE;
+		}
+		LocalFunc::FillScreen(1.0f);
+		return;
+	}
+	else if (m_state == STATE::OPEN)
+	{
+		if (--m_nStateCtr <= 0)
+		{
+			m_state = STATE::CLOSE_WAIT;
+			m_stateCtr = WAIT_TIME;
+		}
+	}
+	else if (m_state == STATE::CLOSE)
+	{
+		if (++m_nStateCtr >= TIME)
+		{
+			if (RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+			{
+				Manager::Transition(CMode::TYPE::TITLE, CTransition::TYPE::NONE);
+				m_state = STATE::NONE;
+			}
+		}
+	}
+
+	float fRate = (float)m_nStateCtr / TIME;
+	float fRateOpp = 1.0 - fRate;
+
+	LocalFunc::FillScreen(fRateOpp);
+
 }
 
 //========================================
 // 更新処理(状態)
 // Author:KEISUKE OTONO
 //========================================
-void CMode_Title::ProcessState(const PROCESS process) {
+void CMode_Logo::ProcessState(const PROCESS process) {
 	switch ((STATE)m_state) {
 		//----------------------------------------
 		// 無し
