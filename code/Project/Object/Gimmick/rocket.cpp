@@ -16,7 +16,7 @@ CRocket::CRocket(void)
 {
 	Manager::BlockMgr()->AddList(this);
 
-	m_type = TYPE::BLOCK;
+	m_type = TYPE::ROCKET;
 	m_width = SIZE_OF_1_SQUARE*3;
 	m_height = SIZE_OF_1_SQUARE*3;
 
