@@ -141,9 +141,10 @@ void CTrampoline::Collision(void) {
 			
 			//ジャンプ量を継承
 			p2->move.y += p1->move.y * 2.5f;
-			
 			//ブロックの立つ位置に戻す
 			p2->pos.y = m_pos.y - m_height * 2.0f;
+			//ジャンプできるようにする
+			p2->bJump = false;
 		}
 		if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 			&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height
@@ -151,9 +152,10 @@ void CTrampoline::Collision(void) {
 		{
 			//ジャンプ量を継承
 			p2->move.y += p1->move.y * 2.5f;
-
 			//ブロックの立つ位置に戻す
 			p2->pos.y = m_pos.y + m_height * 2.0f;
+			//ジャンプできるようにする
+			p2->bJump = false;
 		}
 
 		if (m_state == STATE::NONE
@@ -203,9 +205,10 @@ void CTrampoline::Collision(void) {
 
 			//ジャンプ量を継承
 			p1->move.y = p2->move.y * 2.6875f;			
-
 			//ブロックの立つ位置に戻す
 			p1->pos.y = m_pos.y + m_height * 2.0f;
+			//ジャンプできるようにする
+			p1->bJump = false;
 		}
 		else if (p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 			&& p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height
@@ -213,9 +216,10 @@ void CTrampoline::Collision(void) {
 		{
 			//ジャンプ量を継承
 			p1->move.y = p2->move.y * 2.6875f;
-
 			//ブロックの立つ位置に戻す
 			p1->pos.y = m_pos.y - m_height * 2.0f;
+			//ジャンプできるようにする
+			p1->bJump = false;
 		}
 
 		if (m_state == STATE::NONE
