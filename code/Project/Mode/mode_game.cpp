@@ -115,7 +115,7 @@ void CMode_Game::Update(void) {
 	{
 		float width = RNLib::Window()->GetWidth();
 		float height = RNLib::Window()->GetHeight();
-		RNLib::Polygon3D()->Put(D3DXVECTOR3(0.0f, -height*0.3f, 400.0f), INITD3DXVECTOR3)
+		RNLib::Polygon3D()->Put(D3DXVECTOR3(0.0f, -height*0.25f, 400.0f), INITD3DXVECTOR3)
 			->SetLighting(false)
 			->SetCol(COLOR_DOWN)
 			->SetSize(width * 2.0f, height * 0.5f)
