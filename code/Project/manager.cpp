@@ -15,6 +15,7 @@ namespace {
 	CMode::TYPE m_reserveModeType;
 	CStageObjectMgr   m_blockMgr;
 	CStageEditor m_StgEd;
+	CFont m_Font;
 }
 
 //================================================================================
@@ -24,6 +25,7 @@ namespace {
 //================================================================================
 CStageObjectMgr* Manager::BlockMgr(void) { return &m_blockMgr; }
 CStageEditor* Manager::StgEd(void) { return &m_StgEd; }
+CFont* Manager::Font(void) { return &m_Font; }
 
 //========================================
 // èâä˙âªèàóù
