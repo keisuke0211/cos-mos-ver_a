@@ -140,13 +140,17 @@ CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
 
 	// ‰Šú‰»ˆ—
 	pObj->Init();
-	pObj->SetPos(pos);
 
-	if (pos.y <= 0)
-	{
+	if (pos.y <= 0) {
 		pObj->SetRot(D3DXVECTOR3(0.0f,0.0f, 3.24f));
+		pos.y += CStageObject::SIZE_OF_1_SQUARE * 0.25f;
+	}
+	else {
+		pos.y -= CStageObject::SIZE_OF_1_SQUARE * 0.25f;
 	}
 
+	pObj->SetPos(pos);
+	
 	return pObj;
 }
 
