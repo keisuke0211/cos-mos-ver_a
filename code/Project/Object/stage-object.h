@@ -18,15 +18,16 @@ public:
 
 	//========== [[[ 列挙型定義 ]]]
 	enum class TYPE {
-		NONE       = -1,
-		BLOCK      = 0,
-		FILLBLOCK  = 1,
-		TRAMPOLINE = 2,
-		SPIKE	   = 3,
-		MOVE_BLOCK = 4,
-		METEOR	   = 5,
-		PARTS      = 6,
-		BACKGROUND = 7,
+		NONE       = -1,//何もなし
+		BLOCK      = 0,	//ブロック
+		FILLBLOCK  = 1,	//穴埋めブロック
+		TRAMPOLINE = 2,	//トランポリン
+		SPIKE	   = 3,	//トゲ
+		MOVE_BLOCK = 4,	//移動ブロック
+		METEOR	   = 5,	//隕石
+		PARTS      = 6,	//ロケットパーツ
+		ROCKET     = 7,	//ロケット本体
+		BACKGROUND = 8,	//背景
 		MAX,
 	};
 
