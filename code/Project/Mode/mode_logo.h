@@ -1,6 +1,6 @@
 //========================================
 // 
-// モード:タイトルの処理
+// モード:ロゴの処理
 // Author:KEISUKE OTONO
 // 
 //========================================
@@ -11,22 +11,34 @@
 //****************************************
 // クラス定義
 //****************************************
-// モード(タイトル)クラス
-class CMode_Title :public CMode {
+// モード(ロゴ)クラス
+class CMode_Logo :public CMode {
 public:
+
+	// ***** 定義 *****
+	static const int WAIT_TIME = 60;	// 待機時間
+	static const int TIME = 60;			// 推移時間
+
 	//========== [[[ 列挙型定義 ]]]
 	enum class STATE {
 		NONE,
+		OPEN,
+		OPEN_WAIT,
+		CLOSE_WAIT,
+		CLOSE,
 	};
 
 	//========== [[[ 関数宣言 ]]]
-	CMode_Title();
-	~CMode_Title();
+	CMode_Logo();
+	~CMode_Logo();
 	void  Init(void);
 	void  Uninit(void);
 	void  Update(void);
 	void  ProcessState(const PROCESS process);
 
 private:
-	int m_TexIdx;
+	static int m_TexLogo;
+	int m_nStateCtr;
+	STATE m_state;
+
 };

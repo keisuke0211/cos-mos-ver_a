@@ -58,7 +58,6 @@ void CTransition::Update(void) {
 		return;
 	}
 	else if (m_state == STATE::WAIT_SET_MODE) {
-		LocalFunc::FillScreen(1.0f);
 		return;
 	}
 	else if (m_state == STATE::OPEN_WAIT) {
