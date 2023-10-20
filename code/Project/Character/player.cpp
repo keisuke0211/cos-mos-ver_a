@@ -19,7 +19,7 @@ const float CPlayer::SIZE_HEIGHT = 8.0f;	//高さ
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 2.7f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 12.0f;		//基本ジャンプ量
+const float CPlayer::JUMP_POWER = 8.0f;		//基本ジャンプ量
 const float CPlayer::GRAVITY_POWER = -8.0f;	//基本重力加速度
 const float CPlayer::GRAVITY_CORR = 0.1f;	//基本重力係数
 
@@ -89,6 +89,9 @@ HRESULT CPlayer::Init(void)
 	m_aInfo[1].fGravity = -GRAVITY_POWER;
 	m_aInfo[1].fGravityCorr = GRAVITY_CORR;
 	m_aInfo[1].side = WORLD_SIDE::BEHIND;
+
+	//初期情報設定
+	Death(NULL);
 
 	//初期化成功
 	return S_OK;
@@ -214,6 +217,26 @@ void CPlayer::Swap(void)
 }
 
 //----------------------------
+//死亡処理
+//----------------------------
+void CPlayer::Death(D3DXVECTOR3 *pDeathPos)
+{
+	//１Ｐ初期情報
+	m_aInfo[0].pos = m_aInfo[0].StartPos;
+	m_aInfo[0].fJumpPower = JUMP_POWER;
+	m_aInfo[0].fGravity = GRAVITY_POWER;
+	m_aInfo[0].fGravityCorr = GRAVITY_CORR;
+	m_aInfo[0].side = WORLD_SIDE::FACE;
+
+	//２Ｐ初期情報
+	m_aInfo[1].pos = m_aInfo[1].StartPos;
+	m_aInfo[1].fJumpPower = -JUMP_POWER;
+	m_aInfo[1].fGravity = -GRAVITY_POWER;
+	m_aInfo[1].fGravityCorr = GRAVITY_CORR;
+	m_aInfo[1].side = WORLD_SIDE::BEHIND;
+}
+
+//----------------------------
 //移動処理
 //----------------------------
 void CPlayer::Move(COLLI_VEC vec)
@@ -281,18 +304,29 @@ void CPlayer::WholeCollision(void)
 				//当たった方向を格納
 				const COLLI_ROT ColliRot = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
 
+				//当たっていなければスキップ
 				if (ColliRot == COLLI_ROT::NONE) continue;
 
+				//種類取得
+				const CStageObject::TYPE type = stageObj->GetType();
+
 				//種類ごとに関数分け
-				switch (stageObj->GetType())
+				switch (type)
 				{
 					case CStageObject::TYPE::BLOCK:			CollisionBlock(&Player, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::FILLBLOCK:		break;
 					case CStageObject::TYPE::TRAMPOLINE:	break;
-					case CStageObject::TYPE::SPIKE:			CollisionSpike(&Player);	break;
+					case CStageObject::TYPE::SPIKE:			CollisionSpike();	break;
 					case CStageObject::TYPE::MOVE_BLOCK:	break;
 					case CStageObject::TYPE::METEOR:		break;
 					case CStageObject::TYPE::PARTS:			break;
+				}
+
+				//当たれば即死のオブジェクトに当たっている
+				if (type == CStageObject::TYPE::SPIKE ||
+					type == CStageObject::TYPE::METEOR)
+				{
+					break;
 				}
 			}
 		}
@@ -354,10 +388,10 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 //----------------------------
 //トゲの当たり判定処理
 //----------------------------
-void CPlayer::CollisionSpike(Info *pInfo)
+void CPlayer::CollisionSpike(void)
 {
-	//初期位置戻す
-	pInfo->pos = pInfo->posOLd = pInfo->StartPos;
+	//死亡処理
+	Death(NULL);
 }
 
 //========================
@@ -435,4 +469,17 @@ void CPlayer::SetInfo(Info p1, Info p2)
 	//各プレイヤー情報設定
 	m_aInfo[0] = p1;	m_aInfo[0].StartPos = p1.pos;
 	m_aInfo[1] = p2;	m_aInfo[1].StartPos = p2.pos;
+}
+
+//----------------------------
+//プレイヤー情報取得
+//指定された世界にいるプレイヤーの情報を返します
+//----------------------------
+CPlayer::Info *CPlayer::GetInfo(WORLD_SIDE side)
+{
+	//１Ｐのいる世界と合致したら１Ｐ情報を返す
+	if (m_aInfo[0].side == side) return &m_aInfo[0];
+
+	//違うなら２Ｐ情報を返す
+	else return &m_aInfo[1];
 }
