@@ -170,7 +170,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\rock\\rock.jpg";
+    "data\\TEXTUTE\\rock.jpg";
    }
   }
   Material {
@@ -179,7 +179,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\rock\\rock.jpg";
+    "data\\TEXTUTE\\rock.jpg";
    }
   }
  }
