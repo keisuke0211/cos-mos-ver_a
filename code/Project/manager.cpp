@@ -33,6 +33,9 @@ void Manager::Init(CMode::TYPE mode) {
 
 	// モード設定
 	SetMode(mode);
+
+	//使用するコントローラーの数を指定する
+	RNLib::Input()->SetJoyPadNum(2);
 }
 
 //========================================
