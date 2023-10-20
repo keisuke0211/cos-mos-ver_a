@@ -18,7 +18,7 @@ CSpike::CSpike(void)
 
 	m_type = TYPE::SPIKE;
 	m_width = SIZE_OF_1_SQUARE;
-	m_height = SIZE_OF_1_SQUARE;
+	m_height = SIZE_OF_1_SQUARE * 0.5f;
 
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;

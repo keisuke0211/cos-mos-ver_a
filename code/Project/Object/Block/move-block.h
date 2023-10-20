@@ -13,7 +13,7 @@
 //========================================
 // ƒNƒ‰ƒX
 //========================================
-class CMoveBlock : public CObject
+class CMoveBlock : public CStageObject
 {
 public:
 

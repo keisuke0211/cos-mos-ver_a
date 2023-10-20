@@ -10,7 +10,7 @@
 #include "../../Character/player.h"
 
 
-#define MAX_COUNT (30)	//最大カウント数
+#define MAX_COUNT (20)	//最大カウント数
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -127,35 +127,41 @@ void CTrampoline::Collision(void) {
 	//**************************************
 	//1pトランポリン当たり判定
 	//**************************************
-	if (/*p1が着地で乗る*/
-		p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+	if (p1->bJump == true
+		&& p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 		&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height
-		|| p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		|| p1->bJump == true
+		&& p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 		&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
 	{//土台の範囲内に着地で入った
-	
+
 		if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 			&& p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height
 			&& p2->side == CPlayer::WORLD_SIDE::BEHIND)
 		{//2pが乗っているか
-			
+
 			//ジャンプ量を継承
 			p2->move.y += p1->move.y * 2.5f;
+
 			//ブロックの立つ位置に戻す
 			p2->pos.y = m_pos.y - m_height * 2.0f;
-			//ジャンプできるようにする
-			p2->bJump = false;
+
+			//ジャンプできない
+			p2->bJump = true;
 		}
-		if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		else if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 			&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height
 			&& p2->side == CPlayer::WORLD_SIDE::FACE)
 		{
+			
 			//ジャンプ量を継承
 			p2->move.y += p1->move.y * 2.5f;
+
 			//ブロックの立つ位置に戻す
 			p2->pos.y = m_pos.y + m_height * 2.0f;
-			//ジャンプできるようにする
-			p2->bJump = false;
+
+			//ジャンプできない
+			p2->bJump = true;
 		}
 
 		if (m_state == STATE::NONE
@@ -191,10 +197,11 @@ void CTrampoline::Collision(void) {
 	//**************************************
 	//2pトランポリン当たり判定
 	//**************************************
-	else if (/*p2が着地で乗る*/
-		p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+	else if (p2->bJump == true
+		&& p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 		&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height
-		|| p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		|| p2->bJump == true
+		&& p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 		&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
 	{//土台の範囲内に着地で入った
 
@@ -204,11 +211,13 @@ void CTrampoline::Collision(void) {
 		{//1pが乗っているか
 
 			//ジャンプ量を継承
-			p1->move.y = p2->move.y * 2.6875f;			
+			p1->move.y = p2->move.y * 2.5f;
+
 			//ブロックの立つ位置に戻す
 			p1->pos.y = m_pos.y + m_height * 2.0f;
-			//ジャンプできるようにする
-			p1->bJump = false;
+
+			//ジャンプできない
+			p1->bJump = true;
 		}
 		else if (p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
 			&& p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height
@@ -216,10 +225,12 @@ void CTrampoline::Collision(void) {
 		{
 			//ジャンプ量を継承
 			p1->move.y = p2->move.y * 2.6875f;
+
 			//ブロックの立つ位置に戻す
 			p1->pos.y = m_pos.y - m_height * 2.0f;
-			//ジャンプできるようにする
-			p1->bJump = false;
+
+			//ジャンプできない
+			p1->bJump = true;
 		}
 
 		if (m_state == STATE::NONE
@@ -235,10 +246,56 @@ void CTrampoline::Collision(void) {
 		{
 			m_state = STATE::DOWN_LAND;
 			m_nCnt = MAX_COUNT;
-			p1->bJump = false;
+			p2->bJump = false;
 		}
 
 		//移動量（縦）を消す
+		p2->move.y = 0.0f;
+
+		if (p2->side == CPlayer::WORLD_SIDE::FACE)
+		{
+			//ブロックの立つ位置に戻す
+			p2->pos.y = m_pos.y + m_height * 2.0f;
+		}
+		else if (p2->side == CPlayer::WORLD_SIDE::BEHIND)
+		{
+			//ブロックの立つ位置に戻す
+			p2->pos.y = m_pos.y - m_height * 2.0f;
+		}
+	}
+
+	if (p1->bJump == false
+		&& p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height
+		|| p1->bJump == false
+		&& p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		&& p1->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
+	{//土台の範囲内に着地で入った
+
+		//移動量（縦）を消す
+		p1->move.y = 0.0f;
+
+		if (p1->side == CPlayer::WORLD_SIDE::FACE)
+		{
+			//ブロックの立つ位置に戻す
+			p1->pos.y = m_pos.y + m_height * 2.0f;
+		}
+		else if (p1->side == CPlayer::WORLD_SIDE::BEHIND)
+		{
+			//ブロックの立つ位置に戻す
+			p1->pos.y = m_pos.y - m_height * 2.0f;
+		}
+	}
+
+	if (p2->bJump == false
+		&& p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height
+		|| p2->bJump == false
+		&& p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - m_width && p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + m_width
+		&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + m_height && p2->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - m_height)
+	{//土台の範囲内に着地で入った
+
+	 //移動量（縦）を消す
 		p2->move.y = 0.0f;
 
 		if (p2->side == CPlayer::WORLD_SIDE::FACE)

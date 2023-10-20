@@ -98,7 +98,17 @@ public:
 	//----------------------------
 	void GetInfo(Info*& pP1, Info*& pP2) { pP1 = &m_aInfo[0]; pP2 = &m_aInfo[1]; }
 
+	//----------------------------
+	//プレイヤー情報取得
+	//指定された番号のプレイヤー情報のアドレスを返します
+	//----------------------------
 	Info *GetInfo(int nNum) { return &m_aInfo[nNum]; }
+
+	//----------------------------
+	//プレイヤー情報取得
+	//指定された世界にいるプレイヤーの情報を返します
+	//----------------------------
+	Info *GetInfo(WORLD_SIDE side);
 
 private:
 	static int	s_nSwapInterval;//残りスワップインターバル
@@ -114,6 +124,7 @@ private:
 	void ActionControl(void);
 	void Move(COLLI_VEC vec);
 	void Swap(void);
+	void Death(D3DXVECTOR3 *pDeathPos);//死んだ場所を引数に指定（死亡パーティクルなどを描画するのに使用する
 
 	void WholeCollision(void);
 	//========================
@@ -130,7 +141,7 @@ private:
 	COLLI_ROT IsBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, float fWidth, float fHeight, D3DXVECTOR3 TargetMinPos, D3DXVECTOR3 TargetMaxPos, COLLI_VEC value);
 
 	void CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
-	void CollisionSpike(Info *pInfo);
+	void CollisionSpike(void);
 
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
 };
