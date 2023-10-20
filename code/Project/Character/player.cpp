@@ -19,9 +19,9 @@ const float CPlayer::SIZE_HEIGHT = 8.0f;	//高さ
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 2.7f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 12.0f;		//基本ジャンプ量
-const float CPlayer::GRAVITY_POWER = -12.0f;	//基本重力加速度
-const float CPlayer::GRAVITY_CORR = 0.08f;	//基本重力係数
+const float CPlayer::JUMP_POWER = 11.0f;		//基本ジャンプ量
+const float CPlayer::GRAVITY_POWER = -11.0f;	//基本重力加速度
+const float CPlayer::GRAVITY_CORR = 0.06f;	//基本重力係数
 
 //=======================================
 //コンストラクタ
