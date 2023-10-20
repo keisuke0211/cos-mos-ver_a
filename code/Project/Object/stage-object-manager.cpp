@@ -114,17 +114,17 @@ CBlock *CStageObjectMgr::BlockCreate(D3DXVECTOR3 pos)
 //========================================
 // ブロック(判定　無)
 //========================================
-CFillBlock *CStageObjectMgr::FillBlockCreate(D3DXVECTOR3 pos)
+CFillBlock *CStageObjectMgr::FillBlockCreate(D3DXVECTOR3 pos,CFillBlock::FILL_TYPE type)
 {
-	CFillBlock *pObj = NULL;
+	//プレイヤーインスタンスの生成
+	CFillBlock *pObj = new CFillBlock;
 
-	if (pObj != NULL) { return pObj; }
-	pObj = new CFillBlock;
+	//初期化処理
+	pObj->Init(type);
 
-	// 初期化処理
-	pObj->Init();
 	pObj->SetPos(pos);
 
+	//プレイヤーを返す
 	return pObj;
 }
 
@@ -140,13 +140,17 @@ CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
 
 	// 初期化処理
 	pObj->Init();
-	pObj->SetPos(pos);
 
-	if (pos.y <= 0)
-	{
+	if (pos.y <= 0) {
 		pObj->SetRot(D3DXVECTOR3(0.0f,0.0f, 3.24f));
+		pos.y += CStageObject::SIZE_OF_1_SQUARE * 0.25f;
+	}
+	else {
+		pos.y -= CStageObject::SIZE_OF_1_SQUARE * 0.25f;
 	}
 
+	pObj->SetPos(pos);
+	
 	return pObj;
 }
 

@@ -22,11 +22,11 @@ CParts::CParts(void) {
 
 	m_type = TYPE::PARTS;	// Ží—Þ‚ÌÝ’è
 							// ‘å‚«‚³‚ÌÝ’è
-	m_width = SIZE_OF_1_SQUARE * 3;
-	m_height = SIZE_OF_1_SQUARE * 3;
+	m_width = SIZE_OF_1_SQUARE * 2;
+	m_height = SIZE_OF_1_SQUARE * 2;
 
 	// Šeî•ñ‚Ì‰Šú‰»
-	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Block.x");
+	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Rocket_Engine_break.x");
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 }

@@ -41,12 +41,14 @@ CTransition::~CTransition() {
 
 //========================================
 // 更新処理
-// Author:RIKU NISHIMURA
 //========================================
 void CTransition::Update(void) {
 
 	//===== [[[ ローカル関数宣言 ]]]
 	struct LocalFunc {
+		//========================================
+		// 画面埋め
+		//========================================
 		static void FillScreen(const float& fRate) {
 			RNLib::Polygon2D()->Put(RNLib::Window()->GetCenterPos(), 0.0f)
 				->SetCol(Color{0,0,0,(int)(255 * fRate)})
@@ -54,28 +56,38 @@ void CTransition::Update(void) {
 		}
 	};
 
-	if (m_state == STATE::NONE) {
+	// [[[ 状態:無し ]]]
+	if (m_state == STATE::NONE)
+		return;
+
+	// [[[ 状態:モード設定待ち ]]]
+	if (m_state == STATE::WAIT_SET_MODE) {
+		LocalFunc::FillScreen(1.0f);
 		return;
 	}
-	else if (m_state == STATE::WAIT_SET_MODE) {
-		return;
-	}
-	else if (m_state == STATE::OPEN_WAIT) {
+
+	// [[[ 状態:開き待ち ]]]
+	if (m_state == STATE::OPEN_WAIT) {
 		if (++m_nStateCtr >= WAIT_TIME) {
 			m_nStateCtr = 0;
-			m_state = STATE::OPEN;
+			m_state = STATE::OPEN;	// 開く
 		}
 		LocalFunc::FillScreen(1.0f);
 		return;
 	}
-	else if (++m_nStateCtr >= TIME) {
+
+	// [[[ 状態:開くor閉じる ]]]
+	if (++m_nStateCtr >= TIME) 
+	{// 状態が終わった
+		// 閉じ終わった
 		if (m_state == STATE::CLOSE) {
 			m_state = STATE::WAIT_SET_MODE;
+			LocalFunc::FillScreen(1.0f);
 		}
+		// 開き終わった
 		else {
 			m_state = STATE::NONE;
 		}
-		LocalFunc::FillScreen(1.0f);
 		return;
 	}
 

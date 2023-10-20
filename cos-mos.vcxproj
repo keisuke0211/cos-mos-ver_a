@@ -178,7 +178,7 @@
     <ClCompile Include="code\Project\System\StageEditor.cpp" />
     <ClCompile Include="code\Project\System\words\font.cpp" />
     <ClCompile Include="code\Project\System\words\object\font-object.cpp" />
-    <ClCompile Include="code\Project\System\words\text.cpp" />
+    <ClCompile Include="code\Project\System\words\font-text.cpp" />
     <ClCompile Include="code\Project\System\words\words.cpp" />
     <ClCompile Include="code\_RNLib\RNlib.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\3D\Body\collision3D.cpp" />
@@ -258,7 +258,7 @@
     <ClInclude Include="code\Project\System\StageEditor.h" />
     <ClInclude Include="code\Project\System\words\font.h" />
     <ClInclude Include="code\Project\System\words\object\font-object.h" />
-    <ClInclude Include="code\Project\System\words\text.h" />
+    <ClInclude Include="code\Project\System\words\font-text.h" />
     <ClInclude Include="code\Project\System\words\words.h" />
     <ClInclude Include="code\_RNLib\game-mode.h" />
     <ClInclude Include="code\_RNLib\RNlib.h" />
