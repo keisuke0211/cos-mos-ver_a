@@ -10,6 +10,7 @@
 #include "../_RNLib/RNlib.h"
 #include "Object/stage-object-manager.h"
 #include "System\StageEditor.h"
+#include "System\words\font.h"
 
 //****************************************
 // –¼‘O‹óŠÔ
@@ -26,4 +27,6 @@ namespace Manager {
 	void        Transition (const CMode::TYPE newMode, const CTransition::TYPE transType);
 	CStageObjectMgr*  BlockMgr   (void);
 	CStageEditor* StgEd(void);
+	CFont* Font(void);
+
 };

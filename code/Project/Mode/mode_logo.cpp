@@ -43,7 +43,7 @@ CMode_Logo::~CMode_Logo(void) {
 void CMode_Logo::Init(void) {
 	CMode::Init();
 
-	m_TexLogo = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\title-logo.PNG");
+	m_TexLogo = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\TeamLogo.PNG");
 
 	// ó‘Ôİ’è
 	SetState((int)STATE::NONE);
