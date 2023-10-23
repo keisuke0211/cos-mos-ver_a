@@ -243,6 +243,7 @@ void CStageEditor::SetStage(int nType)
 			Manager::BlockMgr()->BlockCreate(pos);
 			break;
 		case TYPE_FILL_BLOCK:
+			Manager::BlockMgr()->FillBlockCreate(pos, CFillBlock::FILL_TYPE::FILL_1x1);
 			break;
 		case TYPE_TRAMPOLINE:
 			pos.x += nSizeX / 2;
