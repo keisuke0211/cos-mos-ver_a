@@ -36,6 +36,7 @@ public:
 		UNDER,		//下
 		LEFT,		//左
 		RIGHT,		//右
+		UNKNOWN,	//当たっているけど方向が分からない（当たられる側が動いている可能性アリ
 		MAX
 	};
 
@@ -141,6 +142,11 @@ private:
 	// 返り値	対象物にめりこんでいる方向を返す（NONEなら当たっていない
 	//========================
 	COLLI_ROT IsBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, float fWidth, float fHeight, D3DXVECTOR3 TargetMinPos, D3DXVECTOR3 TargetMaxPos, COLLI_VEC value);
+
+	void FixPos_OVER(float *pPosY, float fMaxPosY, float *pMoveY);	//上からの当たり判定による位置・移動量修正
+	void FixPos_UNDER(float *pPosY, float fMinPosY, float *pMoveY);//下からの当たり判定による位置・移動量修正
+	void FixPos_LEFT(float *pPosX, float fMinPosX, float *pMoveX);	//左からの当たり判定による位置・移動量修正
+	void FixPos_RIGHT(float *pPosX, float fMaxPosX, float *pMoveX);//右からの当たり判定による位置・移動量修正
 
 	void CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);

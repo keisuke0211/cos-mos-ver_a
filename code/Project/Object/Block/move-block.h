@@ -21,7 +21,8 @@ public:
 	struct Info
 	{
 		D3DXVECTOR3 pos;		// 位置
-		D3DXVECTOR3 posOld;		// 位置(過去)
+		D3DXVECTOR3 posOld;		// 位置(前回)
+		D3DXVECTOR3 refPos;		// 位置(過去)
 		D3DXVECTOR3 move;		// 移動量
 		D3DXVECTOR3 rot;		// 向き
 		D3DXVECTOR3	size;		// サイズ
@@ -53,6 +54,7 @@ public:
 
 	//取得
 	D3DXVECTOR3 GetPos(void)	{ return m_Info.pos; }
+	D3DXVECTOR3 GetPosOld(void) { return m_Info.posOld; }
 	D3DXVECTOR3 GetRot(void)	{ return m_Info.rot; }
 	D3DXVECTOR3 GetMove(void)	{ return m_Info.move; }
 	D3DXCOLOR GetColor(void)	{ return m_Info.col; }
