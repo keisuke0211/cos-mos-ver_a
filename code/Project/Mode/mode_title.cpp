@@ -62,12 +62,13 @@ void CMode_Title::Init(void) {
 
 
 	FormFont pFont = {INITCOLOR,45.0f,1,1,-1,};
-	FormShadow pShadow = { Color{0,0,0,255},true, D3DXVECTOR3(4.0f,4.0f,0.0f) ,D3DXVECTOR2(2.0f,2.0f) };
+	FormShadow pShadow = { Color{0,0,0,255},true, D3DXVECTOR3(6.0f,6.0f,0.0f) ,D3DXVECTOR2(4.0f,4.0f) };
 
 	m_Menu[0] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 600.0f, 0.0f),D3DXVECTOR2(1080.0f, 100.0f),
 		" ",CFont::FONT_851GKKTT,&pFont);
 
-	m_Menu[1] = CFontText::Create(CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(440.0f, 100.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+	pFont = { INITCOLOR,70.0f,1,1,-1, };
+	m_Menu[1] = CFontText::Create(CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(340.0f, 100.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
 		"COS/MOS", CFont::FONT_851GKKTT, &pFont,false,&pShadow);
 
 	pFont = { INITCOLOR,45.0f,5,10,-1 };
