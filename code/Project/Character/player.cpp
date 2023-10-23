@@ -307,11 +307,17 @@ void CPlayer::WholeCollision(void)
 				//当たった方向を格納
 				const COLLI_ROT ColliRot = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
 
-				//当たっていなければスキップ
-				//if (ColliRot == COLLI_ROT::NONE) continue;
-
 				//種類取得
 				const CStageObject::TYPE type = stageObj->GetType();
+
+				if (stageObj->GetType() == CStageObject::TYPE::MOVE_BLOCK)
+				{
+					//当たった方向を格納
+					const COLLI_ROT test = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
+				}
+
+				//当たっていなければスキップ
+				if (ColliRot == COLLI_ROT::NONE) continue;
 
 				//種類ごとに関数分け
 				switch (type)
@@ -335,18 +341,17 @@ void CPlayer::WholeCollision(void)
 		}
 	}
 
-	RNLib::Text2D()->Set(
-		CreateText("1Pの着地状態：%s\n", m_aInfo[0].bGround ? "true" : "false"),
-		1.0f, 1.0f,
-		D3DXVECTOR3(16.0f, 16.0f, 0.0f), INITD3DXVECTOR3,
-		CText::ALIGNMENT::LEFT);
-
-	RNLib::Text2D()->Set(
-		CreateText("2Pの着地状態：%s\n", m_aInfo[1].bGround ? "true" : "false"),
-		1.0f, 1.0f,
-		D3DXVECTOR3(16.0f, 32.0f, 0.0f), INITD3DXVECTOR3,
-		CText::ALIGNMENT::LEFT);
-
+	//RNLib::Text2D()->Set(
+	//	CreateText("1Pの着地状態：%s\n", m_aInfo[0].bGround ? "true" : "false"),
+	//	1.0f, 1.0f,
+	//	D3DXVECTOR3(16.0f, 16.0f, 0.0f), INITD3DXVECTOR3,
+	//	CText::ALIGNMENT::LEFT);
+	//
+	//RNLib::Text2D()->Set(
+	//	CreateText("2Pの着地状態：%s\n", m_aInfo[1].bGround ? "true" : "false"),
+	//	1.0f, 1.0f,
+	//	D3DXVECTOR3(16.0f, 32.0f, 0.0f), INITD3DXVECTOR3,
+	//	CText::ALIGNMENT::LEFT);
 }
 
 //----------------------------
@@ -462,6 +467,7 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 			//表の世界のプレイヤーの場合
 			if (pInfo->side == WORLD_SIDE::FACE)
 			{
+				pInfo->pos += pMoveBlock->GetMove();
 				pInfo->bGround = true;	//地面に接している
 				pInfo->bJump = false;	//ジャンプ可能
 			}
@@ -478,6 +484,7 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 			//裏の世界のプレイヤーならジャンプ可能
 			if (pInfo->side == WORLD_SIDE::BEHIND)
 			{
+				pInfo->pos += pMoveBlock->GetMove();
 				pInfo->bGround = true;	//地面に接している
 				pInfo->bJump = false;	//ジャンプ可能
 			}

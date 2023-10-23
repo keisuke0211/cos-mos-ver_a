@@ -24,7 +24,7 @@ CMoveBlock::CMoveBlock(void)
 	m_type = TYPE::MOVE_BLOCK;	// Ží—Þ‚ÌÝ’è
 
 	// ‘å‚«‚³‚ÌÝ’è
-	m_width = SIZE_OF_1_SQUARE * 2;
+	m_width = SIZE_OF_1_SQUARE * 2.0f;
 	m_height = SIZE_OF_1_SQUARE * 0.5f;
 
 	m_Info.pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -108,6 +108,7 @@ void CMoveBlock::Update(void)
 		m_Info.move.y *= -1;
 	}
 
+	CStageObject::SetPos(m_Info.pos);
 	RNLib::Model()->Put(m_Info.pos, m_Info.rot, m_Info.nModelIdx);
 	RNLib::Model()->Put(m_Info.pos, m_rot, nModelIdx);
 }
