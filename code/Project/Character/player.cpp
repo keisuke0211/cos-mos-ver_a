@@ -343,7 +343,7 @@ void CPlayer::WholeCollision(void)
 				{
 					case CStageObject::TYPE::BLOCK:			CollisionBlock(&Player, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::FILLBLOCK:		break;
-					case CStageObject::TYPE::TRAMPOLINE:	break;
+					case CStageObject::TYPE::TRAMPOLINE:	CollisionTrampoline(&Player, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::SPIKE:			CollisionSpike(&Player, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::MOVE_BLOCK:	CollisionMoveBlock(&Player, (CMoveBlock *)stageObj, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::METEOR:		break;
@@ -456,7 +456,7 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 }
 
 //----------------------------
-//ƒgƒQ‚Ì“–‚½‚è”»’èˆ—
+//ƒgƒ‰ƒ“ƒ|ƒŠƒ“‚Ì“–‚½‚è”»’èˆ—
 //----------------------------
 void CPlayer::CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot)
 {
