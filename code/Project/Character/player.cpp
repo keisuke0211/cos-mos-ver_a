@@ -20,7 +20,7 @@ const float CPlayer::SIZE_HEIGHT = 8.0f;	//高さ
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 2.7f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 8.0f;		//基本ジャンプ量
+const float CPlayer::JUMP_POWER = 10.0f;		//基本ジャンプ量
 const float CPlayer::GRAVITY_POWER = -8.0f;	//基本重力加速度
 const float CPlayer::GRAVITY_CORR = 0.07f;	//基本重力係数
 
@@ -307,17 +307,11 @@ void CPlayer::WholeCollision(void)
 				//当たった方向を格納
 				const COLLI_ROT ColliRot = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
 
-				//種類取得
-				const CStageObject::TYPE type = stageObj->GetType();
-
-				if (stageObj->GetType() == CStageObject::TYPE::MOVE_BLOCK)
-				{
-					//当たった方向を格納
-					const COLLI_ROT test = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
-				}
-
 				//当たっていなければスキップ
 				if (ColliRot == COLLI_ROT::NONE) continue;
+
+				//種類取得
+				const CStageObject::TYPE type = stageObj->GetType();
 
 				//種類ごとに関数分け
 				switch (type)
@@ -527,19 +521,33 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 			break;
 
 		case COLLI_ROT::UNKNOWN:
-			const D3DXVECTOR3 pos = pMoveBlock->GetPos();
-			const D3DXVECTOR3 posOld = pMoveBlock->GetPosOld();
-			const float fWidth = pMoveBlock->GetWidth();
-			const float fHeight = pMoveBlock->GetHeight();
+			//移動床 -> プレイヤーへの当たり判定処理を実行
+			const D3DXVECTOR3 BlockPos = pMoveBlock->GetPos();
+			const D3DXVECTOR3 BlockPosOld = pMoveBlock->GetPosOld();
+			const float fWidth = pMoveBlock->GetWidth() * 0.5f;
+			const float fHeight = pMoveBlock->GetHeight() * 0.5f;
 			const D3DXVECTOR3 PlayerMinPos = D3DXVECTOR3(pInfo->pos.x - SIZE_WIDTH, pInfo->pos.y - SIZE_HEIGHT, 0.0f);
 			const D3DXVECTOR3 PlayerMaxPos = D3DXVECTOR3(pInfo->pos.x + SIZE_WIDTH, pInfo->pos.y + SIZE_HEIGHT, 0.0f);
 
 			//移動床からの当たり判定
 			for (int nCntVec = 0; nCntVec < (int)COLLI_VEC::MAX; nCntVec++)
 			{
-				COLLI_ROT newRot = IsBoxCollider(pos, posOld, fWidth, fHeight, PlayerMinPos, PlayerMaxPos, (COLLI_VEC)nCntVec);
+				//プレイヤーのどの方向に当たっているか
+				COLLI_ROT ColliRot_Player = IsBoxCollider(BlockPos, BlockPosOld, fWidth, fHeight, PlayerMinPos, PlayerMaxPos, (COLLI_VEC)nCntVec);
 
-				if (newRot != COLLI_ROT::NONE) break;
+				//それでも当たらないなら、スキップ
+				if (ColliRot_Player == COLLI_ROT::NONE || ColliRot_Player == COLLI_ROT::UNKNOWN) continue;
+
+				//当たった方向（上下・左右）を反転する
+				{
+					//当たった方向をint型に変換 - 1
+					const int nRot = (int)ColliRot_Player;
+
+					ColliRot_Player = (COLLI_ROT)(nRot - 1 + 2 * (nRot % 2));
+				}
+
+				//もう一度当たり判定
+				CollisionMoveBlock(pInfo, pMoveBlock, MinPos, MaxPos, ColliRot_Player);
 			}
 			break;
 	}
