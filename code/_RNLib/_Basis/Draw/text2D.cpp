@@ -59,8 +59,6 @@ CText2D::CRegistInfo::CRegistInfo() {
 //========================================
 CText2D::CRegistInfo::~CRegistInfo() {
 
-	// •¶Žš—ñ‚Ìƒƒ‚ƒŠ‰ð•ú
-	RNLib::Memory()->Release(&m_string);
 }
 
 //========================================
@@ -150,6 +148,9 @@ void CText2D::CRegistInfo::PutPolygon2D(const bool& isOnScreen) {
 
 	// wchar_tŒ^•¶Žš—ñ‚Ì‰ð•ú
 	free(wstr);
+
+	// •¶Žš—ñ‚Ìƒƒ‚ƒŠ‰ð•ú
+	RNLib::Memory()->Release(&m_string);
 }
 
 //========================================
