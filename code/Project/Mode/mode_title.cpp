@@ -61,12 +61,17 @@ void CMode_Title::Init(void) {
 	SetBGColor(Color{ 200,0,0,255 });
 
 
-	FormFont pFont = {INITCOLOR,45.0f,1,1,-1};
+	FormFont pFont = {INITCOLOR,45.0f,1,1,-1,};
+	FormShadow pShadow = { Color{0,0,0,255},true, D3DXVECTOR3(2.0f,2.0f,0.0f) ,D3DXVECTOR2(1.0f,1.0f) };
+
 	m_Menu[0] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 600.0f, 0.0f),D3DXVECTOR2(1080.0f, 100.0f),
 		" ",CFont::FONT_851GKKTT,&pFont);
 
+	m_Menu[1] = CFontText::Create(CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(440.0f, 100.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
+		"COS/MOS", CFont::FONT_851GKKTT, &pFont,false,&pShadow);
+
 	pFont = { INITCOLOR,45.0f,5,10,-1 };
-	m_Menu[1] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 600.0f, 0.0f),D3DXVECTOR2(1080.0f, 100.0f),
+	m_Menu[2] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 600.0f, 0.0f),D3DXVECTOR2(1080.0f, 100.0f),
 		"ENTER‚ð‰Ÿ‚µ‚ÄŽn‚ß‚Ä‚Ë!!",CFont::FONT_851GKKTT,&pFont, false);
 }
 

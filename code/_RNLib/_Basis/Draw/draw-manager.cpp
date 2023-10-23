@@ -406,10 +406,6 @@ CPolygon2D::CRegistInfo* CDrawMng::PutPolygon2D(const D3DXVECTOR3& pos, const fl
 //========================================
 CText2D::CRegistInfo* CDrawMng::PutText2D(const D3DXVECTOR2& pos, const float& angle, const bool& isOnScreen) {
 
-	// ìoò^éÛïtíÜÇ≈Ç»Ç¢éûÅAèIóπ
-	if (ms_processState != PROCESS_STATE::REGIST_ACCEPT)
-		return NULL;
-
 	// ìoò^èÓïÒ
 	CText2D::CRegistInfo* registInfo = NULL;;
 

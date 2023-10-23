@@ -66,8 +66,6 @@ CText3D::CRegistInfo::CRegistInfo() {
 //========================================
 CText3D::CRegistInfo::~CRegistInfo() {
 
-	// •¶Žš—ñ‚Ìƒƒ‚ƒŠ‰ð•ú
-	RNLib::Memory()->Release<char>(&m_string);
 }
 
 //========================================
@@ -170,6 +168,9 @@ void CText3D::CRegistInfo::PutPolygon3D(const bool& isOnScreen) {
 
 	// wchar_tŒ^•¶Žš—ñ‚Ì‰ð•ú
 	free(wstr);
+
+	// •¶Žš—ñ‚Ìƒƒ‚ƒŠ‰ð•ú
+	RNLib::Memory()->Release<char>(&m_string);
 }
 
 //========================================
