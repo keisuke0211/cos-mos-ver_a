@@ -9,6 +9,14 @@
 #include "fill-block.h"
 #include "../../main.h"
 
+//パス読み込み
+static const char* s_Path[4] = {
+	"data\\MODEL\\fill-block_1x1.x",
+	"data\\MODEL\\fill-block_2x2.x",
+	"data\\MODEL\\fill-block_3x3.x",
+	"data\\MODEL\\fill-block_4x4.x",
+};
+
 //========================================
 // コンストラクタ
 //========================================
@@ -22,7 +30,6 @@ CFillBlock::CFillBlock(void)
 
 	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
-	m_Info.nModelIdx = RNLib::Model()->Load("data\\MODEL\\Block.x");
 }
 
 //========================================
@@ -36,10 +43,13 @@ CFillBlock::~CFillBlock()
 //========================================
 // 初期化
 //========================================
-HRESULT CFillBlock::Init(void)
+HRESULT CFillBlock::Init(FILL_TYPE type)
 {
 	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
+
+	//モデル番号読み込み
+	m_Info.nModelIdx = RNLib::Model()->Load(s_Path[(int)type]);
 
 	return S_OK;
 }
@@ -58,8 +68,10 @@ void CFillBlock::Uninit(void)
 void CFillBlock::Update(void)
 {
 	// 過去の位置
-	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_Info.nModelIdx, false);
+	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), m_Info.nModelIdx, false);
 }
+
+
 
 //========================================
 // 描画

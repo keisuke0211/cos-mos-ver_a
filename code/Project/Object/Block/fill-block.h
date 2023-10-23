@@ -25,11 +25,21 @@ public:
 		short nModelIdx;		// モデル番号
 	};
 
+	// 穴埋めブロック種類
+	enum class FILL_TYPE
+	{
+		FILL_1x1 = 0,
+		FILL_2x2,
+		FILL_3x3,
+		FILL_4x4,
+		FILL_MAX,
+	};
+
 	// *** 関数 ***
 	CFillBlock();
 	~CFillBlock();
 
-	/* 初期化	*/HRESULT Init(void);
+	/* 初期化	*/HRESULT Init(FILL_TYPE type);
 	/* 終了		*/void Uninit(void);
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);

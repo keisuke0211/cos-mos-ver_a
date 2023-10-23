@@ -63,7 +63,7 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
-	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(0.0f, 100.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f),100.0f);
+	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(-250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
 
 	BackGroundPut(Color{ 100,100,100,255 }, Color{ 100,100,100,255 });
 
@@ -73,6 +73,8 @@ void CMode_Game::Init(void) {
 	// 読込
 	/* ブロック	*/Manager::BlockMgr()->Load();
 	/* ステージ	*/Manager::StgEd()->FileLoad();
+
+	Manager::BlockMgr()->FillBlockCreate(D3DXVECTOR3(0.0f,40.0f,0.0f),CFillBlock::FILL_TYPE::FILL_4x4);
 
 	// ステージ生成
 	Manager::StgEd()->StageLoad(0);

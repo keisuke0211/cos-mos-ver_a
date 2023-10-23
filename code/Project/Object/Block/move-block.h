@@ -1,7 +1,7 @@
 //========================================
 // 
 // 動くブロック処理 [move-block.h]
-// Author:HARUTO KIKUCHI
+// Author:HIROMU KOMURO
 // 
 //========================================
 
@@ -21,18 +21,17 @@ public:
 	struct Info
 	{
 		D3DXVECTOR3 pos;		// 位置
-		D3DXVECTOR3 posOld;		// 位置(過去)
+		D3DXVECTOR3 posOld;		// 位置(前回)
+		D3DXVECTOR3 refPos;		// 位置(過去)
 		D3DXVECTOR3 move;		// 移動量
 		D3DXVECTOR3 rot;		// 向き
 		D3DXVECTOR3	size;		// サイズ
 		D3DXCOLOR col;			// 頂点カラー
 		float frefdef;			// 反射する距離
-		int nCntMove;			// 移動カウント
 		int nType;				// 種類
 		int nID;				// ID
 		int nModelIdx;
 	};
-
 
 	//関数
 	CMoveBlock();
@@ -44,7 +43,7 @@ public:
 	void Draw(void);
 
 	//設定
-	void SetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = pos; }
+	void SetPos(const D3DXVECTOR3 pos) { m_Info.pos = m_Info.posOld = m_Info.refPos = pos; }
 	void SetMove(const D3DXVECTOR3 move) { m_Info.move = move; }
 	void SetRefdef(const float refdef) { m_Info.frefdef = refdef; }
 	void SetRot(const D3DXVECTOR3 rot) { m_Info.rot = rot; }
@@ -53,10 +52,12 @@ public:
 	/* モデル番号	*/void SetModelIdx(const int nIdx) { m_Info.nModelIdx = nIdx; }
 
 	//取得
-	D3DXVECTOR3 GetPos(void) { return m_Info.pos; }
-	D3DXVECTOR3 GetRot(void) { return m_Info.rot; }
-	D3DXCOLOR GetColor(void) { return m_Info.col; }
-	D3DXVECTOR3 GetSize(void) { return m_Info.size; }
+	D3DXVECTOR3 GetPos(void)	{ return m_Info.pos; }
+	D3DXVECTOR3 GetPosOld(void) { return m_Info.posOld; }
+	D3DXVECTOR3 GetRot(void)	{ return m_Info.rot; }
+	D3DXVECTOR3 GetMove(void)	{ return m_Info.move; }
+	D3DXCOLOR GetColor(void)	{ return m_Info.col; }
+	D3DXVECTOR3 GetSize(void)	{ return m_Info.size; }
 
 private:
 
@@ -66,7 +67,6 @@ private:
 	//変数
 	Info m_Info;		// 共通情報
 
-	D3DXVECTOR3 m_rot;
 	int nModelIdx;
 
 };

@@ -12,13 +12,13 @@
 //==========| CTrampolineクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
-static const D3DXVECTOR3 METEOR_ADDROT = { 0.10f,0.02f,0.01f };				// 隕石の回転の移動量
-static const D3DXVECTOR3 METEOR_UNINIT_MINPOS = { -150.0f,-150.0f,0.0f };	// 最小の位置
-static const D3DXVECTOR3 METEOR_UNINIT_MAXPOS = { 150.0f,150.0f,0.0f };		// 最大の位置
-static const float METEOR_ANIME_MAG = 2.0f;				// 点滅アニメーションの倍率
-static const int METEOR_BLINK_MAX = 10 * METEOR_ANIME_MAG;	// 点滅アニメーションの最大数
-static const float METEOR_BLINK_MIN = 0.0f;					// 点滅の最小数
-static const float METEOR_BLINK_ADJ = 0.01f;				// 点滅アニメーションの調整
+const D3DXVECTOR3 METEOR_ADDROT = { 0.10f,0.02f,0.01f };				// 隕石の回転の移動量
+const D3DXVECTOR3 METEOR_UNINIT_MINPOS = { -150.0f,-150.0f,0.0f };		// 最小の位置
+const D3DXVECTOR3 METEOR_UNINIT_MAXPOS = { 150.0f,150.0f,0.0f };		// 最大の位置
+const float METEOR_ANIME_MAG = 2.0f;						// 点滅アニメーションの倍率
+const int	METEOR_BLINK_MAX = 10 * METEOR_ANIME_MAG;		// 点滅アニメーションの最大数
+const float METEOR_BLINK_MIN = 0.0f;						// 点滅の最小数
+const float METEOR_BLINK_ADJ = 0.01f;						// 点滅アニメーションの調整
 //========================================
 // コンストラクタ
 //========================================
@@ -32,9 +32,9 @@ CMeteor::CMeteor(void) {
 
 	// 各情報の初期化
 	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Meteorite.x");
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	m_pos = INITD3DXVECTOR3;
+	m_rot = INITD3DXVECTOR3;
+	m_move = INITD3DXVECTOR3;
 	m_fblink = 0.0f;
 	m_nblinlAnim = 0;
 }
