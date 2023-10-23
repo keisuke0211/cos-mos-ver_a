@@ -123,6 +123,11 @@ void CMode_Game::Update(void) {
 			->SetPriority(-2)
 			->SetZTest(false);
 	}
+
+	static float f = 0.0f;
+	f += 0.01f;
+	RNLib::Text2D()->Put(D3DXVECTOR2(320.0f, 80.0f), f, "‚Ä‚·‚ÆƒeƒXƒg‚s‚d‚r‚s", CText::ALIGNMENT::CENTER, 0);
+	//RNLib::Text3D()->Put(D3DXVECTOR3(0.0f, 80.0f, 0.0f), INITD3DXVECTOR3, "‚Ä‚·‚ÆƒeƒXƒg‚s‚d‚r‚s", CText::ALIGNMENT::CENTER, 0);
 }
 
 //========================================
