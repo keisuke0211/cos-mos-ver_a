@@ -8,7 +8,6 @@
 #ifndef _WORDS_H_
 #define _WORDS_H_
 
-#include "../../main.h"
 #include "../../../_RNLib/RNlib.h"
 #include "object\font-object.h"
 #include "font.h"
@@ -48,6 +47,7 @@ public:
 	/* 初期化	*/HRESULT Init(void);
 	/* 終了		*/void Uninit(void);
 	/* 更新		*/void Update(void);
+
 	/* 描画		*/void Draw(void);
 
 	//--------------------------------------------------
@@ -87,18 +87,16 @@ private:
 		D3DXVECTOR3 move;
 		D3DXVECTOR3 moveRot;
 		Color col;
-
-		bool bDisp;			// 表示フラグ
 	};
 
 	// ***** 関数 *****
 	/* 文字の設定	*/void SetWords(const char*Text, CFont::FONT Type);
 
-
 	/* 変数	*/
 	Info m_Info;
-	LPDIRECT3DTEXTURE9 m_pTex;					// テクスチャ情報
-	LPDIRECT3DVERTEXBUFFER9	m_pVtxBuff = NULL;	// 頂点バッファ
+	LPDIRECT3DTEXTURE9 m_pTex;			// テクスチャ情報
+	LPDIRECT3DVERTEXBUFFER9 m_pVtxBuff;	// 頂点バッファ
+
 };
 
 #endif

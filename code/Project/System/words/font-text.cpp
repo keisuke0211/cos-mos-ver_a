@@ -122,6 +122,8 @@ void CFontText::Uninit()
 		delete[] m_Info.aShadow.shadow;
 		m_Info.aShadow.shadow = NULL;
 	}
+
+	Release();
 }
 
 //========================================
@@ -129,6 +131,14 @@ void CFontText::Uninit()
 //========================================
 void CFontText::Update()
 {
+	if (m_Info.bTextBok)
+	{
+		RNLib::Polygon2D()->Put(m_Info.TexPos, 0.0f, false)
+			->SetSize(m_Info.TexSize.x, m_Info.TexSize.y)
+			->SetCol(m_Info.TextBoxCol)
+			->SetTex(m_Info.nTexIdx);
+	}
+
 	// テキスト生成
 	if (!m_Info.bStand)
 	{
@@ -167,10 +177,10 @@ CFontText *CFontText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const 
 		switch (type)
 		{
 		case CFontText::BOX_NORMAL_RECT:
-			pText->m_Info.nTexIdx = RNLib::Texture()->Load("");
+			pText->m_Info.nTexIdx = RNLib::Texture()->Load("data\\TEXTURE\\TextBox\\TextBox.png");
 			break;
 		case CFontText::BOX_NORMAL_SQR:
-			pText->m_Info.nTexIdx = RNLib::Texture()->Load("");
+			pText->m_Info.nTexIdx = RNLib::Texture()->Load("data\\TEXTURE\\TextBox\\TextBox01.png");
 			break;
 		case CFontText::BOX_MAX:
 			pText->m_Info.nTexIdx = -1;
@@ -253,9 +263,9 @@ void CFontText::LetterForm(void)
 
 			m_Info.sText += m_Info.sALLText[m_Info.nAddLetter];
 			string Text = m_Info.sText;
-			D3DXVECTOR3 pos = GetPos();
+			D3DXVECTOR3 pos = m_Info.TexPos * 2;
 
-			pos.x = pos.x - (GetWidth() / 2);
+			pos.x = pos.x - ((m_Info.TexSize.x * 2) / 2);
 
 			if (Text != "" && m_Info.nAddLetter < m_Info.nTextLength)
 			{// 空白じゃなかったら、 && テキストサイズを下回ってたら、
@@ -282,7 +292,7 @@ void CFontText::LetterForm(void)
 					m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 						D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 						D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-						m_Info.FontType,m_Info.FontCol);
+						m_Info.FontType, m_Info.FontCol);
 
 					m_Info.nLetterPopCount++;
 					m_Info.nLetterPopCountX++;
@@ -318,7 +328,7 @@ void CFontText::LetterForm(void)
 						m_Info.words[m_Info.nLetterPopCount] = CWords::Create(m_Info.sText.c_str(),
 							D3DXVECTOR3((pos.x + 10.0f) + ((fTxtSize * 2) * (m_Info.nLetterPopCountX + 1)), pos.y + m_Info.nNiCount*40.0f, pos.z),
 							D3DXVECTOR3(fTxtSize, fTxtSize, 0.0f),
-							m_Info.FontType,m_Info.FontCol);
+							m_Info.FontType, m_Info.FontCol);
 
 						m_Info.nLetterPopCount++;
 						m_Info.nLetterPopCountX++;

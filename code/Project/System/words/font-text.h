@@ -5,8 +5,7 @@
 //========================================
 // *** text.h ***
 //========================================
-#ifndef _FONT_TEXT_H_
-#define _FONT_TEXT_H_
+#pragma once
 
 #include "object\font-object.h"
 #include "words.h"
@@ -161,5 +160,3 @@ private:
 	Info m_Info;
 
 };
-
-#endif
