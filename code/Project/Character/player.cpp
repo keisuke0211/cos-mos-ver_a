@@ -9,6 +9,8 @@
 #include "../../_RNLib/_Basis/Other/input.h"
 #include "../../_RNLib/_Basis/Calculation/number.h"
 #include "../Object/Block/move-block.h"
+#include "../Object/Gimmick/meteor.h"
+#include "../Object/Gimmick/trampoline.h"
 
 //スワップインターバル
 const int	CPlayer::SWAP_INTERVAL = 30;	//スワップインターバル
@@ -304,14 +306,37 @@ void CPlayer::WholeCollision(void)
 
 			for each(Info& Player in m_aInfo)
 			{
+				//種類取得
+				const CStageObject::TYPE type = stageObj->GetType();
+
+				//前回位置
+				D3DXVECTOR3 PosOld = POS;
+
+				//移動するオブジェクトは、前回位置を特別に設定
+				switch (type)
+				{
+					//移動床
+					case CStageObject::TYPE::MOVE_BLOCK:
+					{
+						CMoveBlock *pBlock = (CMoveBlock *)stageObj;
+						PosOld = pBlock->GetPosOld();
+					}
+						break;
+
+						//隕石
+					case CStageObject::TYPE::METEOR:
+					{
+						CMeteor *pMeteor = (CMeteor *)stageObj;
+						//PosOld = pMeteor->GetPosOld();
+					}
+						break;
+				}
+
 				//当たった方向を格納
-				const COLLI_ROT ColliRot = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
+				const COLLI_ROT ColliRot = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, POS, PosOld, WIDTH, HEIGHT, vec);
 
 				//当たっていなければスキップ
 				if (ColliRot == COLLI_ROT::NONE) continue;
-
-				//種類取得
-				const CStageObject::TYPE type = stageObj->GetType();
 
 				//種類ごとに関数分け
 				switch (type)
@@ -433,6 +458,44 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 //----------------------------
 //トゲの当たり判定処理
 //----------------------------
+void CPlayer::CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot)
+{
+	//当たった方向ごとに処理を切り替え
+	switch (ColliRot)
+	{
+		//*********************************
+		//上に当たった
+		//*********************************
+		case COLLI_ROT::OVER:
+			//位置・移動量修正
+			FixPos_OVER(&pInfo->pos.y, MaxPos.y, &pInfo->move.y);
+
+			//表の世界のプレイヤー
+			if (pInfo->side == WORLD_SIDE::FACE) {
+				pInfo->bGround = true;	//地面に接している
+				pInfo->bJump = false;	//ジャンプ可能
+			}
+			break;
+
+			//*********************************
+			//下に当たった
+			//*********************************
+		case COLLI_ROT::UNDER:
+			//位置・移動量修正
+			FixPos_UNDER(&pInfo->pos.y, MinPos.y, &pInfo->move.y);
+
+			//裏の世界のプレイヤーならジャンプ可能
+			if (pInfo->side == WORLD_SIDE::BEHIND) {
+				pInfo->bGround = true;	//地面に接している
+				pInfo->bJump = false;	//ジャンプ可能
+			}
+			break;
+	}
+}
+
+//----------------------------
+//トゲの当たり判定処理
+//----------------------------
 void CPlayer::CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot)
 {
 	//当たった方向ごとに処理を切り替え
@@ -521,6 +584,7 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 			break;
 
 		case COLLI_ROT::UNKNOWN:
+			/*
 			//移動床 -> プレイヤーへの当たり判定処理を実行
 			const D3DXVECTOR3 BlockPos = pMoveBlock->GetPos();
 			const D3DXVECTOR3 BlockPosOld = pMoveBlock->GetPosOld();
@@ -549,6 +613,7 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 				//もう一度当たり判定
 				CollisionMoveBlock(pInfo, pMoveBlock, MinPos, MaxPos, ColliRot_Player);
 			}
+			*/
 			break;
 	}
 }
@@ -556,45 +621,56 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 //========================
 //対象物の中にめり込んでいるかどうか判定
 //------------------------
-// 引数１	pos				：現在位置
-// 引数２	posOld			：前回位置
-// 引数３	fWidth			：幅
-// 引数４	fHeight			：高さ
-// 引数５	TargetMinPos	：対象物の最小位置
-// 引数６	TargetMaxPos	：対象物の最大位置
+// 引数１	pos			：現在位置
+// 引数２	posOld		：前回位置
+// 引数３	fWidth		：幅
+// 引数４	fHeight		：高さ
+// 引数５	TargetPos	：対象の現在位置
+// 引数６	TargetPosOld：対象の前回位置（オブジェクトにPosOld変数が無いなら、現在位置をいれればOK
+// 引数７	TargetWidth	：対象の幅
+// 引数８	TargetHeight：対象の高さ
+// 引数９	value		：ベクトル
 // 返り値	対象物にめりこんでいる方向を返す（NONEなら当たっていない
 //========================
-CPlayer::COLLI_ROT CPlayer::IsBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, float fWidth, float fHeight, D3DXVECTOR3 TargetMinPos, D3DXVECTOR3 TargetMaxPos, COLLI_VEC value)
+CPlayer::COLLI_ROT CPlayer::IsBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, float fWidth, float fHeight, D3DXVECTOR3 TargetPos, D3DXVECTOR3 TargetPosOld, float TargetWidth, float TargetHeight, COLLI_VEC value)
 {
 	//自分の現在の最小・最大位置
-	const D3DXVECTOR2 MINPOS = D3DXVECTOR2(pos.x - fWidth, pos.y - fHeight);
-	const D3DXVECTOR2 MAXPOS = D3DXVECTOR2(pos.x + fWidth, pos.y + fHeight);
+	const D3DXVECTOR2 MinPos = D3DXVECTOR2(pos.x - fWidth, pos.y - fHeight);
+	const D3DXVECTOR2 MaxPos = D3DXVECTOR2(pos.x + fWidth, pos.y + fHeight);
+
+	//対象の現在の最小・最大位置
+	const D3DXVECTOR2 TARGET_MinPos = D3DXVECTOR2(TargetPos.x - fWidth, TargetPos.y - fHeight);
+	const D3DXVECTOR2 TARGET_MaxPos = D3DXVECTOR2(TargetPos.x + fWidth, TargetPos.y + fHeight);
 
 	//めり込んでいるか判定
-	if (MINPOS.x < TargetMaxPos.x && TargetMinPos.x < MAXPOS.x &&
-		MINPOS.y < TargetMaxPos.y && TargetMinPos.y < MAXPOS.y)
+	if (MinPos.x < TARGET_MaxPos.x && TARGET_MinPos.x < MaxPos.x &&
+		MinPos.y < TARGET_MaxPos.y && TARGET_MinPos.y < MaxPos.y)
 	{
 		//自分の過去の最小・最大位置
 		const D3DXVECTOR2 OLD_MINPOS = D3DXVECTOR2(posOld.x - fWidth, posOld.y - fHeight);
 		const D3DXVECTOR2 OLD_MAXPOS = D3DXVECTOR2(posOld.x + fWidth, posOld.y + fHeight);
+
+		//対象の前回の最小・最大位置
+		const D3DXVECTOR2 TARGET_MinPosOld = D3DXVECTOR2(TargetPosOld.x - fWidth, TargetPosOld.y - fHeight);
+		const D3DXVECTOR2 TARGET_MaxPosOld = D3DXVECTOR2(TargetPosOld.x + fWidth, TargetPosOld.y + fHeight);
 
 		//衝突ベクトルで処理分け
 		switch (value)
 		{
 			case COLLI_VEC::X:
 				//前回は左からめり込んでいない（今はめり込んだ
-				if (OLD_MAXPOS.x <= TargetMinPos.x)			return COLLI_ROT::LEFT;
+				if (OLD_MAXPOS.x <= TARGET_MinPosOld.x)			return COLLI_ROT::LEFT;
 
 				//前回は右からめり込んでいない（今はめり込んだ
-				else if (OLD_MINPOS.x >= TargetMaxPos.x)	return COLLI_ROT::RIGHT;
+				else if (OLD_MINPOS.x >= TARGET_MaxPosOld.x)	return COLLI_ROT::RIGHT;
 				break;
 
 			case COLLI_VEC::Y:
 				//前回は上からめり込んでいない（今はめり込んだ
-				if (OLD_MINPOS.y >= TargetMaxPos.y)			return COLLI_ROT::OVER;
+				if (OLD_MINPOS.y >= TARGET_MaxPosOld.y)			return COLLI_ROT::OVER;
 
 				//前回は下からめり込んでいない（今はめり込んだ
-				else if (OLD_MAXPOS.y <= TargetMinPos.y)	return COLLI_ROT::UNDER;
+				else if (OLD_MAXPOS.y <= TARGET_MinPosOld.y)	return COLLI_ROT::UNDER;
 				break;
 		}
 
