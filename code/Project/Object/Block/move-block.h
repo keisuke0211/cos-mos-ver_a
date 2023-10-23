@@ -52,10 +52,11 @@ public:
 	/* ÉÇÉfÉãî‘çÜ	*/void SetModelIdx(const int nIdx) { m_Info.nModelIdx = nIdx; }
 
 	//éÊìæ
-	D3DXVECTOR3 GetPos(void) { return m_Info.pos; }
-	D3DXVECTOR3 GetRot(void) { return m_Info.rot; }
-	D3DXCOLOR GetColor(void) { return m_Info.col; }
-	D3DXVECTOR3 GetSize(void) { return m_Info.size; }
+	D3DXVECTOR3 GetPos(void)	{ return m_Info.pos; }
+	D3DXVECTOR3 GetRot(void)	{ return m_Info.rot; }
+	D3DXVECTOR3 GetMove(void)	{ return m_Info.move; }
+	D3DXCOLOR GetColor(void)	{ return m_Info.col; }
+	D3DXVECTOR3 GetSize(void)	{ return m_Info.size; }
 
 private:
 
@@ -65,7 +66,6 @@ private:
 	//ïœêî
 	Info m_Info;		// ã§í èÓïÒ
 
-	D3DXVECTOR3 m_rot;
 	int nModelIdx;
 
 };

@@ -75,16 +75,10 @@ void CText2D::Set(
 		D3DXMATRIX resultMtx = MultiplyMatrix(baseMtx, txtMtx);
 
 		// ƒ|ƒŠƒSƒ“2D‚ğİ’è
-		/*RNLib::Polygon2D()->Set(
-			fScaleX,
-			fScaleY,
-			ConvMatrixToPos(resultMtx),
-			ConvMatrixToRot(resultMtx),
-			col,
-			font.nTexIdx,
-			(int)wstr[nCntDigit] - font.nStartCode,
-			font.nPtnWidth,
-			font.nPtnHeight);*/
+		RNLib::Polygon2D()->Put(ConvMatrixToPos(resultMtx), ConvMatrixToRot(resultMtx).z, false)
+			->SetTex(font.nTexIdx, (int)wstr[nCntDigit] - font.nStartCode, font.nPtnWidth, font.nPtnHeight)
+			->SetSize_TexBaseScale(fScaleX, fScaleY)
+			->SetCol(col);
 	}
 
 	// ƒƒ‚ƒŠ‚Ì‰ğ•ú
