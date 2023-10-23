@@ -9,6 +9,7 @@
 
 //前方宣言
 class CStageObject;
+class CMoveBlock;
 
 //プレイヤークラス
 class CPlayer
@@ -47,6 +48,7 @@ public:
 		D3DXVECTOR3 posOLd;			//前回位置
 		D3DXVECTOR3 rot;			//向き
 		D3DXVECTOR3 move;			//移動量
+		bool		bGround;		//地面に接しているか
 		bool		bJump;			//ジャンプ
 		float		fJumpPower;		//ジャンプ量
 		float		fGravity;		//重力
@@ -142,6 +144,7 @@ private:
 
 	void CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
+	void CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock,D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
 };

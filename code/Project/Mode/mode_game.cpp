@@ -74,6 +74,8 @@ void CMode_Game::Init(void) {
 	/* ブロック	*/Manager::BlockMgr()->Load();
 	/* ステージ	*/Manager::StgEd()->FileLoad();
 
+	Manager::BlockMgr()->FillBlockCreate(D3DXVECTOR3(0.0f,40.0f,0.0f),CFillBlock::FILL_TYPE::FILL_4x4);
+
 	// ステージ生成
 	Manager::StgEd()->StageLoad(0);
 

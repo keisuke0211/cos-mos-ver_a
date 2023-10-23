@@ -8,6 +8,7 @@
 #include "player.h"
 #include "../../_RNLib/_Basis/Other/input.h"
 #include "../../_RNLib/_Basis/Calculation/number.h"
+#include "../Object/Block/move-block.h"
 
 //スワップインターバル
 const int	CPlayer::SWAP_INTERVAL = 30;	//スワップインターバル
@@ -37,6 +38,7 @@ CPlayer::CPlayer()
 		Player.posOLd = INITD3DXVECTOR3;	//前回位置
 		Player.rot = INITD3DXVECTOR3;		//向き
 		Player.move = INITD3DXVECTOR3;		//移動量
+		Player.bGround = false;				//地面に接しているか
 		Player.bJump = false;				//ジャンプ
 		Player.fJumpPower = 0.0f;			//ジャンプ量
 		Player.fGravity = 0.0f;				//重力
@@ -161,11 +163,9 @@ void CPlayer::ActionControl(void)
 		//ジャンプ入力（空中じゃない）
 		if (!Player.bJump && RNLib::Input()->GetTrigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON::UP))
 		{
-			//ジャンプ量代入
-			Player.move.y = Player.fJumpPower;
-
-			//ジャンプした
-			Player.bJump = true;
+			Player.bGround = false;				//地面から離れた
+			Player.move.y = Player.fJumpPower;	//ジャンプ量代入
+			Player.bJump = true;				//ジャンプした
 		}
 
 		//右に移動
@@ -275,7 +275,7 @@ void CPlayer::Move(COLLI_VEC vec)
 void CPlayer::WholeCollision(void)
 {
 	//一旦両プレイヤーともにジャンプ不可
-	//m_aInfo[0].bJump = m_aInfo[1].bJump = true;
+	m_aInfo[0].bGround = m_aInfo[1].bGround = false;
 
 	for (int nCntVec = 0; nCntVec < (int)COLLI_VEC::MAX; nCntVec++) {
 
@@ -307,11 +307,17 @@ void CPlayer::WholeCollision(void)
 				//当たった方向を格納
 				const COLLI_ROT ColliRot = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
 
-				//当たっていなければスキップ
-				if (ColliRot == COLLI_ROT::NONE) continue;
-
 				//種類取得
 				const CStageObject::TYPE type = stageObj->GetType();
+
+				if (stageObj->GetType() == CStageObject::TYPE::MOVE_BLOCK)
+				{
+					//当たった方向を格納
+					const COLLI_ROT test = IsBoxCollider(Player.pos, Player.posOLd, SIZE_WIDTH, SIZE_HEIGHT, MinPos, MaxPos, vec);
+				}
+
+				//当たっていなければスキップ
+				if (ColliRot == COLLI_ROT::NONE) continue;
 
 				//種類ごとに関数分け
 				switch (type)
@@ -320,7 +326,7 @@ void CPlayer::WholeCollision(void)
 					case CStageObject::TYPE::FILLBLOCK:		break;
 					case CStageObject::TYPE::TRAMPOLINE:	break;
 					case CStageObject::TYPE::SPIKE:			CollisionSpike(&Player, MinPos, MaxPos, ColliRot);	break;
-					case CStageObject::TYPE::MOVE_BLOCK:	break;
+					case CStageObject::TYPE::MOVE_BLOCK:	CollisionMoveBlock(&Player, (CMoveBlock *)stageObj, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::METEOR:		break;
 					case CStageObject::TYPE::PARTS:			break;
 				}
@@ -334,6 +340,18 @@ void CPlayer::WholeCollision(void)
 			}
 		}
 	}
+
+	//RNLib::Text2D()->Set(
+	//	CreateText("1Pの着地状態：%s\n", m_aInfo[0].bGround ? "true" : "false"),
+	//	1.0f, 1.0f,
+	//	D3DXVECTOR3(16.0f, 16.0f, 0.0f), INITD3DXVECTOR3,
+	//	CText::ALIGNMENT::LEFT);
+	//
+	//RNLib::Text2D()->Set(
+	//	CreateText("2Pの着地状態：%s\n", m_aInfo[1].bGround ? "true" : "false"),
+	//	1.0f, 1.0f,
+	//	D3DXVECTOR3(16.0f, 32.0f, 0.0f), INITD3DXVECTOR3,
+	//	CText::ALIGNMENT::LEFT);
 }
 
 //----------------------------
@@ -352,8 +370,11 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 			pInfo->pos.y = MaxPos.y + SIZE_HEIGHT;
 			pInfo->move.y = 0.0f;
 
-			//表の世界のプレイヤーならジャンプ可能
-			if (pInfo->side == WORLD_SIDE::FACE) pInfo->bJump = false;
+			//表の世界のプレイヤー
+			if (pInfo->side == WORLD_SIDE::FACE) {
+				pInfo->bGround = true;	//地面に接している
+				pInfo->bJump = false;	//ジャンプ可能
+			}
 			break;
 
 			//*********************************
@@ -365,7 +386,10 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 			pInfo->move.y = 0.0f;
 
 			//裏の世界のプレイヤーならジャンプ可能
-			if (pInfo->side == WORLD_SIDE::BEHIND) pInfo->bJump = false;
+			if (pInfo->side == WORLD_SIDE::BEHIND) {
+				pInfo->bGround = true;	//地面に接している
+				pInfo->bJump = false;	//ジャンプ可能
+			}
 			break;
 
 			//*********************************
@@ -403,6 +427,67 @@ void CPlayer::CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 		case COLLI_ROT::UNDER:
 			//死亡処理
 			Death(NULL);
+			break;
+
+			//*********************************
+			//左に当たった
+			//*********************************
+		case COLLI_ROT::LEFT:
+			//位置・移動量修正
+			pInfo->pos.x = MinPos.x - SIZE_WIDTH;
+			pInfo->move.x = 0.0f;
+			break;
+
+			//*********************************
+			//右に当たった
+			//*********************************
+		case COLLI_ROT::RIGHT:
+			//位置・移動量修正
+			pInfo->pos.x = MaxPos.x + SIZE_WIDTH;
+			pInfo->move.x = 0.0f;
+			break;
+	}
+}
+
+//----------------------------
+//移動床の当たり判定処理
+//----------------------------
+void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot)
+{
+	switch (ColliRot)
+	{
+		//*********************************
+		//上に当たった
+		//*********************************
+		case COLLI_ROT::OVER:
+			//位置・移動量修正
+			pInfo->pos.y = MaxPos.y + SIZE_HEIGHT;
+			pInfo->move.y = 0.0f;
+
+			//表の世界のプレイヤーの場合
+			if (pInfo->side == WORLD_SIDE::FACE)
+			{
+				pInfo->pos += pMoveBlock->GetMove();
+				pInfo->bGround = true;	//地面に接している
+				pInfo->bJump = false;	//ジャンプ可能
+			}
+			break;
+
+			//*********************************
+			//下に当たった
+			//*********************************
+		case COLLI_ROT::UNDER:
+			//位置・移動量修正
+			pInfo->pos.y = MinPos.y - SIZE_HEIGHT;
+			pInfo->move.y = 0.0f;
+
+			//裏の世界のプレイヤーならジャンプ可能
+			if (pInfo->side == WORLD_SIDE::BEHIND)
+			{
+				pInfo->pos += pMoveBlock->GetMove();
+				pInfo->bGround = true;	//地面に接している
+				pInfo->bJump = false;	//ジャンプ可能
+			}
 			break;
 
 			//*********************************
