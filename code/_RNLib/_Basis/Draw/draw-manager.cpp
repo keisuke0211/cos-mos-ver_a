@@ -84,6 +84,8 @@ CDrawMng::CRegistInfoSum::CRegistInfoSum() {
 	m_polygon2DRegistInfoNum = 0;
 	m_polygon3DRegistInfos   = NULL;
 	m_polygon3DRegistInfoNum = 0;
+	m_text2DRegistInfos      = NULL;
+	m_text2DRegistInfoNum    = 0;
 	m_text3DRegistInfos      = NULL;
 	m_text3DRegistInfoNum    = 0;
 	m_modelRegistInfos       = NULL;
@@ -135,6 +137,17 @@ void CDrawMng::MainLoop(void) {
 // 登録情報を元に設置する
 //========================================
 void CDrawMng::PutBasedRegistInfo(CRegistInfoSum& resistInfoSum, const bool& isOnScreen) {
+
+	//----------------------------------------
+	// テキスト2Dからポリゴン2Dを設置
+	//----------------------------------------
+	for (int cnt = 0; cnt < resistInfoSum.m_text2DRegistInfoNum; cnt++) {
+		resistInfoSum.m_text2DRegistInfos[cnt].PutPolygon2D(isOnScreen);
+	}
+
+	// 解放
+	resistInfoSum.m_text2DRegistInfoNum = 0;
+	RNLib::Memory()->Release(&resistInfoSum.m_text2DRegistInfos);
 
 	//----------------------------------------
 	// テキスト3Dからポリゴン3Dを設置
@@ -389,6 +402,47 @@ CPolygon2D::CRegistInfo* CDrawMng::PutPolygon2D(const D3DXVECTOR3& pos, const fl
 }
 
 //========================================
+// 設置処理(テキスト2D)
+//========================================
+CText2D::CRegistInfo* CDrawMng::PutText2D(const D3DXVECTOR2& pos, const float& angle, const bool& isOnScreen) {
+
+	// 登録受付中でない時、終了
+	if (ms_processState != PROCESS_STATE::REGIST_ACCEPT)
+		return NULL;
+
+	// 登録情報
+	CText2D::CRegistInfo* registInfo = NULL;;
+
+	// スクリーン上フラグに応じて登録
+	if (isOnScreen) registInfo = &RegistText2D(ms_resistInfoSumScreen);
+	else            registInfo = &RegistText2D(ms_resistInfoSum);
+
+	// 情報を代入
+	registInfo->SetPos(pos);
+	registInfo->SetAngle(angle);
+
+	return registInfo;
+}
+
+//========================================
+// 設置処理(テキスト3D)
+//========================================
+CText3D::CRegistInfo* CDrawMng::PutText3D(const D3DXMATRIX& mtx, const bool& isOnScreen) {
+
+	// 登録情報
+	CText3D::CRegistInfo* registInfo = NULL;;
+
+	// スクリーン上フラグに応じて登録
+	if (isOnScreen) registInfo = &RegistText3D(ms_resistInfoSumScreen);
+	else            registInfo = &RegistText3D(ms_resistInfoSum);
+
+	// 情報を代入
+	registInfo->SetMtx(mtx);
+
+	return registInfo;
+}
+
+//========================================
 // 設置処理(ポリゴン3D)
 //========================================
 CPolygon3D::CRegistInfo* CDrawMng::PutPolygon3D(const D3DXMATRIX& mtx, const bool& isOnScreen) {
@@ -399,28 +453,6 @@ CPolygon3D::CRegistInfo* CDrawMng::PutPolygon3D(const D3DXMATRIX& mtx, const boo
 	// スクリーン上フラグに応じて登録
 	if (isOnScreen) registInfo = &RegistPolygon3D(ms_resistInfoSumScreen);
 	else            registInfo = &RegistPolygon3D(ms_resistInfoSum);
-
-	// 情報を代入
-	registInfo->SetMtx(mtx);
-
-	return registInfo;
-}
-
-//========================================
-// 設置処理(テキスト3D)
-//========================================
-CText3D::CRegistInfo* CDrawMng::PutText3D(const D3DXMATRIX& mtx, const bool& isOnScreen) {
-
-	// 登録受付中でない時、終了
-	if (ms_processState != PROCESS_STATE::REGIST_ACCEPT)
-		return NULL;
-
-	// 登録情報
-	CText3D::CRegistInfo* registInfo = NULL;;
-
-	// スクリーン上フラグに応じて登録
-	if (isOnScreen) registInfo = &RegistText3D(ms_resistInfoSumScreen);
-	else            registInfo = &RegistText3D(ms_resistInfoSum);
 
 	// 情報を代入
 	registInfo->SetMtx(mtx);
@@ -476,6 +508,20 @@ CPolygon3D::CRegistInfo& CDrawMng::RegistPolygon3D(CRegistInfoSum& resistInfo) {
 	RNLib::Memory()->ReAlloc<CPolygon3D::CRegistInfo>(&resistInfo.m_polygon3DRegistInfos, numOld, resistInfo.m_polygon3DRegistInfoNum);
 
 	return resistInfo.m_polygon3DRegistInfos[numOld];
+}
+
+//========================================
+// 登録処理(テキスト2D)
+//========================================
+CText2D::CRegistInfo& CDrawMng::RegistText2D(CRegistInfoSum& resistInfo) {
+
+	// 登録情報数を加算
+	int numOld = resistInfo.m_text2DRegistInfoNum++;
+
+	// 登録情報のメモリ再確保
+	RNLib::Memory()->ReAlloc<CText2D::CRegistInfo>(&resistInfo.m_text2DRegistInfos, numOld, resistInfo.m_text2DRegistInfoNum);
+
+	return resistInfo.m_text2DRegistInfos[numOld];
 }
 
 //========================================

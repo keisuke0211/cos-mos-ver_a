@@ -9,6 +9,7 @@
 
 //前方宣言
 class CStageObject;
+class CMoveBlock;
 
 //プレイヤークラス
 class CPlayer
@@ -35,6 +36,7 @@ public:
 		UNDER,		//下
 		LEFT,		//左
 		RIGHT,		//右
+		UNKNOWN,	//当たっているけど方向が分からない（当たられる側が動いている可能性アリ
 		MAX
 	};
 
@@ -47,6 +49,7 @@ public:
 		D3DXVECTOR3 posOLd;			//前回位置
 		D3DXVECTOR3 rot;			//向き
 		D3DXVECTOR3 move;			//移動量
+		bool		bGround;		//地面に接しているか
 		bool		bJump;			//ジャンプ
 		float		fJumpPower;		//ジャンプ量
 		float		fGravity;		//重力
@@ -127,21 +130,35 @@ private:
 	void Death(D3DXVECTOR3 *pDeathPos);//死んだ場所を引数に指定（死亡パーティクルなどを描画するのに使用する
 
 	void WholeCollision(void);
+
 	//========================
 	//対象物の中にめり込んでいるかどうか判定
 	//------------------------
-	// 引数１	pos				：現在位置
-	// 引数２	posOld			：前回位置
-	// 引数３	fWidth			：幅
-	// 引数４	fHeight			：高さ
-	// 引数５	TargetMinPos	：対象物の最小位置
-	// 引数６	TargetMaxPos	：対象物の最大位置
+	// 引数１	pos			：現在位置
+	// 引数２	posOld		：前回位置
+	// 引数３	fWidth		：幅
+	// 引数４	fHeight		：高さ
+	// 引数５	TargetPos	：対象の現在位置
+	// 引数６	TargetPosOld：対象の前回位置（オブジェクトにPosOld変数が無いなら、現在位置をいれればOK
+	// 引数７	TargetWidth	：対象の幅
+	// 引数８	TargetHeight：対象の高さ
+	// 引数９	value		：ベクトル
 	// 返り値	対象物にめりこんでいる方向を返す（NONEなら当たっていない
 	//========================
-	COLLI_ROT IsBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, float fWidth, float fHeight, D3DXVECTOR3 TargetMinPos, D3DXVECTOR3 TargetMaxPos, COLLI_VEC value);
+	COLLI_ROT IsBoxCollider(D3DXVECTOR3 pos, D3DXVECTOR3 posOld, float fWidth, float fHeight, D3DXVECTOR3 TargetPos, D3DXVECTOR3 TargetPosOld, float TargetWidth, float TargetHeight, COLLI_VEC value);
+
+	void FixPos_OVER(float *pPosY, float fMaxPosY, float *pMoveY);	//上からの当たり判定による位置・移動量修正
+	void FixPos_UNDER(float *pPosY, float fMinPosY, float *pMoveY);//下からの当たり判定による位置・移動量修正
+	void FixPos_LEFT(float *pPosX, float fMinPosX, float *pMoveX);	//左からの当たり判定による位置・移動量修正
+	void FixPos_RIGHT(float *pPosX, float fMaxPosX, float *pMoveX);//右からの当たり判定による位置・移動量修正
 
 	void CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
+	void CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
+	void CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock,D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
+
+	//情報更新処理（更新処理の最後に位置情報などを設定する
+	void UpdateInfo(void);
 
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
 };
