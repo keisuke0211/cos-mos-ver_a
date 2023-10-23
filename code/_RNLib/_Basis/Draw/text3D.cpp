@@ -5,6 +5,7 @@
 // 
 //========================================
 #include "../../RNlib.h"
+#include <locale.h>
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -94,6 +95,18 @@ void CText3D::CRegistInfo::PutPolygon3D(const bool& isOnScreen) {
 	charSpace = charWidth * m_scaleX * fontData.fSpaceRate;
 
 	//----------------------------------------
+	// ロケールを設定してマルチバイト文字に対応
+	//----------------------------------------
+	setlocale(LC_ALL, "");
+
+	//----------------------------------------
+	// char型の文字列をwchar_t型の文字列に変換
+	//----------------------------------------
+	size_t   length = strlen(m_string);
+	wchar_t* wstr = (wchar_t*)malloc((length + 1) * sizeof(wchar_t));
+	mbstowcs(wstr, m_string, length + 1);
+
+	//----------------------------------------
 	// 一文字ずつ設置していく
 	//----------------------------------------
 	D3DXVECTOR3 cameraNorRToV = RNLib::Camera3D()->GetNor();
@@ -148,12 +161,15 @@ void CText3D::CRegistInfo::PutPolygon3D(const bool& isOnScreen) {
 		RNLib::DrawMng()->PutPolygon3D(resultMtx, isOnScreen)
 			->SetSize(charWidth, charHeight)
 			->SetCol(m_col)
-			->SetTex(fontData.nTexIdx, (int)m_string[cntChar] - (int)fontData.nStartCode, fontData.nPtnWidth, fontData.nPtnHeight)
+			->SetTex(fontData.nTexIdx, (int)wstr[cntChar] - (int)fontData.nStartCode, fontData.nPtnWidth, fontData.nPtnHeight)
 			->SetZTest(m_isZtest)
 			->SetLighting(m_isLighting)
 			->SetBillboard(m_isBillboard)
 			->SetPriority(m_priority);
 	}
+
+	// wchar_t型文字列の解放
+	free(wstr);
 }
 
 //========================================
