@@ -320,22 +320,22 @@ void CMode_Title::StageSelect(void)
 			->SetTex(nTexIdx);
 	}
 
+	bool bInput = false;
 	// -- メニュー選択 ---------------------------
 	if (RNLib::Input()->GetKeyTrigger(DIK_A) || RNLib::Input()->GetKeyTrigger(DIK_LEFT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::LEFT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::LEFT))
 	{
 		m_nSelect--;
-		IntLoopControl(&m_nSelect, nMax, 0);
-
-		TextClear(TITLE_SELECT);
-		FormFont pFont = { INITCOLOR,65.0f,5,10,-1 };
-		m_Menu[0] = CFontText::Create(
-			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-			m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);
+		bInput = true;
 	}
 	else if (RNLib::Input()->GetKeyTrigger(DIK_D) || RNLib::Input()->GetKeyTrigger(DIK_RIGHT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::RIGHT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::RIGHT))
 	{
 		m_nSelect++;
-		IntLoopControl(&m_nSelect, nMax, 0);
+		bInput = true;
+	}
+
+	if (bInput)
+	{
+		IntControl(&m_nSelect, nMax - 1, 0);
 
 		TextClear(TITLE_SELECT);
 		FormFont pFont = { INITCOLOR,65.0f,5,10,-1 };
@@ -344,8 +344,6 @@ void CMode_Title::StageSelect(void)
 			m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);
 	}
 
-	// ループ制御
-	IntLoopControl(&m_nSelect, nMax, 0);
 }
 
 //========================================
