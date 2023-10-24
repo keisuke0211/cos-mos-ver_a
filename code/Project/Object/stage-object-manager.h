@@ -18,6 +18,8 @@
 #include "Item/Parts.h"
 #include "BackGround/Planet.h"
 #include "BackGround/Star.h"
+#include "BackGround/Shiningwave.h"
+#include "Gimmick/RoadTripLaser.h"
 //****************************************
 // ÉNÉâÉX
 //****************************************
@@ -40,6 +42,9 @@ public:
 	CRocket     *RocketCreate    (D3DXVECTOR3 pos);
 	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos, D3DXVECTOR3 rot,CPlanet::STAR_TYPE type,Color col);
 	CStar		*StarCreate		 (D3DXVECTOR3 pos, D3DXVECTOR3 rot);
+	CShiningWave*ShiningWaveCreate(void);
+	CRoadTripLaser* RoadTripLaserCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move, float fRefdef);
+
 private:
 
 	// *** ç\ë¢ëÃ ***

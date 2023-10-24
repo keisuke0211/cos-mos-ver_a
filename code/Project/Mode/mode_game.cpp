@@ -76,6 +76,8 @@ void CMode_Game::Init(void) {
 
 	Manager::BlockMgr()->Load();
 	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(-250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
+	Manager::BlockMgr()->ShiningWaveCreate();
+	Manager::BlockMgr()->RoadTripLaserCreate(D3DXVECTOR3(250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
 
 	BackGroundPut(Color{ 100,100,100,255 }, Color{ 100,100,100,255 });
 
@@ -184,7 +186,7 @@ void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 		type = (CPlanet::STAR_TYPE)(rand() % (int)CPlanet::STAR_TYPE::MAX);	// 種類の設定
 		col = Color{ mincol.r + rand() % addcol.r,mincol.g + rand() % addcol.g,mincol.b + rand() % addcol.b,255 };	// 色の設定
 		rot = D3DXVECTOR3(rand() % 6 - 3, rand() % 6 - 3, rand() % 6 - 3);	// 向きの設定
-		Manager::BlockMgr()->PlanetCreate(Planpos, rot, type, col);	// 惑星の生成
+		//Manager::BlockMgr()->PlanetCreate(Planpos, rot, type, col);	// 惑星の生成
 	}
 
 	for (int nCntPut = 0; nCntPut < s_StarMaxSummon; nCntPut++)
@@ -193,6 +195,6 @@ void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 		Starpos = s_StarSummonPos[nCntPut];	// 出現する位置の設定
 		Starpos += D3DXVECTOR3(rand() % 50 - 50, rand() % 50 - 50, 0.0f);	// 位置の設定
 
-		Manager::BlockMgr()->StarCreate(Starpos, INITD3DXVECTOR3);	// 星の生成
+		//Manager::BlockMgr()->StarCreate(Starpos, INITD3DXVECTOR3);	// 星の生成
 	}
 }
