@@ -76,11 +76,11 @@ void CMode_Title::Init(void) {
 
 	pFont = { INITCOLOR,70.0f,1,1,-1, };
 	m_Menu[1] = CFontText::Create(CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(340.0f, 100.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
-		"COS/MOS", CFont::FONT_851GKKTT, &pFont,false,&pShadow);
+		"COS/MOS", CFont::FONT_FUWAFUDE, &pFont,false,&pShadow);
 
 	pFont = { INITCOLOR,45.0f,5,10,-1 };
 	m_Menu[2] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 600.0f, 0.0f),D3DXVECTOR2(1080.0f, 100.0f),
-		"ボタンをおしてはじめてね",CFont::FONT_MARUKOIAS,&pFont, false);
+		"ボタンをおしてはじめてね",CFont::FONT_FUWAFUDE,&pFont, false);
 }
 
 //========================================
@@ -195,15 +195,15 @@ void CMode_Title::MenuCreate(void)
 
 	m_Menu[0] = CFontText::Create(
 		CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 150.0f, 0.0f),D3DXVECTOR2(360.0f, 100.0f),
-		"ゲーム",CFont::FONT_MARUKOIAS,&pFont);
+		"ゲーム",CFont::FONT_FUWAFUDE,&pFont);
 
 	m_Menu[1] = CFontText::Create(
 		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 300.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-		"オプション", CFont::FONT_MARUKOIAS, &pFont);
+		"オプション", CFont::FONT_FUWAFUDE, &pFont);
 
 	m_Menu[2] = CFontText::Create(
 		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 450.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-		"ゲームをやめる", CFont::FONT_MARUKOIAS, &pFont);
+		"ゲームをやめる", CFont::FONT_FUWAFUDE, &pFont);
 }
 
 //========================================
@@ -260,7 +260,7 @@ void CMode_Title::SelectCreate(void)
 	FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
 	m_Menu[0] = CFontText::Create(
 		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-		m_StageType[0].Text, CFont::FONT_MARUKOIAS, &pFont);
+		m_StageType[0].Text, CFont::FONT_FUWAFUDE, &pFont);
 }
 
 //========================================
@@ -326,7 +326,7 @@ void CMode_Title::StageSelect(void)
 		FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
 		m_Menu[0] = CFontText::Create(
 			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-			m_StageType[m_nSelect].Text, CFont::FONT_MARUKOIAS, &pFont);
+			m_StageType[m_nSelect].Text, CFont::FONT_FUWAFUDE, &pFont);
 	}
 	else if (RNLib::Input()->GetKeyTrigger(DIK_D) || RNLib::Input()->GetKeyTrigger(DIK_RIGHT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::RIGHT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::RIGHT))
 	{
@@ -337,7 +337,7 @@ void CMode_Title::StageSelect(void)
 		FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
 		m_Menu[0] = CFontText::Create(
 			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-			m_StageType[m_nSelect].Text, CFont::FONT_MARUKOIAS, &pFont);
+			m_StageType[m_nSelect].Text, CFont::FONT_FUWAFUDE, &pFont);
 	}
 
 	// ループ制御
