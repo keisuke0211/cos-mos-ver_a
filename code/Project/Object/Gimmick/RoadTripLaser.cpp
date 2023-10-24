@@ -1,20 +1,22 @@
 //========================================
 // 
-// 星の処理
+// 往復するレーザーの処理
 // Author:KOMURO HIROMU
 // 
 //========================================
-#include "Star.h"
+#include "RoadTripLaser.h"
 #include "../../main.h"
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| CStarクラスのメンバ関数
+//==========| CRoadTripLaserクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
+static const D3DXVECTOR2  s_Size = D3DXVECTOR2(10.0f,50.0f);	// 高さ
+
 //========================================
 // コンストラクタ
 //========================================
-CStar::CStar(void) {
+CRoadTripLaser::CRoadTripLaser(void) {
 	Manager::BlockMgr()->AddList(this);
 
 	m_type = TYPE::BACKGROUND;	// 種類の設定
@@ -23,17 +25,16 @@ CStar::CStar(void) {
 	m_height = SIZE_OF_1_SQUARE * 5;
 
 	// 各情報の初期化
-	m_rot = INITD3DXVECTOR3;
-	m_move = INITD3DXVECTOR3;
-	m_col = Color{ 255,255,255,255 };
-	m_rot = INITD3DXVECTOR3;
-	m_moveCounter = 0;
+	m_pos = INITD3DXVECTOR3;
+	m_refPos = INITD3DXVECTOR3;
+	m_frefdef = 0.0f;
+	m_fGroundDis = 0.0f;
 }
 
 //========================================
 // デストラクタ
 //========================================
-CStar::~CStar(void) {
+CRoadTripLaser::~CRoadTripLaser(void) {
 
 }
 
@@ -41,17 +42,19 @@ CStar::~CStar(void) {
 // 初期化処理
 // Author:KOMURO HIROMU
 //========================================
-void CStar::Init(void) {
-	//ModelIdx = RNLib::Model()->Load(s_modelPaths[(int)m_Star_type]);
+void CRoadTripLaser::Init(void) {
+	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Lift.x");
 	//RNLib::Texture()->Load();
-	m_posOld = m_pos;
+
+	m_refPos = m_pos;
+	m_fGroundDis = m_pos.y - 0.0f;
 }
 
 //========================================
 // 終了処理
 // Author:KOMURO HIROMU
 //========================================
-void CStar::Uninit(void) {
+void CRoadTripLaser::Uninit(void) {
 
 }
 
@@ -59,17 +62,38 @@ void CStar::Uninit(void) {
 // 更新処理
 // Author:KOMURO HIROMU
 //========================================
-void CStar::Update(void) {
-	
-	RNLib::Polygon3D()->Put(m_pos, m_rot, false)
-		->SetSize(100.0f,100.0f);
+void CRoadTripLaser::Update(void) {
+
+	D3DXVECTOR3 Block = m_pos;	// 位置
+	// ブロックの位置設定
+	Block.y += s_Size.y;
+
+
+	// xの移動量の反転
+	if (m_refPos.x + m_frefdef <= m_pos.x || m_refPos.x - m_frefdef >= m_pos.x)
+	{
+		m_move.x *= -1;
+	}
+	// yの移動量の反転
+	if (m_refPos.y + m_frefdef <= m_pos.y || m_refPos.y - m_frefdef >= m_pos.y)
+	{
+		m_move.y *= -1;
+	}
+
+	m_pos += m_move;
+
+	RNLib::Model()->Put(Block, m_rot, ModelIdx, false);
+
+	RNLib::Polygon3D()->Put(D3DXVECTOR3(m_pos.x, m_pos.y + Block.y,m_pos.z), m_rot, false)
+		->SetSize(s_Size.x, s_Size.y);
+
 }
 
 //========================================
 // 描画処理
 // Author:KOMURO HIROMU
 //========================================
-void CStar::Draw(void) {
+void CRoadTripLaser::Draw(void) {
 
 
 }
