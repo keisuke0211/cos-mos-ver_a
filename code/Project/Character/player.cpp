@@ -22,9 +22,9 @@ const float CPlayer::SIZE_HEIGHT = 8.0f;	//高さ
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 2.7f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 10.0f;		//基本ジャンプ量
-const float CPlayer::GRAVITY_POWER = -8.0f;	//基本重力加速度
-const float CPlayer::GRAVITY_CORR = 0.07f;	//基本重力係数
+const float CPlayer::JUMP_POWER = 3.0f;	//基本ジャンプ量
+const float CPlayer::GRAVITY_POWER = -3.0f;	//基本重力加速度
+const float CPlayer::GRAVITY_CORR = 0.01f;	//基本重力係数
 
 //=======================================
 //コンストラクタ
@@ -323,6 +323,19 @@ void CPlayer::WholeCollision(void)
 
 			for each(Info& Player in m_aInfo)
 			{
+				//プレイヤーの近くにオブジェクトがあるか判定
+				{
+					const D3DXVECTOR3 PosDiff = POS - Player.pos;
+					const float fLength = D3DXVec3Length(&PosDiff);
+
+					const float fWIDTH_SUM = WIDTH + SIZE_WIDTH;
+					const float fHEIGHT_SUM = HEIGHT + SIZE_WIDTH;
+
+					float flength = sqrtf(fWIDTH_SUM * fWIDTH_SUM + fHEIGHT_SUM * fHEIGHT_SUM);
+
+					if (fLength > sqrtf(fWIDTH_SUM * fWIDTH_SUM + fHEIGHT_SUM * fHEIGHT_SUM)) continue;
+				}
+
 				//種類取得
 				const CStageObject::TYPE type = stageObj->GetType();
 
