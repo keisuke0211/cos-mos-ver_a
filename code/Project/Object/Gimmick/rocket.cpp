@@ -47,7 +47,10 @@ HRESULT CRocket::Init(void)
 {
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;
-
+	if (m_pos.z < 0)
+	{
+		m_rot.z -= D3DX_PI;
+	}
 	return S_OK;
 }
 
