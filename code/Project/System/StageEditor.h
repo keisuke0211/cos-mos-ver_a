@@ -28,6 +28,9 @@ public:
 	struct StageType
 	{
 		char	aFileName[0xff];	// ファイルパス
+		char	aTexFile[0xff];		// テクスチャパス
+		char	aStageName[0xff];	// ステージ名
+
 	};
 
 	// ステージ情報
@@ -48,8 +51,9 @@ public:
 	/* ステージ切り替え	*/void SwapStage(int nStageIdx);
 
 	// -- 取得 ---------------------------------------------
-	/* 最大値	*/int GetStageMax(void) { return m_Info.nStageMax; }
-	/* 変換		*/bool ToData(int &val, CSVFILE *pFile, int nRow, int nLine);
+	/* 最大値		*/int GetStageMax(void) { return m_Info.nStageMax; }
+	/* ステージ情報	*/StageType *GetInfo(void) { return m_StageType; }
+	/* 変換			*/bool ToData(int &val, CSVFILE *pFile, int nRow, int nLine);
 
 	// -- 読込 ---------------------------------------------
 	/* ファイルパス	*/void FileLoad(void);

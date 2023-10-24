@@ -1,19 +1,20 @@
 #========================================
 #
-# ã‚¹ãƒ†ãƒ¼ã‚¸æƒ…å ±
+# ƒXƒe[ƒWî•ñ
 # Author KEISUKE OOTONO
 #
 #========================================
-# æœ€å¤§æ•°
+# Å‘å”
 #========================================
-NUM_STAGE = 3
+NUM_STAGE = 4
 
 #========================================
-# ãƒ•ã‚¡ã‚¤ãƒ«å
+# ƒtƒ@ƒCƒ‹–¼
 #========================================
-STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE00.csv
-STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE01.csv
-STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE99.csv
+STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE00.csv data\\TEXTURE\\BackGround\\Stage00.png ƒ|ƒ‰ƒŠƒX
+STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE01.csv data\\TEXTURE\\BackGround\\Stage01.png ƒŒƒOƒ‹ƒX
+STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE02.csv data\\TEXTURE\\BackGround\\Stage02.png ƒXƒsƒJ
+STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE99.csv data\\TEXTURE\\BackGround\\Stage99.png ƒVƒŠƒEƒX
 
 #========================================
 #

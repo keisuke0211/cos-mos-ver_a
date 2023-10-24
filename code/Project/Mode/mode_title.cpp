@@ -24,11 +24,7 @@ CMode_Title::CMode_Title(void) {
 	m_TexIdx = 0;
 	m_nSelect = 0;
 
-	for (int nCnt = 0; nCnt < 3; nCnt++)
-	{
-		m_StageType[0].nTex = 0;
-		m_StageType[0].Text[TXT_MAX] = NULL;
-	}
+	m_StageType = NULL;;
 }
 
 //========================================
@@ -132,8 +128,8 @@ void CMode_Title::Update(void) {
 			switch (m_nSelect)
 			{
 			case MENU_GAME:
-				SelectCreate();
 				Manager::StgEd()->FileLoad();
+				SelectCreate();
 				break;
 			case MENU_SERRING:
 				break;
@@ -149,6 +145,9 @@ void CMode_Title::Update(void) {
 			TextClear(TITLE_NEXT);
 			CMode_Game::SetStage(m_nSelect);
 			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::NONE);
+
+			delete[] m_StageType;
+			m_StageType = NULL;
 		}
 		break;
 		}
@@ -248,13 +247,18 @@ void CMode_Title::Menu(void)
 //========================================
 void CMode_Title::SelectCreate(void)
 {
-	m_StageType[0].nTex = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage00.png");
-	m_StageType[1].nTex = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage01.png");
-	m_StageType[2].nTex = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage99.png");
+	int nMax = Manager::StgEd()->GetStageMax();
+	
+	m_StageType = new StageType[nMax];
 
-	sprintf(m_StageType[0].Text, "ポラリス");
-	sprintf(m_StageType[1].Text, "レグルス");
-	sprintf(m_StageType[2].Text, "シリウス");
+	for (int nCnt = 0; nCnt < nMax; nCnt++)
+	{
+		char *aTexFile = Manager::StgEd()->GetInfo()[nCnt].aTexFile;
+		char *aStgName = Manager::StgEd()->GetInfo()[nCnt].aStageName;
+
+		m_StageType[nCnt].nTex = RNLib::Texture()->Load(aTexFile);
+		sprintf(m_StageType[nCnt].Text, aStgName);
+	}
 
 	TextClear(TITLE_SELECT);
 	FormFont pFont = { INITCOLOR,65.0f,5,10,-1 };// 45

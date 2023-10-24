@@ -99,6 +99,8 @@ void CStageEditor::FileLoad(void)
 		{
 			fscanf(pFile, "%s", &aDataSearch[0]);
 			fscanf(pFile, "%s", &m_StageType[nCntStage].aFileName[0]);	// ファイル名
+			fscanf(pFile, "%s", &m_StageType[nCntStage].aTexFile[0]);	// ステージ画像
+			fscanf(pFile, "%s", &m_StageType[nCntStage].aStageName[0]);	// ステージ名
 
 			nCntStage++;
 		}

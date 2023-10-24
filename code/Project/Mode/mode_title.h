@@ -75,5 +75,5 @@ private:
 	int m_nSelect;
 	CFontText *m_Menu[MENU_MAX];		// メニューテキスト
 	CWords *m_Words[4];					// タイトル
-	StageType m_StageType[3];
+	StageType *m_StageType;
 };
