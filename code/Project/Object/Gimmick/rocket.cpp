@@ -47,8 +47,8 @@ HRESULT CRocket::Init(void)
 {
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;
-	if (m_pos.z < 0)
-	{
+	if (m_pos.y < 0)
+	{// â∫ÇÃê¢äEÇ…Ç¢ÇÈÇ∆Ç´îΩì]Ç≥ÇπÇÈ
 		m_rot.z -= D3DX_PI;
 	}
 	return S_OK;
@@ -89,8 +89,16 @@ void CRocket::Update(void)
 
 		if (m_Info.nFlyAnimeCounter >= s_AnimeMax)
 		{
-			m_Info.move.y *= s_MoveMag;
-			m_Info.move.y += s_MoveAdd;
+			m_Info.move.y *= s_MoveMag;	// à⁄ìÆó Ç…î{ó¶ÇÇ©ÇØÇÈ
+
+			if (m_pos.y >= 0)
+			{// è„ÇÃê¢äEÇ…Ç¢ÇÈÇ∆Ç´
+				m_Info.move.y += s_MoveAdd;
+			}
+			else
+			{// â∫ÇÃê¢äEÇ…Ç¢ÇÈÇ∆Ç´
+				m_Info.move.y -= s_MoveAdd;
+			}
 		}
 		break;
 
