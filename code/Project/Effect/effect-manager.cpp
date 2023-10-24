@@ -30,4 +30,23 @@ CEffectMgr::~CEffectMgr()
 //========================================
 void CEffectMgr::Update(void)
 {
+
+}
+
+//========================================
+// エフェクト
+//========================================
+CEffect *CEffectMgr::EffectCreate(D3DXVECTOR3 pos)
+{
+	CEffect *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CEffect;
+
+	// 初期化処理
+	pObj->Init();
+
+	CObjectMgr::AddList((CObject*)pObj);
+
+	return pObj;
 }
