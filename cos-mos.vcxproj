@@ -165,6 +165,7 @@
     <ClCompile Include="code\Project\Mode\mode_result.cpp" />
     <ClCompile Include="code\Project\Mode\mode_title.cpp" />
     <ClCompile Include="code\Project\Object\BackGround\Planet.cpp" />
+    <ClCompile Include="code\Project\Object\BackGround\ShiningWave.cpp" />
     <ClCompile Include="code\Project\Object\BackGround\Star.cpp" />
     <ClCompile Include="code\Project\Object\Block\fill-block.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\rocket.cpp" />
@@ -248,6 +249,7 @@
     <ClInclude Include="code\Project\Mode\mode_result.h" />
     <ClInclude Include="code\Project\Mode\mode_title.h" />
     <ClInclude Include="code\Project\Object\BackGround\Planet.h" />
+    <ClInclude Include="code\Project\Object\BackGround\Shiningwave.h" />
     <ClInclude Include="code\Project\Object\BackGround\Star.h" />
     <ClInclude Include="code\Project\Object\Block\fill-block.h" />
     <ClInclude Include="code\Project\Object\Gimmick\rocket.h" />
