@@ -6,6 +6,7 @@
 // 
 //========================================
 #include "../../_RNLib/RNlib.h"
+#include "effect.h"
 
 //****************************************
 // ƒNƒ‰ƒX
@@ -16,6 +17,8 @@ public:
 	CEffectMgr();
 	virtual~CEffectMgr();
 	virtual void Update(void);
+
+	CEffect *EffectCreate(D3DXVECTOR3 pos);
 
 private:
 
