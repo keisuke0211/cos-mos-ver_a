@@ -138,11 +138,28 @@ void CPlayer::Update(void)
 	//当たり判定まとめ
 	WholeCollision();
 
-	//プレイヤーの位置更新
+	//情報更新
+	UpdateInfo();
+}
+
+//----------------------------
+//情報更新処理
+//----------------------------
+void CPlayer::UpdateInfo(void)
+{
 	for each (Info &Player in m_aInfo)
 	{
+		//位置設定
 		RNLib::Model()->Put(Player.pos, Player.rot, Player.nModelIdx, false)
 			->SetOutLine(true);
+
+		//スワップ先のマークを描画する位置
+		D3DXVECTOR3 MarkPos = Player.pos;
+		MarkPos.y *= -1.0f;
+
+		RNLib::Polygon3D()->Put(MarkPos, INITD3DXVECTOR3)
+			->SetSize(20.0f, 20.0f)
+			->SetBillboard(true);
 	}
 }
 
@@ -360,11 +377,24 @@ void CPlayer::WholeCollision(void)
 		}
 	}
 
+#if 0
 	//プレイヤーの位置更新
 	for(int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
 	{
 		RNLib::Text2D()->Put(D3DXVECTOR2(20.0f, 20.0f + 25.0f * nCnt), 0.0f, CreateText("%dPのY座標：%f", nCnt, m_aInfo[nCnt].pos.y), CText::ALIGNMENT::LEFT, 0);
 	}
+
+	RNLib::Text2D()->Put(D3DXVECTOR2(20.0f, 80.0f), 0.0f, CreateText("FPS：%d", RNLib::GetFPSCount()), CText::ALIGNMENT::LEFT, 0);
+#endif
+
+	////プレイヤーの位置更新
+	//for (int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
+	//{
+	//	RNLib::Text3D()->Put(D3DXVECTOR3(20.0f, 20.0f + 25.0f * nCnt, 0.0f), INITD3DXVECTOR3, CreateText("%dPのY座標：%f", nCnt, m_aInfo[nCnt].pos.y), CText::ALIGNMENT::LEFT, 0);
+	//}
+
+	//RNLib::Text3D()->Put(D3DXVECTOR3(20.0f, 80.0f, 0.0f), INITD3DXVECTOR3, CreateText("FPS：%d", RNLib::GetFPSCount()), CText::ALIGNMENT::LEFT, 0);
+
 }
 
 //----------------------------

@@ -58,16 +58,19 @@ private:
 	// *** 列挙型 ***
 	enum Type
 	{
-		TYPE_BLOCK = 0,		// ブロック
-		TYPE_FILL_BLOCK,	// ブロック(判定 無)
-		TYPE_TRAMPOLINE,	// トランポリン
-		TYPE_SPIKE,			// 棘
-		TYPE_LIFT,			// リフト
-		TYPE_Meteor,		// 隕石
-		TYPE_PLAYER_0 = 90,	// プレイヤー2
-		TYPE_PLAYER_1,		// プレイヤー1
-		TYPE_PARTS = 98,	// パーツ
-		TYPE_GOAL,			// ゴール
+		TYPE_BLOCK = 0,				// ブロック
+		TYPE_TRAMPOLINE,			// トランポリン
+		TYPE_SPIKE,					// 棘
+		TYPE_LIFT,					// リフト
+		TYPE_Meteor,				// 隕石
+		TYPE_FILL_BLOCK_11 = 20,	// ブロック(判定 無) 1 * 1
+		TYPE_FILL_BLOCK_22 = 21,	// ブロック(判定 無) 2 * 2
+		TYPE_FILL_BLOCK_33 = 22,	// ブロック(判定 無) 3 * 3
+		TYPE_FILL_BLOCK_44 = 23,	// ブロック(判定 無) 4 * 4
+		TYPE_PLAYER_0 = 90,			// プレイヤー2
+		TYPE_PLAYER_1,				// プレイヤー1
+		TYPE_PARTS = 98,			// パーツ
+		TYPE_GOAL,					// ゴール
 		TYPE_MAX
 	};
 

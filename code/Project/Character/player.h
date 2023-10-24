@@ -157,6 +157,9 @@ private:
 	void CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock,D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 
+	//情報更新処理（更新処理の最後に位置情報などを設定する
+	void UpdateInfo(void);
+
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
 };
 
