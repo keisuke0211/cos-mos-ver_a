@@ -44,6 +44,15 @@ public:
 		MENU_MAX
 	};
 
+	// *** 情報構造体 ***
+
+	// ステージ種類情報
+	struct StageType
+	{
+		int nTex;				// 画像
+		char Text[TXT_MAX];		// ステージ名
+	};
+
 	// *** 関数 ***
 	CMode_Title();
 	~CMode_Title();
@@ -66,5 +75,5 @@ private:
 	int m_nSelect;
 	CFontText *m_Menu[MENU_MAX];		// メニューテキスト
 	CWords *m_Words[4];					// タイトル
-	int m_nStageTex[3];					// 仮ステージ画像
+	StageType m_StageType[3];
 };

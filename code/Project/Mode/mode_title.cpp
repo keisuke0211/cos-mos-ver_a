@@ -23,6 +23,12 @@
 CMode_Title::CMode_Title(void) {
 	m_TexIdx = 0;
 	m_nSelect = 0;
+
+	for (int nCnt = 0; nCnt < 3; nCnt++)
+	{
+		m_StageType[0].nTex = 0;
+		m_StageType[0].Text[TXT_MAX] = NULL;
+	}
 }
 
 //========================================
@@ -126,7 +132,7 @@ void CMode_Title::Update(void) {
 			switch (m_nSelect)
 			{
 			case MENU_GAME:
-				TextClear(TITLE_SELECT);
+				SelectCreate();
 				Manager::StgEd()->FileLoad();
 				break;
 			case MENU_SERRING:
@@ -242,7 +248,19 @@ void CMode_Title::Menu(void)
 //========================================
 void CMode_Title::SelectCreate(void)
 {
+	m_StageType[0].nTex = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage00.png");
+	m_StageType[1].nTex = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage01.png");
+	m_StageType[2].nTex = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage99.png");
 
+	sprintf(m_StageType[0].Text, "原始惑星");
+	sprintf(m_StageType[1].Text, "レグルス");
+	sprintf(m_StageType[2].Text, "シリウス");
+
+	TextClear(TITLE_SELECT);
+	FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
+	m_Menu[0] = CFontText::Create(
+		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
+		m_StageType[0].Text, CFont::FONT_851GKKTT, &pFont);
 }
 
 //========================================
@@ -254,18 +272,29 @@ void CMode_Title::StageSelect(void)
 	int nMax = Manager::StgEd()->GetStageMax();
 	int nChoiceTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\mark_smiley_000.png");
 	int nNoChoiceTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Circle_005.png");
-
-	m_nStageTex[0] = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage00.png");
-	m_nStageTex[1] = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage01.png");
-	m_nStageTex[2] = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage99.png");
+	int nPrevTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Arrow_01.png");
+	int nNextTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Arrow_00.png");
 
 	int nTexIdx = 0;
 
 	// ステージ画像
-	RNLib::Polygon2D()->Put(D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, RNLib::Window()->GetCenterPos().y - 80.0f, -1.0f), 0.0f, false)
-		->SetSize(880.0f, 520.0f)
+	RNLib::Polygon2D()->Put(D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, RNLib::Window()->GetCenterPos().y - 120.0f, -1.0f), 0.0f, false)
+		->SetSize(880.0f, 480.0f)
 		->SetCol(Color{ 255,255,255,255 })
-		->SetTex(m_nStageTex[m_nSelect]);
+		->SetTex(m_StageType[m_nSelect].nTex);
+
+	if (m_nSelect != 0)
+	{
+		RNLib::Polygon2D()->Put(D3DXVECTOR3(400.0f, 550.0f, 0.0), 0.0f, false)
+			->SetSize(100.0f, 100.0f)
+			->SetCol(Color{ 50,255,0,255 })
+			->SetTex(nPrevTex);
+	}
+	if(m_nSelect != nMax - 1)
+	RNLib::Polygon2D()->Put(D3DXVECTOR3(880.0f, 550.0f, 0.0), 0.0f, false)
+		->SetSize(100.0f, 100.0f)
+		->SetCol(Color{ 50,255,0,255 })
+		->SetTex(nNextTex);
 
 	// 選択アイコン
 	for (int nCnt = 0; nCnt < nMax; nCnt++)
@@ -291,14 +320,28 @@ void CMode_Title::StageSelect(void)
 	if (RNLib::Input()->GetKeyTrigger(DIK_A) || RNLib::Input()->GetKeyTrigger(DIK_LEFT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::LEFT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::LEFT))
 	{
 		m_nSelect--;
+		IntLoopControl(&m_nSelect, nMax, 0);
+
+		TextClear(TITLE_SELECT);
+		FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
+		m_Menu[0] = CFontText::Create(
+			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
+			m_StageType[m_nSelect].Text, CFont::FONT_851GKKTT, &pFont);
 	}
 	else if (RNLib::Input()->GetKeyTrigger(DIK_D) || RNLib::Input()->GetKeyTrigger(DIK_RIGHT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::RIGHT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::RIGHT))
 	{
 		m_nSelect++;
+		IntLoopControl(&m_nSelect, nMax, 0);
+
+		TextClear(TITLE_SELECT);
+		FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
+		m_Menu[0] = CFontText::Create(
+			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
+			m_StageType[m_nSelect].Text, CFont::FONT_851GKKTT, &pFont);
 	}
 
 	// ループ制御
-	IntLoopControl(&m_nSelect, MENU_MAX, 0);
+	IntLoopControl(&m_nSelect, nMax, 0);
 }
 
 //========================================
