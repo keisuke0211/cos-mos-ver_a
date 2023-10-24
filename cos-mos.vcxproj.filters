@@ -288,6 +288,12 @@
     <ClCompile Include="code\Project\Object\BackGround\ShiningWave.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="code\Project\Object\BackGround\Star.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Effect\effect.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="code\Project\Object\Gimmick\RoadTripLaser.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>

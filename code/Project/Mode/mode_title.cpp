@@ -6,6 +6,7 @@
 //========================================
 #include "../main.h"
 #include "mode_title.h"
+#include "mode_game.h"
 #include "../System/words/words.h"
 #include "../System/words/font-text.h"
 
@@ -21,7 +22,7 @@
 //========================================
 CMode_Title::CMode_Title(void) {
 	m_TexIdx = 0;
-	m_nSelectMenu = 0;
+	m_nSelect = 0;
 }
 
 //========================================
@@ -44,7 +45,7 @@ void CMode_Title::Init(void) {
 		m_Menu[nCnt] = {NULL};
 	}
 	Title = TITLE_OUTSET;
-	m_nSelectMenu = 0;
+	m_nSelect = 0;
 
 	m_TexIdx = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\title.jpg");
 
@@ -101,10 +102,9 @@ void CMode_Title::Update(void) {
 	CMode::Update();
 
 	if (Title == TITLE_MENU)
-	{
-		// メニュー
 		Menu();
-	}
+	else if (Title == TITLE_SELECT)
+		StageSelect();
 
 	RNLib::Polygon2D()->Put(D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, RNLib::Window()->GetCenterPos().y, -1.0f), 0.0f, false)
 		->SetSize(1280.0f,720.0f)
@@ -123,11 +123,11 @@ void CMode_Title::Update(void) {
 		break;
 		case TITLE_MENU:
 		{
-			switch (m_nSelectMenu)
+			switch (m_nSelect)
 			{
 			case MENU_GAME:
-				TextClear(TITLE_NEXT);
-				Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::NONE);
+				TextClear(TITLE_SELECT);
+				Manager::StgEd()->FileLoad();
 				break;
 			case MENU_SERRING:
 				break;
@@ -136,6 +136,13 @@ void CMode_Title::Update(void) {
 				PostQuitMessage(0);
 				break;
 			}
+		}
+		break;
+		case TITLE_SELECT:
+		{
+			TextClear(TITLE_NEXT);
+			CMode_Game::SetStage(m_nSelect);
+			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::NONE);
 		}
 		break;
 		}
@@ -204,7 +211,7 @@ void CMode_Title::Menu(void)
 	{
 		if (m_Menu[nCnt] != NULL)
 		{
-			if (nCnt == m_nSelectMenu)
+			if (nCnt == m_nSelect)
 			{
 				m_Menu[nCnt]->SetBoxColor(Color{0,255,0,255});
 			}
@@ -218,15 +225,80 @@ void CMode_Title::Menu(void)
 	// -- メニュー選択 ---------------------------
 	if (RNLib::Input()->GetKeyTrigger(DIK_W) || RNLib::Input()->GetKeyTrigger(DIK_UP) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::UP) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT,CInput::INPUT_ANGLE::UP))
 	{
-		m_nSelectMenu--;
+		m_nSelect--;
 	}
 	else if (RNLib::Input()->GetKeyTrigger(DIK_S) || RNLib::Input()->GetKeyTrigger(DIK_DOWN) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::DOWN) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::DOWN))
 	{
-		m_nSelectMenu++;
+		m_nSelect++;
 	}
 
 	// ループ制御
-	IntLoopControl(&m_nSelectMenu, MENU_MAX, 0);
+	IntLoopControl(&m_nSelect, MENU_MAX, 0);
+}
+
+//========================================
+// ステージ選択の生成
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Title::SelectCreate(void)
+{
+
+}
+
+//========================================
+// ステージ選択
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Title::StageSelect(void)
+{
+	int nMax = Manager::StgEd()->GetStageMax();
+	int nChoiceTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\mark_smiley_000.png");
+	int nNoChoiceTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Circle_005.png");
+
+	m_nStageTex[0] = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage00.png");
+	m_nStageTex[1] = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage01.png");
+	m_nStageTex[2] = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage99.png");
+
+	int nTexIdx = 0;
+
+	// ステージ画像
+	RNLib::Polygon2D()->Put(D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, RNLib::Window()->GetCenterPos().y - 80.0f, -1.0f), 0.0f, false)
+		->SetSize(880.0f, 520.0f)
+		->SetCol(Color{ 255,255,255,255 })
+		->SetTex(m_nStageTex[m_nSelect]);
+
+	// 選択アイコン
+	for (int nCnt = 0; nCnt < nMax; nCnt++)
+	{
+		if (nCnt == m_nSelect)
+		{
+			nTexIdx = nChoiceTex;
+		}
+		else
+		{
+			nTexIdx = nNoChoiceTex;
+		}
+		D3DXVECTOR3 pos = D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, 680,0.0f);
+		pos.x += ((nMax * -0.5f) + nCnt + 0.5f) * 40;
+
+		RNLib::Polygon2D()->Put(pos, 0.0f, false)
+			->SetSize(30.0f, 30.0f)
+			->SetCol(Color{ 255,255,255,255 })
+			->SetTex(nTexIdx);
+	}
+
+	// -- メニュー選択 ---------------------------
+	if (RNLib::Input()->GetKeyTrigger(DIK_A) || RNLib::Input()->GetKeyTrigger(DIK_LEFT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::LEFT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::LEFT))
+	{
+		m_nSelect--;
+	}
+	else if (RNLib::Input()->GetKeyTrigger(DIK_D) || RNLib::Input()->GetKeyTrigger(DIK_RIGHT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::RIGHT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::RIGHT))
+	{
+		m_nSelect++;
+	}
+
+	// ループ制御
+	IntLoopControl(&m_nSelect, MENU_MAX, 0);
 }
 
 //========================================

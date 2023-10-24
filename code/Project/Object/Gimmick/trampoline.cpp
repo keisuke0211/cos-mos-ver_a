@@ -143,21 +143,23 @@ void CTrampoline::Collision(void) {
 			&& p2->side == CPlayer::WORLD_SIDE::BEHIND)
 		{//2pが乗っているか
 
+			CPlayer::SetSwapInterval();
+
 			//ジャンプ量を継承
 			p2->move.y = p1->move.y * 2.5f;
 
-			//ジャンプできない
-			p2->bJump = true;
+			p2->bGround = false;
 		}
 		else if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + width
 			&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + height
 			&& p2->side == CPlayer::WORLD_SIDE::FACE)
 		{
+			CPlayer::SetSwapInterval();
+
 			//ジャンプ量を継承
 			p2->move.y = p1->move.y * 2.5f;
 
-			//ジャンプできない
-			p2->bJump = true;
+			p2->bGround = false;
 		}
 
 		if (m_state == STATE::NONE
@@ -187,21 +189,23 @@ void CTrampoline::Collision(void) {
 			&& p1->side == CPlayer::WORLD_SIDE::FACE)
 		{//1pが乗っているか
 
+			CPlayer::SetSwapInterval();
+
 			//ジャンプ量を継承
 			p1->move.y = p2->move.y * 2.5f;
 
-			//ジャンプできない
-			p1->bJump = true;
+			p1->bGround = false;
 		}
 		else if (p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + width
 			&& p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - height
 			&& p1->side == CPlayer::WORLD_SIDE::BEHIND)
 		{
+			CPlayer::SetSwapInterval();
+
 			//ジャンプ量を継承
 			p1->move.y = p2->move.y * 2.5f;
 
-			//ジャンプできない
-			p1->bJump = true;
+			p1->bGround = false;
 		}
 
 		if (m_state == STATE::NONE

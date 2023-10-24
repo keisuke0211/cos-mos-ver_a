@@ -41,6 +41,7 @@ static const D3DXVECTOR3 s_StarSummonPos[s_StarMaxSummon] = {	// ¯‚ÌoŒ»‚·‚éˆÊ’
 };
 CPlayer *CMode_Game::s_pPlayer = NULL;
 CPlayer* CMode_Game::GetPlayer(void) { return s_pPlayer; }
+int CMode_Game::m_nStageIdx = 0;
 
 //========================================
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
@@ -86,10 +87,9 @@ void CMode_Game::Init(void) {
 
 	// “Çž
 	/* ƒuƒƒbƒN	*/Manager::BlockMgr()->Load();
-	/* ƒXƒe[ƒW	*/Manager::StgEd()->FileLoad();
 
 	// ƒXƒe[ƒW¶¬
-	Manager::StgEd()->StageLoad(0);
+	Manager::StgEd()->StageLoad(m_nStageIdx);
 
 	SetBGColor(COLOR_UP);
 }

@@ -38,6 +38,7 @@ public:
 		int nRowMax;	// 行数の最大
 		int nLineMax;	// 列数の最大
 		int nStageIdx;	// 現在のステージ番号
+		int nStageMax;	// ステージの最大値
 	};
 
 	// *** 関数宣言 ***
@@ -47,7 +48,8 @@ public:
 	/* ステージ切り替え	*/void SwapStage(int nStageIdx);
 
 	// -- 取得 ---------------------------------------------
-	/* 変換 */bool ToData(int &val, CSVFILE *pFile, int nRow, int nLine);
+	/* 最大値	*/int GetStageMax(void) { return m_Info.nStageMax; }
+	/* 変換		*/bool ToData(int &val, CSVFILE *pFile, int nRow, int nLine);
 
 	// -- 読込 ---------------------------------------------
 	/* ファイルパス	*/void FileLoad(void);
