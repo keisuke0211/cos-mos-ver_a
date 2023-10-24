@@ -29,6 +29,7 @@ protected:
 
 private:
 	//========== [[[ 変数宣言 ]]]
+	D3DXMATRIX mtx;				// マトリックス
 	D3DXVECTOR3 m_posOld;		// 前の位置
 	D3DXVECTOR3 m_move;			// 移動量
 	Color m_col;				// 色
