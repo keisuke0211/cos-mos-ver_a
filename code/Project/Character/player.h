@@ -10,6 +10,7 @@
 //前方宣言
 class CStageObject;
 class CMoveBlock;
+class CParts;
 
 //プレイヤークラス
 class CPlayer
@@ -162,6 +163,7 @@ private:
 	void CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock,D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
+	void CollisionParts(Info *pInfo, CParts *pParts);
 
 	//情報更新処理（更新処理の最後に位置情報などを設定する
 	void UpdateInfo(void);
