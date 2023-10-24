@@ -76,11 +76,11 @@ void CMode_Title::Init(void) {
 
 	pFont = { INITCOLOR,70.0f,1,1,-1, };
 	m_Menu[1] = CFontText::Create(CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(340.0f, 100.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
-		"COS/MOS", CFont::FONT_FUWAFUDE, &pFont,false,&pShadow);
+		"COS/MOS", CFont::FONT_ROND_B, &pFont,false,&pShadow);
 
-	pFont = { INITCOLOR,45.0f,5,10,-1 };
+	pFont = { INITCOLOR,70.0f,5,10,-1 };// 45
 	m_Menu[2] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 600.0f, 0.0f),D3DXVECTOR2(1080.0f, 100.0f),
-		"ボタンをおしてはじめてね",CFont::FONT_FUWAFUDE,&pFont, false);
+		"ボタンを押して始めてね",CFont::FONT_ROND_B,&pFont, false);
 }
 
 //========================================
@@ -189,21 +189,21 @@ void CMode_Title::ProcessState(const PROCESS process) {
 //========================================
 void CMode_Title::MenuCreate(void)
 {
-	FormFont pFont = { INITCOLOR,45.0f,5,10,-1};
+	FormFont pFont = { INITCOLOR,55.0f,5,10,-1};// 45
 
 	TextClear(TITLE_MENU);
 
 	m_Menu[0] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 150.0f, 0.0f),D3DXVECTOR2(360.0f, 100.0f),
-		"ゲーム",CFont::FONT_FUWAFUDE,&pFont);
+		CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 150.0f, 0.0f),D3DXVECTOR2(450.0f, 100.0f),// 360,100
+		"ゲーム",CFont::FONT_ROND_B,&pFont);
 
 	m_Menu[1] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 300.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-		"オプション", CFont::FONT_FUWAFUDE, &pFont);
+		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 300.0f, 0.0f), D3DXVECTOR2(450.0f, 100.0f),
+		"オプション", CFont::FONT_ROND_B, &pFont);
 
 	m_Menu[2] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 450.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-		"ゲームをやめる", CFont::FONT_FUWAFUDE, &pFont);
+		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 450.0f, 0.0f), D3DXVECTOR2(450.0f, 100.0f),
+		"ゲームをやめる", CFont::FONT_ROND_B, &pFont);
 }
 
 //========================================
@@ -257,10 +257,10 @@ void CMode_Title::SelectCreate(void)
 	sprintf(m_StageType[2].Text, "シリウス");
 
 	TextClear(TITLE_SELECT);
-	FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
+	FormFont pFont = { INITCOLOR,65.0f,5,10,-1 };// 45
 	m_Menu[0] = CFontText::Create(
 		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-		m_StageType[0].Text, CFont::FONT_FUWAFUDE, &pFont);
+		m_StageType[0].Text, CFont::FONT_ROND_B, &pFont);
 }
 
 //========================================
@@ -323,10 +323,10 @@ void CMode_Title::StageSelect(void)
 		IntLoopControl(&m_nSelect, nMax, 0);
 
 		TextClear(TITLE_SELECT);
-		FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
+		FormFont pFont = { INITCOLOR,65.0f,5,10,-1 };
 		m_Menu[0] = CFontText::Create(
 			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-			m_StageType[m_nSelect].Text, CFont::FONT_FUWAFUDE, &pFont);
+			m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);
 	}
 	else if (RNLib::Input()->GetKeyTrigger(DIK_D) || RNLib::Input()->GetKeyTrigger(DIK_RIGHT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::RIGHT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::RIGHT))
 	{
@@ -334,10 +334,10 @@ void CMode_Title::StageSelect(void)
 		IntLoopControl(&m_nSelect, nMax, 0);
 
 		TextClear(TITLE_SELECT);
-		FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
+		FormFont pFont = { INITCOLOR,65.0f,5,10,-1 };
 		m_Menu[0] = CFontText::Create(
 			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-			m_StageType[m_nSelect].Text, CFont::FONT_FUWAFUDE, &pFont);
+			m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);
 	}
 
 	// ループ制御

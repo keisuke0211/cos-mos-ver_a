@@ -12,7 +12,7 @@
 const char* CFont::s_FileName[] =
 {
 	"data/FONT/851Gkktt.ttf",
-	"data/FONT/FuwaFude.ttf",
+	"data/FONT/Ronde-B_square.otf",
 	"data/FONT/meiryob.ttc",
 };
 static_assert(sizeof(CFont::s_FileName) / sizeof(CFont::s_FileName[0]) == CFont::FONT_MAX, "bagu");
@@ -21,7 +21,7 @@ static_assert(sizeof(CFont::s_FileName) / sizeof(CFont::s_FileName[0]) == CFont:
 const char* CFont::s_FontName[] =
 {
 	"851ゴチカクット",
-	"ふわふで",
+	"ロンド B スクエア",
 	"メイリオ",
 };
 static_assert(sizeof(CFont::s_FontName) / sizeof(CFont::s_FontName[0]) == CFont::FONT_MAX, "aho");
