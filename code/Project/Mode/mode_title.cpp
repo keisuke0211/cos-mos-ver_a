@@ -6,6 +6,7 @@
 //========================================
 #include "../main.h"
 #include "mode_title.h"
+#include "mode_game.h"
 #include "../System/words/words.h"
 #include "../System/words/font-text.h"
 
@@ -21,7 +22,13 @@
 //========================================
 CMode_Title::CMode_Title(void) {
 	m_TexIdx = 0;
-	m_nSelectMenu = 0;
+	m_nSelect = 0;
+
+	for (int nCnt = 0; nCnt < 3; nCnt++)
+	{
+		m_StageType[0].nTex = 0;
+		m_StageType[0].Text[TXT_MAX] = NULL;
+	}
 }
 
 //========================================
@@ -44,7 +51,7 @@ void CMode_Title::Init(void) {
 		m_Menu[nCnt] = {NULL};
 	}
 	Title = TITLE_OUTSET;
-	m_nSelectMenu = 0;
+	m_nSelect = 0;
 
 	m_TexIdx = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\title.jpg");
 
@@ -73,7 +80,7 @@ void CMode_Title::Init(void) {
 
 	pFont = { INITCOLOR,45.0f,5,10,-1 };
 	m_Menu[2] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 600.0f, 0.0f),D3DXVECTOR2(1080.0f, 100.0f),
-		"ENTERを押して始めてね!!",CFont::FONT_851GKKTT,&pFont, false);
+		"ボタンをおしてはじめてね",CFont::FONT_MARUKOIAS,&pFont, false);
 }
 
 //========================================
@@ -101,10 +108,9 @@ void CMode_Title::Update(void) {
 	CMode::Update();
 
 	if (Title == TITLE_MENU)
-	{
-		// メニュー
 		Menu();
-	}
+	else if (Title == TITLE_SELECT)
+		StageSelect();
 
 	RNLib::Polygon2D()->Put(D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, RNLib::Window()->GetCenterPos().y, -1.0f), 0.0f, false)
 		->SetSize(1280.0f,720.0f)
@@ -123,11 +129,11 @@ void CMode_Title::Update(void) {
 		break;
 		case TITLE_MENU:
 		{
-			switch (m_nSelectMenu)
+			switch (m_nSelect)
 			{
 			case MENU_GAME:
-				TextClear(TITLE_NEXT);
-				Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::NONE);
+				SelectCreate();
+				Manager::StgEd()->FileLoad();
 				break;
 			case MENU_SERRING:
 				break;
@@ -136,6 +142,13 @@ void CMode_Title::Update(void) {
 				PostQuitMessage(0);
 				break;
 			}
+		}
+		break;
+		case TITLE_SELECT:
+		{
+			TextClear(TITLE_NEXT);
+			CMode_Game::SetStage(m_nSelect);
+			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::NONE);
 		}
 		break;
 		}
@@ -182,15 +195,15 @@ void CMode_Title::MenuCreate(void)
 
 	m_Menu[0] = CFontText::Create(
 		CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 150.0f, 0.0f),D3DXVECTOR2(360.0f, 100.0f),
-		"ゲーム",CFont::FONT_851GKKTT,&pFont);
+		"ゲーム",CFont::FONT_MARUKOIAS,&pFont);
 
 	m_Menu[1] = CFontText::Create(
 		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 300.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-		"設定", CFont::FONT_851GKKTT, &pFont);
+		"オプション", CFont::FONT_MARUKOIAS, &pFont);
 
 	m_Menu[2] = CFontText::Create(
 		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 450.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-		"ゲームをやめる", CFont::FONT_851GKKTT, &pFont);
+		"ゲームをやめる", CFont::FONT_MARUKOIAS, &pFont);
 }
 
 //========================================
@@ -204,7 +217,7 @@ void CMode_Title::Menu(void)
 	{
 		if (m_Menu[nCnt] != NULL)
 		{
-			if (nCnt == m_nSelectMenu)
+			if (nCnt == m_nSelect)
 			{
 				m_Menu[nCnt]->SetBoxColor(Color{0,255,0,255});
 			}
@@ -218,15 +231,117 @@ void CMode_Title::Menu(void)
 	// -- メニュー選択 ---------------------------
 	if (RNLib::Input()->GetKeyTrigger(DIK_W) || RNLib::Input()->GetKeyTrigger(DIK_UP) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::UP) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT,CInput::INPUT_ANGLE::UP))
 	{
-		m_nSelectMenu--;
+		m_nSelect--;
 	}
 	else if (RNLib::Input()->GetKeyTrigger(DIK_S) || RNLib::Input()->GetKeyTrigger(DIK_DOWN) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::DOWN) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::DOWN))
 	{
-		m_nSelectMenu++;
+		m_nSelect++;
 	}
 
 	// ループ制御
-	IntLoopControl(&m_nSelectMenu, MENU_MAX, 0);
+	IntLoopControl(&m_nSelect, MENU_MAX, 0);
+}
+
+//========================================
+// ステージ選択の生成
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Title::SelectCreate(void)
+{
+	m_StageType[0].nTex = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage00.png");
+	m_StageType[1].nTex = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage01.png");
+	m_StageType[2].nTex = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\Stage99.png");
+
+	sprintf(m_StageType[0].Text, "ポラリス");
+	sprintf(m_StageType[1].Text, "レグルス");
+	sprintf(m_StageType[2].Text, "シリウス");
+
+	TextClear(TITLE_SELECT);
+	FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
+	m_Menu[0] = CFontText::Create(
+		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
+		m_StageType[0].Text, CFont::FONT_MARUKOIAS, &pFont);
+}
+
+//========================================
+// ステージ選択
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Title::StageSelect(void)
+{
+	int nMax = Manager::StgEd()->GetStageMax();
+	int nChoiceTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\mark_smiley_000.png");
+	int nNoChoiceTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Circle_005.png");
+	int nPrevTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Arrow_01.png");
+	int nNextTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Arrow_00.png");
+
+	int nTexIdx = 0;
+
+	// ステージ画像
+	RNLib::Polygon2D()->Put(D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, RNLib::Window()->GetCenterPos().y - 120.0f, -1.0f), 0.0f, false)
+		->SetSize(880.0f, 480.0f)
+		->SetCol(Color{ 255,255,255,255 })
+		->SetTex(m_StageType[m_nSelect].nTex);
+
+	if (m_nSelect != 0)
+	{
+		RNLib::Polygon2D()->Put(D3DXVECTOR3(400.0f, 550.0f, 0.0), 0.0f, false)
+			->SetSize(100.0f, 100.0f)
+			->SetCol(Color{ 50,255,0,255 })
+			->SetTex(nPrevTex);
+	}
+	if(m_nSelect != nMax - 1)
+	RNLib::Polygon2D()->Put(D3DXVECTOR3(880.0f, 550.0f, 0.0), 0.0f, false)
+		->SetSize(100.0f, 100.0f)
+		->SetCol(Color{ 50,255,0,255 })
+		->SetTex(nNextTex);
+
+	// 選択アイコン
+	for (int nCnt = 0; nCnt < nMax; nCnt++)
+	{
+		if (nCnt == m_nSelect)
+		{
+			nTexIdx = nChoiceTex;
+		}
+		else
+		{
+			nTexIdx = nNoChoiceTex;
+		}
+		D3DXVECTOR3 pos = D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, 680,0.0f);
+		pos.x += ((nMax * -0.5f) + nCnt + 0.5f) * 50;
+
+		RNLib::Polygon2D()->Put(pos, 0.0f, false)
+			->SetSize(40.0f, 40.0f)
+			->SetCol(Color{ 255,255,255,255 })
+			->SetTex(nTexIdx);
+	}
+
+	// -- メニュー選択 ---------------------------
+	if (RNLib::Input()->GetKeyTrigger(DIK_A) || RNLib::Input()->GetKeyTrigger(DIK_LEFT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::LEFT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::LEFT))
+	{
+		m_nSelect--;
+		IntLoopControl(&m_nSelect, nMax, 0);
+
+		TextClear(TITLE_SELECT);
+		FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
+		m_Menu[0] = CFontText::Create(
+			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
+			m_StageType[m_nSelect].Text, CFont::FONT_MARUKOIAS, &pFont);
+	}
+	else if (RNLib::Input()->GetKeyTrigger(DIK_D) || RNLib::Input()->GetKeyTrigger(DIK_RIGHT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::RIGHT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::RIGHT))
+	{
+		m_nSelect++;
+		IntLoopControl(&m_nSelect, nMax, 0);
+
+		TextClear(TITLE_SELECT);
+		FormFont pFont = { INITCOLOR,45.0f,5,10,-1 };
+		m_Menu[0] = CFontText::Create(
+			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
+			m_StageType[m_nSelect].Text, CFont::FONT_MARUKOIAS, &pFont);
+	}
+
+	// ループ制御
+	IntLoopControl(&m_nSelect, nMax, 0);
 }
 
 //========================================

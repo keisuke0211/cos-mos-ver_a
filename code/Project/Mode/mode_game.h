@@ -35,6 +35,13 @@ public:
 	void BackGroundPut  (Color mincol, Color addcol);
 	static CPlayer* GetPlayer(void);
 
+	// -- ê›íË -------------------------------------------------------------------
+	static void SetStage(int Idx) { m_nStageIdx = Idx; }
+
+	// -- éÊìæ -------------------------------------------------------------------
+	static int GetStage(void) { return m_nStageIdx; }
+
 private:
 	static CPlayer *s_pPlayer;
+	static int m_nStageIdx;
 };

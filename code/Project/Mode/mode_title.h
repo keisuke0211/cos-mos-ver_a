@@ -30,6 +30,7 @@ public:
 	{
 		TITLE_OUTSET = 0,	// タイトル
 		TITLE_MENU,			// メニュー
+		TITLE_SELECT,		// ステージ選択
 		TITLE_NEXT,			// 次の画面に移動 
 		TITLE_MAX
 	};
@@ -43,6 +44,15 @@ public:
 		MENU_MAX
 	};
 
+	// *** 情報構造体 ***
+
+	// ステージ種類情報
+	struct StageType
+	{
+		int nTex;				// 画像
+		char Text[TXT_MAX];		// ステージ名
+	};
+
 	// *** 関数 ***
 	CMode_Title();
 	~CMode_Title();
@@ -53,14 +63,17 @@ public:
 
 private:
 	// *** 関数 ***
-	/* メニュー生成 */void MenuCreate(void);
-	/* メニュー		*/void Menu(void);
-	/* テキスト削除 */void TextClear(TITLE aTitle);
+	/* メニュー生成			*/void MenuCreate(void);
+	/* メニュー				*/void Menu(void);
+	/* ステージ選択生成		*/void SelectCreate(void);
+	/* ステージ選択			*/void StageSelect(void);
+	/* テキスト削除			*/void TextClear(TITLE aTitle);
 
 	// *** 変数 ***
 	TITLE Title;						// 現在のモード
 	int m_TexIdx;
-	int m_nSelectMenu;
+	int m_nSelect;
 	CFontText *m_Menu[MENU_MAX];		// メニューテキスト
 	CWords *m_Words[4];					// タイトル
+	StageType m_StageType[3];
 };

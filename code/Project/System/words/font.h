@@ -27,6 +27,7 @@ public:
 	enum FONT
 	{
 		FONT_851GKKTT = 0,
+		FONT_MARUKOIAS,
 		FONT_MEIRIO,
 		FONT_MAX,
 		FONT_NONE,

@@ -79,20 +79,21 @@ void CStageEditor::FileLoad(void)
 
 		if (!strcmp(aDataSearch, "NUM_STAGE"))
 		{
-			int nMaxType = -1;
+			int nMax = -1;
 
 			fscanf(pFile, "%s", &aDataSearch[0]);
-			fscanf(pFile, "%d", &nMaxType);		// Å‘å”
+			fscanf(pFile, "%d", &nMax);		// Å‘å”
 
-			if (nMaxType <= 0)
+			if (nMax <= 0)
 			{
-				nMaxType = 0;
+				nMax = 0;
 			}
 
-			m_StageType = new StageType[nMaxType];
+			m_Info.nStageMax = nMax;
+			m_StageType = new StageType[nMax];
 			assert(m_StageType != NULL);
 
-			m_nStageMax = nMaxType;	// Å‘å”‚Ì•Û‘¶
+			m_nStageMax = nMax;	// Å‘å”‚Ì•Û‘¶
 		}
 		else if (!strcmp(aDataSearch, "STAGE"))
 		{

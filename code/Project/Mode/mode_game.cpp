@@ -41,6 +41,7 @@ static const D3DXVECTOR3 s_StarSummonPos[s_StarMaxSummon] = {	// ¯‚ÌoŒ»‚·‚éˆÊ’
 };
 CPlayer *CMode_Game::s_pPlayer = NULL;
 CPlayer* CMode_Game::GetPlayer(void) { return s_pPlayer; }
+int CMode_Game::m_nStageIdx = 0;
 
 //========================================
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
@@ -76,6 +77,8 @@ void CMode_Game::Init(void) {
 
 	Manager::BlockMgr()->Load();
 	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(-250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
+	Manager::BlockMgr()->ShiningWaveCreate();
+	Manager::BlockMgr()->RoadTripLaserCreate(D3DXVECTOR3(250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
 
 	BackGroundPut(Color{ 100,100,100,255 }, Color{ 100,100,100,255 });
 
@@ -84,10 +87,9 @@ void CMode_Game::Init(void) {
 
 	// “Ç
 	/* ƒuƒƒbƒN	*/Manager::BlockMgr()->Load();
-	/* ƒXƒe[ƒW	*/Manager::StgEd()->FileLoad();
 
 	// ƒXƒe[ƒW¶¬
-	Manager::StgEd()->StageLoad(0);
+	Manager::StgEd()->StageLoad(m_nStageIdx);
 
 	SetBGColor(COLOR_UP);
 }
@@ -184,7 +186,7 @@ void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 		type = (CPlanet::STAR_TYPE)(rand() % (int)CPlanet::STAR_TYPE::MAX);	// í—Ş‚Ìİ’è
 		col = Color{ mincol.r + rand() % addcol.r,mincol.g + rand() % addcol.g,mincol.b + rand() % addcol.b,255 };	// F‚Ìİ’è
 		rot = D3DXVECTOR3(rand() % 6 - 3, rand() % 6 - 3, rand() % 6 - 3);	// Œü‚«‚Ìİ’è
-		Manager::BlockMgr()->PlanetCreate(Planpos, rot, type, col);	// ˜f¯‚Ì¶¬
+		//Manager::BlockMgr()->PlanetCreate(Planpos, rot, type, col);	// ˜f¯‚Ì¶¬
 	}
 
 	for (int nCntPut = 0; nCntPut < s_StarMaxSummon; nCntPut++)
@@ -193,6 +195,6 @@ void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 		Starpos = s_StarSummonPos[nCntPut];	// oŒ»‚·‚éˆÊ’u‚Ìİ’è
 		Starpos += D3DXVECTOR3(rand() % 50 - 50, rand() % 50 - 50, 0.0f);	// ˆÊ’u‚Ìİ’è
 
-		Manager::BlockMgr()->StarCreate(Starpos, INITD3DXVECTOR3);	// ¯‚Ì¶¬
+		//Manager::BlockMgr()->StarCreate(Starpos, INITD3DXVECTOR3);	// ¯‚Ì¶¬
 	}
 }
