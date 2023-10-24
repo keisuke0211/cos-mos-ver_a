@@ -187,12 +187,12 @@ void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 		Manager::BlockMgr()->PlanetCreate(Planpos, rot, type, col);	// 惑星の生成
 	}
 
-	//for (int nCntPut = 0; nCntPut < s_StarMaxSummon; nCntPut++)
-	//{
-	//	// 星の設定
-	//	Starpos = s_StarSummonPos[nCntPut];	// 出現する位置の設定
-	//	Starpos += D3DXVECTOR3(rand() % 50 - 50, rand() % 50 - 50, 0.0f);	// 位置の設定
+	for (int nCntPut = 0; nCntPut < s_StarMaxSummon; nCntPut++)
+	{
+		// 星の設定
+		Starpos = s_StarSummonPos[nCntPut];	// 出現する位置の設定
+		Starpos += D3DXVECTOR3(rand() % 50 - 50, rand() % 50 - 50, 0.0f);	// 位置の設定
 
-	//	Manager::BlockMgr()->StarCreate(Starpos, INITD3DXVECTOR3);	// 星の生成
-	//}
+		Manager::BlockMgr()->StarCreate(Starpos, INITD3DXVECTOR3);	// 星の生成
+	}
 }
