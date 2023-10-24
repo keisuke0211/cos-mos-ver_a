@@ -4,7 +4,7 @@
 // Author:KOMURO HIROMU
 // 
 //========================================
-#include "Planet.h"
+#include "Star.h"
 #include "../../main.h"
 
 //================================================================================
@@ -19,7 +19,7 @@ static const float s_PosOver = 100.0f;
 //========================================
 // コンストラクタ
 //========================================
-CPlanet::CPlanet(void) {
+CStar::CStar(void) {
 	Manager::BlockMgr()->AddList(this);
 
 	m_type = TYPE::BACKGROUND;	// 種類の設定
@@ -38,7 +38,7 @@ CPlanet::CPlanet(void) {
 //========================================
 // デストラクタ
 //========================================
-CPlanet::~CPlanet(void) {
+CStar::~CStar(void) {
 
 }
 
@@ -46,7 +46,7 @@ CPlanet::~CPlanet(void) {
 // 初期化処理
 // Author:KOMURO HIROMU
 //========================================
-void CPlanet::Init(void) {
+void CStar::Init(void) {
 	//ModelIdx = RNLib::Model()->Load(s_modelPaths[(int)m_Star_type]);
 
 	m_posOld = m_pos;
@@ -56,7 +56,7 @@ void CPlanet::Init(void) {
 // 終了処理
 // Author:KOMURO HIROMU
 //========================================
-void CPlanet::Uninit(void) {
+void CStar::Uninit(void) {
 
 }
 
@@ -64,7 +64,7 @@ void CPlanet::Uninit(void) {
 // 更新処理
 // Author:KOMURO HIROMU
 //========================================
-void CPlanet::Update(void) {
+void CStar::Update(void) {
 
 	m_moveCounter++;	// カウンターを進める
 
@@ -83,9 +83,9 @@ void CPlanet::Update(void) {
 	{
 		m_move *= -1;
 	}
-	
-	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
-		->SetCol(m_col);
+
+	//RNLib::Polygon3D()->Put;
+
 		
 }
 
@@ -93,7 +93,7 @@ void CPlanet::Update(void) {
 // 描画処理
 // Author:KOMURO HIROMU
 //========================================
-void CPlanet::Draw(void) {
+void CStar::Draw(void) {
 
 
 }

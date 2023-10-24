@@ -12,11 +12,11 @@
 // クラス定義
 //****************************************
 // 惑星の情報構造体
-class CPlanet : public CStageObject {
+class CStar : public CStageObject {
 public:
 	//========== [[[ 関数宣言 ]]]
-	CPlanet();
-	virtual        ~CPlanet();
+	CStar();
+	virtual        ~CStar();
 	virtual void   Init(void);
 	virtual void   Uninit(void);
 	virtual void   Update(void);
