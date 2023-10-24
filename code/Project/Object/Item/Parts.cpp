@@ -24,6 +24,7 @@ CParts::CParts(void) {
 							// ‘å‚«‚³‚ÌÝ’è
 	m_width = SIZE_OF_1_SQUARE * 2;
 	m_height = SIZE_OF_1_SQUARE * 2;
+	m_bDisp = true;
 
 	// Šeî•ñ‚Ì‰Šú‰»
 	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Rocket_Engine_break.x");
@@ -56,9 +57,11 @@ void CParts::Uninit(void) {
 
 //========================================
 // XVˆ—
-// Author:KOMURO HIROMU
+// Author:KOMURO HIROMU (Hirasawa Shion)
 //========================================
 void CParts::Update(void) {
+	
+	if (!m_bDisp) return;
 
 	m_rot += PARTS_ADDROT;	// ‰ñ“]‚ÌˆÚ“®—Ê‚Ì‘‰Á
 	float fBrightness = fabsf(m_rot.y) / (D3DX_PI * 0.5f);
@@ -78,8 +81,7 @@ void CParts::Update(void) {
 	}
 
 	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
-		->SetCol(Color{ 0,(int)(255* fBrightness),255,255 })
-		;
+	->SetCol(Color{ 0,(int)(255* fBrightness),255,255 });
 }
 
 //========================================

@@ -326,14 +326,15 @@ void CPlayer::WholeCollision(void)
 			{
 				//プレイヤーの近くにオブジェクトがあるか判定
 				{
+					//オブジェクトへの距離を計算
 					const D3DXVECTOR3 PosDiff = POS - Player.pos;
 					const float fLength = D3DXVec3Length(&PosDiff);
 
+					//双方のサイズの合計を計算
 					const float fWIDTH_SUM = WIDTH + SIZE_WIDTH;
 					const float fHEIGHT_SUM = HEIGHT + SIZE_WIDTH;
 
-					float flength = sqrtf(fWIDTH_SUM * fWIDTH_SUM + fHEIGHT_SUM * fHEIGHT_SUM);
-
+					//オブジェクトとの距離がサイズの合計値以下なら当たり判定を実行
 					if (fLength > sqrtf(fWIDTH_SUM * fWIDTH_SUM + fHEIGHT_SUM * fHEIGHT_SUM)) continue;
 				}
 
@@ -673,7 +674,10 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 //----------------------------
 void CPlayer::CollisionParts(Info *pInfo, CParts *pParts)
 {
+	if (!pParts->GetDisp()) return;
 
+	//取得したので描画OFF
+	pParts->DispSwitch(false);
 }
 
 //========================
