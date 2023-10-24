@@ -26,7 +26,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hInstancePrev, LPSTR IpCmdLine
 
 		switch (RNLib::GetSignal()) {
 		case RNLib::SIGNAL::INIT:
-			Manager::Init(CMode::TYPE::GAME);
+			Manager::Init(CMode::TYPE::TITLE);
 			break;
 		case RNLib::SIGNAL::UNINIT:
 			Manager::Uninit();

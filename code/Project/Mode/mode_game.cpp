@@ -63,7 +63,7 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
-	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(0.0f, 100.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f),100.0f);
+	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(-250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
 
 	BackGroundPut(Color{ 100,100,100,255 }, Color{ 100,100,100,255 });
 
@@ -106,8 +106,8 @@ void CMode_Game::Update(void) {
 	if (s_pPlayer != NULL)
 		s_pPlayer->Update();
 
-	/*if (RNLib::Input()->KeyTrigger(DIK_RETURN))
-		Manager::StgEd()->SwapStage(1);*/
+	if (RNLib::Input()->GetKeyTrigger(DIK_RETURN))
+		Manager::StgEd()->SwapStage(1);
 
 	if (RNLib::Input()->GetKeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
 		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::FADE);

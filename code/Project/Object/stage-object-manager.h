@@ -31,7 +31,7 @@ public:
 	virtual~CStageObjectMgr();
 	virtual void Update(void);	void Load(void);
 	CBlock      *BlockCreate     (D3DXVECTOR3 pos);
-	CFillBlock  *FillBlockCreate(D3DXVECTOR3 pos);
+	CFillBlock  *FillBlockCreate(D3DXVECTOR3 pos,CFillBlock::FILL_TYPE type);
 	CSpike      *SpikeCreate	 (D3DXVECTOR3 pos);
 	CTrampoline *TrampolineCreate(D3DXVECTOR3 pos);
 	CMeteor     *MeteorCreate    (D3DXVECTOR3 pos, D3DXVECTOR3 move);

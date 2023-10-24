@@ -43,7 +43,7 @@ CMode_Logo::~CMode_Logo(void) {
 void CMode_Logo::Init(void) {
 	CMode::Init();
 
-	m_TexLogo = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\title-logo.PNG");
+	m_TexLogo = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\TeamLogo.PNG");
 
 	// ó‘ÔÝ’è
 	SetState((int)STATE::NONE);
@@ -80,7 +80,7 @@ void CMode_Logo::Update(void) {
 		static void FillScreen(const float& fRate) {
 			RNLib::Polygon2D()->Put(RNLib::Window()->GetCenterPos(), 0.0f)
 				->SetCol(Color{ 255,255,255,(int)(255 * fRate) })
-				->SetSize(RNLib::Window()->GetWidth(), RNLib::Window()->GetHeight())
+				->SetSize(480, 480)
 				->SetTex(m_TexLogo);
 		}
 	};

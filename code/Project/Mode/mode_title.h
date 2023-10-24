@@ -9,17 +9,41 @@
 #include "../../_RNLib/RNlib.h"
 
 //****************************************
+// 前方宣言
+//****************************************
+class CWords;
+class CFontText;
+
+//****************************************
 // クラス定義
 //****************************************
 // モード(タイトル)クラス
 class CMode_Title :public CMode {
 public:
-	//========== [[[ 列挙型定義 ]]]
+	// *** 列挙型 ***
 	enum class STATE {
 		NONE,
 	};
 
-	//========== [[[ 関数宣言 ]]]
+	// タイトルモード
+	enum TITLE
+	{
+		TITLE_OUTSET = 0,	// タイトル
+		TITLE_MENU,			// メニュー
+		TITLE_NEXT,			// 次の画面に移動 
+		TITLE_MAX
+	};
+
+	// メニュー
+	enum MENU
+	{
+		MENU_GAME = 0,	// ゲーム
+		MENU_SERRING,	// 設定
+		MENU_END,		// 終了
+		MENU_MAX
+	};
+
+	// *** 関数 ***
 	CMode_Title();
 	~CMode_Title();
 	void  Init(void);
@@ -28,5 +52,15 @@ public:
 	void  ProcessState(const PROCESS process);
 
 private:
+	// *** 関数 ***
+	/* メニュー生成 */void MenuCreate(void);
+	/* メニュー		*/void Menu(void);
+	/* テキスト削除 */void TextClear(TITLE aTitle);
+
+	// *** 変数 ***
+	TITLE Title;						// 現在のモード
 	int m_TexIdx;
+	int m_nSelectMenu;
+	CFontText *m_Menu[MENU_MAX];		// メニューテキスト
+	CWords *m_Words[4];					// タイトル
 };

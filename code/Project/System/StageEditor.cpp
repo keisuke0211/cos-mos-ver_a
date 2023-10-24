@@ -227,12 +227,12 @@ void CStageEditor::SetStage(int nType)
 {
 	if (nType >= 0)
 	{
-		float nSizeX = CStageObject::SIZE_OF_1_SQUARE;
-		float nSizeY = CStageObject::SIZE_OF_1_SQUARE;
+		float fSizeX = CStageObject::SIZE_OF_1_SQUARE;
+		float fSizeY = CStageObject::SIZE_OF_1_SQUARE;
 		D3DXVECTOR3 pos = RNLib::Camera3D()->GetPosR();
 
-		pos.x += ((m_Info.nLineMax * -0.5f) + m_Info.nLine + 0.5f) * nSizeX;
-		pos.y -= ((m_Info.nRowMax * -0.5f) + m_Info.nRow + 0.5f) * nSizeY;
+		pos.x += ((m_Info.nLineMax * -0.5f) + m_Info.nLine + 0.5f) * fSizeX;
+		pos.y -= ((m_Info.nRowMax * -0.5f) + m_Info.nRow + 0.5f) * fSizeY;
 
 		pos.z = 0.0f/* + fRand() * 4.0f*/;
 
@@ -242,11 +242,9 @@ void CStageEditor::SetStage(int nType)
 		case TYPE_BLOCK:
 			Manager::BlockMgr()->BlockCreate(pos);
 			break;
-		case TYPE_FILL_BLOCK:
-			Manager::BlockMgr()->FillBlockCreate(pos);
 			break;
 		case TYPE_TRAMPOLINE:
-			pos.x += nSizeX / 2;
+			pos.x += fSizeX / 2;
 			Manager::BlockMgr()->TrampolineCreate(pos);
 			break;
 		case TYPE_SPIKE:
@@ -256,24 +254,42 @@ void CStageEditor::SetStage(int nType)
 			Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),0.0f);
 			break;
 		case TYPE_Meteor:
-			pos.x += nSizeX;
-			pos.y -= nSizeY;
+			pos.x += fSizeX;
+			pos.y -= fSizeY;
 			Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			break;
+		case TYPE_FILL_BLOCK_11:
+			Manager::BlockMgr()->FillBlockCreate(pos, CFillBlock::FILL_TYPE::FILL_1x1);
+			break;
+		case TYPE_FILL_BLOCK_22:
+			pos.x += fSizeX * 0.5f;
+			pos.y -= fSizeY * 0.5f;
+			Manager::BlockMgr()->FillBlockCreate(pos, CFillBlock::FILL_TYPE::FILL_2x2);
+			break;
+		case TYPE_FILL_BLOCK_33:
+			pos.x += fSizeX;
+			pos.y -= fSizeY;
+			Manager::BlockMgr()->FillBlockCreate(pos, CFillBlock::FILL_TYPE::FILL_3x3);
+			break;
+		case TYPE_FILL_BLOCK_44:
+			pos.x += fSizeX * 1.5f;
+			pos.y -= fSizeY * 1.5f;
+			Manager::BlockMgr()->FillBlockCreate(pos, CFillBlock::FILL_TYPE::FILL_4x4);
+			break;
 		case TYPE_PLAYER_0:
-			pos.y += nSizeY / 2;
+			pos.y += fSizeY * 0.5f;
 			CMode_Game::GetPlayer()->SetPos(0, pos);
 			break;
 		case TYPE_PLAYER_1:
-			pos.y += -nSizeY / 2;
+			pos.y += -fSizeY * 0.5f;
 			CMode_Game::GetPlayer()->SetPos(1, pos);
 			break;
 		case TYPE_PARTS:
 			Manager::BlockMgr()->PartsCreate(pos);
 			break;
 		case TYPE_GOAL:
-			pos.x += nSizeX;
-			pos.y -= nSizeY;
+			pos.x += fSizeX;
+			pos.y -= fSizeY;
 			Manager::BlockMgr()->RocketCreate(pos);
 			break;
 		}

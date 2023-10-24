@@ -4,6 +4,7 @@
 // Author:RIKU NISHIMURA
 // 
 //========================================
+#include "System\words\object\font-object.h"
 #include "main.h"
 
 //****************************************
@@ -15,6 +16,7 @@ namespace {
 	CMode::TYPE m_reserveModeType;
 	CStageObjectMgr   m_blockMgr;
 	CStageEditor m_StgEd;
+	CFont m_Font;
 }
 
 //================================================================================
@@ -24,6 +26,7 @@ namespace {
 //================================================================================
 CStageObjectMgr* Manager::BlockMgr(void) { return &m_blockMgr; }
 CStageEditor* Manager::StgEd(void) { return &m_StgEd; }
+CFont* Manager::Font(void) { return &m_Font; }
 
 //========================================
 // 初期化処理
@@ -33,6 +36,9 @@ void Manager::Init(CMode::TYPE mode) {
 
 	// モード設定
 	SetMode(mode);
+
+	//使用するコントローラーの数を指定する
+	RNLib::Input()->SetJoyPadNum(2);
 }
 
 //========================================
@@ -46,6 +52,9 @@ void Manager::Uninit(void) {
 		m_modeObj->Uninit();
 		RNLib::Memory()->Release(&m_modeObj);
 	}
+
+	// フォントオブジェクトの終了処理
+	CFontObject::UpdateAll();
 }
 
 //========================================
@@ -68,6 +77,9 @@ void Manager::Update(void) {
 		m_modeObj->Update();
 		m_modeObj->ProcessState(PROCESS::UPDATE);
 	}
+
+	// フォントオブジェクトの更新処理
+	CFontObject::UpdateAll();
 }
 
 //========================================

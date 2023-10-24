@@ -10,6 +10,7 @@
 #include "polygon2D.h"
 #include "polygon3D.h"
 #include "model.h"
+#include "text2D.h"
 #include "text3D.h"
 #include "../../RNmain.h"
 #include "../Mechanical/memory.h"
@@ -62,6 +63,8 @@ public:
 		int                      m_polygon2DRegistInfoNum;
 		CPolygon3D::CRegistInfo* m_polygon3DRegistInfos; 
 		int                      m_polygon3DRegistInfoNum;
+		CText2D::CRegistInfo*    m_text2DRegistInfos;
+		int                      m_text2DRegistInfoNum;
 		CText3D::CRegistInfo*    m_text3DRegistInfos;
 		int                      m_text3DRegistInfoNum;
 		CModel::CRegistInfo*     m_modelRegistInfos;
@@ -79,6 +82,7 @@ public:
 	void Draw(LPDIRECT3DDEVICE9& device, const bool& isOnScreen);
 	CPolygon2D::CRegistInfo* PutPolygon2D(const D3DXVECTOR3& pos, const float& angle, const bool& isOnScreen);
 	CPolygon3D::CRegistInfo* PutPolygon3D(const D3DXMATRIX& mtx, const bool& isOnScreen);
+	CText2D::CRegistInfo*    PutText2D   (const D3DXVECTOR2& pos, const float& angle, const bool& isOnScreen);
 	CText3D::CRegistInfo*    PutText3D   (const D3DXMATRIX& mtx, const bool& isOnScreen);
 	CModel::CRegistInfo*     PutModel    (const D3DXMATRIX& mtx, const bool& isOnScreen);
 
@@ -93,6 +97,7 @@ private:
 	void ConvDrawInfoToVertex3DInfo(VERTEX_3D* vtxs, CDrawInfoSum& drawInfoSum);
 	CPolygon2D::CRegistInfo& RegistPolygon2D(CRegistInfoSum& resistInfo);
 	CPolygon3D::CRegistInfo& RegistPolygon3D(CRegistInfoSum& resistInfo);
+	CText2D::CRegistInfo&    RegistText2D   (CRegistInfoSum& resistInfo);
 	CText3D::CRegistInfo&    RegistText3D   (CRegistInfoSum& resistInfo);
 	CModel::CRegistInfo&     RegistModel    (CRegistInfoSum& resistInfo);
 

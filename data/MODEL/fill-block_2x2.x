@@ -244,7 +244,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTUTE\\rock.jpg";
+    "data\\TEXTURE\\rock.jpg";
    }
   }
   Material {
@@ -253,7 +253,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "data\\TEXTUTE\\rock.jpg";
+    "data\\TEXTURE\\rock.jpg";
    }
   }
  }
