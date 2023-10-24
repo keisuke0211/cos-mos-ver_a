@@ -267,3 +267,22 @@ CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CPlanet
 
 	return pObj;
 }
+
+//========================================
+// ¯
+//========================================
+CStar *CStageObjectMgr::StarCreate(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
+{
+	CStar *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CStar;
+
+	// ‰Šú‰»ˆ—
+	pObj->SetPos(pos);
+	pObj->SetRot(rot);
+	pObj->Init();
+
+
+	return pObj;
+}
