@@ -41,6 +41,7 @@ static const D3DXVECTOR3 s_StarSummonPos[s_StarMaxSummon] = {	// ¯‚ÌoŒ»‚·‚éˆÊ’
 };
 CPlayer *CMode_Game::s_pPlayer = NULL;
 CPlayer* CMode_Game::GetPlayer(void) { return s_pPlayer; }
+int CMode_Game::m_nStageIdx = 0;
 
 //========================================
 // ƒRƒ“ƒXƒgƒ‰ƒNƒ^
@@ -84,10 +85,9 @@ void CMode_Game::Init(void) {
 
 	// “Ç
 	/* ƒuƒƒbƒN	*/Manager::BlockMgr()->Load();
-	/* ƒXƒe[ƒW	*/Manager::StgEd()->FileLoad();
 
 	// ƒXƒe[ƒW¶¬
-	Manager::StgEd()->StageLoad(0);
+	Manager::StgEd()->StageLoad(m_nStageIdx);
 
 	SetBGColor(COLOR_UP);
 }
@@ -187,12 +187,12 @@ void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 		Manager::BlockMgr()->PlanetCreate(Planpos, rot, type, col);	// ˜f¯‚Ì¶¬
 	}
 
-	for (int nCntPut = 0; nCntPut < s_StarMaxSummon; nCntPut++)
-	{
-		// ¯‚Ìİ’è
-		Starpos = s_StarSummonPos[nCntPut];	// oŒ»‚·‚éˆÊ’u‚Ìİ’è
-		Starpos += D3DXVECTOR3(rand() % 50 - 50, rand() % 50 - 50, 0.0f);	// ˆÊ’u‚Ìİ’è
+	//for (int nCntPut = 0; nCntPut < s_StarMaxSummon; nCntPut++)
+	//{
+	//	// ¯‚Ìİ’è
+	//	Starpos = s_StarSummonPos[nCntPut];	// oŒ»‚·‚éˆÊ’u‚Ìİ’è
+	//	Starpos += D3DXVECTOR3(rand() % 50 - 50, rand() % 50 - 50, 0.0f);	// ˆÊ’u‚Ìİ’è
 
-		Manager::BlockMgr()->StarCreate(Starpos, INITD3DXVECTOR3);	// ¯‚Ì¶¬
-	}
+	//	Manager::BlockMgr()->StarCreate(Starpos, INITD3DXVECTOR3);	// ¯‚Ì¶¬
+	//}
 }
