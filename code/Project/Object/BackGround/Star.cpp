@@ -1,41 +1,39 @@
 //========================================
 // 
-// パーツの処理
+// 星の処理
 // Author:KOMURO HIROMU
 // 
 //========================================
-#include "Parts.h"
+#include "Star.h"
 #include "../../main.h"
-
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| CPartsクラスのメンバ関数
+//==========| CStarクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
-static const D3DXVECTOR3 PARTS_ADDROT = { 0.0f,0.02f,0.0f };				// パーツの回転の移動量
-
 //========================================
 // コンストラクタ
 //========================================
-CParts::CParts(void) {
+CStar::CStar(void) {
 	Manager::BlockMgr()->AddList(this);
 
-	m_type = TYPE::PARTS;	// 種類の設定
-							// 大きさの設定
-	m_width = SIZE_OF_1_SQUARE * 2;
-	m_height = SIZE_OF_1_SQUARE * 2;
-	m_bDisp = true;
+	m_type = TYPE::BACKGROUND;	// 種類の設定
+								// 大きさの設定
+	m_width = SIZE_OF_1_SQUARE * 5;
+	m_height = SIZE_OF_1_SQUARE * 5;
 
 	// 各情報の初期化
-	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Rocket_Engine_break.x");
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-
+	m_rot = INITD3DXVECTOR3;
+	m_move = INITD3DXVECTOR3;
+	m_col = Color{ 255,255,255,255 };
+	m_rot = INITD3DXVECTOR3;
+	m_moveCounter = 0;
 }
 
 //========================================
 // デストラクタ
 //========================================
-CParts::~CParts(void) {
+CStar::~CStar(void) {
 
 }
 
@@ -43,52 +41,35 @@ CParts::~CParts(void) {
 // 初期化処理
 // Author:KOMURO HIROMU
 //========================================
-void CParts::Init(void) {
-
+void CStar::Init(void) {
+	//ModelIdx = RNLib::Model()->Load(s_modelPaths[(int)m_Star_type]);
+	//RNLib::Texture()->Load();
+	m_posOld = m_pos;
 }
 
 //========================================
 // 終了処理
 // Author:KOMURO HIROMU
 //========================================
-void CParts::Uninit(void) {
+void CStar::Uninit(void) {
 
 }
 
 //========================================
 // 更新処理
-// Author:KOMURO HIROMU (Hirasawa Shion)
+// Author:KOMURO HIROMU
 //========================================
-void CParts::Update(void) {
+void CStar::Update(void) {
 	
-	if (!m_bDisp) return;
-
-	m_rot += PARTS_ADDROT;	// 回転の移動量の増加
-	float fBrightness = fabsf(m_rot.y) / (D3DX_PI * 0.5f);
-
-	if (fBrightness >= 1.0f)
-	{
-		fBrightness = fBrightness - (fBrightness  - 1.0f);
-	}
-
-	if (fBrightness < 0)
-	{
-		fBrightness = fabsf(fBrightness);
-	}
-	if (m_rot.y > D3DX_PI)
-	{
-		m_rot.y = -D3DX_PI;
-	}
-
-	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
-	->SetCol(Color{ 0,(int)(255* fBrightness),255,255 });
+	RNLib::Polygon3D()->Put(m_pos, m_rot, false)
+		->SetSize(100.0f,100.0f);
 }
 
 //========================================
 // 描画処理
 // Author:KOMURO HIROMU
 //========================================
-void CParts::Draw(void) {
+void CStar::Draw(void) {
 
 
 }

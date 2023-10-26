@@ -4,6 +4,7 @@
 // Author:RIKU NISHIMURA
 // 
 //========================================
+#include "System\words\object\font-object.h"
 #include "main.h"
 
 //****************************************
@@ -51,6 +52,9 @@ void Manager::Uninit(void) {
 		m_modeObj->Uninit();
 		RNLib::Memory()->Release(&m_modeObj);
 	}
+
+	// フォントオブジェクトの終了処理
+	CFontObject::UpdateAll();
 }
 
 //========================================
@@ -73,6 +77,9 @@ void Manager::Update(void) {
 		m_modeObj->Update();
 		m_modeObj->ProcessState(PROCESS::UPDATE);
 	}
+
+	// フォントオブジェクトの更新処理
+	CFontObject::UpdateAll();
 }
 
 //========================================

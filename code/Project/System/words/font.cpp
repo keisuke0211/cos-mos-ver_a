@@ -12,6 +12,7 @@
 const char* CFont::s_FileName[] =
 {
 	"data/FONT/851Gkktt.ttf",
+	"data/FONT/Ronde-B_square.otf",
 	"data/FONT/meiryob.ttc",
 };
 static_assert(sizeof(CFont::s_FileName) / sizeof(CFont::s_FileName[0]) == CFont::FONT_MAX, "bagu");
@@ -20,6 +21,7 @@ static_assert(sizeof(CFont::s_FileName) / sizeof(CFont::s_FileName[0]) == CFont:
 const char* CFont::s_FontName[] =
 {
 	"851ゴチカクット",
+	"ロンド B スクエア",
 	"メイリオ",
 };
 static_assert(sizeof(CFont::s_FontName) / sizeof(CFont::s_FontName[0]) == CFont::FONT_MAX, "aho");
@@ -65,7 +67,7 @@ void CFont::FontCreate(FONT nFont)
 
 	// フォントの生成
 	int fontsize = 60;
-	m_logFont[nFont] = { fontsize, 0, 0, 0, 0, 0, 0, 0, SHIFTJIS_CHARSET, OUT_TT_ONLY_PRECIS,
+	m_logFont[nFont] = { fontsize, 0, 0, 0, FW_DONTCARE, false, false, false, SHIFTJIS_CHARSET, OUT_TT_ONLY_PRECIS,
 		CLIP_DEFAULT_PRECIS, PROOF_QUALITY, FIXED_PITCH | FF_MODERN };
 
 	strcpy(m_logFont[nFont].lfFaceName, s_FontName[nFont]);

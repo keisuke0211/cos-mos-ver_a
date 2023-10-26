@@ -267,3 +267,57 @@ CPlanet *CStageObjectMgr::PlanetCreate(D3DXVECTOR3 pos, D3DXVECTOR3 rot, CPlanet
 
 	return pObj;
 }
+
+//========================================
+// ¯
+//========================================
+CStar *CStageObjectMgr::StarCreate(D3DXVECTOR3 pos, D3DXVECTOR3 rot)
+{
+	CStar *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CStar;
+
+	// ‰Šú‰»ˆ—
+	pObj->SetPos(pos);
+	pObj->SetRot(rot);
+	pObj->Init();
+
+
+	return pObj;
+}
+//========================================
+// ”g‘Å‚ÂŒõ
+//========================================
+CShiningWave *CStageObjectMgr::ShiningWaveCreate(void)
+{
+	CShiningWave *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CShiningWave;
+
+	// ‰Šú‰»ˆ—
+	pObj->Init();
+
+
+	return pObj;
+}
+//========================================
+// ˆÚ“®°
+//========================================
+CRoadTripLaser *CStageObjectMgr::RoadTripLaserCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move, float fRefdef)
+{
+	CRoadTripLaser *pObj = NULL;
+
+	if (pObj != NULL) { return pObj; }
+	pObj = new CRoadTripLaser;
+
+	// ‰Šú‰»ˆ—
+	pObj->SetPos(pos);
+	pObj->SetMove(move);
+	pObj->SetRefdef(fRefdef);
+	pObj->Init();
+	
+
+	return pObj;
+}

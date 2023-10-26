@@ -11,6 +11,7 @@
 #include "../Object/Block/move-block.h"
 #include "../Object/Gimmick/meteor.h"
 #include "../Object/Gimmick/trampoline.h"
+#include "../Object/Item/Parts.h"
 
 //スワップインターバル
 const int	CPlayer::SWAP_INTERVAL = 30;	//スワップインターバル
@@ -22,7 +23,7 @@ const float CPlayer::SIZE_HEIGHT = 8.0f;	//高さ
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 2.7f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 10.0f;		//基本ジャンプ量
+const float CPlayer::JUMP_POWER = 10.0f;	//基本ジャンプ量
 const float CPlayer::GRAVITY_POWER = -8.0f;	//基本重力加速度
 const float CPlayer::GRAVITY_CORR = 0.07f;	//基本重力係数
 
@@ -180,7 +181,7 @@ void CPlayer::ActionControl(void)
 		Info& Player = m_aInfo[nCntPlayer];
 
 		//ジャンプ入力（空中じゃない）
-		if (!Player.bJump && RNLib::Input()->GetTrigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON::UP))
+		if (!Player.bJump && Player.bGround &&RNLib::Input()->GetTrigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON::UP))
 		{
 			Player.bGround = false;				//地面から離れた
 			Player.move.y = Player.fJumpPower;	//ジャンプ量代入
@@ -323,6 +324,20 @@ void CPlayer::WholeCollision(void)
 
 			for each(Info& Player in m_aInfo)
 			{
+				//プレイヤーの近くにオブジェクトがあるか判定
+				{
+					//オブジェクトへの距離を計算
+					const D3DXVECTOR3 PosDiff = POS - Player.pos;
+					const float fLength = D3DXVec3Length(&PosDiff);
+
+					//双方のサイズの合計を計算
+					const float fWIDTH_SUM = WIDTH + SIZE_WIDTH;
+					const float fHEIGHT_SUM = HEIGHT + SIZE_WIDTH;
+
+					//オブジェクトとの距離がサイズの合計値以下なら当たり判定を実行
+					if (fLength > sqrtf(fWIDTH_SUM * fWIDTH_SUM + fHEIGHT_SUM * fHEIGHT_SUM)) continue;
+				}
+
 				//種類取得
 				const CStageObject::TYPE type = stageObj->GetType();
 
@@ -364,7 +379,7 @@ void CPlayer::WholeCollision(void)
 					case CStageObject::TYPE::SPIKE:			CollisionSpike(&Player, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::MOVE_BLOCK:	CollisionMoveBlock(&Player, (CMoveBlock *)stageObj, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::METEOR:		break;
-					case CStageObject::TYPE::PARTS:			break;
+					case CStageObject::TYPE::PARTS:			CollisionParts(&Player, (CParts *)stageObj); break;
 				}
 
 				//当たれば即死のオブジェクトに当たっている
@@ -377,6 +392,7 @@ void CPlayer::WholeCollision(void)
 		}
 	}
 
+#if 0
 	//プレイヤーの位置更新
 	for(int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
 	{
@@ -642,6 +658,17 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 			*/
 			break;
 	}
+}
+
+//----------------------------
+//パーツの当たり判定処理
+//----------------------------
+void CPlayer::CollisionParts(Info *pInfo, CParts *pParts)
+{
+	if (!pParts->GetDisp()) return;
+
+	//取得したので描画OFF
+	pParts->DispSwitch(false);
 }
 
 //========================

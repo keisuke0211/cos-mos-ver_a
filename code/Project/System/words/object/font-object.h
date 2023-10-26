@@ -5,8 +5,7 @@
 //========================================
 // *** font-objext.h ***
 //========================================
-#ifndef _FONT_OBJECT_H_
-#define _FONT_OBJECT_H_
+#pragma once
 
 #include "../../../../_RNLib/RNlib.h"
 
@@ -91,4 +90,3 @@ private:
 	bool m_bDeath;						// Ž€–Sƒtƒ‰ƒO
 
 };
-#endif

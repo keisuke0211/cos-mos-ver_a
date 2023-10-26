@@ -21,7 +21,6 @@ CWords::CWords(int nPriority) : CFontObject(nPriority)
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.moveRot = INITD3DXVECTOR3;
 	m_Info.col = INITBGCOLOR;
-	m_Info.bDisp = false;
 }
 
 //========================================
@@ -150,26 +149,23 @@ void CWords::Update(void)
 //========================================
 void CWords::Draw(void)
 {
-	if (m_Info.bDisp)
-	{
-		// デバイスの取得
-		LPDIRECT3DDEVICE9 pDevice = RNLib::Window()->GetD3DDevice();
+	// デバイスの取得
+	LPDIRECT3DDEVICE9 pDevice = RNLib::Window()->GetD3DDevice();
 
-		// 頂点バッファをデータストリームに設定
-		pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));
+	// 頂点バッファをデータストリームに設定
+	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));
 
-		// 頂点フォーマットの設定
-		pDevice->SetFVF(FVF_VERTEX_2D);
+	// 頂点フォーマットの設定
+	pDevice->SetFVF(FVF_VERTEX_2D);
 
-		// テクスチャの設定
-		pDevice->SetTexture(0, m_pTex);
+	// テクスチャの設定
+	pDevice->SetTexture(0, m_pTex);
 
-		// ポリゴンの描画
-		pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
-			0,
-			2);
-		pDevice->SetTexture(0, NULL);
-	}
+	// ポリゴンの描画
+	pDevice->DrawPrimitive(D3DPT_TRIANGLESTRIP,
+		0,
+		2);
+	pDevice->SetTexture(0, NULL);
 }
 
 //========================================
@@ -205,7 +201,6 @@ void CWords::SetWords(const char*text, CFont::FONT type)
 	string Txt = text;
 	if (Txt != "")
 	{
-		m_Info.bDisp = true;
 		m_pTex = Manager::Font()->GetFont(text, type);
 	}
 	else
@@ -236,21 +231,18 @@ void CWords::SetMove(const D3DXVECTOR3 &move)
 //========================================
 void CWords::SetColar(Color col)
 {
-	if (m_Info.bDisp)
-	{
-		m_Info.col = col;
+	m_Info.col = col;
 
-		VERTEX_2D *pVtx; //頂点へのポインタ
+	VERTEX_2D *pVtx; //頂点へのポインタ
 
-		 //頂点バッファをロックし頂点情報へのポインタを取得
-		m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
+	//頂点バッファをロックし頂点情報へのポインタを取得
+	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-		pVtx[0].col = D3DXCOLOR(255 / m_Info.col.r, 255 / m_Info.col.g, 255/ m_Info.col.b, 255 / m_Info.col.a);
-		pVtx[1].col = D3DXCOLOR(255 / m_Info.col.r, 255 / m_Info.col.g, 255/ m_Info.col.b, 255 / m_Info.col.a);
-		pVtx[2].col = D3DXCOLOR(255 / m_Info.col.r, 255 / m_Info.col.g, 255/ m_Info.col.b, 255 / m_Info.col.a);
-		pVtx[3].col = D3DXCOLOR(255 / m_Info.col.r, 255 / m_Info.col.g, 255/ m_Info.col.b, 255 / m_Info.col.a);
+	pVtx[0].col = D3DXCOLOR(m_Info.col.r / 255, m_Info.col.g / 255,m_Info.col.b / 255,m_Info.col.a / 255);
+	pVtx[1].col = D3DXCOLOR(m_Info.col.r / 255, m_Info.col.g / 255,m_Info.col.b / 255,m_Info.col.a / 255);
+	pVtx[2].col = D3DXCOLOR(m_Info.col.r / 255, m_Info.col.g / 255,m_Info.col.b / 255,m_Info.col.a / 255);
+	pVtx[3].col = D3DXCOLOR(m_Info.col.r / 255, m_Info.col.g / 255,m_Info.col.b / 255,m_Info.col.a / 255);
 
-		//頂点バッファをアンロック
-		m_pVtxBuff->Unlock();
-	}
+	//頂点バッファをアンロック
+	m_pVtxBuff->Unlock();
 }

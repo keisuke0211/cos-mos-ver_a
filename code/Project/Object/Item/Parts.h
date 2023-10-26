@@ -1,7 +1,7 @@
 //========================================
 // 
 // パーツの処理
-// Author:KOMURO HIROMU
+// Author:KOMURO HIROMU　Hirasawa Shion
 // 
 //========================================
 #pragma once
@@ -25,10 +25,19 @@ public:
 	void	SetModelIdx(int idx) { ModelIdx = idx; }
 	void	SetPos(D3DXVECTOR3 pos) { m_pos = pos; }
 
-protected:
+	//---------------------------
+	//描画 ON/OFF 状態を取得
+	//---------------------------
+	bool	GetDisp(void) { return m_bDisp; }
+
+	//---------------------------
+	//取得したら描画 ON/OFF を切り替え
+	//---------------------------
+	void	DispSwitch(bool bGet) { m_bDisp = bGet; }
 
 private:
 	//========== [[[ 変数宣言 ]]]
 
 	int ModelIdx;
+	bool m_bDisp;	//取得したかどうか
 }; 

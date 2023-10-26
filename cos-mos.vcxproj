@@ -155,6 +155,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="code\Project\Character\player.cpp" />
+    <ClCompile Include="code\Project\Effect\effect-manager.cpp" />
+    <ClCompile Include="code\Project\Effect\effect.cpp" />
     <ClCompile Include="code\Project\main.cpp" />
     <ClCompile Include="code\Project\manager.cpp" />
     <ClCompile Include="code\Project\Mode\mode.cpp" />
@@ -163,7 +165,10 @@
     <ClCompile Include="code\Project\Mode\mode_result.cpp" />
     <ClCompile Include="code\Project\Mode\mode_title.cpp" />
     <ClCompile Include="code\Project\Object\BackGround\Planet.cpp" />
+    <ClCompile Include="code\Project\Object\BackGround\ShiningWave.cpp" />
+    <ClCompile Include="code\Project\Object\BackGround\Star.cpp" />
     <ClCompile Include="code\Project\Object\Block\fill-block.cpp" />
+    <ClCompile Include="code\Project\Object\Gimmick\RoadTripLaser.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\rocket.cpp" />
     <ClCompile Include="code\Project\Object\Item\Parts.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\Spike.cpp" />
@@ -236,6 +241,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Project\Character\player.h" />
+    <ClInclude Include="code\Project\Effect\effect-manager.h" />
+    <ClInclude Include="code\Project\Effect\effect.h" />
     <ClInclude Include="code\Project\main.h" />
     <ClInclude Include="code\Project\manager.h" />
     <ClInclude Include="code\Project\Mode\mode.h" />
@@ -244,7 +251,10 @@
     <ClInclude Include="code\Project\Mode\mode_result.h" />
     <ClInclude Include="code\Project\Mode\mode_title.h" />
     <ClInclude Include="code\Project\Object\BackGround\Planet.h" />
+    <ClInclude Include="code\Project\Object\BackGround\Shiningwave.h" />
+    <ClInclude Include="code\Project\Object\BackGround\Star.h" />
     <ClInclude Include="code\Project\Object\Block\fill-block.h" />
+    <ClInclude Include="code\Project\Object\Gimmick\RoadTripLaser.h" />
     <ClInclude Include="code\Project\Object\Gimmick\rocket.h" />
     <ClInclude Include="code\Project\Object\Gimmick\Spike.h" />
     <ClInclude Include="code\Project\Object\Item\Parts.h" />

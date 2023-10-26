@@ -1,31 +1,22 @@
 //========================================
 // 
-// 惑星の処理
+// 往復するレーザーの処理
 // Author:KOMURO HIROMU
 // 
 //========================================
-#include "Planet.h"
+#include "RoadTripLaser.h"
 #include "../../main.h"
-
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| CPlanetクラスのメンバ関数
+//==========| CRoadTripLaserクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
-static const int s_maxAnimeCounter = 120;		// アニメーションのカウンター最大
-static const char* s_modelPaths[(int)CPlanet::STAR_TYPE::MAX] = {
-	"data\\MODEL\\Saturn_Star.x",
-	"data\\MODEL\\Saturn_2_Star.x",
-	"data\\MODEL\\Saturn_4_Star.x",
-	"data\\MODEL\\Saturn_8_Star.x",
-};
-static const D3DXVECTOR3 s_moveRot = D3DXVECTOR3(0.0005f, 0.0005f, 0.0f);
-static const float s_PosOver = 100.0f;	
+static const D3DXVECTOR2  s_Size = D3DXVECTOR2(10.0f,50.0f);	// 高さ
 
 //========================================
 // コンストラクタ
 //========================================
-CPlanet::CPlanet(void) {
+CRoadTripLaser::CRoadTripLaser(void) {
 	Manager::BlockMgr()->AddList(this);
 
 	m_type = TYPE::BACKGROUND;	// 種類の設定
@@ -34,18 +25,16 @@ CPlanet::CPlanet(void) {
 	m_height = SIZE_OF_1_SQUARE * 5;
 
 	// 各情報の初期化
-	m_posInit = INITD3DXVECTOR3;
-	m_rot = INITD3DXVECTOR3;
-	m_move = INITD3DXVECTOR3;
-	m_col = Color{ 255,255,255,255 };
-	m_rot = INITD3DXVECTOR3;
-	m_moveCounter = 0;
+	m_pos = INITD3DXVECTOR3;
+	m_refPos = INITD3DXVECTOR3;
+	m_frefdef = 0.0f;
+	m_fGroundDis = 0.0f;
 }
 
 //========================================
 // デストラクタ
 //========================================
-CPlanet::~CPlanet(void) {
+CRoadTripLaser::~CRoadTripLaser(void) {
 
 }
 
@@ -53,17 +42,19 @@ CPlanet::~CPlanet(void) {
 // 初期化処理
 // Author:KOMURO HIROMU
 //========================================
-void CPlanet::Init(void) {
-	ModelIdx = RNLib::Model()->Load(s_modelPaths[(int)m_Star_type]);
+void CRoadTripLaser::Init(void) {
+	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Lift.x");
+	//RNLib::Texture()->Load();
 
-	m_posInit = m_pos;
+	m_refPos = m_pos;
+	m_fGroundDis = m_pos.y - 0.0f;
 }
 
 //========================================
 // 終了処理
 // Author:KOMURO HIROMU
 //========================================
-void CPlanet::Uninit(void) {
+void CRoadTripLaser::Uninit(void) {
 
 }
 
@@ -71,36 +62,38 @@ void CPlanet::Uninit(void) {
 // 更新処理
 // Author:KOMURO HIROMU
 //========================================
-void CPlanet::Update(void) {
+void CRoadTripLaser::Update(void) {
 
-	m_moveCounter++;	// カウンターを進める
+	D3DXVECTOR3 Block = m_pos;	// 位置
+	// ブロックの位置設定
+	Block.y += s_Size.y;
 
 
-	if (m_moveCounter % s_maxAnimeCounter == 0)
+	// xの移動量の反転
+	if (m_refPos.x + m_frefdef <= m_pos.x || m_refPos.x - m_frefdef >= m_pos.x)
 	{
-		m_move = vecRand() * 0.05f;
-		m_move.z = 0.0f;
+		m_move.x *= -1;
+	}
+	// yの移動量の反転
+	if (m_refPos.y + m_frefdef <= m_pos.y || m_refPos.y - m_frefdef >= m_pos.y)
+	{
+		m_move.y *= -1;
 	}
 
-	// 移動量を位置に増加
 	m_pos += m_move;
-	m_rot += s_moveRot;
 
-	if (m_posInit.x + s_PosOver <= m_pos.x || m_posInit.x - s_PosOver >= m_pos.x)
-	{
-		m_move *= -1;
-	}
-	
-	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
-		->SetCol(m_col);
-		
+	RNLib::Model()->Put(Block, m_rot, ModelIdx, false);
+
+	RNLib::Polygon3D()->Put(D3DXVECTOR3(m_pos.x, m_pos.y + Block.y,m_pos.z), m_rot, false)
+		->SetSize(s_Size.x, s_Size.y);
+
 }
 
 //========================================
 // 描画処理
 // Author:KOMURO HIROMU
 //========================================
-void CPlanet::Draw(void) {
+void CRoadTripLaser::Draw(void) {
 
 
 }
