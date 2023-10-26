@@ -392,7 +392,6 @@ void CPlayer::WholeCollision(void)
 		}
 	}
 
-#if 0
 	//プレイヤーの位置更新
 	for(int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
 	{
