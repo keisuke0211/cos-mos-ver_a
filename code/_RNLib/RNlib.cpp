@@ -1,21 +1,10 @@
 //========================================
 // 
-// RNlibの処理
+// RNライブラリの処理
 // Author:RIKU NISHIMURA
 // 
 //========================================
-// [[[ RNlib.cpp ]]]
-//========================================
-#include <time.h>
-#include "_ImGui\imgui.h"
-#include "RNlib.h"
-#include "../Project/System/words/object/font-object.h"
-
-//****************************************
-// 前方宣言
-//****************************************
-// imgui_impl_win32.cppのメッセージハンドラ
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+#include "RNLib.h"
 
 //****************************************
 // プロトタイプ宣言
@@ -23,7 +12,60 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 //****************************************
-// 静的宣言
+// クラス定義
+//****************************************
+// RNオブジェクトクラス
+class CRNObject {
+public:
+	//========== [[[ 関数宣言 ]]]
+	virtual void Init(LPDIRECT3DDEVICE9& device) = 0;
+	virtual void Uninit(LPDIRECT3DDEVICE9& device) = 0;
+	virtual void Update(LPDIRECT3DDEVICE9& device) = 0;
+};
+
+// 3Dオブジェクトクラス
+class C3DObject : public CRNObject {
+public:
+	//========== [[[ 関数宣言 ]]]
+	void Init(LPDIRECT3DDEVICE9& device) {}
+	void Uninit(LPDIRECT3DDEVICE9& device) {}
+	void Update(LPDIRECT3DDEVICE9& device) {}
+
+	//========== [[[ 変数宣言 ]]]
+	CMotion3D m_motion3D;
+	CSetUp3D  m_setUp3D;
+};
+
+// 計算クラス
+class CCalculation : public CRNObject {
+public:
+	//========== [[[ 関数宣言 ]]]
+	void Init(LPDIRECT3DDEVICE9& device) {}
+	void Uninit(LPDIRECT3DDEVICE9& device) {}
+	void Update(LPDIRECT3DDEVICE9& device) {}
+
+	//========== [[[ 変数宣言 ]]]
+	CEase     m_ease;
+	CGeometry m_geometry;
+	CMatrix   m_matrix;
+};
+
+// その他クラス
+class COther : public CRNObject {
+public:
+	//========== [[[ 関数宣言 ]]]
+	void Init(LPDIRECT3DDEVICE9& device) {
+		m_defaultData.Init();
+	}
+	void Uninit(LPDIRECT3DDEVICE9& device) {}
+	void Update(LPDIRECT3DDEVICE9& device) {}
+
+	//========== [[[ 変数宣言 ]]]
+	CDefaultData m_defaultData;
+};
+
+//****************************************
+// 名前空間
 //****************************************
 namespace {
 	//========== [[[ 関数宣言 ]]]
@@ -35,34 +77,29 @@ namespace {
 	void Save(void);
 
 	//========== [[[ 変数宣言 ]]]
-	RNLib::SIGNAL m_signal = RNLib::SIGNAL::NONE;
-	bool          m_bUseImGui;
-	int           m_nCount;
-	DWORD         m_dwCurrentTime;
-	DWORD         m_dwExecLastTime;
-	DWORD         m_dwFrameCount;
-	DWORD         m_dwFPSLastTime;
-	int           m_nFPSCount;
-	bool          m_bBlinkF2;
-	bool          m_bBlinkF4;
-	bool          m_bSpace3DStop;
-	bool          m_bSpace3DStopRsrv;
-	bool          m_bSceneSwap;
+	RNLib::SIGNAL  m_signal = RNLib::SIGNAL::NONE;
+	unsigned short m_nCount;
+	DWORD          m_dwCurrentTime;
+	DWORD          m_dwExecLastTime;
+	DWORD          m_dwFrameCount;
+	DWORD          m_dwFPSLastTime;
+	int            m_nFPSCount;
+	bool           m_bBlinkF2;
+	bool           m_bBlinkF4;
+	bool           m_bSpace3DStop;
+	bool           m_bSpace3DStopRsrv;
+	bool           m_bSceneSwap;
+	// RNオブジェクト
+	C3DObject      m_3DObject;
+	CCalculation   m_calculation;
+	COther         m_other;
 
-	//----- Items
 	CText2D      m_text2D;
 	CPolygon2D   m_polygon2D;
-	//CMotion3D    m_motion3D;
-	//CHuman3DBase m_human3DBase;
-	CSetUp3D  m_modelSetUp;
 	CModel       m_model;
-	CEff3DMng    m_eff3DMng;
 	CText3D      m_text3D;
 	CPolygon3D   m_polygon3D;
-	CLine3D      m_line3D;
-	CFog         m_fog;
 	CLight3D     m_light3D;
-	CShadow3D    m_shadow3D;
 	CCamera      m_camera;
 	CFile        m_file;
 	CInput       m_input;
@@ -72,7 +109,6 @@ namespace {
 	CText        m_text;
 	CTexture     m_texture;
 	CTransition  m_transition;
-	CVisual      m_visual;
 	CDrawMng     m_drawMng;
 	CDrawState   m_drawState;
 }
@@ -87,60 +123,52 @@ namespace {
 // 取得・設定系処理
 // Author:RIKU NISHIMURA
 //========================================
-RNLib::SIGNAL  RNLib::GetSignal     (void)       { return m_signal;        }
-int            RNLib::GetCount      (void)       { return m_nCount;        }
-int            RNLib::GetFPSCount   (void)       { return m_nFPSCount;     }
-bool           RNLib::GetBlinkF2    (void)       { return m_bBlinkF2;      }
-bool           RNLib::GetBlinkF4    (void)       { return m_bBlinkF4;      }
-bool           RNLib::GetUseImGui   (void)       { return m_bUseImGui;     }
-void           RNLib::SetSpace3DStop(bool bStop) { m_bSpace3DStopRsrv = bStop; }
-bool           RNLib::GetSpace3DStop(void)       { return m_bSpace3DStop;  }
-bool           RNLib::GetSceneSwap  (void)       { return m_bSceneSwap;    }
-CText2D*       RNLib::Text2D        (void)       { return &m_text2D;       }
-CPolygon2D*    RNLib::Polygon2D     (void)       { return &m_polygon2D;    }
-//CMotion3D*     RNLib::Motion3D      (void)       { return &m_motion3D;     }
-//CHuman3DBase*  RNLib::Human3DBase   (void)       { return &m_human3DBase;  }
-CSetUp3D*   RNLib::ModelSetUp    (void)       { return &m_modelSetUp;   }
-CModel*        RNLib::Model         (void)       { return &m_model;        }
-CEff3DMng*     RNLib::Eff3DMng      (void)       { return &m_eff3DMng;     }
-CText3D*       RNLib::Text3D        (void)       { return &m_text3D;       }
-CPolygon3D*    RNLib::Polygon3D     (void)       { return &m_polygon3D;    }
-CLine3D*       RNLib::Line3D        (void)       { return &m_line3D;       }
-CFog*          RNLib::Fog           (void)       { return &m_fog;          }
-CLight3D*      RNLib::Light3D       (void)       { return &m_light3D;      }
-CShadow3D*     RNLib::Shadow3D      (void)       { return &m_shadow3D;     }
-CCamera*       RNLib::Camera3D      (void)       { return &m_camera;       }
-CFile*         RNLib::File          (void)       { return &m_file;         }
-CInput*        RNLib::Input         (void)       { return &m_input;        }
-CMemory*       RNLib::Memory        (void)       { return &m_memory;       }
-CSound*        RNLib::Sound         (void)       { return &m_sound;        }
-CWindow*       RNLib::Window        (void)       { return &m_window;       }
-CText*         RNLib::Text          (void)       { return &m_text;         }
-CTexture*      RNLib::Texture       (void)       { return &m_texture;      }
-CTransition*   RNLib::Transition    (void)       { return &m_transition;   }
-CVisual*       RNLib::Visual        (void)       { return &m_visual;       }
-CDrawMng*      RNLib::DrawMng       (void)       { return &m_drawMng;      }
-CDrawState*    RNLib::DrawStateMng  (void)       { return &m_drawState;    }
+RNLib::SIGNAL RNLib::GetSignal     (void)       { return m_signal;       }
+int           RNLib::GetCount      (void)       { return m_nCount;       }
+int           RNLib::GetFPSCount   (void)       { return m_nFPSCount;    }
+bool          RNLib::GetBlinkF2    (void)       { return m_bBlinkF2;     }
+bool          RNLib::GetBlinkF4    (void)       { return m_bBlinkF4;     }
+void          RNLib::SetSpace3DStop(bool bStop) { m_bSpace3DStopRsrv = bStop; }
+bool          RNLib::GetSpace3DStop(void)       { return m_bSpace3DStop; }
+bool          RNLib::GetSceneSwap  (void)       { return m_bSceneSwap;   }
+//========== [[[ RNオブジェクト ]]]
+// 3DObject    RNLib::              (void) { return                           }
+CMotion3D&     RNLib::Motion3D      (void) { return m_3DObject.m_motion3D;    }
+CSetUp3D&      RNLib::SetUp3D       (void) { return m_3DObject.m_setUp3D;     }
+// Calculation RNLib::              (void) { return                           }
+CEase&         RNLib::Ease          (void) { return m_calculation.m_ease;     }
+CGeometry&     RNLib::Geometry      (void) { return m_calculation.m_geometry; }
+CMatrix&       RNLib::Matrix        (void) { return m_calculation.m_matrix;   }
+// Other...    RNLib::              (void) { return                           }
+CDefaultData&  RNLib::DefaultData   (void) { return m_other.m_defaultData;    }
+
+CText2D&      RNLib::Text2D        (void)       { return m_text2D;       }
+CPolygon2D&   RNLib::Polygon2D     (void)       { return m_polygon2D;    }
+CModel&       RNLib::Model         (void)       { return m_model;        }
+CText3D&      RNLib::Text3D        (void)       { return m_text3D;       }
+CPolygon3D&   RNLib::Polygon3D     (void)       { return m_polygon3D;    }
+CLight3D&     RNLib::Light3D       (void)       { return m_light3D;      }
+CCamera&      RNLib::Camera3D      (void)       { return m_camera;       }
+CFile&        RNLib::File          (void)       { return m_file;         }
+CInput&       RNLib::Input         (void)       { return m_input;        }
+CMemory&      RNLib::Memory        (void)       { return m_memory;       }
+CSound&       RNLib::Sound         (void)       { return m_sound;        }
+CWindow&      RNLib::Window        (void)       { return m_window;       }
+CText&        RNLib::Text          (void)       { return m_text;         }
+CTexture&     RNLib::Texture       (void)       { return m_texture;      }
+CTransition&  RNLib::Transition    (void)       { return m_transition;   }
+CDrawMng&     RNLib::DrawMng       (void)       { return m_drawMng;      }
+CDrawState&   RNLib::DrawStateMng  (void)       { return m_drawState;    }
 
 //========================================
 // メインループ
 // Author:RIKU NISHIMURA
 //========================================
-bool RNLib::MainLoop(
-	int*           pEndCode,
-	HINSTANCE      hInstance,
-	const char*    pClassName,
-	const char*    pWinName,
-	const float    fWinWidth,
-	const float    fWinHeight,
-	const bool     bFullScreen,
-	const float    fResolution,
-	const bool     bUseImGui) {
+bool RNLib::MainLoop(int* pEndCode, HINSTANCE hInstance, const char* pClassName, const char* pWinName, const float fWinWidth, const float fWinHeight, const bool bFullScreen, const float fResolution) {
 	static bool bMessageLoop = false;
 	static MSG  msg;
 
 	if (m_signal == RNLib::SIGNAL::NONE) {
-		m_bUseImGui = bUseImGui;
 		m_window.Create(
 			hInstance,
 			{
@@ -236,11 +264,9 @@ bool RNLib::MainLoop(
 // Author:RIKU NISHIMURA
 //========================================
 void RNLib::UninitScene(void) {
-	m_eff3DMng.ReleaseAll();
 	m_sound   .Stop();
 	m_light3D .SetCol(INITCOLOR);
-	m_fog     .SetUse(false);
-	RNLib::Camera3D()->SetFixed(false);
+	m_camera  .SetFixed(false);
 	m_bSceneSwap = true;
 	m_bSpace3DStopRsrv = false;
 }
@@ -250,44 +276,43 @@ void RNLib::UninitScene(void) {
 // Author:RIKU NISHIMURA
 //========================================
 LRESULT CALLBACK WindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) {
-	if (m_bUseImGui) {
-		if (ImGui_ImplWin32_WndProcHandler(hWnd, uMsg, wParam, lParam))
-			return 0;
-	}
 
-	int nID = DATANONE;
+	int nID = NONEDATA;
 	switch (uMsg) {
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
 
-	case WM_KEYDOWN:
+	case WM_DESTROY: {
+		PostQuitMessage(0);
+	}break;
+
+	case WM_KEYDOWN: {
+
 		switch (wParam) {
 		case VK_ESCAPE:
 			if (MessageBox(hWnd, "終了しますか？", "終了メッセージ", MB_YESNO) == IDYES)
 				DestroyWindow(hWnd);
 			break;
 		}
-		break;
+	}break;
 
-	case WM_CLOSE:
+	case WM_CLOSE: {
+
 		if (MessageBox(hWnd, "終了しますか？", "終了メッセージ", MB_YESNO) == IDYES)
 			DestroyWindow(hWnd);
 		else
 			return 0;	// (※0を返さないと終了してしまう)
-		break;
+	}break;
+	case WM_MOUSEWHEEL: {
 
-	case WM_MOUSEWHEEL:
 		// マウスホイールの前回転/後回転 状態設定
 		if (HIWORD(wParam) == WHEEL_DELTA)
 			m_input.SetWheelSpin(CInput::WHEELSPIN::FRONT);
 		else
 			m_input.SetWheelSpin(CInput::WHEELSPIN::BACK);
-		break;
+	}break;
+	case WM_LBUTTONDOWN: {
 
-	case WM_LBUTTONDOWN:
 		SetFocus(hWnd); // マウスを左クリックしたウインドウにフォーカスを合わせ、アクティブにする
-		break;
+	}break;
 	}
 
 	// 既定の処理を返す
@@ -306,7 +331,7 @@ namespace {
 	//========================================
 	void Init(HINSTANCE hInstance) {
 		// 終了後にメモリリークを出力
-		//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	
 		srand((unsigned int)time(0));	// 乱数の種を取得
 		timeBeginPeriod(1);				// 分解能を設定
@@ -325,21 +350,20 @@ namespace {
 		// デバイスを取得
 		LPDIRECT3DDEVICE9 device = m_window.GetD3DDevice();
 
+		// RNオブジェクト
+		m_3DObject   .Init(device);
+		m_calculation.Init(device);
+		m_other      .Init(device);
+
 		m_drawMng  .Init();
 		m_drawState.Init(device);
-		m_line3D   .Init();
-		m_fog      .Init();
 		m_light3D  .Init();
-		m_shadow3D .Init();
 		m_camera   .Init();
 		m_input    .Init(hInstance);
 		m_sound    .Init();
 	
 		//;;
 		InitSetting();
-	
-		if (m_bUseImGui)
-			ImGuiInit(m_window.GetHandle());
 	}
 	
 	//========================================
@@ -347,12 +371,17 @@ namespace {
 	// Author:RIKU NISHIMURA
 	//========================================
 	void Uninit(void) {
-		//m_motion3D   .Uninit();
-		//m_human3DBase.Uninit();
-		//m_modelSetUp .Uninit();
+
+		// デバイスを取得
+		LPDIRECT3DDEVICE9 device = m_window.GetD3DDevice();
+
+		// RNオブジェクト
+		m_3DObject   .Uninit(device);
+		m_calculation.Uninit(device);
+		m_other      .Uninit(device);
+
 		m_drawMng    .Uninit();
 		m_drawState  .Uninit();
-		m_line3D     .Uninit();
 		m_light3D    .Uninit();
 		m_camera     .Uninit();
 		m_text       .Uninit();
@@ -365,9 +394,6 @@ namespace {
 	
 		m_sound  .Uninit();
 
-		if (m_bUseImGui)
-			ImGuiUninit();
-	
 		// 分解能を戻す
 		timeEndPeriod(1);
 	}
@@ -387,9 +413,17 @@ namespace {
 		// 全オブジェクトマネージャーの更新処理
 		CObjectMgr::UpdateAllMgrs();
 
-		//----------------------------------------
-		// 各オプションの更新処理
-		//----------------------------------------
+		// デバイスを取得
+		LPDIRECT3DDEVICE9 device = m_window.GetD3DDevice();
+
+		// RNオブジェクト
+		m_3DObject   .Update(device);
+		m_calculation.Update(device);
+		m_other      .Update(device);
+
+		// デバッグログをクリア
+		m_text2D.ClearDebugLog();
+
 		m_input   .Update();
 		m_sound   .Update();
 		m_light3D .Update();
@@ -404,9 +438,6 @@ namespace {
 		m_window.Update();
 		
 		m_input.SetWheelSpin(CInput::WHEELSPIN::NONE);
-	
-		if (m_bUseImGui)
-			ImGuiInitFlag();
 	}
 
 	//========================================
@@ -421,12 +452,10 @@ namespace {
 		// デバイスを取得
 		LPDIRECT3DDEVICE9 device = m_window.GetD3DDevice();
 
-		m_polygon3D.Put(ConvPosRotToMatrix(D3DXVECTOR3(0.0f, 0.0f, 43.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f)), true)
+		m_polygon3D.Put(CMatrix::ConvPosRotToMtx(D3DXVECTOR3(0.0f, 0.0f, 43.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f)), true)
 			->SetSize(m_window.GetWidth() * 0.05f, m_window.GetHeight() * 0.05f)
 			->SetTex_Camera(&m_camera)
-			->SetLighting(false)
-			->SetPriority(0)
-			;
+			->SetLighting(false);
 
 		// 描画開始
 		if (SUCCEEDED(device->BeginScene())) {
@@ -439,10 +468,6 @@ namespace {
 
 					// 描画
 					m_drawMng.Draw(device, true);
-
-					// ImGuiの描画処理
-					if (m_bUseImGui)
-						ImGuiDraw();
 				}// <<< >>>
 
 				{// [[[ カメラオブジェクト描画 ]]]
@@ -458,9 +483,6 @@ namespace {
 
 					// 描画
 					m_drawMng.Draw(device, false);
-
-					// フォントオブジェクトの描画処理
-					CFontObject::DrawAll();
 
 					// レンダリング終了
 					m_camera.EndRendering(device);
@@ -485,7 +507,6 @@ namespace {
 	
 		// 設定リセット
 		if ((!m_bSpace3DStop && !m_bSpace3DStopRsrv) || m_bSceneSwap) {
-			m_line3D.SetReset();
 			m_bSceneSwap = false;
 		}
 	}
@@ -497,12 +518,10 @@ namespace {
 	void Load(void) {
 		m_sound   .Load();
 		m_text    .LoadFont();
-		m_visual  .Load();
-		m_eff3DMng.Load();
 	}
 
 	//========================================
-	// 書き込み処理
+	// 書き出し処理
 	// Author:RIKU NISHIMURA
 	//========================================
 	void Save(void) {

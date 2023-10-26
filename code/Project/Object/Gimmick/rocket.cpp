@@ -29,7 +29,7 @@ CRocket::CRocket(void)
 	m_Info.col = INITD3DCOLOR;
 	m_Info.nFlyAnimeCounter = 0;
 	m_Info.Animstate = CRocket::ANIME_STATE::NONE;
-	m_Info.nModelIdx = RNLib::Model()->Load("data\\MODEL\\rocket.x");
+	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\rocket.x");
 }
 
 //========================================
@@ -106,7 +106,7 @@ void CRocket::Update(void)
 
 	m_pos += m_Info.move;
 	// ‰ß‹Ž‚ÌˆÊ’u
-	RNLib::Model()->Put(m_pos, m_rot, m_Info.nModelIdx, false);
+	RNLib::Model().Put(m_pos, m_rot, m_Info.nModelIdx, false);
 }
 
 //========================================

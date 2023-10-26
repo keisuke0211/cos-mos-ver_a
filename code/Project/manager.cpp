@@ -40,7 +40,7 @@ void Manager::Init(CMode::TYPE mode) {
 	SetMode(mode);
 
 	//使用するコントローラーの数を指定する
-	RNLib::Input()->SetJoyPadNum(2);
+	RNLib::Input().SetJoyPadNum(2);
 }
 
 //========================================
@@ -52,7 +52,7 @@ void Manager::Uninit(void) {
 	// モードオブジェクトの終了処理
 	if (m_modeObj != NULL) {
 		m_modeObj->Uninit();
-		RNLib::Memory()->Release(&m_modeObj);
+		RNLib::Memory().Release(&m_modeObj);
 	}
 
 	// フォントオブジェクトの終了処理
@@ -69,7 +69,7 @@ void Manager::Update(void) {
 
 	// 予約されている時、遷移がモード設定待ちならモードを設定する
 	if (m_reserveModeType != CMode::TYPE::NONE) {
-		if (RNLib::Transition()->GetState() == CTransition::STATE::WAIT_SET_MODE) {
+		if (RNLib::Transition().GetState() == CTransition::STATE::WAIT_SET_MODE) {
 			SetMode(m_reserveModeType);
 		}
 	}
@@ -114,7 +114,7 @@ void Manager::SetMode(CMode::TYPE newMode) {
 	// モードオブジェクトの終了処理
 	if (m_modeObj != NULL) {
 		m_modeObj->Uninit();
-		RNLib::Memory()->Release(&m_modeObj);
+		RNLib::Memory().Release(&m_modeObj);
 	}
 	// モードオブジェクトを新たに生成
 	m_modeObj = CMode::Create(newMode);
@@ -145,5 +145,5 @@ void Manager::Transition(CMode::TYPE newMode, CTransition::TYPE transType) {
 	m_reserveModeType = newMode;
 
 	// 遷移設定
-	RNLib::Transition()->Set(CTransition::STATE::CLOSE, transType);
+	RNLib::Transition().Set(CTransition::STATE::CLOSE, transType);
 }

@@ -28,7 +28,7 @@ CParts::CParts(void) {
 	m_bDisp = true;
 
 	// Šeî•ñ‚Ì‰Šú‰»
-	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Rocket_Engine_break.x");
+	ModelIdx = RNLib::Model().Load("data\\MODEL\\Rocket_Engine_break.x");
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
 	s_nNumAll++;
@@ -83,7 +83,7 @@ void CParts::Update(void) {
 		m_rot.y = -D3DX_PI;
 	}
 
-	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
+	RNLib::Model().Put(m_pos, m_rot, ModelIdx, false)
 	->SetCol(Color{ 0,(int)(255* fBrightness),255,255 });
 }
 

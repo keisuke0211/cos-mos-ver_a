@@ -31,7 +31,7 @@ CMeteor::CMeteor(void) {
 	m_height = SIZE_OF_1_SQUARE * 3;
 
 	// Šeî•ñ‚Ì‰Šú‰»
-	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Meteorite.x");
+	ModelIdx = RNLib::Model().Load("data\\MODEL\\Meteorite.x");
 	m_pos = INITD3DXVECTOR3;
 	m_rot = INITD3DXVECTOR3;
 	m_move = INITD3DXVECTOR3;
@@ -92,7 +92,7 @@ void CMeteor::Update(void) {
 	}
 
 
-	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
+	RNLib::Model().Put(m_pos, m_rot, ModelIdx, false)
 		->SetOutLine(true)
 		->SetBrightnessOfEmissive(m_fblink)
 		;

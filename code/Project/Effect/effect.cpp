@@ -63,7 +63,7 @@ void CEffect::Uninit(void)
 void CEffect::Update(void)
 {
 	// âﬂãéÇÃà íu
-	RNLib::Polygon3D()->Put(m_Info.pos + m_Info.move, INITD3DXVECTOR3)
+	RNLib::Polygon3D().Put(m_Info.pos + m_Info.move, INITD3DXVECTOR3)
 		->SetTex(m_Info.nTex)
 		->SetBillboard(true)
 		->SetCol(m_Info.col);
@@ -71,7 +71,7 @@ void CEffect::Update(void)
 	m_Info.nCount--;
 
 	//äÑçáåvéZ
-	float fCountRate = Easing(EASE_IN, m_Info.nCount, MAX_COUNT);
+	float fCountRate = CEase::Easing(CEase::TYPE::IN_SINE, m_Info.nCount, MAX_COUNT);
 
 	m_Info.col.a = m_Info.col.a * fCountRate;
 

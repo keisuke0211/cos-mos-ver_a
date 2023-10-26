@@ -37,8 +37,8 @@ CMoveBlock::CMoveBlock(void)
 	m_Info.frefdef = 0.0f;
 	m_Info.nType = 0;
 	m_Info.nID = m_nNumAll;
-	m_Info.nModelIdx = RNLib::Model()->Load("data\\MODEL\\Lift.x");
-	nModelIdx = RNLib::Model()->Load("data\\MODEL\\Lift_Gear.x");
+	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\Lift.x");
+	nModelIdx = RNLib::Model().Load("data\\MODEL\\Lift_Gear.x");
 	m_nNumAll++;
 
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
@@ -111,8 +111,8 @@ void CMoveBlock::Update(void)
 	}
 
 	CStageObject::SetPos(m_Info.pos);
-	RNLib::Model()->Put(m_Info.pos, m_Info.rot, m_Info.nModelIdx);
-	RNLib::Model()->Put(m_Info.pos, m_rot, nModelIdx);
+	RNLib::Model().Put(m_Info.pos, m_Info.rot, m_Info.nModelIdx);
+	RNLib::Model().Put(m_Info.pos, m_rot, nModelIdx);
 }
 
 //========================================

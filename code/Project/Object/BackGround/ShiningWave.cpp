@@ -41,8 +41,8 @@ CShiningWave::~CShiningWave(void) {
 // Author:KOMURO HIROMU
 //========================================
 void CShiningWave::Init(void) {
-	//ModelIdx = RNLib::Model()->Load(s_modelPaths[(int)m_Star_type]);
-	//RNLib::Texture()->Load();
+	//ModelIdx = RNLib::Model().Load(s_modelPaths[(int)m_Star_type]);
+	//RNLib::Texture().Load();
 
 	
 }
@@ -65,7 +65,7 @@ void CShiningWave::Update(void) {
 	/*for (int nCntShin = 0; nCntShin < s_nNumShining; nCntShin++)
 	{
 		nShining = nCntShin % 12;
-		RNLib::Polygon3D()->Put(D3DXVECTOR3(s_ShiningSummonPos.x + (20.0f * nShining), s_ShiningSummonPos.x + (20.0f * nShining), m_pos.z), m_rot, false)
+		RNLib::Polygon3D().Put(D3DXVECTOR3(s_ShiningSummonPos.x + (20.0f * nShining), s_ShiningSummonPos.x + (20.0f * nShining), m_pos.z), m_rot, false)
 			->SetLighting(false)
 			->SetSize(10.0f, 10.0f);
 	}*/

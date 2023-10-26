@@ -43,15 +43,15 @@ CMode_Logo::~CMode_Logo(void) {
 void CMode_Logo::Init(void) {
 	CMode::Init();
 
-	m_TexLogo = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\TeamLogo.PNG");
+	m_TexLogo = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\TeamLogo.PNG");
 
 	// 状態設定
 	SetState((int)STATE::NONE);
 	// 遷移設定
-	RNLib::Transition()->Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
+	RNLib::Transition().Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
 
 	// カメラの視点/注視点を設定
-	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	RNLib::Camera3D().SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// 状態設定
 	SetState((int)STATE::NONE);
@@ -78,7 +78,7 @@ void CMode_Logo::Update(void) {
 	//===== [[[ ローカル関数宣言 ]]]
 	struct LocalFunc {
 		static void FillScreen(const float& fRate) {
-			RNLib::Polygon2D()->Put(RNLib::Window()->GetCenterPos(), 0.0f)
+			RNLib::Polygon2D().Put(RNLib::Window().GetCenterPos(), 0.0f)
 				->SetCol(Color{ 255,255,255,(int)(255 * fRate) })
 				->SetSize(480, 480)
 				->SetTex(m_TexLogo);
@@ -119,7 +119,7 @@ void CMode_Logo::Update(void) {
 	{
 		if (++m_nStateCtr >= TIME)
 		{
-			if (RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+			if (RNLib::Transition().GetState() == CTransition::STATE::NONE)
 			{
 				Manager::Transition(CMode::TYPE::TITLE, CTransition::TYPE::NONE);
 				m_state = STATE::NONE;

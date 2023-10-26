@@ -75,7 +75,7 @@ void CParticle::Update(void)
 	m_Info.pos += m_Info.move;
 
 	// âﬂãéÇÃà íu
-	RNLib::Polygon3D()->Put(m_Info.pos, INITD3DXVECTOR3)
+	RNLib::Polygon3D().Put(m_Info.pos, INITD3DXVECTOR3)
 		->SetTex(m_Info.nTex)
 		->SetBillboard(true)
 		->SetCol(m_Info.col);
@@ -85,7 +85,7 @@ void CParticle::Update(void)
 	m_Info.move.y += (0.0f - m_Info.move.y) * ATTEN_RATE;
 
 	//äÑçáåvéZ
-	float fCountRate = Easing(EASE_IN, m_Info.nCount, MAX_COUNT);
+	float fCountRate = CEase::Easing(CEase::TYPE::IN_SINE, m_Info.nCount, MAX_COUNT);
 
 	//ìßñæÇ…ÇµÇƒÇ¢Ç≠
 	m_Info.col.a = m_Info.col.a * fCountRate;

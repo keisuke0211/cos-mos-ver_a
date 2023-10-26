@@ -120,7 +120,7 @@ void CFont::TextureCreate(string nWords, FONT nFont)
 	ReleaseDC(NULL, hdc);
 
 	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = RNLib::Window()->GetD3DDevice();
+	LPDIRECT3DDEVICE9 pDevice = RNLib::Window().GetD3DDevice();
 
 	// テクスチャ作成
 	if (FAILED(pDevice->CreateTexture(GM.gmCellIncX, TM.tmHeight, 1, D3DUSAGE_DYNAMIC, D3DFMT_A8R8G8B8, D3DPOOL_DEFAULT, &m_texFont[nFont], NULL)))

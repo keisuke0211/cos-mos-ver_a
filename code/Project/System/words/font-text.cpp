@@ -133,7 +133,7 @@ void CFontText::Update()
 {
 	if (m_Info.bTextBok)
 	{
-		RNLib::Polygon2D()->Put(m_Info.TexPos, 0.0f, false)
+		RNLib::Polygon2D().Put(m_Info.TexPos, 0.0f, false)
 			->SetSize(m_Info.TexSize.x, m_Info.TexSize.y)
 			->SetCol(m_Info.TextBoxCol)
 			->SetTex(m_Info.nTexIdx);
@@ -177,10 +177,10 @@ CFontText *CFontText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const 
 		switch (type)
 		{
 		case CFontText::BOX_NORMAL_RECT:
-			pText->m_Info.nTexIdx = RNLib::Texture()->Load("data\\TEXTURE\\TextBox\\TextBox.png");
+			pText->m_Info.nTexIdx = RNLib::Texture().Load("data\\TEXTURE\\TextBox\\TextBox.png");
 			break;
 		case CFontText::BOX_NORMAL_SQR:
-			pText->m_Info.nTexIdx = RNLib::Texture()->Load("data\\TEXTURE\\TextBox\\TextBox01.png");
+			pText->m_Info.nTexIdx = RNLib::Texture().Load("data\\TEXTURE\\TextBox\\TextBox01.png");
 			break;
 		case CFontText::BOX_MAX:
 			pText->m_Info.nTexIdx = -1;

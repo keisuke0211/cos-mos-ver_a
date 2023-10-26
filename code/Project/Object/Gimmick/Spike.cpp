@@ -22,7 +22,7 @@ CSpike::CSpike(void)
 
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;
-	m_Info.nModelIdx = RNLib::Model()->Load("data\\MODEL\\Spike.x");
+	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\Spike.x");
 }
 
 //========================================
@@ -58,7 +58,7 @@ void CSpike::Uninit(void)
 void CSpike::Update(void)
 {
 	// ‰ß‹Ž‚ÌˆÊ’u
-	RNLib::Model()->Put(m_pos, m_rot, m_Info.nModelIdx, false);
+	RNLib::Model().Put(m_pos, m_rot, m_Info.nModelIdx, false);
 }
 
 //========================================

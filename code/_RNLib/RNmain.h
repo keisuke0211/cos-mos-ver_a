@@ -1,19 +1,17 @@
 //========================================
 // 
-// RNlibのメイン処理のヘッダファイル
+// RNライブラリのメインヘッダファイル
 // Author:RIKU NISHIMURA
 // 
 //========================================
-// [[[ RNmain.h ]]]
-//========================================
-#ifndef _RNMAIN_H_
-#define _RNMAIN_H_
+#pragma once
 
 #include <windows.h>
 #include <stdio.h>
 #include <assert.h>
 #include <thread>
 #include <mutex>
+#include <time.h>
 #include "d3dx9.h"
 #define DIRECTINPUT_VERSION	(0x0800)	// ビルド時の警告対処用マクロ
 #include "dinput.h"						// 入力処理に必要
@@ -36,68 +34,57 @@
 //****************************************
 // マクロ定義
 //****************************************
-//========== [[[ フォーマット指定 ]]]
-#define FVF_VERTEX_2D (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)			// 頂点フォーマット2D
-#define FVF_VERTEX_3D (D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_DIFFUSE|D3DFVF_TEX1)	// 頂点フォーマット3D
-
+// 頂点フォーマット
+#define FVF_VERTEX_2D         (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)
+#define FVF_VERTEX_3D         (D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_DIFFUSE|D3DFVF_TEX1)
+// 初期値 (※D3D系列)
+#define INITD3DXMATRIX        D3DXMATRIX   (1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f)
+#define INITD3DVIEWPORT9      D3DVIEWPORT9 {0,0,0,0,0.0f,0.0f}
+#define INITD3DCOLOR          D3DCOLOR_RGBA(255,255,255,255)
+#define INITD3DXVECTOR3       D3DXVECTOR3  (0.0f,0.0f,0.0f)
+#define INITD3DXVECTOR2       D3DXVECTOR2  (0.0f,0.0f)
 // 初期値
-#define INITD3DXMATRIX     D3DXMATRIX   (1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f)
-#define INITD3DVIEWPORT9   D3DVIEWPORT9 {0,0,0,0,0.0f,0.0f}
-#define INITD3DCOLOR       D3DCOLOR_RGBA(255,255,255,255)
-#define INITD3DXVECTOR3    D3DXVECTOR3  (0.0f,0.0f,0.0f)
-#define INITD3DXVECTOR2    D3DXVECTOR2  (0.0f,0.0f)
-#define INITMATRIX         Matrix       (1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f)
-#define INITPOS2D          Pos2D        (0.0f,0.0f)
-#define INITROT2D          Rot2D        (0.0f,0.0f)
-#define INITVECTOR2D       Vector2D     (0.0f,0.0f)
-#define INITNORMAL2D       Normal2D     (0.0f,0.0f)
-#define INITSCALE2D        Scale2D      (1.0f,1.0f)
-#define INITPOS3D          Pos3D        (0.0f,0.0f,0.0f)
-#define INITROT3D          Rot3D        (0.0f,0.0f,0.0f)
-#define INITVECTOR3D       Vector3D     (0.0f,0.0f,0.0f)
-#define INITNORMAL3D       Normal3D     (0.0f,0.0f,0.0f)
-#define INITSCALE3D        Scale3D      (1.0f,1.0f,1.0f)
-#define INITBGCOLOR        Color        {0  ,0  ,0  ,255}
-#define INITCOLOR          Color        {255,255,255,255}
+#define INITMATRIX            Matrix       (1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f)
+#define INITPOS2D             Pos2D        (0.0f,0.0f)
+#define INITROT2D             Rot2D        (0.0f,0.0f)
+#define INITVECTOR2D          Vector2D     (0.0f,0.0f)
+#define INITNORMAL2D          Normal2D     (0.0f,0.0f)
+#define INITSCALE2D           Scale2D      (1.0f,1.0f)
+#define INITPOS3D             Pos3D        (0.0f,0.0f,0.0f)
+#define INITROT3D             Rot3D        (0.0f,0.0f,0.0f)
+#define INITVECTOR3D          Vector3D     (0.0f,0.0f,0.0f)
+#define INITNORMAL3D          Normal3D     (0.0f,0.0f,0.0f)
+#define INITSCALE3D           Scale3D      (1.0f,1.0f,1.0f)
+#define INITBGCOLOR           Color        {0,0,0,255}
+#define INITCOLOR             Color        {255,255,255,255}
 // 円周率
-#define D3DX_PI_HALF       (D3DX_PI*0.5f)
-#define D3DX_PI_DOUBLE     (D3DX_PI*2.0f)
-#define D3DX_PI_UP         (0.0f)
-#define D3DX_PI_DOWN       (D3DX_PI)
-#define D3DX_PI_RIGHT      (D3DX_PI*0.5f)
-#define D3DX_PI_RIGHT_UP   (D3DX_PI*0.75f)
-#define D3DX_PI_RIGHT_DOWN (D3DX_PI*0.25f)
-#define D3DX_PI_LEFT       (D3DX_PI*0.5f)
-#define D3DX_PI_LEFT_UP    (D3DX_PI*-0.75f)
-#define D3DX_PI_LEFT_DOWN  (D3DX_PI*-0.25f)
+#define D3DX_PI_HALF          (D3DX_PI*0.5f)
+#define D3DX_PI_DOUBLE        (D3DX_PI*2.0f)
+#define D3DX_PI_UP            (0.0f)
+#define D3DX_PI_DOWN          (D3DX_PI)
+#define D3DX_PI_RIGHT         (D3DX_PI*0.5f)
+#define D3DX_PI_RIGHT_UP      (D3DX_PI*0.75f)
+#define D3DX_PI_RIGHT_DOWN    (D3DX_PI*0.25f)
+#define D3DX_PI_LEFT          (D3DX_PI*0.5f)
+#define D3DX_PI_LEFT_UP       (D3DX_PI*-0.75f)
+#define D3DX_PI_LEFT_DOWN     (D3DX_PI*-0.25f)
 // ピクセルサイズ
-#define PIXEL2D_SIZE       (2.0f)
-#define PIXEL3D_SIZE       (0.4f)
-
-//========== [[[ その他定数 ]]]
-#define TXT_MAX  (512)	// 文字列の最大数(汎用)
-#define DATANONE (-1)	// データ無し番号
-
-//========== [[[ 関数形式 ]]]
+#define PIXEL2D_SIZE          (2.0f)
+#define PIXEL3D_SIZE          (0.4f)
+// データ無し
+#define NONEDATA              (-1)
+#define NONECOLOR             Color{-1,-1,-1,-1}
+// 関数形式
 #define ARRAY_SIZE(a)         (sizeof(a) / sizeof(*a))
 #define CHECK_ARRAY_SIZE(a,l) static_assert(ARRAY_SIZE(a) == (l),"aho")
+// その他
+#define TXT_MAX               (512)
 
 //****************************************
 // 列挙型定義
 //****************************************
-enum class PROCESS { 
-	INIT, 
-	UNINIT, 
-	UPDATE, 
-};
-
-enum class ANCHOR {
-	NONE ,
-	CENTER, TOP     , BOTTOM     ,
-	LEFT  , LEFTTOP , LEFTBOTTOM ,
-	RIGHT , RIGHTTOP, RIGHTBOTTOM,
-	MAX,
-};
+enum class PROCESS { INIT, UNINIT, UPDATE, };
+enum class ANCHOR { NONE, CENTER, TOP, BOTTOM, LEFT, LEFTTOP, LEFTBOTTOM, RIGHT, RIGHTTOP, RIGHTBOTTOM, MAX, };
 
 //****************************************
 // 構造体定義
@@ -118,28 +105,30 @@ struct Vertex3D {
 	D3DXVECTOR2 tex = INITD3DXVECTOR2;	// テクスチャ座標
 };
 
-// 拡大倍率構造体
-typedef struct {
-	float fWidth;	// 幅
-	float fHeight;	// 高さ
-	float fDepth;	// 奥行き
-}Scale;
-
+//****************************************
 // 構造体変換
-typedef float             Angle;
-typedef D3DXMATRIX        Matrix;
-typedef D3DMATERIAL9      Material;
-typedef LPDIRECT3DDEVICE9 Device;
+//****************************************
+// unsigned
+typedef unsigned short    UShort;
+typedef unsigned int      UInt;
+typedef unsigned long     ULong;
+// Vector2
 typedef D3DXVECTOR2       Pos2D;
 typedef D3DXVECTOR2       Rot2D;
 typedef D3DXVECTOR2       Vector2D;
 typedef D3DXVECTOR2       Normal2D;
 typedef D3DXVECTOR2       Scale2D;
+// Vector3
 typedef D3DXVECTOR3       Pos3D;
 typedef D3DXVECTOR3       Rot3D;
 typedef D3DXVECTOR3       Vector3D;
 typedef D3DXVECTOR3       Normal3D;
 typedef D3DXVECTOR3       Scale3D;
+// Other
+typedef float             Angle;
+typedef D3DXMATRIX        Matrix;
+typedef D3DMATERIAL9      Material;
+typedef LPDIRECT3DDEVICE9 Device;
 
 //****************************************
 // クラス定義
@@ -211,5 +200,3 @@ public:
 	int b;	// 青
 	int a;	// 不透明度
 };
-
-#endif

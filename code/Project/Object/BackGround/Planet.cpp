@@ -54,7 +54,7 @@ CPlanet::~CPlanet(void) {
 // Author:KOMURO HIROMU
 //========================================
 void CPlanet::Init(void) {
-	ModelIdx = RNLib::Model()->Load(s_modelPaths[(int)m_Star_type]);
+	ModelIdx = RNLib::Model().Load(s_modelPaths[(int)m_Star_type]);
 
 	m_posInit = m_pos;
 }
@@ -78,7 +78,7 @@ void CPlanet::Update(void) {
 
 	if (m_moveCounter % s_maxAnimeCounter == 0)
 	{
-		m_move = vecRand() * 0.05f;
+		m_move = CGeometry::GetRandomVec() * 0.05f;
 		m_move.z = 0.0f;
 	}
 
@@ -91,7 +91,7 @@ void CPlanet::Update(void) {
 		m_move *= -1;
 	}
 	
-	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
+	RNLib::Model().Put(m_pos, m_rot, ModelIdx, false)
 		->SetCol(m_col);
 		
 }

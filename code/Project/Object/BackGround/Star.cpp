@@ -42,8 +42,8 @@ CStar::~CStar(void) {
 // Author:KOMURO HIROMU
 //========================================
 void CStar::Init(void) {
-	//ModelIdx = RNLib::Model()->Load(s_modelPaths[(int)m_Star_type]);
-	//RNLib::Texture()->Load();
+	//ModelIdx = RNLib::Model().Load(s_modelPaths[(int)m_Star_type]);
+	//RNLib::Texture().Load();
 	m_posOld = m_pos;
 }
 
@@ -61,7 +61,7 @@ void CStar::Uninit(void) {
 //========================================
 void CStar::Update(void) {
 	
-	RNLib::Polygon3D()->Put(m_pos, m_rot, false)
+	RNLib::Polygon3D().Put(m_pos, m_rot, false)
 		->SetSize(100.0f,100.0f);
 }
 

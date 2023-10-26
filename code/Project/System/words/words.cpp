@@ -43,7 +43,7 @@ HRESULT CWords::Init(void)
 	SetType(TYPE_FONT);
 
 	//デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = RNLib::Window()->GetD3DDevice();
+	LPDIRECT3DDEVICE9 pDevice = RNLib::Window().GetD3DDevice();
 
 	//頂点バッファの生成
 	pDevice->CreateVertexBuffer(sizeof(VERTEX_2D) * 4,
@@ -150,7 +150,7 @@ void CWords::Update(void)
 void CWords::Draw(void)
 {
 	// デバイスの取得
-	LPDIRECT3DDEVICE9 pDevice = RNLib::Window()->GetD3DDevice();
+	LPDIRECT3DDEVICE9 pDevice = RNLib::Window().GetD3DDevice();
 
 	// 頂点バッファをデータストリームに設定
 	pDevice->SetStreamSource(0, m_pVtxBuff, 0, sizeof(VERTEX_2D));

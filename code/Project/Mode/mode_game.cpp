@@ -68,10 +68,10 @@ void CMode_Game::Init(void) {
 	CMode::Init();
 
 	// ‘JˆÚÝ’è
-	RNLib::Transition()->Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
+	RNLib::Transition().Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
 
 	// ƒJƒƒ‰‚ÌŽ‹“_/’Ž‹“_‚ðÝ’è
-	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	RNLib::Camera3D().SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// ó‘ÔÝ’è
 	SetState((int)STATE::NONE);
@@ -120,7 +120,7 @@ void CMode_Game::Update(void) {
 
 	if (m_state != (int)STATE::PAUSE)
 	{
-		if (RNLib::Input()->GetKeyTrigger(DIK_P))
+		if (RNLib::Input().GetKeyTrigger(DIK_P))
 		{
 			SetState((int)STATE::PAUSE);
 		}
@@ -129,14 +129,14 @@ void CMode_Game::Update(void) {
 			s_pPlayer->Update();
 	}
 
-	if (RNLib::Input()->GetKeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+	if (RNLib::Input().GetKeyTrigger(DIK_SPACE) && RNLib::Transition().GetState() == CTransition::STATE::NONE)
 		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::FADE);
 
 	// ”wŒi(‰¼)
 	{
-		float width = RNLib::Window()->GetWidth();
-		float height = RNLib::Window()->GetHeight();
-		RNLib::Polygon3D()->Put(D3DXVECTOR3(0.0f, -height*0.25f, 400.0f), INITD3DXVECTOR3)
+		float width = RNLib::Window().GetWidth();
+		float height = RNLib::Window().GetHeight();
+		RNLib::Polygon3D().Put(D3DXVECTOR3(0.0f, -height*0.25f, 400.0f), INITD3DXVECTOR3)
 			->SetLighting(false)
 			->SetCol(COLOR_DOWN)
 			->SetSize(width * 2.0f, height * 0.5f)
@@ -273,11 +273,11 @@ void CMode_Game::PauseMenu(void)
 	}
 
 	// -- ƒƒjƒ…[‘I‘ð ---------------------------
-	if (RNLib::Input()->GetKeyTrigger(DIK_W) || RNLib::Input()->GetKeyTrigger(DIK_UP) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::UP) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::UP))
+	if (RNLib::Input().GetKeyTrigger(DIK_W) || RNLib::Input().GetKeyTrigger(DIK_UP) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::UP) || RNLib::Input().GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::UP))
 	{
 		m_nSelect--;
 	}
-	else if (RNLib::Input()->GetKeyTrigger(DIK_S) || RNLib::Input()->GetKeyTrigger(DIK_DOWN) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::DOWN) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::DOWN))
+	else if (RNLib::Input().GetKeyTrigger(DIK_S) || RNLib::Input().GetKeyTrigger(DIK_DOWN) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::DOWN) || RNLib::Input().GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::DOWN))
 	{
 		m_nSelect++;
 	}
@@ -292,7 +292,7 @@ void CMode_Game::PauseMenu(void)
 //========================================
 void CMode_Game::PauseSelect(void)
 {
-	if ((RNLib::Input()->GetKeyTrigger(DIK_RETURN) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::A)) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+	if ((RNLib::Input().GetKeyTrigger(DIK_RETURN) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::A)) && RNLib::Transition().GetState() == CTransition::STATE::NONE)
 	{
 		switch (m_nSelect)
 		{

@@ -254,7 +254,7 @@ void CFontObject::UpdateAll(void)
 void CFontObject::DrawAll(void)
 {
 	// デバイスの所得
-	LPDIRECT3DDEVICE9 pDevice = RNLib::Window()->GetD3DDevice();
+	LPDIRECT3DDEVICE9 pDevice = RNLib::Window().GetD3DDevice();
 
 	for (int nPrio = 0; nPrio < PRIO_MAX; nPrio++)
 	{

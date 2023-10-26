@@ -43,8 +43,8 @@ CRoadTripLaser::~CRoadTripLaser(void) {
 // Author:KOMURO HIROMU
 //========================================
 void CRoadTripLaser::Init(void) {
-	ModelIdx = RNLib::Model()->Load("data\\MODEL\\Lift.x");
-	//RNLib::Texture()->Load();
+	ModelIdx = RNLib::Model().Load("data\\MODEL\\Lift.x");
+	//RNLib::Texture().Load();
 
 	m_refPos = m_pos;
 	m_fGroundDis = m_pos.y - 0.0f;
@@ -82,9 +82,9 @@ void CRoadTripLaser::Update(void) {
 
 	m_pos += m_move;
 
-	RNLib::Model()->Put(Block, m_rot, ModelIdx, false);
+	RNLib::Model().Put(Block, m_rot, ModelIdx, false);
 
-	RNLib::Polygon3D()->Put(D3DXVECTOR3(m_pos.x, m_pos.y + Block.y,m_pos.z), m_rot, false)
+	RNLib::Polygon3D().Put(D3DXVECTOR3(m_pos.x, m_pos.y + Block.y,m_pos.z), m_rot, false)
 		->SetSize(s_Size.x, s_Size.y);
 
 }

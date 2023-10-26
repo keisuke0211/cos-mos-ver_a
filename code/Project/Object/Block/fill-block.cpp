@@ -49,7 +49,7 @@ HRESULT CFillBlock::Init(FILL_TYPE type)
 	m_Info.nType = 0;
 
 	//ƒ‚ƒfƒ‹”Ô†“Ç‚Ýž‚Ý
-	m_Info.nModelIdx = RNLib::Model()->Load(s_Path[(int)type]);
+	m_Info.nModelIdx = RNLib::Model().Load(s_Path[(int)type]);
 
 	return S_OK;
 }
@@ -68,7 +68,7 @@ void CFillBlock::Uninit(void)
 void CFillBlock::Update(void)
 {
 	// ‰ß‹Ž‚ÌˆÊ’u
-	RNLib::Model()->Put(m_pos, D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), m_Info.nModelIdx, false);
+	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), m_Info.nModelIdx, false);
 }
 
 

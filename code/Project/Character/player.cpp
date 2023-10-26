@@ -6,8 +6,8 @@
 //================================================================================================
 #include "../main.h"
 #include "player.h"
-#include "../../_RNLib/_Basis/Other/input.h"
-#include "../../_RNLib/_Basis/Calculation/number.h"
+#include "../../_RNLib/Basis/input.h"
+#include "../../_RNLib/Basis/Calculation/number.h"
 
 //スワップインターバル
 const int	CPlayer::SWAP_INTERVAL = 30;	//スワップインターバル
@@ -48,7 +48,7 @@ CPlayer::CPlayer()
 		Player.fJumpPower = 0.0f;			//ジャンプ量
 		Player.fGravity = 0.0f;				//重力
 		Player.fGravityCorr = 0.0f;			//重力係数
-		Player.nModelIdx = DATANONE;		//モデル番号
+		Player.nModelIdx = NONEDATA;		//モデル番号
 		Player.side = WORLD_SIDE::FACE;		//どちらの世界に存在するか
 	}
 }
@@ -82,7 +82,7 @@ CPlayer *CPlayer::Create(void)
 HRESULT CPlayer::Init(void)
 {
 	//１Ｐ初期情報
-	m_aInfo[0].nModelIdx = RNLib::Model()->Load("data\\MODEL\\1P.x");
+	m_aInfo[0].nModelIdx = RNLib::Model().Load("data\\MODEL\\1P.x");
 	m_aInfo[0].pos = D3DXVECTOR3(50.0f, 0.0f, 0.0f);
 	m_aInfo[0].fJumpPower = JUMP_POWER;
 	m_aInfo[0].fGravity = GRAVITY_POWER;
@@ -90,7 +90,7 @@ HRESULT CPlayer::Init(void)
 	m_aInfo[0].side = WORLD_SIDE::FACE;
 
 	//２Ｐ初期情報
-	m_aInfo[1].nModelIdx = RNLib::Model()->Load("data\\MODEL\\2P.x");
+	m_aInfo[1].nModelIdx = RNLib::Model().Load("data\\MODEL\\2P.x");
 	m_aInfo[1].pos = D3DXVECTOR3(-50.0f, 0.0f, 0.0f);
 	m_aInfo[1].fJumpPower = -JUMP_POWER;
 	m_aInfo[1].fGravity = -GRAVITY_POWER;
@@ -156,14 +156,14 @@ void CPlayer::UpdateInfo(void)
 		if (Player.bRide) continue;
 
 		//位置設定
-		RNLib::Model()->Put(Player.pos, Player.rot, Player.nModelIdx, false)
+		RNLib::Model().Put(Player.pos, Player.rot, Player.nModelIdx, false)
 			->SetOutLine(true);
 
 		//スワップ先のマークを描画する位置
 		D3DXVECTOR3 MarkPos = Player.pos;
 		MarkPos.y *= -1.0f;
 
-		RNLib::Polygon3D()->Put(MarkPos, INITD3DXVECTOR3)
+		RNLib::Polygon3D().Put(MarkPos, INITD3DXVECTOR3)
 			->SetSize(20.0f, 20.0f)
 			->SetBillboard(true)
 			->SetCol(INITCOLOR);
@@ -190,7 +190,7 @@ void CPlayer::ActionControl(void)
 		if (Player.bRide) continue;
 
 		//ジャンプ入力（空中じゃない）
-		if (!Player.bJump && Player.bGround &&RNLib::Input()->GetTrigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON::UP))
+		if (!Player.bJump && Player.bGround &&RNLib::Input().GetTrigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON::UP))
 		{
 			Player.bGround = false;				//地面から離れた
 			Player.move.y = Player.fJumpPower;	//ジャンプ量代入
@@ -198,11 +198,11 @@ void CPlayer::ActionControl(void)
 		}
 
 		//右に移動
-		if (RNLib::Input()->GetPress(ACTION_KEY[nCntPlayer][2], CInput::BUTTON::RIGHT))
+		if (RNLib::Input().GetPress(ACTION_KEY[nCntPlayer][2], CInput::BUTTON::RIGHT))
 			Player.move.x += MOVE_SPEED;
 
 		//左に移動
-		if (RNLib::Input()->GetPress(ACTION_KEY[nCntPlayer][3], CInput::BUTTON::LEFT))
+		if (RNLib::Input().GetPress(ACTION_KEY[nCntPlayer][3], CInput::BUTTON::LEFT))
 			Player.move.x -= MOVE_SPEED;
 	}
 }
@@ -226,8 +226,8 @@ void CPlayer::Swap(void)
 	};
 
 	//両者ともにスワップボタンを押しているまたはどちらかがロケットに乗っている
-	if ((RNLib::Input()->GetKeyPress(ACTION_KEY[0][(int)m_aInfo[0].side]) || m_aInfo[0].bRide) && 
-		(RNLib::Input()->GetKeyPress(ACTION_KEY[1][(int)m_aInfo[1].side]) || m_aInfo[1].bRide))
+	if ((RNLib::Input().GetKeyPress(ACTION_KEY[0][(int)m_aInfo[0].side]) || m_aInfo[0].bRide) && 
+		(RNLib::Input().GetKeyPress(ACTION_KEY[1][(int)m_aInfo[1].side]) || m_aInfo[1].bRide))
 	{
 		//インターバル設定
 		s_nSwapInterval = SWAP_INTERVAL;

@@ -84,7 +84,7 @@ void CStageObjectMgr::Load(void)
 			fscanf(pFile, "%s", &aDataSearch[0]);
 			fscanf(pFile, "%s", &m_pBlockType[nCntModel].aFileName[0]);	// ファイル名
 
-			m_pBlockType[nCntModel].nModelIdx = RNLib::Model()->Load(m_pBlockType[nCntModel].aFileName);	// モデル番号
+			m_pBlockType[nCntModel].nModelIdx = RNLib::Model().Load(m_pBlockType[nCntModel].aFileName);	// モデル番号
 			nCntModel++;
 		}
 	}

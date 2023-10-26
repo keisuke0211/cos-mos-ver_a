@@ -49,13 +49,13 @@ void CMode_Title::Init(void) {
 	Title = TITLE_OUTSET;
 	m_nSelect = 0;
 
-	m_TexIdx = RNLib::Texture()->Load("data\\TEXTURE\\BackGround\\title.jpg");
+	m_TexIdx = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\title.jpg");
 
 	// 遷移設定
-	RNLib::Transition()->Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
+	RNLib::Transition().Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
 
 	// カメラの視点/注視点を設定
-	RNLib::Camera3D()->SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
+	RNLib::Camera3D().SetGeometryInfo(D3DXVECTOR3(0.0f, 0.0f, -500.0f), D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 
 	// 状態設定
 	SetState((int)STATE::NONE);
@@ -108,12 +108,12 @@ void CMode_Title::Update(void) {
 	else if (Title == TITLE_SELECT)
 		StageSelect();
 
-	RNLib::Polygon2D()->Put(D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, RNLib::Window()->GetCenterPos().y, -1.0f), 0.0f, false)
+	RNLib::Polygon2D().Put(D3DXVECTOR3(RNLib::Window().GetCenterPos().x, RNLib::Window().GetCenterPos().y, -1.0f), 0.0f, false)
 		->SetSize(1280.0f,720.0f)
 		->SetCol(Color{255,255,255,255})
 		->SetTex(m_TexIdx);
 
-	if ((RNLib::Input()->GetKeyTrigger(DIK_RETURN) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::A)) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+	if ((RNLib::Input().GetKeyTrigger(DIK_RETURN) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::A)) && RNLib::Transition().GetState() == CTransition::STATE::NONE)
 	{
 		switch (Title)
 		{
@@ -227,11 +227,11 @@ void CMode_Title::Menu(void)
 	}
 
 	// -- メニュー選択 ---------------------------
-	if (RNLib::Input()->GetKeyTrigger(DIK_W) || RNLib::Input()->GetKeyTrigger(DIK_UP) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::UP) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT,CInput::INPUT_ANGLE::UP))
+	if (RNLib::Input().GetKeyTrigger(DIK_W) || RNLib::Input().GetKeyTrigger(DIK_UP) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::UP) || RNLib::Input().GetStickAngleTrigger(CInput::STICK::LEFT,CInput::INPUT_ANGLE::UP))
 	{
 		m_nSelect--;
 	}
-	else if (RNLib::Input()->GetKeyTrigger(DIK_S) || RNLib::Input()->GetKeyTrigger(DIK_DOWN) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::DOWN) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::DOWN))
+	else if (RNLib::Input().GetKeyTrigger(DIK_S) || RNLib::Input().GetKeyTrigger(DIK_DOWN) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::DOWN) || RNLib::Input().GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::DOWN))
 	{
 		m_nSelect++;
 	}
@@ -256,7 +256,7 @@ void CMode_Title::SelectCreate(void)
 		char *aTexFile = Manager::StgEd()->GetInfo()[nCnt].aTexFile;
 		char *aStgName = Manager::StgEd()->GetInfo()[nCnt].aStageName;
 
-		m_StageType[nCnt].nTex = RNLib::Texture()->Load(aTexFile);
+		m_StageType[nCnt].nTex = RNLib::Texture().Load(aTexFile);
 		sprintf(m_StageType[nCnt].Text, aStgName);
 	}
 
@@ -274,28 +274,28 @@ void CMode_Title::SelectCreate(void)
 void CMode_Title::StageSelect(void)
 {
 	int nMax = Manager::StgEd()->GetStageMax();
-	int nChoiceTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\mark_smiley_000.png");
-	int nNoChoiceTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Circle_005.png");
-	int nPrevTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Arrow_01.png");
-	int nNextTex = RNLib::Texture()->Load("data\\TEXTURE\\Effect\\eff_Arrow_00.png");
+	int nChoiceTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\mark_smiley_000.png");
+	int nNoChoiceTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Circle_005.png");
+	int nPrevTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Arrow_01.png");
+	int nNextTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Arrow_00.png");
 
 	int nTexIdx = 0;
 
 	// ステージ画像
-	RNLib::Polygon2D()->Put(D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, RNLib::Window()->GetCenterPos().y - 120.0f, -1.0f), 0.0f, false)
+	RNLib::Polygon2D().Put(D3DXVECTOR3(RNLib::Window().GetCenterPos().x, RNLib::Window().GetCenterPos().y - 120.0f, -1.0f), 0.0f, false)
 		->SetSize(880.0f, 480.0f)
 		->SetCol(Color{ 255,255,255,255 })
 		->SetTex(m_StageType[m_nSelect].nTex);
 
 	if (m_nSelect != 0)
 	{
-		RNLib::Polygon2D()->Put(D3DXVECTOR3(400.0f, 550.0f, 0.0), 0.0f, false)
+		RNLib::Polygon2D().Put(D3DXVECTOR3(400.0f, 550.0f, 0.0), 0.0f, false)
 			->SetSize(100.0f, 100.0f)
 			->SetCol(Color{ 50,255,0,255 })
 			->SetTex(nPrevTex);
 	}
 	if(m_nSelect != nMax - 1)
-	RNLib::Polygon2D()->Put(D3DXVECTOR3(880.0f, 550.0f, 0.0), 0.0f, false)
+	RNLib::Polygon2D().Put(D3DXVECTOR3(880.0f, 550.0f, 0.0), 0.0f, false)
 		->SetSize(100.0f, 100.0f)
 		->SetCol(Color{ 50,255,0,255 })
 		->SetTex(nNextTex);
@@ -311,10 +311,10 @@ void CMode_Title::StageSelect(void)
 		{
 			nTexIdx = nNoChoiceTex;
 		}
-		D3DXVECTOR3 pos = D3DXVECTOR3(RNLib::Window()->GetCenterPos().x, 680,0.0f);
+		D3DXVECTOR3 pos = D3DXVECTOR3(RNLib::Window().GetCenterPos().x, 680,0.0f);
 		pos.x += ((nMax * -0.5f) + nCnt + 0.5f) * 50;
 
-		RNLib::Polygon2D()->Put(pos, 0.0f, false)
+		RNLib::Polygon2D().Put(pos, 0.0f, false)
 			->SetSize(40.0f, 40.0f)
 			->SetCol(Color{ 255,255,255,255 })
 			->SetTex(nTexIdx);
@@ -322,12 +322,12 @@ void CMode_Title::StageSelect(void)
 
 	bool bInput = false;
 	// -- メニュー選択 ---------------------------
-	if (RNLib::Input()->GetKeyTrigger(DIK_A) || RNLib::Input()->GetKeyTrigger(DIK_LEFT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::LEFT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::LEFT))
+	if (RNLib::Input().GetKeyTrigger(DIK_A) || RNLib::Input().GetKeyTrigger(DIK_LEFT) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::LEFT) || RNLib::Input().GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::LEFT))
 	{
 		m_nSelect--;
 		bInput = true;
 	}
-	else if (RNLib::Input()->GetKeyTrigger(DIK_D) || RNLib::Input()->GetKeyTrigger(DIK_RIGHT) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::RIGHT) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::RIGHT))
+	else if (RNLib::Input().GetKeyTrigger(DIK_D) || RNLib::Input().GetKeyTrigger(DIK_RIGHT) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::RIGHT) || RNLib::Input().GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::RIGHT))
 	{
 		m_nSelect++;
 		bInput = true;
