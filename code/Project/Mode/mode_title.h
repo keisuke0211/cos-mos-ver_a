@@ -11,7 +11,6 @@
 //****************************************
 // 前方宣言
 //****************************************
-class CWords;
 class CFontText;
 
 //****************************************
@@ -74,6 +73,5 @@ private:
 	int m_TexIdx;
 	int m_nSelect;
 	CFontText *m_Menu[MENU_MAX];		// メニューテキスト
-	CWords *m_Words[4];					// タイトル
 	StageType *m_StageType;
 };

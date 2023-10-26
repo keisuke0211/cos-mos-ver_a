@@ -24,6 +24,11 @@ public:
 		BACK_SIDE,	// 裏面
 		BOTH_SIDES,	// 両面
 	};
+	// アルファブレンドモード
+	enum class ALPHA_BLEND_MODE {
+		NORMAL,	// 通常
+		ADD,	// 加算
+	};
 	// テクスチャ透過モード
 	enum class TEXTURE_ALPHA_MODE {
 		ENABLED,	// 有効
@@ -50,6 +55,7 @@ public:
 	void SetZTestMode         (const ZTEST_MODE& mode, LPDIRECT3DDEVICE9& device);
 	void SetZTestMode         (const bool& isZTest, LPDIRECT3DDEVICE9& device);
 	void SetCullingMode       (const CULLING_MODE& mode, LPDIRECT3DDEVICE9& device);
+	void SetAlphaBlendMode    (const ALPHA_BLEND_MODE& mode, LPDIRECT3DDEVICE9& device);
 	void SetTextureAlphaMode  (const TEXTURE_ALPHA_MODE& mode, LPDIRECT3DDEVICE9& device);
 	void SetTextureAlphaMode  (const bool& isTextureAlpha, LPDIRECT3DDEVICE9& device);
 	void SetLightingMode      (const LIGHTING_MODE& mode, LPDIRECT3DDEVICE9& device);
@@ -63,6 +69,7 @@ private:
 	struct FormerMode {
 		ZTEST_MODE         ZTest        = ZTEST_MODE::ENABLED;
 		CULLING_MODE       culling      = CULLING_MODE::FRONT_SIDE;
+		ALPHA_BLEND_MODE   alphaBlend   = ALPHA_BLEND_MODE::NORMAL;
 		TEXTURE_ALPHA_MODE textureAlpha = TEXTURE_ALPHA_MODE::ENABLED;
 		LIGHTING_MODE      lighting     = LIGHTING_MODE::ENABLED;
 		FOG_MODE           fog          = FOG_MODE::ENABLED;

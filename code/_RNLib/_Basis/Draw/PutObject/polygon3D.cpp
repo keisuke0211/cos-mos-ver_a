@@ -200,26 +200,7 @@ void CPolygon3D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const Matrix& viewMt
 //========================================
 CPolygon3D::CRegistInfo::CRegistInfo() {
 
-	m_idx          = DATANONE;
-	m_scaleX       = 1.0f;
-	m_scaleY       = 1.0f;
-	m_isFactScale  = false;
-	m_mtx          = INITMATRIX;
-	m_vtxPoses     = NULL;
-	m_col          = INITCOLOR;
-	m_texIdx       = DATANONE;
-	m_texCamera    = NULL;
-	m_ptn          = 0;
-	m_ptnX         = 1;
-	m_ptnY         = 1;
-	m_ptnScaleX    = 1.0f;
-	m_ptnScaleY    = 1.0f;
-	m_ptnPos       = INITPOS2D;
-	m_isZtest      = true;
-	m_isLighting   = true;
-	m_isBillboard  = false;
-	m_isTexMirrorX = false;
-	m_priority     = 0;
+	ClearParameter();
 }
 
 //========================================
@@ -227,6 +208,34 @@ CPolygon3D::CRegistInfo::CRegistInfo() {
 //========================================
 CPolygon3D::CRegistInfo::~CRegistInfo() {
 
+}
+
+//========================================
+// パラメーターのクリア処理
+//========================================
+void CPolygon3D::CRegistInfo::ClearParameter(void) {
+
+	m_idx            = DATANONE;
+	m_scaleX         = 1.0f;
+	m_scaleY         = 1.0f;
+	m_isFactScale    = false;
+	m_mtx            = INITMATRIX;
+	m_vtxPoses       = NULL;
+	m_col            = INITCOLOR;
+	m_texIdx         = DATANONE;
+	m_texCamera      = NULL;
+	m_ptn            = 0;
+	m_ptnX           = 1;
+	m_ptnY           = 1;
+	m_ptnScaleX      = 1.0f;
+	m_ptnScaleY      = 1.0f;
+	m_ptnPos         = INITPOS2D;
+	m_isZtest        = true;
+	m_isLighting     = true;
+	m_isBillboard    = false;
+	m_alphaBlendMode = CDrawState::ALPHA_BLEND_MODE::NORMAL;
+	m_isTexMirrorX   = false;
+	m_priority       = 0;
 }
 
 //========================================
@@ -517,6 +526,19 @@ CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetBillboard(const bool& isBil
 
 	m_isBillboard = isBillboard;
 	
+	return this;
+}
+
+//========================================
+// アルファブレンドモードを設定
+//========================================
+CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetAlphaBlendMode(const CDrawState::ALPHA_BLEND_MODE& alphaBlendMode) {
+
+	if (this == NULL)
+		return NULL;
+
+	m_alphaBlendMode = alphaBlendMode;
+
 	return this;
 }
 
