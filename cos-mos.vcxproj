@@ -210,7 +210,6 @@
     <ClCompile Include="code\_RNLib\_Basis\Draw\draw-info.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\draw-manager.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\draw-state.cpp" />
-    <ClCompile Include="code\_RNLib\_Basis\Draw\light3D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\PutObject\model.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\PutObject\polygon2D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\PutObject\polygon3D.cpp" />
