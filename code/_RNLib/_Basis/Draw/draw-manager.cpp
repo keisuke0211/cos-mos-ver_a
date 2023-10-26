@@ -438,7 +438,11 @@ CPolygon3D::CRegistInfo* CDrawMng::RegistPolygon3D(CRegistInfoSum& resistInfo) {
 
 		// ‚»‚ÌŠm•Ûƒ‰ƒCƒ“•ªŠm•Û‚µ’¼‚·
 		RNLib::Memory()->ReAlloc(&resistInfo.m_polygon3DRegistInfos, oldAllocNum, resistInfo.m_polygon3DRegistInfoAllocNum);
+
+		
 	}
+
+	resistInfo.m_polygon3DRegistInfos[resistInfo.m_polygon3DRegistInfoNum++].ClearParameter();
 
 	return &resistInfo.m_polygon3DRegistInfos[resistInfo.m_polygon3DRegistInfoNum++];
 }

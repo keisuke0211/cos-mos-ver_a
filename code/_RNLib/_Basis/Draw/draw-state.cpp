@@ -68,6 +68,8 @@ void CDrawState::Init(LPDIRECT3DDEVICE9& device) {
 	device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
+	
+
 	//----------------------------------------
 	// サンプラーステートの初期設定
 	//----------------------------------------
@@ -101,6 +103,7 @@ void CDrawState::EndTemporarySetMode(LPDIRECT3DDEVICE9& device) {
 	// 元のモードで設定し直す
 	SetZTestMode(m_formerMode.ZTest, device);
 	SetCullingMode(m_formerMode.culling, device);
+	SetAlphaBlendMode(m_formerMode.alphaBlend, device);
 	SetTextureAlphaMode(m_formerMode.textureAlpha, device);
 	SetLightingMode(m_formerMode.lighting, device);
 
@@ -160,6 +163,36 @@ void CDrawState::SetCullingMode(const CULLING_MODE& mode, LPDIRECT3DDEVICE9& dev
 		// [[[ 両面 ]]]
 	case CULLING_MODE::BOTH_SIDES: {
 		device->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+	}break;
+	}
+}
+
+//========================================
+// アルファブレンドモードの設定
+//========================================
+void CDrawState::SetAlphaBlendMode(const ALPHA_BLEND_MODE& mode, LPDIRECT3DDEVICE9& device) {
+
+	// 元のモードとして代入
+	if (m_isAssignFormerMode)
+		m_formerMode.alphaBlend = mode;
+
+	switch (mode) {
+		// [[[ 通常 ]]]
+	case ALPHA_BLEND_MODE::NORMAL: {
+		device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+		device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_ALWAYS);
+		device->SetRenderState(D3DRS_ALPHAREF, 255);
+		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	}break;
+		// [[[ 加算 ]]]
+	case ALPHA_BLEND_MODE::ADD: {
+		device->SetRenderState(D3DRS_ALPHATESTENABLE, TRUE);
+		device->SetRenderState(D3DRS_ALPHAFUNC, D3DCMP_GREATER);
+		device->SetRenderState(D3DRS_ALPHAREF, 0);
+		device->SetRenderState(D3DRS_BLENDOP, D3DBLENDOP_ADD);
+		device->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+		device->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_ONE);
 	}break;
 	}
 }

@@ -5,9 +5,9 @@
 // 
 //========================================
 #include "../main.h"
-#include "mode_pause.h"
 #include "../Character/player.h"
 #include "../System/StageEditor.h"
+#include "../System/words/font-text.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -118,22 +118,16 @@ void CMode_Game::Uninit(void) {
 void CMode_Game::Update(void) {
 	CMode::Update();
 
-	bool bPause = CMode_Pause::IsPause();
-
-	if (!bPause)
+	if (m_state != (int)STATE::PAUSE)
 	{
 		if (RNLib::Input()->GetKeyTrigger(DIK_P))
 		{
-			Manager::Transition(CMode::TYPE::PAUSE, CTransition::TYPE::NONE);
-			CMode_Pause::SetPause(true);
+			SetState((int)STATE::PAUSE);
 		}
 
 		if (s_pPlayer != NULL)
 			s_pPlayer->Update();
 	}
-
-	if (RNLib::Input()->GetKeyTrigger(DIK_RETURN))
-		Manager::StgEd()->SwapStage(2);
 
 	if (RNLib::Input()->GetKeyTrigger(DIK_SPACE) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
 		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::FADE);
@@ -176,6 +170,30 @@ void CMode_Game::ProcessState(const PROCESS process) {
 		}break;
 		}
 	}break;
+	case STATE::PAUSE: {
+		switch (process) {
+			// [[[ 初期処理 ]]]
+		case PROCESS::INIT: {
+			PauseCreate();
+		}break;
+			// [[[ 終了処理 ]]]
+		case PROCESS::UNINIT: {
+			for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
+			{
+				if (m_Menu[nCnt] != NULL)
+				{
+					m_Menu[nCnt]->Uninit();
+					m_Menu[nCnt] = NULL;
+				}
+			}
+		}break;
+			// [[[ 更新処理 ]]]
+		case PROCESS::UPDATE: {
+			PauseMenu();
+			PauseSelect();
+		}break;
+		}
+	}break;
 	}
 }
 
@@ -208,5 +226,87 @@ void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 		Starpos += D3DXVECTOR3(rand() % 50 - 50, rand() % 50 - 50, 0.0f);	// 位置の設定
 
 		//Manager::BlockMgr()->StarCreate(Starpos, INITD3DXVECTOR3);	// 星の生成
+	}
+}
+
+//========================================
+// ポーズ生成の処理
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Game::PauseCreate(void)
+{
+	FormFont pFont = { INITCOLOR,45.0f,1,1,-1, };
+
+	m_Menu[0] = CFontText::Create(CFontText::BOX_NORMAL_RECT,
+		D3DXVECTOR3(640.0f, 200.0f, 0.0f), D3DXVECTOR2(460.0f, 100.0f),
+		"続ける", CFont::FONT_ROND_B, &pFont);
+
+	m_Menu[1] = CFontText::Create(CFontText::BOX_NORMAL_RECT,
+		D3DXVECTOR3(640.0f, 350.0f, 0.0f), D3DXVECTOR2(460.0f, 100.0f),
+		"リスタート", CFont::FONT_ROND_B, &pFont);
+
+	m_Menu[2] = CFontText::Create(CFontText::BOX_NORMAL_RECT,
+		D3DXVECTOR3(640.0f, 500.0f, 0.0f), D3DXVECTOR2(460.0f, 100.0f),
+		"タイトル画面に戻る", CFont::FONT_ROND_B, &pFont);
+}
+
+//========================================
+// ポーズメニューの処理
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Game::PauseMenu(void)
+{
+	// 色
+	for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
+	{
+		if (m_Menu[nCnt] != NULL)
+		{
+			if (nCnt == m_nSelect)
+			{
+				m_Menu[nCnt]->SetBoxColor(Color{ 0,255,0,255 });
+			}
+			else
+			{
+				m_Menu[nCnt]->SetBoxColor(INITCOLOR);
+			}
+		}
+	}
+
+	// -- メニュー選択 ---------------------------
+	if (RNLib::Input()->GetKeyTrigger(DIK_W) || RNLib::Input()->GetKeyTrigger(DIK_UP) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::UP) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::UP))
+	{
+		m_nSelect--;
+	}
+	else if (RNLib::Input()->GetKeyTrigger(DIK_S) || RNLib::Input()->GetKeyTrigger(DIK_DOWN) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::DOWN) || RNLib::Input()->GetStickAngleTrigger(CInput::STICK::LEFT, CInput::INPUT_ANGLE::DOWN))
+	{
+		m_nSelect++;
+	}
+
+	// ループ制御
+	IntLoopControl(&m_nSelect, MENU_MAX, 0);
+}
+
+//========================================
+// ポーズ選択の処理
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Game::PauseSelect(void)
+{
+	if ((RNLib::Input()->GetKeyTrigger(DIK_RETURN) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::A)) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+	{
+		switch (m_nSelect)
+		{
+		case MENU_RESUME:
+			SetState((int)STATE::NONE);
+			break;
+		case MENU_RESET:
+			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::FADE);
+			break;
+		case MENU_TITLE:
+			Manager::Transition(CMode::TYPE::TITLE, CTransition::TYPE::FADE);
+			break;
+		}
+
+		ProcessState(PROCESS::UNINIT);
 	}
 }

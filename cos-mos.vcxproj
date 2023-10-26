@@ -157,12 +157,12 @@
     <ClCompile Include="code\Project\Character\player.cpp" />
     <ClCompile Include="code\Project\Effect\effect-manager.cpp" />
     <ClCompile Include="code\Project\Effect\effect.cpp" />
+    <ClCompile Include="code\Project\Effect\particle.cpp" />
     <ClCompile Include="code\Project\main.cpp" />
     <ClCompile Include="code\Project\manager.cpp" />
     <ClCompile Include="code\Project\Mode\mode.cpp" />
     <ClCompile Include="code\Project\Mode\mode_game.cpp" />
     <ClCompile Include="code\Project\Mode\mode_logo.cpp" />
-    <ClCompile Include="code\Project\Mode\mode_pause.cpp" />
     <ClCompile Include="code\Project\Mode\mode_result.cpp" />
     <ClCompile Include="code\Project\Mode\mode_title.cpp" />
     <ClCompile Include="code\Project\Object\BackGround\Planet.cpp" />
@@ -244,12 +244,12 @@
     <ClInclude Include="code\Project\Character\player.h" />
     <ClInclude Include="code\Project\Effect\effect-manager.h" />
     <ClInclude Include="code\Project\Effect\effect.h" />
+    <ClInclude Include="code\Project\Effect\particle.h" />
     <ClInclude Include="code\Project\main.h" />
     <ClInclude Include="code\Project\manager.h" />
     <ClInclude Include="code\Project\Mode\mode.h" />
     <ClInclude Include="code\Project\Mode\mode_game.h" />
     <ClInclude Include="code\Project\Mode\mode_logo.h" />
-    <ClInclude Include="code\Project\Mode\mode_pause.h" />
     <ClInclude Include="code\Project\Mode\mode_result.h" />
     <ClInclude Include="code\Project\Mode\mode_title.h" />
     <ClInclude Include="code\Project\Object\BackGround\Planet.h" />

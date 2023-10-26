@@ -18,7 +18,6 @@ public:
 	enum class TYPE{
 		NONE = -1,
 		LOGO,
-		PAUSE,
 		TITLE,
 		GAME,
 		RESULT,
