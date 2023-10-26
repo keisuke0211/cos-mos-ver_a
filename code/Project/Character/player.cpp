@@ -8,10 +8,6 @@
 #include "player.h"
 #include "../../_RNLib/_Basis/Other/input.h"
 #include "../../_RNLib/_Basis/Calculation/number.h"
-#include "../Object/Block/move-block.h"
-#include "../Object/Gimmick/meteor.h"
-#include "../Object/Gimmick/trampoline.h"
-#include "../Object/Item/Parts.h"
 
 //スワップインターバル
 const int	CPlayer::SWAP_INTERVAL = 30;	//スワップインターバル
@@ -27,12 +23,17 @@ const float CPlayer::JUMP_POWER = 10.0f;	//基本ジャンプ量
 const float CPlayer::GRAVITY_POWER = -8.0f;	//基本重力加速度
 const float CPlayer::GRAVITY_CORR = 0.07f;	//基本重力係数
 
+int			CPlayer::s_nNumGetParts = 0;	//取得したパーツの数
+bool		CPlayer::s_bRideRocket = false;	//ロケットに乗れるかどうか
+
 //=======================================
 //コンストラクタ
 //=======================================
 CPlayer::CPlayer()
 {
-	s_nSwapInterval = 0;	//残りスワップインターバル
+	s_nSwapInterval = 0;//残りスワップインターバル
+	s_nNumGetParts = 0;	//取得したパーツの数
+	s_bRideRocket = false;//ロケットに乗れるかどうか
 
 	for each(Info &Player in m_aInfo)
 	{
@@ -380,6 +381,7 @@ void CPlayer::WholeCollision(void)
 					case CStageObject::TYPE::MOVE_BLOCK:	CollisionMoveBlock(&Player, (CMoveBlock *)stageObj, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::METEOR:		break;
 					case CStageObject::TYPE::PARTS:			CollisionParts(&Player, (CParts *)stageObj); break;
+					case CStageObject::TYPE::ROCKET:		CollisionRocket(&Player, (CRocket *)stageObj); break;
 				}
 
 				//当たれば即死のオブジェクトに当たっている
@@ -392,14 +394,21 @@ void CPlayer::WholeCollision(void)
 		}
 	}
 
+	CText2D *pTxt = RNLib::Text2D();
+
 	//プレイヤーの位置更新
 	for(int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
 	{
-		RNLib::Text2D()->Put(D3DXVECTOR3(20.0f, 20.0f + 25.0f * nCnt, 0.0f), 0.0f, CreateText("%dPのY座標：%f", nCnt, m_aInfo[nCnt].pos.y), CText::ALIGNMENT::LEFT, 0);
+		pTxt->Put(D3DXVECTOR3(20.0f, 20.0f + 25.0f * nCnt, 0.0f), 0.0f, CreateText("%dPのY座標：%f", nCnt, m_aInfo[nCnt].pos.y), CText::ALIGNMENT::LEFT, 0);
 	}
 
-	RNLib::Text2D()->Put(D3DXVECTOR3(20.0f, 80.0f, 0.0f), 0.0f, CreateText("FPS：%d", RNLib::GetFPSCount()), CText::ALIGNMENT::LEFT, 0);
+	pTxt->Put(D3DXVECTOR3(20.0f, 80.0f, 0.0f), 0.0f, CreateText("FPS：%d", RNLib::GetFPSCount()), CText::ALIGNMENT::LEFT, 0);
 
+	pTxt->Put(Pos3D(20.0, 100.0f, 0.0f), 0.0f, CreateText("パーツ総数：%d", CParts::GetNumAll()), CText::ALIGNMENT::LEFT, 0);
+	pTxt->Put(Pos3D(20.0, 125.0f, 0.0f), 0.0f, CreateText("取得数：%d", s_nNumGetParts), CText::ALIGNMENT::LEFT, 0);
+
+	if (s_bRideRocket)
+		pTxt->Put(Pos3D(20.0f, 150.0f, 0.0f), 0.0f, "ロケット乗車可能！", CText::ALIGNMENT::LEFT, 0);
 }
 
 //----------------------------
@@ -668,6 +677,23 @@ void CPlayer::CollisionParts(Info *pInfo, CParts *pParts)
 
 	//取得したので描画OFF
 	pParts->DispSwitch(false);
+
+	//取得数増加
+	s_nNumGetParts++;
+
+	//取得した数が全体数と同じなら、ロケット乗車可能
+	if (s_nNumGetParts == CParts::GetNumAll()) s_bRideRocket = true;
+}
+
+//----------------------------
+//ロケットの当たり判定処理
+//----------------------------
+void CPlayer::CollisionRocket(Info *pInfo, CRocket *pRocket)
+{
+	if (!s_bRideRocket) return;
+
+	//飛ばせる
+	pRocket->SetState(CRocket::ANIME_STATE::FLY);
 }
 
 //========================
