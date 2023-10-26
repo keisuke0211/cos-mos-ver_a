@@ -157,6 +157,7 @@
     <ClCompile Include="code\Project\Character\player.cpp" />
     <ClCompile Include="code\Project\Effect\effect-manager.cpp" />
     <ClCompile Include="code\Project\Effect\effect.cpp" />
+    <ClCompile Include="code\Project\Effect\particle.cpp" />
     <ClCompile Include="code\Project\main.cpp" />
     <ClCompile Include="code\Project\manager.cpp" />
     <ClCompile Include="code\Project\Mode\mode.cpp" />
@@ -209,7 +210,6 @@
     <ClCompile Include="code\_RNLib\_Basis\Draw\draw-info.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\draw-manager.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\draw-state.cpp" />
-    <ClCompile Include="code\_RNLib\_Basis\Draw\light3D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\PutObject\model.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\PutObject\polygon2D.cpp" />
     <ClCompile Include="code\_RNLib\_Basis\Draw\PutObject\polygon3D.cpp" />
@@ -243,6 +243,7 @@
     <ClInclude Include="code\Project\Character\player.h" />
     <ClInclude Include="code\Project\Effect\effect-manager.h" />
     <ClInclude Include="code\Project\Effect\effect.h" />
+    <ClInclude Include="code\Project\Effect\particle.h" />
     <ClInclude Include="code\Project\main.h" />
     <ClInclude Include="code\Project\manager.h" />
     <ClInclude Include="code\Project\Mode\mode.h" />

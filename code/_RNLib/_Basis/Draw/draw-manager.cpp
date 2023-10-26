@@ -85,8 +85,8 @@ void CDrawMng::Release(void) {
 	ms_resistInfoSumScreen.Release();
 
 	// 頂点バッファを破棄する
-	CPolygon2D::CDrawInfo::ReleaseVertexBuffer();
-	CPolygon3D::CDrawInfo::ReleaseVertexBuffer();
+	//CPolygon2D::CDrawInfo::ReleaseVertexBuffer();
+	//CPolygon3D::CDrawInfo::ReleaseVertexBuffer();
 }
 
 //========================================
@@ -438,7 +438,11 @@ CPolygon3D::CRegistInfo* CDrawMng::RegistPolygon3D(CRegistInfoSum& resistInfo) {
 
 		// その確保ライン分確保し直す
 		RNLib::Memory()->ReAlloc(&resistInfo.m_polygon3DRegistInfos, oldAllocNum, resistInfo.m_polygon3DRegistInfoAllocNum);
+
+		
 	}
+
+	resistInfo.m_polygon3DRegistInfos[resistInfo.m_polygon3DRegistInfoNum++].ClearParameter();
 
 	return &resistInfo.m_polygon3DRegistInfos[resistInfo.m_polygon3DRegistInfoNum++];
 }

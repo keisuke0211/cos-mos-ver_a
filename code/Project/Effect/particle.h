@@ -1,6 +1,6 @@
 //========================================
 // 
-// エフェクト処理
+// パーティクル処理
 // Author:RYUKI FUJIWARA
 // 
 //========================================
@@ -10,7 +10,7 @@
 //****************************************
 // クラス
 //****************************************
-class CEffect : public CObject{
+class CParticle : public CObject {
 public:
 
 	// 共通情報
@@ -24,8 +24,8 @@ public:
 	};
 
 	// *** 関数 ***
-	CEffect();
-	~CEffect();
+	CParticle();
+	~CParticle();
 
 	/* 初期化	*/HRESULT Init(int nTex);
 	/* 終了		*/void Uninit(void);

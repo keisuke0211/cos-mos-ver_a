@@ -11,6 +11,7 @@
 class CStageObject;
 class CMoveBlock;
 class CParts;
+class CRocket;
 
 //プレイヤークラス
 class CPlayer
@@ -52,6 +53,7 @@ public:
 		D3DXVECTOR3 move;			//移動量
 		bool		bGround;		//地面に接しているか
 		bool		bJump;			//ジャンプ
+		bool		bRide;			//ロケットに乗っているかどうか
 		float		fJumpPower;		//ジャンプ量
 		float		fGravity;		//重力
 		float		fGravityCorr;	//重力係数
@@ -130,6 +132,9 @@ private:
 	static const float GRAVITY_POWER;	//基本重力加速度
 	static const float GRAVITY_CORR;	//基本重力係数
 
+	static int	s_nNumGetParts;	//取得したパーツの数
+	static bool	s_bRideRocket;	//ロケットに乗れるかどうか
+
 	void SetPosOld(void);
 	void ActionControl(void);
 	void Move(COLLI_VEC vec);
@@ -164,6 +169,7 @@ private:
 	void CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock,D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionParts(Info *pInfo, CParts *pParts);
+	void CollisionRocket(Info *pInfo, CRocket *pRocket);
 
 	//情報更新処理（更新処理の最後に位置情報などを設定する
 	void UpdateInfo(void);

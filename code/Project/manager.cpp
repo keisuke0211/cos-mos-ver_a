@@ -15,6 +15,7 @@ namespace {
 	CMode*      m_modeObj;
 	CMode::TYPE m_reserveModeType;
 	CStageObjectMgr   m_blockMgr;
+	CEffectMgr   m_effectMgr;
 	CStageEditor m_StgEd;
 	CFont m_Font;
 }
@@ -25,6 +26,7 @@ namespace {
 //----------|---------------------------------------------------------------------
 //================================================================================
 CStageObjectMgr* Manager::BlockMgr(void) { return &m_blockMgr; }
+CEffectMgr* Manager::EffectMgr(void) { return &m_effectMgr; }
 CStageEditor* Manager::StgEd(void) { return &m_StgEd; }
 CFont* Manager::Font(void) { return &m_Font; }
 
@@ -75,6 +77,8 @@ void Manager::Update(void) {
 	// モードオブジェクトが在る時、更新処理
 	if (m_modeObj != NULL) {
 		m_modeObj->Update();
+
+		if(m_modeObj != NULL)
 		m_modeObj->ProcessState(PROCESS::UPDATE);
 	}
 
@@ -106,16 +110,15 @@ void Manager::SetMode(CMode::TYPE newMode) {
 
 	// シーンを終了
 	RNLib::UninitScene();
-	
+
 	// モードオブジェクトの終了処理
 	if (m_modeObj != NULL) {
 		m_modeObj->Uninit();
 		RNLib::Memory()->Release(&m_modeObj);
 	}
-
 	// モードオブジェクトを新たに生成
 	m_modeObj = CMode::Create(newMode);
-	
+
 	// 予約モードを無しにする
 	m_reserveModeType = CMode::TYPE::NONE;
 }

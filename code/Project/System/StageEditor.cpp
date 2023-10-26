@@ -112,6 +112,9 @@ void CStageEditor::FileLoad(void)
 //========================================
 void CStageEditor::StageLoad(int stage)
 {
+	//ƒvƒŒƒCƒ„[‰Šú‰»
+	CMode_Game::GetPlayer()->Init();
+
 	CSVFILE *pFile = new CSVFILE;
 
 	m_Info.nStageIdx = stage;

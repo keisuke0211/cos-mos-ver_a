@@ -8,10 +8,6 @@
 #include "player.h"
 #include "../../_RNLib/_Basis/Other/input.h"
 #include "../../_RNLib/_Basis/Calculation/number.h"
-#include "../Object/Block/move-block.h"
-#include "../Object/Gimmick/meteor.h"
-#include "../Object/Gimmick/trampoline.h"
-#include "../Object/Item/Parts.h"
 
 //スワップインターバル
 const int	CPlayer::SWAP_INTERVAL = 30;	//スワップインターバル
@@ -27,12 +23,17 @@ const float CPlayer::JUMP_POWER = 10.0f;	//基本ジャンプ量
 const float CPlayer::GRAVITY_POWER = -8.0f;	//基本重力加速度
 const float CPlayer::GRAVITY_CORR = 0.07f;	//基本重力係数
 
+int			CPlayer::s_nNumGetParts = 0;	//取得したパーツの数
+bool		CPlayer::s_bRideRocket = false;	//ロケットに乗れるかどうか
+
 //=======================================
 //コンストラクタ
 //=======================================
 CPlayer::CPlayer()
 {
-	s_nSwapInterval = 0;	//残りスワップインターバル
+	s_nSwapInterval = 0;//残りスワップインターバル
+	s_nNumGetParts = 0;	//取得したパーツの数
+	s_bRideRocket = false;//ロケットに乗れるかどうか
 
 	for each(Info &Player in m_aInfo)
 	{
@@ -43,6 +44,7 @@ CPlayer::CPlayer()
 		Player.move = INITD3DXVECTOR3;		//移動量
 		Player.bGround = false;				//地面に接しているか
 		Player.bJump = false;				//ジャンプ
+		Player.bRide = false;				//ロケットに乗っているかどうか
 		Player.fJumpPower = 0.0f;			//ジャンプ量
 		Player.fGravity = 0.0f;				//重力
 		Player.fGravityCorr = 0.0f;			//重力係数
@@ -150,6 +152,9 @@ void CPlayer::UpdateInfo(void)
 {
 	for each (Info &Player in m_aInfo)
 	{
+		//ロケットに乗ってたらスキップ
+		if (Player.bRide) continue;
+
 		//位置設定
 		RNLib::Model()->Put(Player.pos, Player.rot, Player.nModelIdx, false)
 			->SetOutLine(true);
@@ -160,7 +165,8 @@ void CPlayer::UpdateInfo(void)
 
 		RNLib::Polygon3D()->Put(MarkPos, INITD3DXVECTOR3)
 			->SetSize(20.0f, 20.0f)
-			->SetBillboard(true);
+			->SetBillboard(true)
+			->SetCol(INITCOLOR);
 	}
 }
 
@@ -179,6 +185,9 @@ void CPlayer::ActionControl(void)
 	{
 		//情報を参照
 		Info& Player = m_aInfo[nCntPlayer];
+
+		//ロケットに乗ってたらスキップ
+		if (Player.bRide) continue;
 
 		//ジャンプ入力（空中じゃない）
 		if (!Player.bJump && Player.bGround &&RNLib::Input()->GetTrigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON::UP))
@@ -216,14 +225,18 @@ void CPlayer::Swap(void)
 		{ DIK_DOWNARROW, DIK_UPARROW }//２Ｐの操作キー
 	};
 
-	//両者ともにスワップボタンを押している
-	if (RNLib::Input()->GetKeyPress(ACTION_KEY[0][(int)m_aInfo[0].side]) && RNLib::Input()->GetKeyPress(ACTION_KEY[1][(int)m_aInfo[1].side]))
+	//両者ともにスワップボタンを押しているまたはどちらかがロケットに乗っている
+	if ((RNLib::Input()->GetKeyPress(ACTION_KEY[0][(int)m_aInfo[0].side]) || m_aInfo[0].bRide) && 
+		(RNLib::Input()->GetKeyPress(ACTION_KEY[1][(int)m_aInfo[1].side]) || m_aInfo[1].bRide))
 	{
 		//インターバル設定
 		s_nSwapInterval = SWAP_INTERVAL;
 
 		for each (Info &Player in m_aInfo)
 		{
+			//ロケットに乗ってたらスキップ
+			if (Player.bRide) continue;
+
 			//位置・重力加速度・ジャンプ量・存在する世界を反転
 			Player.pos.y *= -1.0f;
 			Player.fGravity *= -1.0f;
@@ -241,19 +254,27 @@ void CPlayer::Swap(void)
 //----------------------------
 void CPlayer::Death(D3DXVECTOR3 *pDeathPos)
 {
-	//１Ｐ初期情報
-	m_aInfo[0].pos = m_aInfo[0].StartPos;
+	//１Ｐ用初期情報
 	m_aInfo[0].fJumpPower = JUMP_POWER;
 	m_aInfo[0].fGravity = GRAVITY_POWER;
 	m_aInfo[0].fGravityCorr = GRAVITY_CORR;
 	m_aInfo[0].side = WORLD_SIDE::FACE;
 
-	//２Ｐ初期情報
-	m_aInfo[1].pos = m_aInfo[1].StartPos;
+	//２Ｐ用初期情報
 	m_aInfo[1].fJumpPower = -JUMP_POWER;
 	m_aInfo[1].fGravity = -GRAVITY_POWER;
 	m_aInfo[1].fGravityCorr = GRAVITY_CORR;
 	m_aInfo[1].side = WORLD_SIDE::BEHIND;
+
+	//両者共通初期情報
+	for each (Info &Player in m_aInfo)
+	{
+		Player.posOLd =	Player.pos = Player.StartPos;
+		Player.move = INITD3DXVECTOR3;
+		Player.bGround = false;
+		Player.bJump = true;
+		Player.bRide = false;
+	}
 }
 
 //----------------------------
@@ -264,6 +285,9 @@ void CPlayer::Move(COLLI_VEC vec)
 	//プレイヤーの位置更新
 	for each (Info &Player in m_aInfo)
 	{
+		//ロケットに乗っていたらスキップ
+		if (Player.bRide) continue;
+
 		//移動量反映
 		switch (vec)
 		{
@@ -324,6 +348,9 @@ void CPlayer::WholeCollision(void)
 
 			for each(Info& Player in m_aInfo)
 			{
+				//ロケットに乗っていたらスキップ
+				if (Player.bRide) continue;
+
 				//プレイヤーの近くにオブジェクトがあるか判定
 				{
 					//オブジェクトへの距離を計算
@@ -380,6 +407,7 @@ void CPlayer::WholeCollision(void)
 					case CStageObject::TYPE::MOVE_BLOCK:	CollisionMoveBlock(&Player, (CMoveBlock *)stageObj, MinPos, MaxPos, ColliRot);	break;
 					case CStageObject::TYPE::METEOR:		break;
 					case CStageObject::TYPE::PARTS:			CollisionParts(&Player, (CParts *)stageObj); break;
+					case CStageObject::TYPE::ROCKET:		CollisionRocket(&Player, (CRocket *)stageObj); break;
 				}
 
 				//当たれば即死のオブジェクトに当たっている
@@ -391,15 +419,6 @@ void CPlayer::WholeCollision(void)
 			}
 		}
 	}
-
-	//プレイヤーの位置更新
-	for(int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
-	{
-		RNLib::Text2D()->Put(D3DXVECTOR3(20.0f, 20.0f + 25.0f * nCnt, 0.0f), 0.0f, CreateText("%dPのY座標：%f", nCnt, m_aInfo[nCnt].pos.y), CText::ALIGNMENT::LEFT, 0);
-	}
-
-	RNLib::Text2D()->Put(D3DXVECTOR3(20.0f, 80.0f, 0.0f), 0.0f, CreateText("FPS：%d", RNLib::GetFPSCount()), CText::ALIGNMENT::LEFT, 0);
-
 }
 
 //----------------------------
@@ -668,6 +687,27 @@ void CPlayer::CollisionParts(Info *pInfo, CParts *pParts)
 
 	//取得したので描画OFF
 	pParts->DispSwitch(false);
+
+	//取得数増加
+	s_nNumGetParts++;
+
+	//取得した数が全体数と同じなら、ロケット乗車可能
+	if (s_nNumGetParts == CParts::GetNumAll()) s_bRideRocket = true;
+}
+
+//----------------------------
+//ロケットの当たり判定処理
+//----------------------------
+void CPlayer::CollisionRocket(Info *pInfo, CRocket *pRocket)
+{
+	if (!s_bRideRocket) return;
+
+	//ロケットに搭乗
+	pInfo->bRide = true;
+
+	//両方とも搭乗したら飛ばせる
+	if(m_aInfo[0].bRide && m_aInfo[1].bRide)
+	pRocket->SetState(CRocket::ANIME_STATE::FLY);
 }
 
 //========================

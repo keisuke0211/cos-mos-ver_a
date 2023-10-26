@@ -113,7 +113,7 @@ void CMode_Title::Update(void) {
 		->SetCol(Color{255,255,255,255})
 		->SetTex(m_TexIdx);
 
-	if (RNLib::Input()->GetKeyTrigger(DIK_RETURN) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
+	if ((RNLib::Input()->GetKeyTrigger(DIK_RETURN) || RNLib::Input()->GetButtonTrigger(CInput::BUTTON::A)) && RNLib::Transition()->GetState() == CTransition::STATE::NONE)
 	{
 		switch (Title)
 		{
@@ -128,7 +128,6 @@ void CMode_Title::Update(void) {
 			switch (m_nSelect)
 			{
 			case MENU_GAME:
-				Manager::StgEd()->FileLoad();
 				SelectCreate();
 				break;
 			case MENU_SERRING:
@@ -144,7 +143,7 @@ void CMode_Title::Update(void) {
 		{
 			TextClear(TITLE_NEXT);
 			CMode_Game::SetStage(m_nSelect);
-			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::NONE);
+			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::FADE);
 
 			delete[] m_StageType;
 			m_StageType = NULL;
@@ -247,8 +246,9 @@ void CMode_Title::Menu(void)
 //========================================
 void CMode_Title::SelectCreate(void)
 {
+	Manager::StgEd()->FileLoad();
 	int nMax = Manager::StgEd()->GetStageMax();
-	
+
 	m_StageType = new StageType[nMax];
 
 	for (int nCnt = 0; nCnt < nMax; nCnt++)
