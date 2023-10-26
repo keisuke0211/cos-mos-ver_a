@@ -4,7 +4,7 @@
 // Author:RIKU NISHIMURA
 // 
 //========================================
-#include "../../RNlib.h"
+#include "../../../RNlib.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -15,7 +15,7 @@
 //========================================
 // 設置処理
 //========================================
-CPolygon3D::CRegistInfo* CPolygon3D::Put(const D3DXMATRIX& mtx, const bool& isOnScreen) {
+CPolygon3D::CRegistInfo* CPolygon3D::Put(const Matrix& mtx, const bool& isOnScreen) {
 
 	// 登録受付中でない時、終了
 	if (CDrawMng::GetProcessState() != CDrawMng::PROCESS_STATE::REGIST_ACCEPT)
@@ -27,7 +27,7 @@ CPolygon3D::CRegistInfo* CPolygon3D::Put(const D3DXMATRIX& mtx, const bool& isOn
 //========================================
 // 設置処理(位置と向き指定)
 //========================================
-CPolygon3D::CRegistInfo* CPolygon3D::Put(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const bool& isOnScreen) {
+CPolygon3D::CRegistInfo* CPolygon3D::Put(const Pos3D& pos, const Rot3D& rot, const bool& isOnScreen) {
 
 	return Put(ConvPosRotToMatrix(pos, rot), isOnScreen);
 }
@@ -38,27 +38,32 @@ CPolygon3D::CRegistInfo* CPolygon3D::Put(const D3DXVECTOR3& pos, const D3DXVECTO
 //----------|---------------------------------------------------------------------
 //================================================================================
 
+//****************************************
+// 静的変数定義
+//****************************************
 LPDIRECT3DVERTEXBUFFER9 CPolygon3D::CDrawInfo::m_vtxBuff = NULL;
-int CPolygon3D::CDrawInfo::m_idxCount = 0;
+unsigned short CPolygon3D::CDrawInfo::m_allocPower = 0;
+unsigned short CPolygon3D::CDrawInfo::m_allocNum   = 0;
+unsigned short CPolygon3D::CDrawInfo::m_idxCount   = 0;
+
+//========================================
+// [静的] 頂点バッファ初期生成処理
+//========================================
+void CPolygon3D::CDrawInfo::InitCreateVertexBuffer(void) {
+
+	m_allocPower = CDrawMng::POLYGON3D_ALLOC_BASE_POWER;
+	m_allocNum   = pow(2, m_allocPower);
+	CreateVertexBuffer(m_allocNum);
+}
 
 //========================================
 // [静的] 頂点バッファ生成処理
 //========================================
-void CPolygon3D::CDrawInfo::CreateVertexBuffer(void) {
-
-	// 番号カウント初期化
-	m_idxCount = 0;
-
-	// 頂点バッファを破棄しておく
-	ReleaseVertexBuffer();
-
-	// 登録数が0以下なら終了
-	if (CPolygon3D::CRegistInfo::m_resistCount <= 0)
-		return;
+void CPolygon3D::CDrawInfo::CreateVertexBuffer(const unsigned short& num) {
 
 	// 頂点バッファの生成
 	RNLib::Window()->GetD3DDevice()->CreateVertexBuffer(
-		sizeof(VERTEX_3D) * 4 * CPolygon3D::CRegistInfo::m_resistCount,
+		sizeof(Vertex3D) * 4 * num,
 		D3DUSAGE_WRITEONLY,
 		FVF_VERTEX_3D,
 		D3DPOOL_MANAGED,
@@ -84,14 +89,14 @@ void CPolygon3D::CDrawInfo::ReleaseVertexBuffer(void) {
 CPolygon3D::CDrawInfo::CDrawInfo() {
 
 	m_idx         = 0;
-	m_mtx         = INITD3DXMATRIX;
+	m_mtx         = INITMATRIX;
 	m_texIdx      = DATANONE;
 	m_texCamera   = NULL;
 	m_isZTest     = true;
 	m_isLighting  = true;
 	m_isBillboard = false;
 	m_distance    = 0.0f;
-	for (int cntVtx = 0; cntVtx < 4; cntVtx++) {
+	for (int cntVtx(0); cntVtx < 4; cntVtx++) {
 		m_vtxs[cntVtx] = {};
 	}
 }
@@ -106,7 +111,7 @@ CPolygon3D::CDrawInfo::~CDrawInfo() {
 //========================================
 // 描画処理
 //========================================
-void CPolygon3D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMtx) {
+void CPolygon3D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const Matrix& viewMtx) {
 
 	// 頂点バッファがNULLの時、終了
 	if (m_vtxBuff == NULL)
@@ -119,7 +124,7 @@ void CPolygon3D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& vi
 	device->SetFVF(FVF_VERTEX_3D);
 
 	// 頂点バッファをデータストリームに設定
-	device->SetStreamSource(0, m_vtxBuff, 0, sizeof(VERTEX_3D));
+	device->SetStreamSource(0, m_vtxBuff, 0, sizeof(Vertex3D));
 
 	//----------------------------------------
 	// 一時的な描画モード設定を開始
@@ -136,14 +141,14 @@ void CPolygon3D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& vi
 	RNLib::DrawStateMng()->SetLightingMode(m_isLighting, device);
 
 	{
-		D3DXMATRIX mtxTrans = INITD3DXMATRIX;	// 計算用マトリックス
-		D3DXMATRIX mtxSelf = INITD3DXMATRIX;	// 本体マトリックス
+		Matrix mtxTrans(INITMATRIX);	// 計算用マトリックス
+		Matrix mtxSelf (INITMATRIX);	// 本体マトリックス
 		
 		// [[[ ビルボードフラグに応じて向きを設定 ]]]
 		if (m_isBillboard) {
 
 			// 位置マトリックスを設定
-			D3DXVECTOR3 setPos = ConvMatrixToPos(m_mtx);
+			const Pos3D setPos(ConvMatrixToPos(m_mtx));
 			D3DXMatrixTranslation(&mtxTrans, setPos.x, setPos.y, setPos.z);
 
 			// ポリゴンをカメラに対して正面に向ける
@@ -169,8 +174,9 @@ void CPolygon3D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& vi
 		m_texCamera->SetTexture(device);
 		RNLib::DrawStateMng()->SetTextureAlphaMode(false, device);	// テクスチャの透過を無効化
 	}
-	else
+	else {
 		RNLib::Texture()->Set(device, m_texIdx);
+	}
 
 	//----------------------------------------
 	// 描画
@@ -189,36 +195,31 @@ void CPolygon3D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& vi
 //----------|---------------------------------------------------------------------
 //================================================================================
 
-int CPolygon3D::CRegistInfo::m_resistCount = 0;
-
 //========================================
 // コンストラクタ
 //========================================
 CPolygon3D::CRegistInfo::CRegistInfo() {
 
-	m_resistCount++;
-
-	m_scaleX        = 1.0f;
-	m_scaleY        = 1.0f;
-	m_isFactScale   = false;
-	m_mtx           = INITD3DXMATRIX;
-	for (int cnt = 0; cnt < 4; cnt++)
-		m_vtxPoses[cnt] = INITD3DXVECTOR3;
-	m_isSetVtxPoses = false;
-	m_col           = INITCOLOR;
-	m_texIdx        = DATANONE;
-	m_texCamera     = NULL;
-	m_ptn           = 0;
-	m_ptnX          = 1;
-	m_ptnY          = 1;
-	m_ptnScaleX     = 1.0f;
-	m_ptnScaleY     = 1.0f;
-	m_ptnPos        = INITD3DXVECTOR3;
-	m_isZtest       = true;
-	m_isLighting    = true;
-	m_isBillboard   = false;
-	m_isTexMirrorX  = false;
-	m_priority      = 0;
+	m_idx          = DATANONE;
+	m_scaleX       = 1.0f;
+	m_scaleY       = 1.0f;
+	m_isFactScale  = false;
+	m_mtx          = INITMATRIX;
+	m_vtxPoses     = NULL;
+	m_col          = INITCOLOR;
+	m_texIdx       = DATANONE;
+	m_texCamera    = NULL;
+	m_ptn          = 0;
+	m_ptnX         = 1;
+	m_ptnY         = 1;
+	m_ptnScaleX    = 1.0f;
+	m_ptnScaleY    = 1.0f;
+	m_ptnPos       = INITPOS2D;
+	m_isZtest      = true;
+	m_isLighting   = true;
+	m_isBillboard  = false;
+	m_isTexMirrorX = false;
+	m_priority     = 0;
 }
 
 //========================================
@@ -234,15 +235,15 @@ CPolygon3D::CRegistInfo::~CRegistInfo() {
 CPolygon3D::CDrawInfo* CPolygon3D::CRegistInfo::ConvToDrawInfo(void) {
 
 	// 描画情報のメモリ確保
-	CDrawInfo* drawInfo = NULL;
-	RNLib::Memory()->Alloc<CDrawInfo>(&drawInfo);
+	CDrawInfo* drawInfo(NULL);
+	RNLib::Memory()->Alloc(&drawInfo);
 
 	// 情報を代入
 	// (基底)
 	drawInfo->m_type        = CDrawInfoBase::TYPE::POLYGON3D;
 	drawInfo->m_priority    = m_priority;
 	// (継承)
-	drawInfo->m_idx         = CPolygon3D::CDrawInfo::m_idxCount++;
+	drawInfo->m_idx         = m_idx;
 	drawInfo->m_mtx         = m_mtx;
 	drawInfo->m_texIdx      = m_texIdx;
 	drawInfo->m_texCamera   = m_texCamera;
@@ -255,13 +256,7 @@ CPolygon3D::CDrawInfo* CPolygon3D::CRegistInfo::ConvToDrawInfo(void) {
 	// 頂点情報の設定
 	//----------------------------------------
 	// [[[ 位置 ]]]
-	if (m_isSetVtxPoses) {
-		drawInfo->m_vtxs[0].pos = m_vtxPoses[0];
-		drawInfo->m_vtxs[1].pos = m_vtxPoses[1];
-		drawInfo->m_vtxs[2].pos = m_vtxPoses[2];
-		drawInfo->m_vtxs[3].pos = m_vtxPoses[3];
-	}
-	else {
+	if (m_vtxPoses == NULL) {
 		float widthHalf;
 		float heightHalf;
 
@@ -270,16 +265,22 @@ CPolygon3D::CDrawInfo* CPolygon3D::CRegistInfo::ConvToDrawInfo(void) {
 			heightHalf = m_scaleY * 0.5f;
 		}
 		else {
-			float fWidth  = (RNLib::Texture()->GetWidth (m_texIdx) * PIXEL3D_SIZE) / m_ptnX;
-			float fHeight = (RNLib::Texture()->GetHeight(m_texIdx) * PIXEL3D_SIZE) / m_ptnY;
-			widthHalf  = fWidth  * m_scaleX * 0.5f;
-			heightHalf = fHeight * m_scaleY * 0.5f;
+			float width ((RNLib::Texture()->GetWidth (m_texIdx) * PIXEL3D_SIZE) / m_ptnX);
+			float height((RNLib::Texture()->GetHeight(m_texIdx) * PIXEL3D_SIZE) / m_ptnY);
+			widthHalf  = width  * m_scaleX * 0.5f;
+			heightHalf = height * m_scaleY * 0.5f;
 		}
 
 		drawInfo->m_vtxs[0].pos = D3DXVECTOR3(-widthHalf,  heightHalf, 0.0f);
 		drawInfo->m_vtxs[1].pos = D3DXVECTOR3( widthHalf,  heightHalf, 0.0f);
 		drawInfo->m_vtxs[2].pos = D3DXVECTOR3(-widthHalf, -heightHalf, 0.0f);
 		drawInfo->m_vtxs[3].pos = D3DXVECTOR3( widthHalf, -heightHalf, 0.0f);
+	}
+	else {
+		drawInfo->m_vtxs[0].pos = m_vtxPoses[0];
+		drawInfo->m_vtxs[1].pos = m_vtxPoses[1];
+		drawInfo->m_vtxs[2].pos = m_vtxPoses[2];
+		drawInfo->m_vtxs[3].pos = m_vtxPoses[3];
 	}
 
 	// [[[ 法線 ]]]
@@ -310,22 +311,22 @@ CPolygon3D::CDrawInfo* CPolygon3D::CRegistInfo::ConvToDrawInfo(void) {
 		}
 	}
 	else {
-		float divX = (1.0f / m_ptnX) * m_ptnScaleX;
-		float divY = (1.0f / m_ptnY) * m_ptnScaleY;
-		float x = ((m_ptn % m_ptnX) * divX) + m_ptnPos.x;
-		float y = (((m_ptn / m_ptnX) % m_ptnY) * divY) + m_ptnPos.y;
+		const float divX((1.0f / m_ptnX) * m_ptnScaleX);
+		const float divY((1.0f / m_ptnY) * m_ptnScaleY);
+		const float x   (((m_ptn % m_ptnX) * divX) + m_ptnPos.x);
+		const float y   ((((m_ptn / m_ptnX) % m_ptnY) * divY) + m_ptnPos.y);
 
 		if (m_isTexMirrorX) {
-			float left   = x + divX;
-			float bottom = y + divY;
+			const float left  (x + divX);
+			const float bottom(y + divY);
 			drawInfo->m_vtxs[0].tex = D3DXVECTOR2(left, y     );
 			drawInfo->m_vtxs[1].tex = D3DXVECTOR2(x   , y     );
 			drawInfo->m_vtxs[2].tex = D3DXVECTOR2(left, bottom);
 			drawInfo->m_vtxs[3].tex = D3DXVECTOR2(x   , bottom);
 		}
 		else {
-			float right  = x + divX;
-			float bottom = y + divY;
+			const float right (x + divX);
+			const float bottom(y + divY);
 			drawInfo->m_vtxs[0].tex = D3DXVECTOR2(x    , y     );
 			drawInfo->m_vtxs[1].tex = D3DXVECTOR2(right, y     );
 			drawInfo->m_vtxs[2].tex = D3DXVECTOR2(x    , bottom);
@@ -337,9 +338,22 @@ CPolygon3D::CDrawInfo* CPolygon3D::CRegistInfo::ConvToDrawInfo(void) {
 }
 
 //========================================
+// 番号を設定
+//========================================
+CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetIdx(const short& idx) {
+
+	if (this == NULL)
+		return NULL;
+
+	m_idx = idx;
+
+	return this;
+}
+
+//========================================
 // マトリックスを設定
 //========================================
-CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetMtx(const D3DXMATRIX& mtx) {
+CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetMtx(const Matrix& mtx) {
 
 	if (this == NULL)
 		return NULL;
@@ -352,16 +366,16 @@ CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetMtx(const D3DXMATRIX& mtx) 
 //========================================
 // 頂点位置を設定
 //========================================
-CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetVtxPos(const D3DXVECTOR3 pos0, const D3DXVECTOR3 pos1, const D3DXVECTOR3 pos2, const D3DXVECTOR3 pos3) {
+CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetVtxPos(const Pos3D pos0, const Pos3D pos1, const Pos3D pos2, const Pos3D pos3) {
 
 	if (this == NULL)
 		return NULL;
 
+	RNLib::Memory()->Alloc(&m_vtxPoses, 4);
 	m_vtxPoses[0] = pos0;
 	m_vtxPoses[1] = pos1;
 	m_vtxPoses[2] = pos2;
 	m_vtxPoses[3] = pos3;
-	m_isSetVtxPoses = true;
 
 	return this;
 }
@@ -412,7 +426,7 @@ CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetSize_TexBaseScale(const flo
 //========================================
 // テクスチャを設定
 //========================================
-CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetTex(const short& texIdx, const unsigned short& ptn, const unsigned short& ptnX, const unsigned short& ptnY, const D3DXVECTOR3& ptnPos) {
+CPolygon3D::CRegistInfo* CPolygon3D::CRegistInfo::SetTex(const short& texIdx, const unsigned short& ptn, const unsigned short& ptnX, const unsigned short& ptnY, const Pos2D& ptnPos) {
 
 	if (this == NULL)
 		return NULL;

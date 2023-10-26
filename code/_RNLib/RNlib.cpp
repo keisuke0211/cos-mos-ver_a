@@ -306,7 +306,7 @@ namespace {
 	//========================================
 	void Init(HINSTANCE hInstance) {
 		// 終了後にメモリリークを出力
-		_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+		//_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 	
 		srand((unsigned int)time(0));	// 乱数の種を取得
 		timeBeginPeriod(1);				// 分解能を設定

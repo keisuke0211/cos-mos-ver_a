@@ -4,7 +4,7 @@
 // Author:RIKU NISHIMURA
 // 
 //========================================
-#include "../../../RNlib.h"
+#include "../../RNlib.h"
 
 //****************************************
 // マクロ定義
@@ -125,10 +125,10 @@ void CCamera::Init(void) {
 	// 頂点バッファの設定
 	//----------------------------------------
 	// 頂点バッファの生成
-	RNLib::Window()->GetD3DDevice()->CreateVertexBuffer(sizeof(VERTEX_2D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &m_vtxBuffMT, NULL);
+	RNLib::Window()->GetD3DDevice()->CreateVertexBuffer(sizeof(Vertex2D) * 4, D3DUSAGE_WRITEONLY, FVF_VERTEX_2D, D3DPOOL_MANAGED, &m_vtxBuffMT, NULL);
 
 	// 頂点バッファをロックし、頂点情報へのポインタを取得
-	VERTEX_2D* vtxs;
+	Vertex2D* vtxs;
 	m_vtxBuffMT->Lock(0, 0, (void**)&vtxs, 0);
 
 	// [[[ 頂点位置の設定 ]]]
@@ -286,7 +286,7 @@ void CCamera::StartRendering(LPDIRECT3DDEVICE9 device) {
 	D3DXMATRIX mtxView = INITD3DXMATRIX; {
 		D3DXVECTOR3 posV = m_posV;
 		D3DXVECTOR3 posR = m_posR;
-
+		
 		// 振動位置に変動がある時、
 		if (m_posVib != INITD3DXVECTOR3) {
 			float fAngle = Find_Angle_LookDown(m_posV, m_posR) - D3DX_PI_HALF;
@@ -330,7 +330,7 @@ void CCamera::EndRendering(LPDIRECT3DDEVICE9 device) {
 		pDevice->SetFVF(FVF_VERTEX_2D);
 
 		// 頂点バッファをデータストリームに設定
-		pDevice->SetStreamSource(0, m_vtxBuffMT, 0, sizeof(VERTEX_2D));
+		pDevice->SetStreamSource(0, m_vtxBuffMT, 0, sizeof(Vertex2D));
 
 		// テクスチャの設定
 		pDevice->SetTexture(0, m_texturesMT[1]);

@@ -100,7 +100,7 @@ void CLine3D::Draw(bool bZTest) {
 			continue;
 
 		// 頂点バッファをデータストリームに設定
-		pDevice->SetStreamSource(0, m_ppVtxBuff[nCntSet], 0, sizeof(VERTEX_3D));
+		pDevice->SetStreamSource(0, m_ppVtxBuff[nCntSet], 0, sizeof(Vertex3D));
 
 		// ポリゴン3Dの描画
 		pDevice->DrawPrimitive(D3DPT_LINELIST, 0, 1);
@@ -155,7 +155,7 @@ void CLine3D::Set(D3DXVECTOR3 pos0, D3DXVECTOR3 pos1, Color col, bool bZTest) {
 
 	// 頂点バッファの生成
 	if (FAILED(RNLib::Window()->GetD3DDevice()->CreateVertexBuffer(
-		sizeof(VERTEX_3D) * 2,
+		sizeof(Vertex3D) * 2,
 		D3DUSAGE_WRITEONLY,
 		FVF_VERTEX_3D,
 		D3DPOOL_MANAGED,
@@ -165,7 +165,7 @@ void CLine3D::Set(D3DXVECTOR3 pos0, D3DXVECTOR3 pos1, Color col, bool bZTest) {
 	}
 
 	// 頂点バッファをロックし、頂点情報へのポインタを取得
-	VERTEX_3D* pVtx;
+	Vertex3D* pVtx;
 	m_ppVtxBuff[nNumOld_and_idx]->Lock(0, 0, (void**)&pVtx, 0);
 
 	// 頂点座標の設定

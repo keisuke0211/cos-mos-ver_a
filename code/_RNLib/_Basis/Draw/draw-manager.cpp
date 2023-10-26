@@ -6,8 +6,14 @@
 //========================================
 #include "../../RNlib.h"
 
+//================================================================================
+//----------|---------------------------------------------------------------------
+//==========| [公開]描画マネージャークラスのメンバ関数
+//----------|---------------------------------------------------------------------
+//================================================================================
+
 //****************************************
-// 静的メンバ変数定義
+// 静的変数定義
 //****************************************
 CDrawMng::PROCESS_STATE  CDrawMng::ms_processState = PROCESS_STATE::REGIST_ACCEPT;
 CDrawMng::CRegistInfoSum CDrawMng::ms_resistInfoSum;
@@ -18,95 +24,496 @@ CDrawMng::CDrawInfoSum   CDrawMng::ms_drawInfoSumScreen;
 CDrawMng::CDrawInfoSum   CDrawMng::ms_drawInfoSumScreenOvr;
 std::thread              CDrawMng::ms_mainLoopTh(MainLoop);
 
-//================================================================================
-//----------|---------------------------------------------------------------------
-//==========| 描画情報総括クラスのメンバ関数
-//----------|---------------------------------------------------------------------
-//================================================================================
-
 //========================================
 // コンストラクタ
 //========================================
-CDrawMng::CDrawInfoSum::CDrawInfoSum() {
+CDrawMng::CDrawMng() {
 
-	ms_drawInfos   = NULL;
-	ms_drawInfoNum = 0;
+	m_reAllocCount = 0;
 }
 
 //========================================
 // デストラクタ
 //========================================
-CDrawMng::CDrawInfoSum::~CDrawInfoSum() {
+CDrawMng::~CDrawMng() {
 
+}
+
+//========================================
+// 初期化処理
+//========================================
+void CDrawMng::Init(void) {
+	
+	// 登録情報の初期メモリ確保
+	ms_resistInfoSum      .InitAlloc();
+	ms_resistInfoSumScreen.InitAlloc();
+
+	// 頂点バッファの初期生成
+	CPolygon2D::CDrawInfo::InitCreateVertexBuffer();
+	CPolygon3D::CDrawInfo::InitCreateVertexBuffer();
+}
+
+//========================================
+// 終了処理
+//========================================
+void CDrawMng::Uninit(void) {
+
+	// メインループスレッドを斬り離す
+	ms_mainLoopTh.detach();
+
+	// 解放処理
+	Release();
 }
 
 //========================================
 // 解放処理
 //========================================
-void CDrawMng::CDrawInfoSum::Release(void) {
+void CDrawMng::Release(void) {
 
-	// 描画情報を解放
-	if (ms_drawInfos != NULL) {
-		for (int cnt = 0; cnt < ms_drawInfoNum; cnt++) {
-			RNLib::Memory()->Release<CDrawInfoBase>(&ms_drawInfos[cnt]);
+	// 描画情報を破棄
+	ms_drawInfoSum.Release();
+	ms_drawInfoSumOvr.Release();
+	ms_drawInfoSumScreen.Release();
+	ms_drawInfoSumScreenOvr.Release();
+	RNLib::Memory()->Release(&ms_drawInfoSum.ms_drawInfos);
+	RNLib::Memory()->Release(&ms_drawInfoSumOvr.ms_drawInfos);
+	RNLib::Memory()->Release(&ms_drawInfoSumScreen.ms_drawInfos);
+	RNLib::Memory()->Release(&ms_drawInfoSumScreenOvr.ms_drawInfos);
+
+	// 登録情報を解放
+	ms_resistInfoSum.Release();
+	ms_resistInfoSumScreen.Release();
+
+	// 頂点バッファを破棄する
+	CPolygon2D::CDrawInfo::ReleaseVertexBuffer();
+	CPolygon3D::CDrawInfo::ReleaseVertexBuffer();
+}
+
+//========================================
+// 描画開始処理
+//========================================
+bool CDrawMng::StartDraw(void) {
+
+	if (ms_processState == PROCESS_STATE::REGIST_ACCEPT)
+	{// [ 登録受付 ]の時、
+		// [ 登録情報適用待ち ]にする
+		ms_processState = PROCESS_STATE::REGIST_INFO_APPLY_WAIT;
+	}
+	else if ((ms_processState == PROCESS_STATE::DRAW_INFO_SWAP_WAIT && !RNLib::GetSpace3DStop()) || RNLib::GetSceneSwap())
+	{// [ 描画入れ替え待ち ]の時、
+		// 描画情報を上書きする
+		ms_drawInfoSum.Overwrite(&ms_drawInfoSumOvr);
+		ms_drawInfoSumScreen.Overwrite(&ms_drawInfoSumScreenOvr);
+
+		{// 不要メモリ破棄の為、再確保
+			ms_resistInfoSum.ReAlloc();
+			ms_resistInfoSumScreen.ReAlloc();
+
+			// ポリゴン2D
+			if (CPolygon2D::CDrawInfo::m_allocPower > POLYGON2D_ALLOC_BASE_POWER) {
+
+				for (int cntAlloc = POLYGON2D_ALLOC_BASE_POWER; cntAlloc < CPolygon2D::CDrawInfo::m_allocPower; cntAlloc++) {
+					const unsigned short allocLine = pow(2, cntAlloc);
+
+					if (CPolygon2D::CDrawInfo::m_idxCount < allocLine)
+					{// 確保ラインよりも数が少ない時、
+						// その確保ライン分確保し直す
+						CPolygon2D::CDrawInfo::ReleaseVertexBuffer();
+						CPolygon2D::CDrawInfo::CreateVertexBuffer(allocLine);
+
+						// 確保した数/べき乗数を保存
+						CPolygon2D::CDrawInfo::m_allocNum   = allocLine;
+						CPolygon2D::CDrawInfo::m_allocPower = cntAlloc;
+
+						break;
+					}
+				}
+			}
+
+			// ポリゴン3D
+			if (CPolygon3D::CDrawInfo::m_allocPower > POLYGON3D_ALLOC_BASE_POWER) {
+
+				for (int cntAlloc = POLYGON3D_ALLOC_BASE_POWER; cntAlloc < CPolygon3D::CDrawInfo::m_allocPower; cntAlloc++) {
+					const unsigned short allocLine = pow(2, cntAlloc);
+
+					if (CPolygon3D::CDrawInfo::m_idxCount < allocLine)
+					{// 確保ラインよりも数が少ない時、
+						// その確保ライン分確保し直す
+						CPolygon3D::CDrawInfo::ReleaseVertexBuffer();
+						CPolygon3D::CDrawInfo::CreateVertexBuffer(allocLine);
+
+						// 確保した数/べき乗数を保存
+						CPolygon3D::CDrawInfo::m_allocNum   = allocLine;
+						CPolygon3D::CDrawInfo::m_allocPower = cntAlloc;
+
+						break;
+					}
+				}
+			}
 		}
-		RNLib::Memory()->Release<CDrawInfoBase*>(&ms_drawInfos);
+
+		// 番号カウント初期化
+		CPolygon2D::CDrawInfo::m_idxCount = 0;
+		CPolygon3D::CDrawInfo::m_idxCount = 0;
+
+		// 頂点情報を代入
+		AssignVertexInfo();
+
+		// [ 登録受付 ]にする
+		ms_processState = PROCESS_STATE::REGIST_ACCEPT;
+
+		return true;
+	}
+
+	return false;
+}
+
+//========================================
+// 描画処理
+//========================================
+void CDrawMng::Draw(LPDIRECT3DDEVICE9& device, const bool& isOnScreen) {
+
+	// ビューマトリックスを取得
+	D3DXMATRIX viewMtx;
+	device->GetTransform(D3DTS_VIEW, &viewMtx);
+
+	// 描画していく
+	if (isOnScreen) {
+		for (int cntDrawInfo = 0; cntDrawInfo < ms_drawInfoSumScreen.ms_drawInfoNum; cntDrawInfo++) {
+			if (ms_drawInfoSumScreen.ms_drawInfos[cntDrawInfo] != NULL)
+				ms_drawInfoSumScreen.ms_drawInfos[cntDrawInfo]->Draw(device, viewMtx);
+		}
+	}
+	else {
+		for (int cntDrawInfo = 0; cntDrawInfo < ms_drawInfoSum.ms_drawInfoNum; cntDrawInfo++) {
+			if (ms_drawInfoSum.ms_drawInfos[cntDrawInfo] != NULL)
+				ms_drawInfoSum.ms_drawInfos[cntDrawInfo]->Draw(device, viewMtx);
+		}
 	}
 }
 
 //========================================
-// 上書き処理
+// 設置処理(ポリゴン2D)
 //========================================
-void CDrawMng::CDrawInfoSum::Overwrite(CDrawInfoSum* pOvr) {
+CPolygon2D::CRegistInfo* CDrawMng::PutPolygon2D(const D3DXVECTOR3& pos, const float& angle, const bool& isOnScreen) {
 
-	// 解放処理
-	Release();
+	// 番号カウントが最大数に達した時、頂点バッファを再生成する
+	if (CPolygon2D::CDrawInfo::m_idxCount == CPolygon2D::CDrawInfo::m_allocNum) {
+		CPolygon2D::CDrawInfo::m_allocPower++;
+		CPolygon2D::CDrawInfo::m_allocNum = pow(2, CPolygon2D::CDrawInfo::m_allocPower);
+		CPolygon2D::CDrawInfo::ReleaseVertexBuffer();
+		CPolygon2D::CDrawInfo::CreateVertexBuffer(CPolygon2D::CDrawInfo::m_allocNum);
+	}
 
-	// 上書き
-	ms_drawInfos         = pOvr->ms_drawInfos;
-	ms_drawInfoNum       = pOvr->ms_drawInfoNum;
-	pOvr->ms_drawInfos   = NULL;
-	pOvr->ms_drawInfoNum = 0;
+	// 登録情報
+	CPolygon2D::CRegistInfo* registInfo = NULL;
+
+	// スクリーン上フラグに応じて登録
+	if (isOnScreen) registInfo = RegistPolygon2D(ms_resistInfoSumScreen);
+	else            registInfo = RegistPolygon2D(ms_resistInfoSum);
+
+	// 情報を代入
+	if (registInfo != NULL) {
+		registInfo->SetIdx(CPolygon2D::CDrawInfo::m_idxCount++);
+		registInfo->SetPos(pos);
+		registInfo->SetAngle(angle);
+	}
+
+	return registInfo;
+}
+
+//========================================
+// 設置処理(ポリゴン3D)
+//========================================
+CPolygon3D::CRegistInfo* CDrawMng::PutPolygon3D(const D3DXMATRIX& mtx, const bool& isOnScreen) {
+	
+	// 番号カウントが最大数に達した時、頂点バッファを再生成する
+	if (CPolygon3D::CDrawInfo::m_idxCount == CPolygon3D::CDrawInfo::m_allocNum) {
+		CPolygon3D::CDrawInfo::m_allocPower++;
+		CPolygon3D::CDrawInfo::m_allocNum = pow(2, CPolygon3D::CDrawInfo::m_allocPower);
+		CPolygon3D::CDrawInfo::ReleaseVertexBuffer();
+		CPolygon3D::CDrawInfo::CreateVertexBuffer(CPolygon3D::CDrawInfo::m_allocNum);
+	}
+
+	// 登録情報
+	CPolygon3D::CRegistInfo* registInfo = NULL;
+
+	// スクリーン上フラグに応じて登録
+	if (isOnScreen) registInfo = RegistPolygon3D(ms_resistInfoSumScreen);
+	else            registInfo = RegistPolygon3D(ms_resistInfoSum);
+
+	// 情報を代入
+	if (registInfo != NULL) {
+		registInfo->SetIdx(CPolygon3D::CDrawInfo::m_idxCount++);
+		registInfo->SetMtx(mtx);
+	}
+
+	return registInfo;
+}
+
+//========================================
+// 設置処理(テキスト2D)
+//========================================
+CText2D::CRegistInfo* CDrawMng::PutText2D(const D3DXVECTOR3& pos, const float& angle, const bool& isOnScreen) {
+
+	// 登録情報
+	CText2D::CRegistInfo* registInfo = NULL;
+
+	// スクリーン上フラグに応じて登録
+	if (isOnScreen) registInfo = RegistText2D(ms_resistInfoSumScreen);
+	else            registInfo = RegistText2D(ms_resistInfoSum);
+
+	// 情報を代入
+	if (registInfo != NULL) {
+		registInfo->SetPos(pos);
+		registInfo->SetAngle(angle);
+	}
+
+	return registInfo;
+}
+
+//========================================
+// 設置処理(テキスト3D)
+//========================================
+CText3D::CRegistInfo* CDrawMng::PutText3D(const D3DXMATRIX& mtx, const bool& isOnScreen) {
+
+	// 登録情報
+	CText3D::CRegistInfo* registInfo = NULL;
+
+	// スクリーン上フラグに応じて登録
+	if (isOnScreen) registInfo = RegistText3D(ms_resistInfoSumScreen);
+	else            registInfo = RegistText3D(ms_resistInfoSum);
+
+	// 情報を代入
+	if (registInfo != NULL) {
+		registInfo->SetMtx(mtx);
+	}
+
+	return registInfo;
+}
+
+//========================================
+// 設置処理(モデル)
+//========================================
+CModel::CRegistInfo* CDrawMng::PutModel(const D3DXMATRIX& mtx, const bool& isOnScreen) {
+
+	// 登録受付中でない時、終了
+	if (ms_processState != PROCESS_STATE::REGIST_ACCEPT)
+		return NULL;
+
+	// 登録情報
+	CModel::CRegistInfo* registInfo = NULL;
+
+	// スクリーン上フラグに応じて登録
+	if (isOnScreen) registInfo = RegistModel(ms_resistInfoSumScreen);
+	else            registInfo = RegistModel(ms_resistInfoSum);
+
+	// 情報を代入
+	if (registInfo != NULL) {
+		registInfo->SetMtx(mtx);
+	}
+
+	return registInfo;
 }
 
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| 登録情報情報総括クラスのメンバ関数
+//==========| [非公開]描画マネージャークラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
 
 //========================================
-// コンストラクタ
+// 頂点情報代入処理
 //========================================
-CDrawMng::CRegistInfoSum::CRegistInfoSum() {
+void CDrawMng::AssignVertexInfo(void) {
 
-	m_polygon2DRegistInfos   = NULL;
-	m_polygon2DRegistInfoNum = 0;
-	m_polygon3DRegistInfos   = NULL;
-	m_polygon3DRegistInfoNum = 0;
-	m_text2DRegistInfos      = NULL;
-	m_text2DRegistInfoNum    = 0;
-	m_text3DRegistInfos      = NULL;
-	m_text3DRegistInfoNum    = 0;
-	m_modelRegistInfos       = NULL;
-	m_modelRegistInfoNum     = 0;
+	// 頂点2D情報に変換
+	if (CPolygon2D::CDrawInfo::m_vtxBuff != NULL) {
+
+		// 頂点バッファをロック
+		Vertex2D* vtxs = NULL;
+		CPolygon2D::CDrawInfo::m_vtxBuff->Lock(0, 0, (void**)&vtxs, 0);
+
+		ConvDrawInfoToVertex2DInfo(vtxs, ms_drawInfoSum);
+		ConvDrawInfoToVertex2DInfo(vtxs, ms_drawInfoSumScreen);
+
+		// 頂点バッファをアンロック
+		CPolygon2D::CDrawInfo::m_vtxBuff->Unlock();
+	}
+
+	// 頂点3D情報に変換
+	if (CPolygon3D::CDrawInfo::m_vtxBuff != NULL) {
+
+		// 頂点バッファをロック
+		Vertex3D* vtxs = NULL;
+		CPolygon3D::CDrawInfo::m_vtxBuff->Lock(0, 0, (void**)&vtxs, 0);
+
+		ConvDrawInfoToVertex3DInfo(vtxs, ms_drawInfoSum);
+		ConvDrawInfoToVertex3DInfo(vtxs, ms_drawInfoSumScreen);
+
+		// 頂点バッファをアンロック
+		CPolygon3D::CDrawInfo::m_vtxBuff->Unlock();
+	}
+}
+
+
+//========================================
+// 描画情報を頂点2D情報に変換
+//========================================
+void CDrawMng::ConvDrawInfoToVertex2DInfo(Vertex2D*& vtxs, CDrawInfoSum& drawInfoSum) {
+
+	for (int cntDrawInfo = 0; cntDrawInfo < drawInfoSum.ms_drawInfoNum; cntDrawInfo++) {
+
+		if (drawInfoSum.ms_drawInfos[cntDrawInfo]->m_type == CDrawInfoBase::TYPE::POLYGON2D)
+		{// カウントの描画情報がポリゴン2Dの時、
+			// 頂点情報を代入
+			CPolygon2D::CDrawInfo& drawInfo = (CPolygon2D::CDrawInfo&)*drawInfoSum.ms_drawInfos[cntDrawInfo];
+			int vtxStartIdx = 4 * drawInfo.m_idx;
+
+			for (int cntVtx = 0; cntVtx < 4; cntVtx++) {
+				int vtxIdx = vtxStartIdx + cntVtx;
+				assert(vtxIdx < CPolygon2D::CDrawInfo::m_allocNum * 4);
+				vtxs[vtxIdx] = drawInfo.m_vtxs[cntVtx];
+			}
+		}
+	}
 }
 
 //========================================
-// デストラクタ
+// 描画情報を頂点3D情報に変換
 //========================================
-CDrawMng::CRegistInfoSum::~CRegistInfoSum() {
+void CDrawMng::ConvDrawInfoToVertex3DInfo(Vertex3D*& vtxs, CDrawInfoSum& drawInfoSum) {
 
+	for (int cntDrawInfo = 0; cntDrawInfo < drawInfoSum.ms_drawInfoNum; cntDrawInfo++) {
+
+		if (drawInfoSum.ms_drawInfos[cntDrawInfo]->m_type == CDrawInfoBase::TYPE::POLYGON3D)
+		{// カウントの描画情報がポリゴン2Dの時、
+			// 頂点情報を代入
+			CPolygon3D::CDrawInfo& drawInfo((CPolygon3D::CDrawInfo&)*drawInfoSum.ms_drawInfos[cntDrawInfo]);
+			int                    vtxStartIdx(4 * drawInfo.m_idx);
+
+			for (int cntVtx = 0; cntVtx < 4; cntVtx++) {
+				int vtxIdx(vtxStartIdx + cntVtx);
+				assert(vtxIdx < CPolygon3D::CDrawInfo::m_allocNum * 4);
+				vtxs[vtxIdx] = drawInfo.m_vtxs[cntVtx];
+			}
+		}
+	}
+}
+
+//========================================
+// 登録処理(ポリゴン2D)
+//========================================
+CPolygon2D::CRegistInfo* CDrawMng::RegistPolygon2D(CRegistInfoSum& resistInfo) {
+
+	if (resistInfo.m_polygon2DRegistInfoNum == resistInfo.m_polygon2DRegistInfoAllocNum) {
+
+		// 確保べき乗数を増やす
+		resistInfo.m_polygon2DRegistInfoAllocPower++;
+
+		// 確保した数を算出
+		const unsigned short oldAllocNum = resistInfo.m_polygon2DRegistInfoAllocNum;
+		resistInfo.m_polygon2DRegistInfoAllocNum = pow(2, resistInfo.m_polygon2DRegistInfoAllocPower);
+
+		// その確保ライン分確保し直す
+		RNLib::Memory()->ReAlloc(&resistInfo.m_polygon2DRegistInfos, oldAllocNum, resistInfo.m_polygon2DRegistInfoAllocNum);
+	}
+
+	return &resistInfo.m_polygon2DRegistInfos[resistInfo.m_polygon2DRegistInfoNum++];
+}
+
+//========================================
+// 登録処理(ポリゴン3D)
+//========================================
+CPolygon3D::CRegistInfo* CDrawMng::RegistPolygon3D(CRegistInfoSum& resistInfo) {
+
+	if (resistInfo.m_polygon3DRegistInfoNum == resistInfo.m_polygon3DRegistInfoAllocNum) {
+
+		// 確保べき乗数を増やす
+		resistInfo.m_polygon3DRegistInfoAllocPower++;
+
+		// 確保した数を算出
+		const unsigned short oldAllocNum = resistInfo.m_polygon3DRegistInfoAllocNum;
+		resistInfo.m_polygon3DRegistInfoAllocNum = pow(2, resistInfo.m_polygon3DRegistInfoAllocPower);
+
+		// その確保ライン分確保し直す
+		RNLib::Memory()->ReAlloc(&resistInfo.m_polygon3DRegistInfos, oldAllocNum, resistInfo.m_polygon3DRegistInfoAllocNum);
+	}
+
+	return &resistInfo.m_polygon3DRegistInfos[resistInfo.m_polygon3DRegistInfoNum++];
+}
+
+//========================================
+// 登録処理(テキスト2D)
+//========================================
+CText2D::CRegistInfo* CDrawMng::RegistText2D(CRegistInfoSum& resistInfo) {
+
+	if (resistInfo.m_text2DRegistInfoNum == resistInfo.m_text2DRegistInfoAllocNum) {
+
+		// 確保べき乗数を増やす
+		resistInfo.m_text2DRegistInfoAllocPower++;
+
+		// 確保した数を算出
+		const unsigned short oldAllocNum = resistInfo.m_text2DRegistInfoAllocNum;
+		resistInfo.m_text2DRegistInfoAllocNum = pow(2, resistInfo.m_text2DRegistInfoAllocPower);
+
+		// その確保ライン分確保し直す
+		RNLib::Memory()->ReAlloc(&resistInfo.m_text2DRegistInfos, oldAllocNum, resistInfo.m_text2DRegistInfoAllocNum);
+	}
+
+	return &resistInfo.m_text2DRegistInfos[resistInfo.m_text2DRegistInfoNum++];
+}
+
+//========================================
+// 登録処理(テキスト3D)
+//========================================
+CText3D::CRegistInfo* CDrawMng::RegistText3D(CRegistInfoSum& resistInfo) {
+
+	if (resistInfo.m_text3DRegistInfoNum == resistInfo.m_text3DRegistInfoAllocNum) {
+
+		// 確保べき乗数を増やす
+		resistInfo.m_text3DRegistInfoAllocPower++;
+
+		// 確保した数を算出
+		const unsigned short oldAllocNum = resistInfo.m_text3DRegistInfoAllocNum;
+		resistInfo.m_text3DRegistInfoAllocNum = pow(2, resistInfo.m_text3DRegistInfoAllocPower);
+
+		// その確保ライン分確保し直す
+		RNLib::Memory()->ReAlloc(&resistInfo.m_text3DRegistInfos, oldAllocNum, resistInfo.m_text3DRegistInfoAllocNum);
+	}
+
+	return &resistInfo.m_text3DRegistInfos[resistInfo.m_text3DRegistInfoNum++];
+}
+
+//========================================
+// 登録処理(モデル)
+//========================================
+CModel::CRegistInfo* CDrawMng::RegistModel(CRegistInfoSum& resistInfo) {
+
+	if (resistInfo.m_modelRegistInfoNum == resistInfo.m_modelRegistInfoAllocNum) {
+
+		// 確保べき乗数を増やす
+		resistInfo.m_modelRegistInfoAllocPower++;
+
+		// 確保した数を算出
+		const unsigned short oldAllocNum = resistInfo.m_modelRegistInfoAllocNum;
+		resistInfo.m_modelRegistInfoAllocNum = pow(2, resistInfo.m_modelRegistInfoAllocPower);
+
+		// その確保ライン分確保し直す
+		RNLib::Memory()->ReAlloc(&resistInfo.m_modelRegistInfos, oldAllocNum, resistInfo.m_modelRegistInfoAllocNum);
+	}
+
+	return &resistInfo.m_modelRegistInfos[resistInfo.m_modelRegistInfoNum++];
 }
 
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| 描画クラスのスレッド用静的メンバ関数
+//==========| [非公開]描画マネージャークラスのスレッド用メンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
 
 //========================================
-// メインループ
+// [静的]メインループ
 //========================================
 void CDrawMng::MainLoop(void) {
 	while (true) {
@@ -134,7 +541,7 @@ void CDrawMng::MainLoop(void) {
 }
 
 //========================================
-// 登録情報を元に設置する
+// [静的]登録情報を元に設置する
 //========================================
 void CDrawMng::PutBasedRegistInfo(CRegistInfoSum& resistInfoSum, const bool& isOnScreen) {
 
@@ -147,7 +554,6 @@ void CDrawMng::PutBasedRegistInfo(CRegistInfoSum& resistInfoSum, const bool& isO
 
 	// 解放
 	resistInfoSum.m_text2DRegistInfoNum = 0;
-	RNLib::Memory()->Release(&resistInfoSum.m_text2DRegistInfos);
 
 	//----------------------------------------
 	// テキスト3Dからポリゴン3Dを設置
@@ -158,11 +564,10 @@ void CDrawMng::PutBasedRegistInfo(CRegistInfoSum& resistInfoSum, const bool& isO
 
 	// 解放
 	resistInfoSum.m_text3DRegistInfoNum = 0;
-	RNLib::Memory()->Release(&resistInfoSum.m_text3DRegistInfos);
 }
 
 //========================================
-// 登録情報を描画情報に変換する
+// [静的]登録情報を描画情報に変換する
 //========================================
 void CDrawMng::ConvRegistInfoToDrawInfo(CRegistInfoSum& resistInfoSum, CDrawInfoSum& drawInfoSum) {
 
@@ -186,7 +591,6 @@ void CDrawMng::ConvRegistInfoToDrawInfo(CRegistInfoSum& resistInfoSum, CDrawInfo
 
 	// 解放
 	resistInfoSum.m_polygon3DRegistInfoNum = 0;
-	RNLib::Memory()->Release(&resistInfoSum.m_polygon3DRegistInfos);
 
 	//----------------------------------------
 	// モデル
@@ -197,7 +601,6 @@ void CDrawMng::ConvRegistInfoToDrawInfo(CRegistInfoSum& resistInfoSum, CDrawInfo
 
 	// 解放
 	resistInfoSum.m_modelRegistInfoNum = 0;
-	RNLib::Memory()->Release(&resistInfoSum.m_modelRegistInfos);
 
 	//----------------------------------------
 	// ポリゴン2D
@@ -208,11 +611,10 @@ void CDrawMng::ConvRegistInfoToDrawInfo(CRegistInfoSum& resistInfoSum, CDrawInfo
 
 	// 解放
 	resistInfoSum.m_polygon2DRegistInfoNum = 0;
-	RNLib::Memory()->Release(&resistInfoSum.m_polygon2DRegistInfos);
 }
 
 //========================================
-// 描画情報ソート処理
+// [静的]描画情報ソート処理
 //========================================
 void CDrawMng::SortDrawInfo(CDrawInfoSum& drawInfoSum) {
 
@@ -364,351 +766,245 @@ void CDrawMng::SortDrawInfo(CDrawInfoSum& drawInfoSum) {
 
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| 描画クラスのメンバ関数
+//==========| [公開]描画情報総括クラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
 
 //========================================
 // コンストラクタ
 //========================================
-CDrawMng::CDrawMng() {
+CDrawMng::CDrawInfoSum::CDrawInfoSum() {
 
+	ms_drawInfos   = NULL;
+	ms_drawInfoNum = 0;
 }
 
 //========================================
 // デストラクタ
 //========================================
-CDrawMng::~CDrawMng() {
+CDrawMng::CDrawInfoSum::~CDrawInfoSum() {
 
-}
-
-//========================================
-// 設置処理(ポリゴン2D)
-//========================================
-CPolygon2D::CRegistInfo* CDrawMng::PutPolygon2D(const D3DXVECTOR3& pos, const float& angle, const bool& isOnScreen) {
-
-	// 登録情報
-	CPolygon2D::CRegistInfo* registInfo = NULL;;
-
-	// スクリーン上フラグに応じて登録
-	if (isOnScreen) registInfo = &RegistPolygon2D(ms_resistInfoSumScreen);
-	else            registInfo = &RegistPolygon2D(ms_resistInfoSum);
-
-	// 情報を代入
-	registInfo->SetPos(pos);
-	registInfo->SetAngle(angle);
-
-	return registInfo;
-}
-
-//========================================
-// 設置処理(テキスト2D)
-//========================================
-CText2D::CRegistInfo* CDrawMng::PutText2D(const D3DXVECTOR2& pos, const float& angle, const bool& isOnScreen) {
-
-	// 登録情報
-	CText2D::CRegistInfo* registInfo = NULL;;
-
-	// スクリーン上フラグに応じて登録
-	if (isOnScreen) registInfo = &RegistText2D(ms_resistInfoSumScreen);
-	else            registInfo = &RegistText2D(ms_resistInfoSum);
-
-	// 情報を代入
-	registInfo->SetPos(pos);
-	registInfo->SetAngle(angle);
-
-	return registInfo;
-}
-
-//========================================
-// 設置処理(テキスト3D)
-//========================================
-CText3D::CRegistInfo* CDrawMng::PutText3D(const D3DXMATRIX& mtx, const bool& isOnScreen) {
-
-	// 登録情報
-	CText3D::CRegistInfo* registInfo = NULL;;
-
-	// スクリーン上フラグに応じて登録
-	if (isOnScreen) registInfo = &RegistText3D(ms_resistInfoSumScreen);
-	else            registInfo = &RegistText3D(ms_resistInfoSum);
-
-	// 情報を代入
-	registInfo->SetMtx(mtx);
-
-	return registInfo;
-}
-
-//========================================
-// 設置処理(ポリゴン3D)
-//========================================
-CPolygon3D::CRegistInfo* CDrawMng::PutPolygon3D(const D3DXMATRIX& mtx, const bool& isOnScreen) {
-	
-	// 登録情報
-	CPolygon3D::CRegistInfo* registInfo = NULL;;
-
-	// スクリーン上フラグに応じて登録
-	if (isOnScreen) registInfo = &RegistPolygon3D(ms_resistInfoSumScreen);
-	else            registInfo = &RegistPolygon3D(ms_resistInfoSum);
-
-	// 情報を代入
-	registInfo->SetMtx(mtx);
-
-	return registInfo;
-}
-
-//========================================
-// 設置処理(モデル)
-//========================================
-CModel::CRegistInfo* CDrawMng::PutModel(const D3DXMATRIX& mtx, const bool& isOnScreen) {
-
-	// 登録受付中でない時、終了
-	if (ms_processState != PROCESS_STATE::REGIST_ACCEPT)
-		return NULL;
-
-	// 登録情報
-	CModel::CRegistInfo* registInfo = NULL;;
-
-	// スクリーン上フラグに応じて登録
-	if (isOnScreen) registInfo = &RegistModel(ms_resistInfoSumScreen);
-	else            registInfo = &RegistModel(ms_resistInfoSum);
-
-	// 情報を代入
-	registInfo->SetMtx(mtx);
-
-	return registInfo;
-}
-
-//========================================
-// 登録処理(ポリゴン2D)
-//========================================
-CPolygon2D::CRegistInfo& CDrawMng::RegistPolygon2D(CRegistInfoSum& resistInfo) {
-
-	// 登録情報数を加算
-	int numOld = resistInfo.m_polygon2DRegistInfoNum++;
-
-	// 登録情報のメモリ再確保
-	RNLib::Memory()->ReAlloc<CPolygon2D::CRegistInfo>(&resistInfo.m_polygon2DRegistInfos, numOld, resistInfo.m_polygon2DRegistInfoNum);
-
-	return resistInfo.m_polygon2DRegistInfos[numOld];
-}
-
-//========================================
-// 登録処理(ポリゴン3D)
-//========================================
-CPolygon3D::CRegistInfo& CDrawMng::RegistPolygon3D(CRegistInfoSum& resistInfo) {
-
-	// 登録情報数を加算
-	int numOld = resistInfo.m_polygon3DRegistInfoNum++;
-
-	// 登録情報のメモリ再確保
-	RNLib::Memory()->ReAlloc<CPolygon3D::CRegistInfo>(&resistInfo.m_polygon3DRegistInfos, numOld, resistInfo.m_polygon3DRegistInfoNum);
-
-	return resistInfo.m_polygon3DRegistInfos[numOld];
-}
-
-//========================================
-// 登録処理(テキスト2D)
-//========================================
-CText2D::CRegistInfo& CDrawMng::RegistText2D(CRegistInfoSum& resistInfo) {
-
-	// 登録情報数を加算
-	int numOld = resistInfo.m_text2DRegistInfoNum++;
-
-	// 登録情報のメモリ再確保
-	RNLib::Memory()->ReAlloc<CText2D::CRegistInfo>(&resistInfo.m_text2DRegistInfos, numOld, resistInfo.m_text2DRegistInfoNum);
-
-	return resistInfo.m_text2DRegistInfos[numOld];
-}
-
-//========================================
-// 登録処理(テキスト3D)
-//========================================
-CText3D::CRegistInfo& CDrawMng::RegistText3D(CRegistInfoSum& resistInfo) {
-
-	// 登録情報数を加算
-	int numOld = resistInfo.m_text3DRegistInfoNum++;
-
-	// 登録情報のメモリ再確保
-	RNLib::Memory()->ReAlloc<CText3D::CRegistInfo>(&resistInfo.m_text3DRegistInfos, numOld, resistInfo.m_text3DRegistInfoNum);
-
-	return resistInfo.m_text3DRegistInfos[numOld];
-}
-
-//========================================
-// 登録処理(モデル)
-//========================================
-CModel::CRegistInfo& CDrawMng::RegistModel(CRegistInfoSum& resistInfo) {
-
-	// 登録情報数を加算
-	int numOld = resistInfo.m_modelRegistInfoNum++;
-
-	// 登録情報のメモリ再確保
-	RNLib::Memory()->ReAlloc<CModel::CRegistInfo>(&resistInfo.m_modelRegistInfos, numOld, resistInfo.m_modelRegistInfoNum);
-
-	return resistInfo.m_modelRegistInfos[numOld];
-}
-
-//================================================================================
-//----------|---------------------------------------------------------------------
-//==========| 描画マネージャークラスのメンバ関数
-//----------|---------------------------------------------------------------------
-//================================================================================
-
-//========================================
-// 初期化処理
-//========================================
-void CDrawMng::Init(void) {
-	
-}
-
-//========================================
-// 終了処理
-//========================================
-void CDrawMng::Uninit(void) {
-
-	// メインループスレッドを斬り離す
-	ms_mainLoopTh.detach();
-
-	// 解放処理
-	Release();
 }
 
 //========================================
 // 解放処理
 //========================================
-void CDrawMng::Release(void) {
+void CDrawMng::CDrawInfoSum::Release(void) {
 
-	// 描画情報を破棄
-	ms_drawInfoSum.Release();
-	ms_drawInfoSumOvr.Release();
-	ms_drawInfoSumScreen.Release();
-	ms_drawInfoSumScreenOvr.Release();
-	RNLib::Memory()->Release(&ms_drawInfoSum.ms_drawInfos);
-	RNLib::Memory()->Release(&ms_drawInfoSumOvr.ms_drawInfos);
-	RNLib::Memory()->Release(&ms_drawInfoSumScreen.ms_drawInfos);
-	RNLib::Memory()->Release(&ms_drawInfoSumScreenOvr.ms_drawInfos);
-
-	// 頂点バッファを破棄する
-	CPolygon2D::CDrawInfo::ReleaseVertexBuffer();
-	CPolygon3D::CDrawInfo::ReleaseVertexBuffer();
-}
-
-//========================================
-// 描画開始処理
-//========================================
-bool CDrawMng::StartDraw(void) {
-
-	if (ms_processState == PROCESS_STATE::REGIST_ACCEPT)
-	{// [ 登録受付 ]の時、
-		// [ 登録情報適用待ち ]にする
-		ms_processState = PROCESS_STATE::REGIST_INFO_APPLY_WAIT;
-	}
-	else if ((ms_processState == PROCESS_STATE::DRAW_INFO_SWAP_WAIT && !RNLib::GetSpace3DStop()) || RNLib::GetSceneSwap())
-	{// [ 描画入れ替え待ち ]の時、
-		// 描画情報を上書きする
-		ms_drawInfoSum.Overwrite(&ms_drawInfoSumOvr);
-		ms_drawInfoSumScreen.Overwrite(&ms_drawInfoSumScreenOvr);
-
-		// 頂点バッファを生成する
-		CPolygon2D::CDrawInfo::CreateVertexBuffer();
-		CPolygon3D::CDrawInfo::CreateVertexBuffer();
-
-		// 頂点情報を代入
-		AssignVertexInfo();
-
-		// [ 登録受付 ]にする
-		ms_processState = PROCESS_STATE::REGIST_ACCEPT;
-
-		return true;
-	}
-
-	return false;
-}
-
-//========================================
-// 頂点情報代入処理
-//========================================
-void CDrawMng::AssignVertexInfo(void) {
-
-	// 頂点2D情報に変換
-	if (CPolygon2D::CDrawInfo::m_vtxBuff != NULL) {
-		VERTEX_2D* vtxs = NULL;
-		CPolygon2D::CDrawInfo::m_vtxBuff->Lock(0, 0, (void**)&vtxs, 0);
-
-		ConvDrawInfoToVertex2DInfo(vtxs, ms_drawInfoSum);
-		ConvDrawInfoToVertex2DInfo(vtxs, ms_drawInfoSumScreen);
-
-		CPolygon2D::CDrawInfo::m_vtxBuff->Unlock();
-	}
-
-	// 頂点3D情報に変換
-	if (CPolygon3D::CDrawInfo::m_vtxBuff != NULL) {
-		VERTEX_3D* vtxs = NULL;
-		CPolygon3D::CDrawInfo::m_vtxBuff->Lock(0, 0, (void**)&vtxs, 0);
-
-		ConvDrawInfoToVertex3DInfo(vtxs, ms_drawInfoSum);
-		ConvDrawInfoToVertex3DInfo(vtxs, ms_drawInfoSumScreen);
-
-		CPolygon3D::CDrawInfo::m_vtxBuff->Unlock();
+	// 描画情報を解放
+	if (ms_drawInfos != NULL) {
+		for (int cnt = 0; cnt < ms_drawInfoNum; cnt++) {
+			RNLib::Memory()->Release(&ms_drawInfos[cnt]);
+		}
+		RNLib::Memory()->Release(&ms_drawInfos);
 	}
 }
 
 //========================================
-// 描画情報を頂点2D情報に変換
+// 上書き処理
 //========================================
-void CDrawMng::ConvDrawInfoToVertex2DInfo(VERTEX_2D* vtxs, CDrawInfoSum& drawInfoSum) {
+void CDrawMng::CDrawInfoSum::Overwrite(CDrawInfoSum* pOvr) {
 
-	for (int cntDrawInfo = 0; cntDrawInfo < drawInfoSum.ms_drawInfoNum; cntDrawInfo++) {
-		if (drawInfoSum.ms_drawInfos[cntDrawInfo]->m_type == CDrawInfoBase::TYPE::POLYGON2D) {
-			CPolygon2D::CDrawInfo& drawInfo = (CPolygon2D::CDrawInfo&)*drawInfoSum.ms_drawInfos[cntDrawInfo];
-			int vtxStartIdx = 4 * drawInfo.m_idx;
+	// 解放処理
+	Release();
 
-			for (int cntVtx = 0; cntVtx < 4; cntVtx++) {
-				int vtxIdx = vtxStartIdx + cntVtx;
-				vtxs[vtxIdx] = drawInfo.m_vtxs[cntVtx];
+	// 上書き
+	ms_drawInfos         = pOvr->ms_drawInfos;
+	ms_drawInfoNum       = pOvr->ms_drawInfoNum;
+	pOvr->ms_drawInfos   = NULL;
+	pOvr->ms_drawInfoNum = 0;
+}
+
+//================================================================================
+//----------|---------------------------------------------------------------------
+//==========| [公開]登録情報情報総括クラスのメンバ関数
+//----------|---------------------------------------------------------------------
+//================================================================================
+
+//========================================
+// コンストラクタ
+//========================================
+CDrawMng::CRegistInfoSum::CRegistInfoSum() {
+
+	m_polygon2DRegistInfos          = NULL;
+	m_polygon2DRegistInfoNum        = 0;
+	m_polygon2DRegistInfoAllocPower = 0;
+	m_polygon2DRegistInfoAllocNum   = 0;
+	m_polygon3DRegistInfos          = NULL;
+	m_polygon3DRegistInfoNum        = 0;
+	m_polygon3DRegistInfoAllocPower = 0;
+	m_polygon3DRegistInfoAllocNum   = 0;
+	m_text2DRegistInfos             = NULL;
+	m_text2DRegistInfoNum           = 0;
+	m_text2DRegistInfoAllocPower    = 0;
+	m_text2DRegistInfoAllocNum      = 0;
+	m_text3DRegistInfos             = NULL;
+	m_text3DRegistInfoNum           = 0;
+	m_text3DRegistInfoAllocPower    = 0;
+	m_text3DRegistInfoAllocNum      = 0;
+	m_modelRegistInfos              = NULL;
+	m_modelRegistInfoNum            = 0;
+	m_modelRegistInfoAllocPower     = 0;
+	m_modelRegistInfoAllocNum       = 0;
+}
+
+//========================================
+// デストラクタ
+//========================================
+CDrawMng::CRegistInfoSum::~CRegistInfoSum() {
+
+}
+
+//========================================
+// 初期確保処理
+//========================================
+void CDrawMng::CRegistInfoSum::InitAlloc(void) {
+
+	const unsigned short allocNum = pow(2, REGIST_ALLOC_BASE_POWER);
+
+	RNLib::Memory()->Alloc(&m_polygon2DRegistInfos, allocNum);
+	RNLib::Memory()->Alloc(&m_polygon3DRegistInfos, allocNum);
+	RNLib::Memory()->Alloc(&m_text2DRegistInfos   , allocNum);
+	RNLib::Memory()->Alloc(&m_text3DRegistInfos   , allocNum);
+	RNLib::Memory()->Alloc(&m_modelRegistInfos    , allocNum);
+	
+	m_polygon2DRegistInfoAllocNum   = 
+	m_polygon3DRegistInfoAllocNum   = 
+	m_text2DRegistInfoAllocNum      = 
+	m_text3DRegistInfoAllocNum      = 
+	m_modelRegistInfoAllocNum       = allocNum;
+
+	m_polygon2DRegistInfoAllocPower = 
+	m_polygon3DRegistInfoAllocPower = 
+	m_text2DRegistInfoAllocPower    = 
+	m_text3DRegistInfoAllocPower    = 
+	m_modelRegistInfoAllocPower     = REGIST_ALLOC_BASE_POWER;
+}
+
+//========================================
+// 再確保処理
+//========================================
+void CDrawMng::CRegistInfoSum::ReAlloc() {
+
+	//----------------------------------------
+	// ポリゴン2D
+	//----------------------------------------
+	if (m_polygon2DRegistInfoAllocPower > REGIST_ALLOC_BASE_POWER) {
+
+		for (int cntAlloc = REGIST_ALLOC_BASE_POWER; cntAlloc < m_polygon2DRegistInfoAllocPower; cntAlloc++) {
+			const unsigned short allocLine = pow(2, cntAlloc);
+
+			if (m_polygon2DRegistInfoNum < allocLine)
+			{// 確保ラインよりも数が少ない時、
+				// その確保ライン分確保し直す
+				RNLib::Memory()->ReAlloc(&m_polygon2DRegistInfos, m_polygon2DRegistInfoAllocNum, allocLine);
+
+				// 確保した数/べき乗数を保存
+				m_polygon2DRegistInfoAllocNum   = allocLine;
+				m_polygon2DRegistInfoAllocPower = cntAlloc;
+
+				break;
+			}
+		}
+	}
+
+	//----------------------------------------
+	// ポリゴン3D
+	//----------------------------------------
+	if (m_polygon3DRegistInfoAllocPower > REGIST_ALLOC_BASE_POWER) {
+
+		for (int cntAlloc = REGIST_ALLOC_BASE_POWER; cntAlloc < m_polygon3DRegistInfoAllocPower; cntAlloc++) {
+			const unsigned short allocLine = pow(2, cntAlloc);
+
+			if (m_polygon3DRegistInfoNum < allocLine)
+			{// 確保ラインよりも数が少ない時、
+				// その確保ライン分確保し直す
+				RNLib::Memory()->ReAlloc(&m_polygon3DRegistInfos, m_polygon3DRegistInfoAllocNum, allocLine);
+
+				// 確保した数/べき乗数を保存
+				m_polygon3DRegistInfoAllocNum   = allocLine;
+				m_polygon3DRegistInfoAllocPower = cntAlloc;
+
+				break;
+			}
+		}
+	}
+
+	//----------------------------------------
+	// テキスト2D
+	//----------------------------------------
+	if (m_text2DRegistInfoAllocPower > REGIST_ALLOC_BASE_POWER) {
+
+		for (int cntAlloc = REGIST_ALLOC_BASE_POWER; cntAlloc < m_text2DRegistInfoAllocPower; cntAlloc++) {
+			const unsigned short allocLine = pow(2, cntAlloc);
+
+			if (m_text2DRegistInfoNum < allocLine)
+			{// 確保ラインよりも数が少ない時、
+				// その確保ライン分確保し直す
+				RNLib::Memory()->ReAlloc(&m_text2DRegistInfos, m_text2DRegistInfoAllocNum, allocLine);
+
+				// 確保した数/べき乗数を保存
+				m_text2DRegistInfoAllocNum   = allocLine;
+				m_text2DRegistInfoAllocPower = cntAlloc;
+
+				break;
+			}
+		}
+	}
+
+	//----------------------------------------
+	// テキスト3D
+	//----------------------------------------
+	if (m_text3DRegistInfoAllocPower > REGIST_ALLOC_BASE_POWER) {
+
+		for (int cntAlloc = REGIST_ALLOC_BASE_POWER; cntAlloc < m_text3DRegistInfoAllocPower; cntAlloc++) {
+			const unsigned short allocLine = pow(2, cntAlloc);
+
+			if (m_text3DRegistInfoNum < allocLine)
+			{// 確保ラインよりも数が少ない時、
+				// その確保ライン分確保し直す
+				RNLib::Memory()->ReAlloc(&m_text3DRegistInfos, m_text3DRegistInfoAllocNum, allocLine);
+
+				// 確保した数/べき乗数を保存
+				m_text3DRegistInfoAllocNum   = allocLine;
+				m_text3DRegistInfoAllocPower = cntAlloc;
+
+				break;
+			}
+		}
+	}
+
+	//----------------------------------------
+	// モデル
+	//----------------------------------------
+	if (m_modelRegistInfoAllocPower > REGIST_ALLOC_BASE_POWER) {
+
+		for (int cntAlloc = REGIST_ALLOC_BASE_POWER; cntAlloc < m_modelRegistInfoAllocPower; cntAlloc++) {
+			const unsigned short allocLine = pow(2, cntAlloc);
+
+			if (m_modelRegistInfoNum < allocLine)
+			{// 確保ラインよりも数が少ない時、
+				// その確保ライン分確保し直す
+				RNLib::Memory()->ReAlloc(&m_modelRegistInfos, m_modelRegistInfoAllocNum, allocLine);
+
+				// 確保した数/べき乗数を保存
+				m_modelRegistInfoAllocNum   = allocLine;
+				m_modelRegistInfoAllocPower = cntAlloc;
+
+				break;
 			}
 		}
 	}
 }
 
 //========================================
-// 描画情報を頂点3D情報に変換
+// 解放処理
 //========================================
-void CDrawMng::ConvDrawInfoToVertex3DInfo(VERTEX_3D* vtxs, CDrawInfoSum& drawInfoSum) {
+void CDrawMng::CRegistInfoSum::Release() {
 
-	for (int cntDrawInfo = 0; cntDrawInfo < drawInfoSum.ms_drawInfoNum; cntDrawInfo++) {
-		if (drawInfoSum.ms_drawInfos[cntDrawInfo]->m_type == CDrawInfoBase::TYPE::POLYGON3D) {
-			CPolygon3D::CDrawInfo& drawInfo = (CPolygon3D::CDrawInfo&)*drawInfoSum.ms_drawInfos[cntDrawInfo];
-			int vtxStartIdx = 4 * drawInfo.m_idx;
-
-			for (int cntVtx = 0; cntVtx < 4; cntVtx++) {
-				int vtxIdx = vtxStartIdx + cntVtx;
-				vtxs[vtxIdx] = drawInfo.m_vtxs[cntVtx];
-			}
-		}
-	}
-}
-
-//========================================
-// 描画処理
-//========================================
-void CDrawMng::Draw(LPDIRECT3DDEVICE9& device, const bool& isOnScreen) {
-
-	// ビューマトリックスを取得
-	D3DXMATRIX viewMtx;
-	device->GetTransform(D3DTS_VIEW, &viewMtx);
-
-	// 描画していく
-	if (isOnScreen) {
-		for (int cntDrawInfo = 0; cntDrawInfo < ms_drawInfoSumScreen.ms_drawInfoNum; cntDrawInfo++) {
-			if (ms_drawInfoSumScreen.ms_drawInfos[cntDrawInfo] != NULL)
-				ms_drawInfoSumScreen.ms_drawInfos[cntDrawInfo]->Draw(device, viewMtx);
-		}
-	}
-	else {
-		for (int cntDrawInfo = 0; cntDrawInfo < ms_drawInfoSum.ms_drawInfoNum; cntDrawInfo++) {
-			if (ms_drawInfoSum.ms_drawInfos[cntDrawInfo] != NULL)
-				ms_drawInfoSum.ms_drawInfos[cntDrawInfo]->Draw(device, viewMtx);
-		}
-	}
+	RNLib::Memory()->Release(&m_polygon2DRegistInfos);
+	RNLib::Memory()->Release(&m_polygon3DRegistInfos);
+	RNLib::Memory()->Release(&m_text2DRegistInfos);
+	RNLib::Memory()->Release(&m_text3DRegistInfos);
+	RNLib::Memory()->Release(&m_modelRegistInfos);
 }

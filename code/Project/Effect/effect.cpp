@@ -1,13 +1,15 @@
 //========================================
 // 
-// ブロック処理
-// Author:KEISUKE OTONO
+// エフェクト処理
+// Author:RYUKI FUJIWARA
 // 
 //========================================
 // *** block.cpp ***
 //========================================
 #include "effect.h"
 #include "../main.h"
+
+#define MAX_COUNT (60)	//カウント
 
 //========================================
 // 静的変数
@@ -19,10 +21,10 @@ int CEffect::m_nNumAll = 0;
 //========================================
 CEffect::CEffect(void)
 {
+	m_Info.pos = INITD3DXVECTOR3;
 	m_Info.move = INITD3DXVECTOR3;
-	m_Info.col = INITD3DCOLOR;
-	m_Info.nType = 0;
-	m_Info.nID = m_nNumAll;
+	m_Info.col = INITCOLOR;
+	m_Info.nCount = MAX_COUNT;
 	m_nNumAll++;
 }
 
@@ -37,11 +39,12 @@ CEffect::~CEffect()
 //========================================
 // 初期化
 //========================================
-HRESULT CEffect::Init(void)
+HRESULT CEffect::Init(int nTex)
 {
 	m_Info.move = INITD3DXVECTOR3;
-	m_Info.col = INITD3DCOLOR;
-	m_Info.nType = 0;
+	m_Info.col = INITCOLOR;
+	m_Info.nTex = nTex;
+	m_Info.nCount = MAX_COUNT;
 
 	return S_OK;
 }
@@ -60,9 +63,22 @@ void CEffect::Uninit(void)
 void CEffect::Update(void)
 {
 	// 過去の位置
-	RNLib::Polygon3D()->Put(INITD3DXVECTOR3, INITD3DXVECTOR3)
-		->SetTex(1)
-		->SetBillboard(true);
+	RNLib::Polygon3D()->Put(m_Info.pos + m_Info.move, INITD3DXVECTOR3)
+		->SetTex(m_Info.nTex)
+		->SetBillboard(true)
+		->SetCol(m_Info.col);
+
+	m_Info.nCount--;
+
+	//割合計算
+	float fCountRate = Easing(EASE_IN, m_Info.nCount, MAX_COUNT);
+
+	m_Info.col.a = m_Info.col.a * fCountRate;
+
+	if (m_Info.nCount <= 0)
+	{
+		CObject::Delete();
+	}
 }
 
 //========================================

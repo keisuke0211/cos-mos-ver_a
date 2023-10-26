@@ -4,7 +4,7 @@
 // Author:RIKU NISHIMURA
 // 
 //========================================
-#include "../../RNlib.h"
+#include "../../../RNlib.h"
 
 //****************************************
 // 定数定義
@@ -13,7 +13,7 @@
 
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| モデルクラスのメンバ関数
+//==========| [公開]モデルクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
 
@@ -30,8 +30,6 @@ CModel::CModel() {
 //========================================
 CModel::~CModel() {
 
-	// 解放処理
-	Release();
 }
 
 //========================================
@@ -43,7 +41,7 @@ void CModel::Release(void) {
 	for (int cnt = 0; cnt < m_num; cnt++) {
 		m_datas[cnt].Release();
 	}
-	RNLib::Memory()->Release<CData>(&m_datas);
+	RNLib::Memory()->Release(&m_datas);
 }
 
 //========================================
@@ -51,26 +49,30 @@ void CModel::Release(void) {
 //========================================
 short CModel::Load(const char* loadPath, short idx) {
 
-	unsigned short numOld = m_num;
-	short idxOld = idx;
+	const unsigned short numOld(m_num);
+	const short idxOld(idx);
 
 	if (CRegist::Load(loadPath, idx)) 
 	{// 読み込み成功
 		// データのメモリ再確保
-		RNLib::Memory()->ReAlloc<CData>(&m_datas, numOld, m_num);
-
+		CData* t = m_datas;
+		RNLib::Memory()->ReAlloc(&m_datas, numOld, m_num);
+		for (int cnt = 0; cnt < numOld; cnt++) {
+			m_datas[cnt].Release();
+		}
 		// データの破棄(番号指定の場合)
-		//if (idxOld != DATANONE)m_datas[idxOld].Release();
+		if (idxOld != DATANONE)
+			m_datas[idx].Release();
 
 		// Xファイルの読み込み
-		LPDIRECT3DDEVICE9 device = RNLib::Window()->GetD3DDevice();
+		Device device(RNLib::Window()->GetD3DDevice());
 		if (FAILED(D3DXLoadMeshFromX(loadPath, D3DXMESH_SYSTEMMEM, device, NULL, &m_datas[idx].m_matBuff, NULL, (DWORD*)&m_datas[idx].m_matNum, &m_datas[idx].m_mesh))) 
 		{// 読み込み失敗
 			// データのメモリリセット
-			RNLib::Memory()->ReAlloc<CData>(&m_datas, m_num, numOld);
+			RNLib::Memory()->ReAlloc(&m_datas, m_num, numOld);
 
 			// 読み込み済パスのメモリリセット
-			RNLib::Memory()->ReAlloc<char*>(&m_loadPaths, m_num, numOld);
+			RNLib::Memory()->ReAlloc(&m_loadPaths, m_num, numOld);
 
 			// 数をリセット
 			m_num = numOld;
@@ -87,20 +89,20 @@ short CModel::Load(const char* loadPath, short idx) {
 				D3DXLoadMeshFromX(loadPath, D3DXMESH_SYSTEMMEM, device, NULL, NULL, NULL, NULL, &m_datas[idx].m_outLineMesh);
 
 				// 頂点フォーマットのサイズを取得
-				DWORD dwSizeFVF = D3DXGetFVFVertexSize(m_datas[idx].m_outLineMesh->GetFVF());
+				const DWORD dwSizeFVF(D3DXGetFVFVertexSize(m_datas[idx].m_outLineMesh->GetFVF()));
 
 				// 頂点バッファをロック
 				BYTE* vtxBuff;
 				m_datas[idx].m_outLineMesh->LockVertexBuffer(D3DLOCK_READONLY, (void**)&vtxBuff);
 
 				// 法線方向に加算
-				int nVtxNum = (int)m_datas[idx].m_outLineMesh->GetNumVertices();
+				int nVtxNum((int)m_datas[idx].m_outLineMesh->GetNumVertices());
 				for (int nCntVtx = 0; nCntVtx < nVtxNum; nCntVtx++) {
-					D3DXVECTOR3* pos =  (D3DXVECTOR3*)(vtxBuff + (dwSizeFVF * nCntVtx));
-					D3DXVECTOR3  nor = *(D3DXVECTOR3*)(vtxBuff + (dwSizeFVF * nCntVtx) + D3DXGetFVFVertexSize(D3DFVF_XYZ));
+					D3DXVECTOR3* pos( (D3DXVECTOR3*)(vtxBuff + (dwSizeFVF * nCntVtx)));
+					D3DXVECTOR3  nor(*(D3DXVECTOR3*)(vtxBuff + (dwSizeFVF * nCntVtx) + D3DXGetFVFVertexSize(D3DFVF_XYZ)));
 
 					{// 半径の最大を調べる
-						float dist = Find_Dist(INITD3DXVECTOR3, *pos);
+						float dist(Find_Dist(INITD3DXVECTOR3, *pos));
 
 						if (m_datas[idx].m_radiusMax < dist) {
 							m_datas[idx].m_radiusMax = dist;
@@ -115,20 +117,14 @@ short CModel::Load(const char* loadPath, short idx) {
 			}// <<< >>>
 
 			// マテリアル情報に対するポインタを取得
-			D3DXMATERIAL* mats = (D3DXMATERIAL*)m_datas[idx].m_matBuff->GetBufferPointer();
+			const D3DXMATERIAL* mats((D3DXMATERIAL*)m_datas[idx].m_matBuff->GetBufferPointer());
 
 			// テクスチャ番号のメモリ確保
-			RNLib::Memory()->Alloc<short>(&m_datas[idx].m_texIdxs, m_datas[idx].m_matNum);
+			RNLib::Memory()->Alloc(&m_datas[idx].m_texIdxs, m_datas[idx].m_matNum);
 
 			// テクスチャの読み込み
-			for (int nCntMat = 0; nCntMat < m_datas[idx].m_matNum; nCntMat++) {
-				if (mats[nCntMat].pTextureFilename != NULL) {
-					m_datas[idx].m_texIdxs[nCntMat] = RNLib::Texture()->Load(mats[nCntMat].pTextureFilename);
-				}
-				else {
-					m_datas[idx].m_texIdxs[nCntMat] = DATANONE;
-				}
-			}
+			for (int nCntMat(0); nCntMat < m_datas[idx].m_matNum; nCntMat++)
+				m_datas[idx].m_texIdxs[nCntMat] = (mats[nCntMat].pTextureFilename != NULL) ? RNLib::Texture()->Load(mats[nCntMat].pTextureFilename) : DATANONE;
 		}
 	}
 
@@ -138,7 +134,7 @@ short CModel::Load(const char* loadPath, short idx) {
 //========================================
 // 設置処理
 //========================================
-CModel::CRegistInfo* CModel::Put(const D3DXMATRIX& mtx, const short& modelIdx, const bool& isOnScreen) {
+CModel::CRegistInfo* CModel::Put(const Matrix& mtx, const short& modelIdx, const bool& isOnScreen) {
 
 	// 登録受付中でない時、終了
 	if (CDrawMng::GetProcessState() != CDrawMng::PROCESS_STATE::REGIST_ACCEPT)
@@ -151,7 +147,7 @@ CModel::CRegistInfo* CModel::Put(const D3DXMATRIX& mtx, const short& modelIdx, c
 //========================================
 // 設置処理(位置と向きで指定)
 //========================================
-CModel::CRegistInfo* CModel::Put(const D3DXVECTOR3& pos, const D3DXVECTOR3& rot, const short& modelIdx, const bool& isOnScreen) {
+CModel::CRegistInfo* CModel::Put(const Pos3D& pos, const Rot3D& rot, const short& modelIdx, const bool& isOnScreen) {
 	
 	return Put(ConvPosRotToMatrix(pos, rot), modelIdx, isOnScreen);
 }
@@ -188,25 +184,25 @@ CModel::CData::~CData() {
 void CModel::CData::Release(void) {
 
 	// テクスチャ番号の破棄
-	RNLib::Memory()->Release<short>(&m_texIdxs);
+	//RNLib::Memory()->Release(&m_texIdxs);
 
-	// メッシュの破棄
-	if (m_mesh != NULL) {
-		m_mesh->Release();
-		m_mesh = NULL;
-	}
+	//// メッシュの破棄
+	//if (m_mesh != NULL) {
+	//	m_mesh->Release();
+	//	m_mesh = NULL;
+	//}
 
-	// 輪郭線メッシュの破棄
-	if (m_outLineMesh != NULL) {
-		m_outLineMesh->Release();
-		m_outLineMesh = NULL;
-	}
+	//// 輪郭線メッシュの破棄
+	//if (m_outLineMesh != NULL) {
+	//	m_outLineMesh->Release();
+	//	m_outLineMesh = NULL;
+	//}
 
-	// マテリアルの破棄
-	if (m_matBuff != NULL) {
-		m_matBuff->Release();
-		m_matBuff = NULL;
-	}
+	//// マテリアルの破棄
+	//if (m_matBuff != NULL) {
+	//	m_matBuff->Release();
+	//	m_matBuff = NULL;
+	//}
 }
 
 //================================================================================
@@ -241,29 +237,26 @@ CModel::CDrawInfo::~CDrawInfo() {
 //========================================
 // 描画処理
 //========================================
-void CModel::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMtx) {
+void CModel::CDrawInfo::Draw(Device& device, const Matrix& viewMtx) {
 
 	//----------------------------------------
 	// 事前準備
 	//----------------------------------------
 	// モデルデータを取得
-	CData& modelData = RNLib::Model()->GetData(m_modelIdx);
+	const CData& modelData(RNLib::Model()->GetData(m_modelIdx));
 
 	// 本体のワールドマトリックスの設定
 	device->SetTransform(D3DTS_WORLD, &m_mtx);
 
 	// マテリアルデータへのポインタを取得
-	D3DXMATERIAL* mats = (D3DXMATERIAL*)modelData.m_matBuff->GetBufferPointer();
+	D3DXMATERIAL* mats((D3DXMATERIAL*)modelData.m_matBuff->GetBufferPointer());
 
 	//----------------------------------------
 	// 一時的な描画モード設定を開始
 	//----------------------------------------
 	RNLib::DrawStateMng()->StartTemporarySetMode();
 
-	// [[[ ライティングのオンオフ ]]]
-	RNLib::DrawStateMng()->SetLightingMode(m_isLighting, device);
-
-	for (int cntMat = 0; cntMat < modelData.m_matNum; cntMat++) {
+	for (int cntMat(0); cntMat < modelData.m_matNum; cntMat++) {
 		
 		//----------------------------------------
 		// パラメーターに応じた設定
@@ -285,10 +278,7 @@ void CModel::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMt
 		}
 
 		// [[[ テクスチャの設定 ]]]
-		if (m_texIdx == DATANONE)
-			RNLib::Texture()->Set(device, modelData.m_texIdxs[cntMat]);
-		else
-			RNLib::Texture()->Set(device, m_texIdx);
+		RNLib::Texture()->Set(device, (m_texIdx == DATANONE) ? modelData.m_texIdxs[cntMat] : m_texIdx);
 
 		//----------------------------------------
 		// 描画
@@ -320,33 +310,37 @@ void CModel::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const D3DXMATRIX& viewMt
 //========================================
 // マテリアル設定処理
 //========================================
-void CModel::CDrawInfo::SetMaterial(LPDIRECT3DDEVICE9& device, D3DMATERIAL9* mat, const Color& col) {
+void CModel::CDrawInfo::SetMaterial(Device& device, Material* mat, const Color& col) {
 
 	// マテリアルの材質パラメータを保存
-	D3DXCOLOR DiffuseTemp  = mat->Diffuse;
-	D3DXCOLOR EmissiveTemp = mat->Emissive;
+	const D3DXCOLOR diffuseTemp (mat->Diffuse);
+	const D3DXCOLOR emissiveTemp(mat->Emissive);
 
 	// マテリアルの材質パラメータを設定
-	mat->Diffuse.r  = DiffuseTemp.r * ((float)col.r / 255);
-	mat->Diffuse.g  = DiffuseTemp.g * ((float)col.g / 255);
-	mat->Diffuse.b  = DiffuseTemp.b * ((float)col.b / 255);
-	mat->Diffuse.a  = DiffuseTemp.a * ((float)col.a / 255);
-	mat->Emissive.r = EmissiveTemp.r * ((float)col.r / 255);
-	mat->Emissive.g = EmissiveTemp.g * ((float)col.g / 255);
-	mat->Emissive.b = EmissiveTemp.b * ((float)col.b / 255);
-	mat->Emissive.a = EmissiveTemp.a * ((float)col.a / 255);
+	const float r = (float)col.r / 255;
+	const float g = (float)col.g / 255;
+	const float b = (float)col.b / 255;
+	const float a = (float)col.a / 255;
+	mat->Diffuse.r  = diffuseTemp .r * r;
+	mat->Diffuse.g  = diffuseTemp .g * g;
+	mat->Diffuse.b  = diffuseTemp .b * b;
+	mat->Diffuse.a  = diffuseTemp .a * a;
+	mat->Emissive.r = emissiveTemp.r * r;
+	mat->Emissive.g = emissiveTemp.g * g;
+	mat->Emissive.b = emissiveTemp.b * b;
+	mat->Emissive.a = emissiveTemp.a * a;
 
 	// マテリアルの設定
 	device->SetMaterial(mat);
 
 	// マテリアルの材質パラメータを元に戻す
-	mat->Diffuse  = DiffuseTemp;
-	mat->Emissive = EmissiveTemp;
+	mat->Diffuse  = diffuseTemp;
+	mat->Emissive = emissiveTemp;
 }
 
 //================================================================================
 //----------|---------------------------------------------------------------------
-//==========| 登録情報クラスのメンバ関数
+//==========| [公開]登録情報クラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
 
@@ -360,7 +354,7 @@ CModel::CRegistInfo::CRegistInfo() {
 	m_modelIdx             = DATANONE;
 	m_texIdx               = DATANONE;
 	m_isZTest              = false;
-	m_isLighting           = true;
+	m_isLighting           = false;
 	m_isOutLine            = false;
 	m_brightnessOfEmissive = 1.0f;
 	m_priority             = 0;
@@ -379,8 +373,8 @@ CModel::CRegistInfo::~CRegistInfo() {
 CModel::CDrawInfo* CModel::CRegistInfo::ConvToDrawInfo(void) {
 
 	// 描画情報のメモリ確保
-	CDrawInfo* drawInfo = NULL;
-	RNLib::Memory()->Alloc<CDrawInfo>(&drawInfo);
+	CDrawInfo* drawInfo(NULL);
+	RNLib::Memory()->Alloc(&drawInfo);
 
 	// 情報を代入
 	// (基底)
@@ -395,21 +389,7 @@ CModel::CDrawInfo* CModel::CRegistInfo::ConvToDrawInfo(void) {
 	drawInfo->m_isLighting           = m_isLighting;
 	drawInfo->m_isOutLine            = m_isOutLine;
 	drawInfo->m_brightnessOfEmissive = m_brightnessOfEmissive;
-	{// 距離を算出
-		// 拡大倍率の最大を算出
-		float scaleMax = 0.0f; {
-			float scaleX = FindMatrixScaleX(m_mtx);
-			float scaleY = FindMatrixScaleY(m_mtx);
-			float scaleZ = FindMatrixScaleZ(m_mtx);
-
-			scaleMax = scaleX;
-			if (scaleMax < scaleY)
-				scaleMax = scaleY;
-			if (scaleMax < scaleZ)
-				scaleMax = scaleZ;
-		}
-		drawInfo->m_distance = Find_DistToCameraPlane(ConvMatrixToPos(m_mtx)) - (RNLib::Model()->GetData(m_modelIdx).m_radiusMax * scaleMax);
-	}
+	drawInfo->m_distance = Find_DistToCameraPlane(ConvMatrixToPos(m_mtx));
 
 	return drawInfo;
 }

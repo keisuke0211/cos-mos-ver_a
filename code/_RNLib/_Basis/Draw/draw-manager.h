@@ -7,11 +7,11 @@
 #pragma once
 
 #include "draw-info.h"
-#include "polygon2D.h"
-#include "polygon3D.h"
-#include "model.h"
-#include "text2D.h"
-#include "text3D.h"
+#include "PutObject/polygon2D.h"
+#include "PutObject/polygon3D.h"
+#include "PutObject/model.h"
+#include "PutObject/text2D.h"
+#include "PutObject/text3D.h"
 #include "../../RNmain.h"
 #include "../Mechanical/memory.h"
 
@@ -21,6 +21,13 @@
 // 描画クラス
 class CDrawMng {
 public:
+	//----------------------------------------
+	// 定数宣言
+	//----------------------------------------
+	static const unsigned short POLYGON2D_ALLOC_BASE_POWER = 8;
+	static const unsigned short POLYGON3D_ALLOC_BASE_POWER = 8;
+	static const unsigned short REGIST_ALLOC_BASE_POWER    = 8;	// 2の何乗を基準とするか
+
 	//----------------------------------------
 	// 列挙型定義
 	//----------------------------------------
@@ -57,18 +64,31 @@ public:
 		// [[[ 関数宣言 ]]]
 		CRegistInfoSum();
 		~CRegistInfoSum();
+		void InitAlloc(void);
+		void ReAlloc(void);
+		void Release(void);
 
 		// [[[ 変数宣言 ]]]
 		CPolygon2D::CRegistInfo* m_polygon2DRegistInfos;
-		int                      m_polygon2DRegistInfoNum;
-		CPolygon3D::CRegistInfo* m_polygon3DRegistInfos; 
-		int                      m_polygon3DRegistInfoNum;
+		unsigned short           m_polygon2DRegistInfoNum;
+		unsigned short           m_polygon2DRegistInfoAllocPower;
+		unsigned short           m_polygon2DRegistInfoAllocNum;
+		CPolygon3D::CRegistInfo* m_polygon3DRegistInfos;
+		unsigned short           m_polygon3DRegistInfoNum;
+		unsigned short           m_polygon3DRegistInfoAllocPower;
+		unsigned short           m_polygon3DRegistInfoAllocNum;
 		CText2D::CRegistInfo*    m_text2DRegistInfos;
-		int                      m_text2DRegistInfoNum;
+		unsigned short           m_text2DRegistInfoNum;
+		unsigned short           m_text2DRegistInfoAllocPower;
+		unsigned short           m_text2DRegistInfoAllocNum;
 		CText3D::CRegistInfo*    m_text3DRegistInfos;
-		int                      m_text3DRegistInfoNum;
+		unsigned short           m_text3DRegistInfoNum;
+		unsigned short           m_text3DRegistInfoAllocPower;
+		unsigned short           m_text3DRegistInfoAllocNum;
 		CModel::CRegistInfo*     m_modelRegistInfos;
-		int                      m_modelRegistInfoNum;
+		unsigned short           m_modelRegistInfoNum;
+		unsigned short           m_modelRegistInfoAllocPower;
+		unsigned short           m_modelRegistInfoAllocNum;
 	};
 
 	//========== [[[ 関数宣言 ]]]
@@ -82,7 +102,7 @@ public:
 	void Draw(LPDIRECT3DDEVICE9& device, const bool& isOnScreen);
 	CPolygon2D::CRegistInfo* PutPolygon2D(const D3DXVECTOR3& pos, const float& angle, const bool& isOnScreen);
 	CPolygon3D::CRegistInfo* PutPolygon3D(const D3DXMATRIX& mtx, const bool& isOnScreen);
-	CText2D::CRegistInfo*    PutText2D   (const D3DXVECTOR2& pos, const float& angle, const bool& isOnScreen);
+	CText2D::CRegistInfo*    PutText2D   (const D3DXVECTOR3& pos, const float& angle, const bool& isOnScreen);
 	CText3D::CRegistInfo*    PutText3D   (const D3DXMATRIX& mtx, const bool& isOnScreen);
 	CModel::CRegistInfo*     PutModel    (const D3DXMATRIX& mtx, const bool& isOnScreen);
 
@@ -93,13 +113,13 @@ private:
 	static void ConvRegistInfoToDrawInfo(CRegistInfoSum& resistInfoSum, CDrawInfoSum& drawInfoSum);
 	static void SortDrawInfo(CDrawInfoSum& drawInfoSum);
 	void AssignVertexInfo(void);
-	void ConvDrawInfoToVertex2DInfo(VERTEX_2D* vtxs, CDrawInfoSum& drawInfoSum);
-	void ConvDrawInfoToVertex3DInfo(VERTEX_3D* vtxs, CDrawInfoSum& drawInfoSum);
-	CPolygon2D::CRegistInfo& RegistPolygon2D(CRegistInfoSum& resistInfo);
-	CPolygon3D::CRegistInfo& RegistPolygon3D(CRegistInfoSum& resistInfo);
-	CText2D::CRegistInfo&    RegistText2D   (CRegistInfoSum& resistInfo);
-	CText3D::CRegistInfo&    RegistText3D   (CRegistInfoSum& resistInfo);
-	CModel::CRegistInfo&     RegistModel    (CRegistInfoSum& resistInfo);
+	void ConvDrawInfoToVertex2DInfo(Vertex2D*& vtxs, CDrawInfoSum& drawInfoSum);
+	void ConvDrawInfoToVertex3DInfo(Vertex3D*& vtxs, CDrawInfoSum& drawInfoSum);
+	CPolygon2D::CRegistInfo* RegistPolygon2D(CRegistInfoSum& resistInfo);
+	CPolygon3D::CRegistInfo* RegistPolygon3D(CRegistInfoSum& resistInfo);
+	CText2D::CRegistInfo*    RegistText2D   (CRegistInfoSum& resistInfo);
+	CText3D::CRegistInfo*    RegistText3D   (CRegistInfoSum& resistInfo);
+	CModel::CRegistInfo*     RegistModel    (CRegistInfoSum& resistInfo);
 
 	//========== [[[ 変数宣言 ]]]
 	static PROCESS_STATE  ms_processState;
@@ -110,4 +130,5 @@ private:
 	static CDrawInfoSum   ms_drawInfoSumScreen;		// スクリーン描画情報
 	static CDrawInfoSum   ms_drawInfoSumScreenOvr;	// スクリーン描画情報(上書き)
 	static std::thread    ms_mainLoopTh;			// メインループスレッド
+	unsigned short        m_reAllocCount;
 };

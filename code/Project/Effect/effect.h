@@ -4,38 +4,41 @@
 // Author:RYUKI FUJIWARA
 // 
 //========================================
-
+#pragma once
 #include "../../_RNLib/RNlib.h"
 
 //****************************************
 // クラス
 //****************************************
-class CEffect : CObject{
+class CEffect : public CObject{
 public:
 
 	// 共通情報
 	struct Info
 	{
+		D3DXVECTOR3 pos;		// 位置
 		D3DXVECTOR3 move;		// 移動量
-		D3DXCOLOR col;			// 頂点カラー
-		int nType;				// 種類
-		int nID;				// ID
+		Color col;			// 頂点カラー
+		int nCount;
+		int nTex;
 	};
 
 	// *** 関数 ***
 	CEffect();
 	~CEffect();
 
-	/* 初期化	*/HRESULT Init(void);
+	/* 初期化	*/HRESULT Init(int nTex);
 	/* 終了		*/void Uninit(void);
 	/* 更新		*/void Update(void);
 	/* 描画		*/void Draw(void);
 
 	// -- 設定 ---------------------------------------------
-	/* 色			*/void SetColor(const D3DXCOLOR col) { m_Info.col = col; }
+	/* 色		*/void SetColor(const Color col) { m_Info.col = col; }
+	/* 位置		*/void SetPos(const D3DXVECTOR3 pos) { m_Info.pos = pos; }
 
 	// -- 所得 ---------------------------------------------
-	/* 色		*/D3DXCOLOR GetColor(void) { return m_Info.col; }
+	/* 色		*/Color GetColor(void) { return m_Info.col; }
+	/* 位置		*/D3DXVECTOR3 GetPos(void) { return m_Info.pos; }
 
 private:
 
@@ -44,5 +47,4 @@ private:
 
 	// *** 変数 ***
 	Info m_Info;		// 共通情報
-
 };

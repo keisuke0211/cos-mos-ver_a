@@ -40,24 +40,39 @@
 #define FVF_VERTEX_2D (D3DFVF_XYZRHW|D3DFVF_DIFFUSE|D3DFVF_TEX1)			// 頂点フォーマット2D
 #define FVF_VERTEX_3D (D3DFVF_XYZ|D3DFVF_NORMAL|D3DFVF_DIFFUSE|D3DFVF_TEX1)	// 頂点フォーマット3D
 
-//========== [[[ 値 ]]]
-#define INITD3DXVECTOR3 D3DXVECTOR3(0.0f,0.0f,0.0f)	// D3DXVECTOR3の初期値
-#define INITD3DXVECTOR2 D3DXVECTOR2(0.0f,0.0f)		// D3DXVECTOR2の初期値
-#define INITD3DCOLOR    D3DCOLOR_RGBA(255,255,255,255)
-#define INITD3DVIEWPORT9 D3DVIEWPORT9{0,0,0,0,0.0f,0.0f}
-#define INITBGCOLOR     Color{0  ,0  ,0  ,255}		// 背景色の初期値
-#define INITCOLOR       Color{255,255,255,255}		// Colorの初期値
-#define CLEARCOLOR      Color{0  ,0  ,0  ,0  }		// Colorのクリア値
-#define COLORNONE       Color{-1 ,-1 ,-1 ,-1 }		// Colorのクリア値
-#define D3DX_PI_HALF       (D3DX_PI* 0.5f)
-#define D3DX_PI_DOUBLE     (D3DX_PI* 2.0f)
-#define D3DX_PI_LEFT_UP    (D3DX_PI*-0.75)
-#define D3DX_PI_RIGHT_UP   (D3DX_PI* 0.75)
-#define D3DX_PI_LEFT_DOWN  (D3DX_PI*-0.25)
-#define D3DX_PI_RIGHT_DOWN (D3DX_PI* 0.25)
-#define COUNT_MAX       (INT_MAX*0.5f)
-#define PIXEL2D_SIZE    (2.0f)
-#define PIXEL3D_SIZE    (0.4f)
+// 初期値
+#define INITD3DXMATRIX     D3DXMATRIX   (1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f)
+#define INITD3DVIEWPORT9   D3DVIEWPORT9 {0,0,0,0,0.0f,0.0f}
+#define INITD3DCOLOR       D3DCOLOR_RGBA(255,255,255,255)
+#define INITD3DXVECTOR3    D3DXVECTOR3  (0.0f,0.0f,0.0f)
+#define INITD3DXVECTOR2    D3DXVECTOR2  (0.0f,0.0f)
+#define INITMATRIX         Matrix       (1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f)
+#define INITPOS2D          Pos2D        (0.0f,0.0f)
+#define INITROT2D          Rot2D        (0.0f,0.0f)
+#define INITVECTOR2D       Vector2D     (0.0f,0.0f)
+#define INITNORMAL2D       Normal2D     (0.0f,0.0f)
+#define INITSCALE2D        Scale2D      (1.0f,1.0f)
+#define INITPOS3D          Pos3D        (0.0f,0.0f,0.0f)
+#define INITROT3D          Rot3D        (0.0f,0.0f,0.0f)
+#define INITVECTOR3D       Vector3D     (0.0f,0.0f,0.0f)
+#define INITNORMAL3D       Normal3D     (0.0f,0.0f,0.0f)
+#define INITSCALE3D        Scale3D      (1.0f,1.0f,1.0f)
+#define INITBGCOLOR        Color        {0  ,0  ,0  ,255}
+#define INITCOLOR          Color        {255,255,255,255}
+// 円周率
+#define D3DX_PI_HALF       (D3DX_PI*0.5f)
+#define D3DX_PI_DOUBLE     (D3DX_PI*2.0f)
+#define D3DX_PI_UP         (0.0f)
+#define D3DX_PI_DOWN       (D3DX_PI)
+#define D3DX_PI_RIGHT      (D3DX_PI*0.5f)
+#define D3DX_PI_RIGHT_UP   (D3DX_PI*0.75f)
+#define D3DX_PI_RIGHT_DOWN (D3DX_PI*0.25f)
+#define D3DX_PI_LEFT       (D3DX_PI*0.5f)
+#define D3DX_PI_LEFT_UP    (D3DX_PI*-0.75f)
+#define D3DX_PI_LEFT_DOWN  (D3DX_PI*-0.25f)
+// ピクセルサイズ
+#define PIXEL2D_SIZE       (2.0f)
+#define PIXEL3D_SIZE       (0.4f)
 
 //========== [[[ その他定数 ]]]
 #define TXT_MAX  (512)	// 文字列の最大数(汎用)
@@ -88,7 +103,7 @@ enum class ANCHOR {
 // 構造体定義
 //****************************************
 // 頂点情報2Dの構造体
-struct VERTEX_2D {
+struct Vertex2D {
 	D3DXVECTOR3 pos = INITD3DXVECTOR3;	// 頂点座標
 	float       rhw = 0.0f;				// 座標変換用係数(1.0fで固定)
 	D3DCOLOR    col = INITD3DCOLOR;		// 頂点カラー
@@ -96,7 +111,7 @@ struct VERTEX_2D {
 };
 
 // 頂点情報3Dの構造体
-struct VERTEX_3D {
+struct Vertex3D {
 	D3DXVECTOR3 pos = INITD3DXVECTOR3;	// 頂点座標
 	D3DXVECTOR3 nor = INITD3DXVECTOR3;	// 法線ベクトル
 	D3DCOLOR    col = INITD3DCOLOR;		// 頂点カラー
@@ -109,6 +124,22 @@ typedef struct {
 	float fHeight;	// 高さ
 	float fDepth;	// 奥行き
 }Scale;
+
+// 構造体変換
+typedef float             Angle;
+typedef D3DXMATRIX        Matrix;
+typedef D3DMATERIAL9      Material;
+typedef LPDIRECT3DDEVICE9 Device;
+typedef D3DXVECTOR2       Pos2D;
+typedef D3DXVECTOR2       Rot2D;
+typedef D3DXVECTOR2       Vector2D;
+typedef D3DXVECTOR2       Normal2D;
+typedef D3DXVECTOR2       Scale2D;
+typedef D3DXVECTOR3       Pos3D;
+typedef D3DXVECTOR3       Rot3D;
+typedef D3DXVECTOR3       Vector3D;
+typedef D3DXVECTOR3       Normal3D;
+typedef D3DXVECTOR3       Scale3D;
 
 //****************************************
 // クラス定義
