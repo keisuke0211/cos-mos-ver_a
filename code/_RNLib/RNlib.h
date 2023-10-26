@@ -16,7 +16,6 @@
 #include "_Basis/3D/Body/setup3D.h"
 #include "_Basis/3D/Body/motion3D.h"
 #include "_Basis/3D/Body/doll3D.h"
-#include "_Basis/3D/Camera/camera.h"
 #include "_Basis/3D/Draw/line3D.h"
 #include "_Basis/3D/Effect/eff3D-fragment.h"
 #include "_Basis/3D/Effect/eff3D-polygon.h"
@@ -33,12 +32,13 @@
 //========== [[[ Draw ]]]
 #include "_Basis/Draw/draw-manager.h"
 #include "_Basis/Draw/draw-state.h"
-#include "_Basis/Draw/model.h"
-#include "_Basis/Draw/polygon2D.h"
-#include "_Basis/Draw/polygon3D.h"
+#include "_Basis/Draw/camera.h"
 #include "_Basis/Draw/text.h"
-#include "_Basis/Draw/text2D.h"
-#include "_Basis/Draw/text3D.h"
+#include "_Basis/Draw/PutObject/model.h"
+#include "_Basis/Draw/PutObject/polygon2D.h"
+#include "_Basis/Draw/PutObject/polygon3D.h"
+#include "_Basis/Draw/PutObject/text2D.h"
+#include "_Basis/Draw/PutObject/text3D.h"
 //========== [[[ Mechanical ]]]
 #include "_Basis/Mechanical/memory.h"
 #include "_Basis/Mechanical/object.h"
@@ -62,23 +62,23 @@
 //****************************************
 // メモリリークチェックの定義
 //****************************************
-#define _CRTDBG_MAP_ALLOC
-#include <crtdbg.h>
-
-#ifdef _DEBUG
-#define CHECK_MEM_LEAK
-#endif // _DEBUG
-
-#ifdef CHECK_MEM_LEAK
-#ifdef new
-#undef new
-#endif
-#endif // CHECK_MEM_LEAK
-
-// 普段使用禁止
-#ifdef CHECK_MEM_LEAK
-#define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
-#endif // CHECK_MEM_LEAK
+//#define _CRTDBG_MAP_ALLOC
+//#include <crtdbg.h>
+//
+//#ifdef _DEBUG
+//#define CHECK_MEM_LEAK
+//#endif // _DEBUG
+//
+//#ifdef CHECK_MEM_LEAK
+//#ifdef new
+//#undef new
+//#endif
+//#endif // CHECK_MEM_LEAK
+//
+//// 普段使用禁止
+//#ifdef CHECK_MEM_LEAK
+//#define new new ( _NORMAL_BLOCK , __FILE__ , __LINE__ )
+//#endif // CHECK_MEM_LEAK
 
 //****************************************
 // 名前空間

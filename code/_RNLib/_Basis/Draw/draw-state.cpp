@@ -56,6 +56,12 @@ void CDrawState::Init(LPDIRECT3DDEVICE9& device) {
 	SetLightingMode(LIGHTING_MODE::ENABLED, device);
 
 	//----------------------------------------
+	// フォグの初期設定
+	//----------------------------------------
+	SetFogMode(FOG_MODE::DISABLED, device);
+	SetFogParameter(INITCOLOR, 0.0f, 0.0f, device);
+
+	//----------------------------------------
 	// アルファブレンドの初期設定
 	//----------------------------------------
 	device->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
@@ -94,9 +100,9 @@ void CDrawState::EndTemporarySetMode(LPDIRECT3DDEVICE9& device) {
 
 	// 元のモードで設定し直す
 	SetZTestMode(m_formerMode.ZTest, device);
-	SetCullingMode(m_formerMode.Culling, device);
-	SetTextureAlphaMode(m_formerMode.TextureAlpha, device);
-	SetLightingMode(m_formerMode.Lighting, device);
+	SetCullingMode(m_formerMode.culling, device);
+	SetTextureAlphaMode(m_formerMode.textureAlpha, device);
+	SetLightingMode(m_formerMode.lighting, device);
 
 	// 元のモード代入フラグを真にする
 	m_isAssignFormerMode = true;
@@ -130,10 +136,7 @@ void CDrawState::SetZTestMode(const ZTEST_MODE& mode, LPDIRECT3DDEVICE9& device)
 //========================================
 void CDrawState::SetZTestMode(const bool& isZTest, LPDIRECT3DDEVICE9& device) {
 
-	if (isZTest)
-		SetZTestMode(ZTEST_MODE::ENABLED, device);
-	else
-		SetZTestMode(ZTEST_MODE::DISABLED, device);
+	SetZTestMode(isZTest ? ZTEST_MODE::ENABLED : ZTEST_MODE::DISABLED, device);
 }
 
 //========================================
@@ -143,7 +146,7 @@ void CDrawState::SetCullingMode(const CULLING_MODE& mode, LPDIRECT3DDEVICE9& dev
 
 	// 元のモードとして代入
 	if (m_isAssignFormerMode)
-		m_formerMode.Culling = mode;
+		m_formerMode.culling = mode;
 
 	switch (mode) {
 		// [[[ 表面 ]]]
@@ -168,7 +171,7 @@ void CDrawState::SetTextureAlphaMode(const TEXTURE_ALPHA_MODE& mode, LPDIRECT3DD
 
 	// 元のモードとして代入
 	if (m_isAssignFormerMode)
-		m_formerMode.TextureAlpha = mode;
+		m_formerMode.textureAlpha = mode;
 
 	switch (mode) {
 		// [[[ 有効 ]]]
@@ -187,10 +190,7 @@ void CDrawState::SetTextureAlphaMode(const TEXTURE_ALPHA_MODE& mode, LPDIRECT3DD
 //========================================
 void CDrawState::SetTextureAlphaMode(const bool& isTextureAlpha, LPDIRECT3DDEVICE9& device) {
 
-	if (isTextureAlpha)
-		SetTextureAlphaMode(TEXTURE_ALPHA_MODE::ENABLED, device);
-	else
-		SetTextureAlphaMode(TEXTURE_ALPHA_MODE::DISABLED, device);
+	SetTextureAlphaMode(isTextureAlpha ? TEXTURE_ALPHA_MODE::ENABLED : TEXTURE_ALPHA_MODE::DISABLED, device);
 }
 
 //========================================
@@ -200,7 +200,7 @@ void CDrawState::SetLightingMode(const LIGHTING_MODE& mode, LPDIRECT3DDEVICE9& d
 
 	// 元のモードとして代入
 	if (m_isAssignFormerMode)
-		m_formerMode.Lighting = mode;
+		m_formerMode.lighting = mode;
 
 	switch (mode) {
 		// [[[ 有効 ]]]
@@ -219,8 +219,44 @@ void CDrawState::SetLightingMode(const LIGHTING_MODE& mode, LPDIRECT3DDEVICE9& d
 //========================================
 void CDrawState::SetLightingMode(const bool& isLighting, LPDIRECT3DDEVICE9& device) {
 
-	if (isLighting)
-		SetLightingMode(LIGHTING_MODE::ENABLED, device);
-	else
-		SetLightingMode(LIGHTING_MODE::DISABLED, device);
+	SetLightingMode(isLighting ? LIGHTING_MODE::ENABLED : LIGHTING_MODE::DISABLED, device);
+}
+
+//========================================
+// フォグモードの設定
+//========================================
+void CDrawState::SetFogMode(const FOG_MODE& mode, LPDIRECT3DDEVICE9& device) {
+
+	// 元のモードとして代入
+	if (m_isAssignFormerMode)
+		m_formerMode.fog = mode;
+
+	switch (mode) {
+		// [[[ 有効 ]]]
+	case FOG_MODE::ENABLED: {
+		device->SetRenderState(D3DRS_FOGENABLE, TRUE);
+	}break;
+		// [[[ 無効 ]]]
+	case FOG_MODE::DISABLED: {
+		device->SetRenderState(D3DRS_FOGENABLE, FALSE);
+	}break;
+	}
+}
+
+//========================================
+// フォグモードの設定(フラグ指定)
+//========================================
+void CDrawState::SetFogMode(const bool& isFog, LPDIRECT3DDEVICE9& device) {
+
+	SetFogMode(isFog ? FOG_MODE::ENABLED : FOG_MODE::DISABLED, device);
+}
+
+//========================================
+// フォグモードの設定(フラグ指定)
+//========================================
+void CDrawState::SetFogParameter(const Color& col, const float& startDist, const float& endDist, LPDIRECT3DDEVICE9& device) {
+
+	device->SetRenderState(D3DRS_FOGCOLOR, ColorToD3DCOLOR(col));
+	device->SetRenderState(D3DRS_FOGSTART, *(DWORD*)(&startDist));
+	device->SetRenderState(D3DRS_FOGEND  , *(DWORD*)(&endDist));
 }
