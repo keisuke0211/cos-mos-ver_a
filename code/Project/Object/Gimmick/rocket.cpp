@@ -28,7 +28,7 @@ CRocket::CRocket(void)
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;
 	m_Info.nFlyAnimeCounter = 0;
-	m_Info.Animstate = CRocket::ANIME_STATE::FLY;
+	m_Info.Animstate = CRocket::ANIME_STATE::NONE;
 	m_Info.nModelIdx = RNLib::Model()->Load("data\\MODEL\\rocket.x");
 }
 

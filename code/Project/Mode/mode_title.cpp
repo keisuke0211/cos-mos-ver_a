@@ -128,7 +128,6 @@ void CMode_Title::Update(void) {
 			switch (m_nSelect)
 			{
 			case MENU_GAME:
-				Manager::StgEd()->FileLoad();
 				SelectCreate();
 				break;
 			case MENU_SERRING:
@@ -247,8 +246,9 @@ void CMode_Title::Menu(void)
 //========================================
 void CMode_Title::SelectCreate(void)
 {
+	Manager::StgEd()->FileLoad();
 	int nMax = Manager::StgEd()->GetStageMax();
-	
+
 	m_StageType = new StageType[nMax];
 
 	for (int nCnt = 0; nCnt < nMax; nCnt++)

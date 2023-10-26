@@ -5,6 +5,7 @@
 // 
 //========================================
 #include "../main.h"
+#include "mode_pause.h"
 #include "../Character/player.h"
 #include "../System/StageEditor.h"
 
@@ -117,8 +118,19 @@ void CMode_Game::Uninit(void) {
 void CMode_Game::Update(void) {
 	CMode::Update();
 
-	if (s_pPlayer != NULL)
-		s_pPlayer->Update();
+	bool bPause = CMode_Pause::IsPause();
+
+	if (!bPause)
+	{
+		if (RNLib::Input()->GetKeyTrigger(DIK_P))
+		{
+			Manager::Transition(CMode::TYPE::PAUSE, CTransition::TYPE::NONE);
+			CMode_Pause::SetPause(true);
+		}
+
+		if (s_pPlayer != NULL)
+			s_pPlayer->Update();
+	}
 
 	if (RNLib::Input()->GetKeyTrigger(DIK_RETURN))
 		Manager::StgEd()->SwapStage(2);
