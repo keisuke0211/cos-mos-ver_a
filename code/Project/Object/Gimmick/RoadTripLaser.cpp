@@ -11,7 +11,7 @@
 //==========| CRoadTripLaserクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
-static const D3DXVECTOR2  s_Size = D3DXVECTOR2(10.0f,50.0f);	// 高さ
+static const D3DXVECTOR2  s_Size = D3DXVECTOR2(5.0f,50.0f);	// 高さ
 
 //========================================
 // コンストラクタ
@@ -20,7 +20,8 @@ CRoadTripLaser::CRoadTripLaser(void) {
 	Manager::BlockMgr()->AddList(this);
 
 	m_type = TYPE::BACKGROUND;	// 種類の設定
-								// 大きさの設定
+
+	// 大きさの設定
 	m_width = SIZE_OF_1_SQUARE * 5;
 	m_height = SIZE_OF_1_SQUARE * 5;
 
@@ -48,6 +49,8 @@ void CRoadTripLaser::Init(void) {
 
 	m_refPos = m_pos;
 	m_fGroundDis = m_pos.y - 0.0f;
+	m_fGroundDis = fabsf(m_fGroundDis);
+
 }
 
 //========================================
@@ -65,10 +68,32 @@ void CRoadTripLaser::Uninit(void) {
 void CRoadTripLaser::Update(void) {
 
 	D3DXVECTOR3 Block = m_pos;	// 位置
-	// ブロックの位置設定
-	Block.y += s_Size.y;
 
+	//オブジェクトを取得
+	CObject *obj = NULL;
+	float fDis = m_fGroundDis;
+	while (Manager::BlockMgr()->ListLoop(&obj)) {
+		//取得したオブジェクトをキャスト
+		CStageObject* stageObj = (CStageObject*)obj;
 
+		TYPE type = stageObj->GetType();
+		if (type == CStageObject::TYPE::MOVE_BLOCK || type == CStageObject::TYPE::BLOCK || type == CStageObject::TYPE::TRAMPOLINE)
+		{// 想定された種類の時
+
+			D3DXVECTOR3 stagepos = stageObj->GetPos();
+			D3DXVECTOR2 stagesize = D3DXVECTOR2(stageObj->GetWidth(), stageObj->GetHeight());
+
+			if (stagepos.x + (stagesize.x * 0.5f) >= m_pos.x - s_Size.x &&
+				stagepos.x - (stagesize.x * 0.5f) <= m_pos.x + s_Size.x)
+			{// 範囲内にいるとき
+				if (fDis >= m_pos.y - stagepos.y - stagesize.y * 0.5f)
+				{// 距離が近いとき
+					fDis = m_pos.y - stagepos.y - stagesize.y * 0.5f;	// 距離の更新
+				}
+			}
+		}
+	}
+	
 	// xの移動量の反転
 	if (m_refPos.x + m_frefdef <= m_pos.x || m_refPos.x - m_frefdef >= m_pos.x)
 	{
@@ -80,13 +105,16 @@ void CRoadTripLaser::Update(void) {
 		m_move.y *= -1;
 	}
 
+	// ブロックの位置設定
+	Block.y += m_pos.y - 100.0f;
 	m_pos += m_move;
 
+	// ブロック
 	RNLib::Model()->Put(Block, m_rot, ModelIdx, false);
 
-	RNLib::Polygon3D()->Put(D3DXVECTOR3(m_pos.x, m_pos.y + Block.y,m_pos.z), m_rot, false)
-		->SetSize(s_Size.x, s_Size.y);
-
+	// ビーム
+	RNLib::Polygon3D()->Put(D3DXVECTOR3(m_pos.x, (Block.y - fDis * 0.5f),m_pos.z), m_rot, false)
+		->SetSize(s_Size.x, fDis);
 }
 
 //========================================

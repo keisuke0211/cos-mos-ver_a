@@ -78,7 +78,7 @@ void CMode_Game::Init(void) {
 	Manager::BlockMgr()->Load();
 	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(-250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
 	Manager::BlockMgr()->ShiningWaveCreate();
-	Manager::BlockMgr()->RoadTripLaserCreate(D3DXVECTOR3(250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
+	Manager::BlockMgr()->RoadTripLaserCreate(D3DXVECTOR3(-150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
 
 	BackGroundPut(Color{ 100,100,100,255 }, Color{ 100,100,100,255 });
 
