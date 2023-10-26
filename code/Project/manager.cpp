@@ -99,20 +99,37 @@ void Manager::Save(void) {
 }
 
 //========================================
-// モードの設定処理
-// Author:RIKU NISHIMURA
+// モードの終了処理
+// Author:KEISUKE OTONO
 //========================================
-void Manager::SetMode(CMode::TYPE newMode) {
+void Manager::UninitMode(void) {
 
 	// シーンを終了
 	RNLib::UninitScene();
-	
+
 	// モードオブジェクトの終了処理
 	if (m_modeObj != NULL) {
 		m_modeObj->Uninit();
 		RNLib::Memory()->Release(&m_modeObj);
 	}
+}
+//========================================
+// モードの設定処理
+// Author:RIKU NISHIMURA
+//========================================
+void Manager::SetMode(CMode::TYPE newMode) {
 
+	if (newMode != CMode::TYPE::PAUSE)
+	{
+		// シーンを終了
+		RNLib::UninitScene();
+
+		// モードオブジェクトの終了処理
+		if (m_modeObj != NULL) {
+			m_modeObj->Uninit();
+			RNLib::Memory()->Release(&m_modeObj);
+		}
+	}
 	// モードオブジェクトを新たに生成
 	m_modeObj = CMode::Create(newMode);
 	
@@ -141,6 +158,14 @@ void Manager::Transition(CMode::TYPE newMode, CTransition::TYPE transType) {
 	// モードを予約する
 	m_reserveModeType = newMode;
 
-	// 遷移設定
-	RNLib::Transition()->Set(CTransition::STATE::CLOSE, transType);
+	if (transType == CTransition::TYPE::NONE)
+	{
+		// 遷移設定
+		RNLib::Transition()->Set(CTransition::STATE::WAIT_SET_MODE, transType);
+	}
+	else if (newMode != CMode::TYPE::PAUSE)
+	{
+		// 遷移設定
+		RNLib::Transition()->Set(CTransition::STATE::CLOSE, transType);
+	}
 }

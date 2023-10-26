@@ -22,6 +22,7 @@ namespace Manager {
 	void        Update     (void);
 	void        Load       (void);
 	void        Save       (void);
+	void        UninitMode (void);
 	void        SetMode    (const CMode::TYPE newMode);
 	CMode::TYPE GetMode    (void);
 	void        Transition (const CMode::TYPE newMode, const CTransition::TYPE transType);
