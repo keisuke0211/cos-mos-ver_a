@@ -229,6 +229,7 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="code\_RNLib\Basis\Mechanical\regist.cpp">
+    <ClCompile Include="code\Project\Effect\effect-manager.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="code\_RNLib\Basis\default-data.cpp">
@@ -244,6 +245,9 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="code\_RNLib\Basis\Mechanical\window.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="code\Project\Effect\particle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -467,6 +471,7 @@
     <ClInclude Include="code\_RNLib\Basis\setting.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="code\Project\Effect\particle.h">
     <ClInclude Include="code\_RNLib\Basis\sound.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>

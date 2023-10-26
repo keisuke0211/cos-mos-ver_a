@@ -85,8 +85,8 @@ void CDrawMng::Release(void) {
 	ms_resistInfoSumScreen.Release();
 
 	// 頂点バッファを破棄する
-	CPolygon2D::CDrawInfo::ReleaseVertexBuffer();
-	CPolygon3D::CDrawInfo::ReleaseVertexBuffer();
+	//CPolygon2D::CDrawInfo::ReleaseVertexBuffer();
+	//CPolygon3D::CDrawInfo::ReleaseVertexBuffer();
 }
 
 //========================================
