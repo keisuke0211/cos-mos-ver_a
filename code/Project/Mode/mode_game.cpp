@@ -178,7 +178,14 @@ void CMode_Game::ProcessState(const PROCESS process) {
 		}break;
 			// [[[ èIóπèàóù ]]]
 		case PROCESS::UNINIT: {
-
+			for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
+			{
+				if (m_Menu[nCnt] != NULL)
+				{
+					m_Menu[nCnt]->Uninit();
+					m_Menu[nCnt] = NULL;
+				}
+			}
 		}break;
 			// [[[ çXêVèàóù ]]]
 		case PROCESS::UPDATE: {
@@ -300,13 +307,6 @@ void CMode_Game::PauseSelect(void)
 			break;
 		}
 
-		for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
-		{
-			if (m_Menu[nCnt] != NULL)
-			{
-				m_Menu[nCnt]->Uninit();
-				m_Menu[nCnt] = NULL;
-			}
-		}
+		ProcessState(PROCESS::UNINIT);
 	}
 }
