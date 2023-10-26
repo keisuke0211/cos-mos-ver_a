@@ -8,6 +8,7 @@
 
 #include "../draw-info.h"
 #include "../../Draw/camera.h"
+#include "../draw-state.h"
 
 //****************************************
 // ÉNÉâÉXíËã`
@@ -49,6 +50,7 @@ public:
 		// [[[ ä÷êîêÈåæ ]]]
 		CRegistInfo();
 		~CRegistInfo();
+		void ClearParameter(void);
 		CPolygon3D::CDrawInfo* ConvToDrawInfo(void);
 		CRegistInfo* SetIdx              (const short& idx);
 		CRegistInfo* SetMtx              (const Matrix& mtx);
@@ -63,31 +65,33 @@ public:
 		CRegistInfo* SetZTest            (const bool& isZTest);
 		CRegistInfo* SetLighting         (const bool& isLighting);
 		CRegistInfo* SetBillboard        (const bool& isBillboard);
+		CRegistInfo* SetAlphaBlendMode   (const CDrawState::ALPHA_BLEND_MODE& alphaBlendMode);
 		CRegistInfo* SetTexMirrorX       (const bool& isMirror);
 		CRegistInfo* SetPriority         (const short& priority);
 
 	private:
 		// [[[ ïœêîêÈåæ ]]]
-		short          m_idx;
-		float          m_scaleX;
-		float          m_scaleY;
-		bool           m_isFactScale;
-		Matrix         m_mtx;
-		Pos3D*         m_vtxPoses;
-		Color          m_col;
-		short          m_texIdx;
-		CCamera*       m_texCamera;
-		unsigned short m_ptn;
-		unsigned short m_ptnX;
-		unsigned short m_ptnY;
-		float          m_ptnScaleX;
-		float          m_ptnScaleY;
-		Pos2D          m_ptnPos;
-		bool           m_isZtest;
-		bool           m_isLighting;
-		bool           m_isBillboard;
-		bool           m_isTexMirrorX;
-		short          m_priority;
+		short                        m_idx;
+		float                        m_scaleX;
+		float                        m_scaleY;
+		bool                         m_isFactScale;
+		Matrix                       m_mtx;
+		Pos3D*                       m_vtxPoses;
+		Color                        m_col;
+		short                        m_texIdx;
+		CCamera*                     m_texCamera;
+		unsigned short               m_ptn;
+		unsigned short               m_ptnX;
+		unsigned short               m_ptnY;
+		float                        m_ptnScaleX;
+		float                        m_ptnScaleY;
+		Pos2D                        m_ptnPos;
+		bool                         m_isZtest;
+		bool                         m_isLighting;
+		bool                         m_isBillboard;
+		CDrawState::ALPHA_BLEND_MODE m_alphaBlendMode;
+		bool                         m_isTexMirrorX;
+		short                        m_priority;
 	};
 
 	//========== [[[ ä÷êîêÈåæ ]]]
