@@ -44,6 +44,7 @@ CPlayer::CPlayer()
 		Player.move = INITD3DXVECTOR3;		//移動量
 		Player.bGround = false;				//地面に接しているか
 		Player.bJump = false;				//ジャンプ
+		Player.bRide = false;				//ロケットに乗っているかどうか
 		Player.fJumpPower = 0.0f;			//ジャンプ量
 		Player.fGravity = 0.0f;				//重力
 		Player.fGravityCorr = 0.0f;			//重力係数
@@ -151,6 +152,9 @@ void CPlayer::UpdateInfo(void)
 {
 	for each (Info &Player in m_aInfo)
 	{
+		//ロケットに乗ってたらスキップ
+		if (Player.bRide) continue;
+
 		//位置設定
 		RNLib::Model()->Put(Player.pos, Player.rot, Player.nModelIdx, false)
 			->SetOutLine(true);
@@ -161,7 +165,8 @@ void CPlayer::UpdateInfo(void)
 
 		RNLib::Polygon3D()->Put(MarkPos, INITD3DXVECTOR3)
 			->SetSize(20.0f, 20.0f)
-			->SetBillboard(true);
+			->SetBillboard(true)
+			->SetCol(INITCOLOR);
 	}
 }
 
@@ -180,6 +185,9 @@ void CPlayer::ActionControl(void)
 	{
 		//情報を参照
 		Info& Player = m_aInfo[nCntPlayer];
+
+		//ロケットに乗ってたらスキップ
+		if (Player.bRide) continue;
 
 		//ジャンプ入力（空中じゃない）
 		if (!Player.bJump && Player.bGround &&RNLib::Input()->GetTrigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON::UP))
@@ -217,14 +225,18 @@ void CPlayer::Swap(void)
 		{ DIK_DOWNARROW, DIK_UPARROW }//２Ｐの操作キー
 	};
 
-	//両者ともにスワップボタンを押している
-	if (RNLib::Input()->GetKeyPress(ACTION_KEY[0][(int)m_aInfo[0].side]) && RNLib::Input()->GetKeyPress(ACTION_KEY[1][(int)m_aInfo[1].side]))
+	//両者ともにスワップボタンを押しているまたはどちらかがロケットに乗っている
+	if ((RNLib::Input()->GetKeyPress(ACTION_KEY[0][(int)m_aInfo[0].side]) || m_aInfo[0].bRide) && 
+		(RNLib::Input()->GetKeyPress(ACTION_KEY[1][(int)m_aInfo[1].side]) || m_aInfo[1].bRide))
 	{
 		//インターバル設定
 		s_nSwapInterval = SWAP_INTERVAL;
 
 		for each (Info &Player in m_aInfo)
 		{
+			//ロケットに乗ってたらスキップ
+			if (Player.bRide) continue;
+
 			//位置・重力加速度・ジャンプ量・存在する世界を反転
 			Player.pos.y *= -1.0f;
 			Player.fGravity *= -1.0f;
@@ -242,19 +254,27 @@ void CPlayer::Swap(void)
 //----------------------------
 void CPlayer::Death(D3DXVECTOR3 *pDeathPos)
 {
-	//１Ｐ初期情報
-	m_aInfo[0].pos = m_aInfo[0].StartPos;
+	//１Ｐ用初期情報
 	m_aInfo[0].fJumpPower = JUMP_POWER;
 	m_aInfo[0].fGravity = GRAVITY_POWER;
 	m_aInfo[0].fGravityCorr = GRAVITY_CORR;
 	m_aInfo[0].side = WORLD_SIDE::FACE;
 
-	//２Ｐ初期情報
-	m_aInfo[1].pos = m_aInfo[1].StartPos;
+	//２Ｐ用初期情報
 	m_aInfo[1].fJumpPower = -JUMP_POWER;
 	m_aInfo[1].fGravity = -GRAVITY_POWER;
 	m_aInfo[1].fGravityCorr = GRAVITY_CORR;
 	m_aInfo[1].side = WORLD_SIDE::BEHIND;
+
+	//両者共通初期情報
+	for each (Info &Player in m_aInfo)
+	{
+		Player.posOLd =	Player.pos = Player.StartPos;
+		Player.move = INITD3DXVECTOR3;
+		Player.bGround = false;
+		Player.bJump = true;
+		Player.bRide = false;
+	}
 }
 
 //----------------------------
@@ -265,6 +285,9 @@ void CPlayer::Move(COLLI_VEC vec)
 	//プレイヤーの位置更新
 	for each (Info &Player in m_aInfo)
 	{
+		//ロケットに乗っていたらスキップ
+		if (Player.bRide) continue;
+
 		//移動量反映
 		switch (vec)
 		{
@@ -325,6 +348,9 @@ void CPlayer::WholeCollision(void)
 
 			for each(Info& Player in m_aInfo)
 			{
+				//ロケットに乗っていたらスキップ
+				if (Player.bRide) continue;
+
 				//プレイヤーの近くにオブジェクトがあるか判定
 				{
 					//オブジェクトへの距離を計算
@@ -393,22 +419,6 @@ void CPlayer::WholeCollision(void)
 			}
 		}
 	}
-
-	CText2D *pTxt = RNLib::Text2D();
-
-	//プレイヤーの位置更新
-	for(int nCnt = 0; nCnt < NUM_PLAYER; nCnt++)
-	{
-		pTxt->Put(D3DXVECTOR3(20.0f, 20.0f + 25.0f * nCnt, 0.0f), 0.0f, CreateText("%dPのY座標：%f", nCnt, m_aInfo[nCnt].pos.y), CText::ALIGNMENT::LEFT, 0);
-	}
-
-	pTxt->Put(D3DXVECTOR3(20.0f, 80.0f, 0.0f), 0.0f, CreateText("FPS：%d", RNLib::GetFPSCount()), CText::ALIGNMENT::LEFT, 0);
-
-	pTxt->Put(Pos3D(20.0, 100.0f, 0.0f), 0.0f, CreateText("パーツ総数：%d", CParts::GetNumAll()), CText::ALIGNMENT::LEFT, 0);
-	pTxt->Put(Pos3D(20.0, 125.0f, 0.0f), 0.0f, CreateText("取得数：%d", s_nNumGetParts), CText::ALIGNMENT::LEFT, 0);
-
-	if (s_bRideRocket)
-		pTxt->Put(Pos3D(20.0f, 150.0f, 0.0f), 0.0f, "ロケット乗車可能！", CText::ALIGNMENT::LEFT, 0);
 }
 
 //----------------------------
@@ -692,7 +702,11 @@ void CPlayer::CollisionRocket(Info *pInfo, CRocket *pRocket)
 {
 	if (!s_bRideRocket) return;
 
-	//飛ばせる
+	//ロケットに搭乗
+	pInfo->bRide = true;
+
+	//両方とも搭乗したら飛ばせる
+	if(m_aInfo[0].bRide && m_aInfo[1].bRide)
 	pRocket->SetState(CRocket::ANIME_STATE::FLY);
 }
 

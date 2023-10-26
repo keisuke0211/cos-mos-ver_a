@@ -53,6 +53,7 @@ public:
 		D3DXVECTOR3 move;			//移動量
 		bool		bGround;		//地面に接しているか
 		bool		bJump;			//ジャンプ
+		bool		bRide;			//ロケットに乗っているかどうか
 		float		fJumpPower;		//ジャンプ量
 		float		fGravity;		//重力
 		float		fGravityCorr;	//重力係数
