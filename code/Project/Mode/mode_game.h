@@ -12,6 +12,7 @@
 // 前方宣言
 //****************************************
 class CPlayer;
+class CFontText;
 
 //****************************************
 // クラス定義
@@ -22,6 +23,16 @@ public:
 	//========== [[[ 列挙型定義 ]]]
 	enum class STATE {
 		NONE,
+		PAUSE,
+	};
+
+	// メニュー
+	enum MENU
+	{
+		MENU_RESUME = 0,// 続ける
+		MENU_RESET,		// やり直す
+		MENU_TITLE,		// タイトルに戻る
+		MENU_MAX
 	};
 
 	//========== [[[ 関数宣言 ]]]
@@ -42,6 +53,15 @@ public:
 	static int GetStage(void) { return m_nStageIdx; }
 
 private:
+
+	//========== [[[ 関数宣言 ]]]
+	void PauseCreate(void);
+	void PauseSelect(void);
+	void PauseMenu(void);
+
+	//========== [[[ 変数宣言 ]]]
 	static CPlayer *s_pPlayer;
 	static int m_nStageIdx;
+	int m_nSelect;
+	CFontText *m_Menu[MENU_MAX];
 };

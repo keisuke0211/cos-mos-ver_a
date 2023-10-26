@@ -300,7 +300,7 @@
     <ClCompile Include="code\Project\Object\Gimmick\RoadTripLaser.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="code\Project\Mode\mode_pause.cpp">
+   <ClCompile Include="code\Project\Effect\particle.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -584,7 +584,7 @@
     <ClInclude Include="code\Project\Effect\effect.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="code\Project\Mode\mode_pause.h">
+	<ClInclude Include="code\Project\Effect\particle.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>

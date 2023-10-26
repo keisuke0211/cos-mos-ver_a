@@ -9,6 +9,7 @@
 
 #include "../../_RNLib/RNlib.h"
 #include "effect.h"
+#include "particle.h"
 
 //****************************************
 // ƒNƒ‰ƒX
@@ -20,7 +21,8 @@ public:
 	virtual~CEffectMgr();
 	virtual void Update(void);
 
-	CEffect *EffectCreate(int nTex, D3DXVECTOR3 pos );
+	CEffect *EffectCreate(int nTex, D3DXVECTOR3 pos);
+	CParticle *ParticleCreate(int nTex, D3DXVECTOR3 pos);
 
 private:
 
