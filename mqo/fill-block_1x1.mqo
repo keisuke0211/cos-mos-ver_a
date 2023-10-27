@@ -4,8 +4,8 @@ Format Text Ver 1.0
 Scene {
 	pos 0.0000 0.0000 937.5000
 	lookat 0.0000 0.0000 0.0000
-	head -0.2036
-	pich -0.1164
+	head -0.6236
+	pich -0.0964
 	bank 0.0000
 	ortho 0
 	zoom2 8.0000
@@ -18,8 +18,8 @@ Scene {
 	}
 }
 Material 2 {
-	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\OneDrive\デスクトップ\画像\卒業制作\Mars.jpg")
-	"mat2" col(0.576 0.576 0.576 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\OneDrive\デスクトップ\画像\卒業制作\Mars.jpg")
+	"mat1" col(1.000 1.000 1.000 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\OneDrive\デスクトップ\画像\卒業制作\Month.png")
+	"mat2" col(0.576 0.576 0.576 1.000) dif(0.800) amb(0.600) emi(0.000) spc(0.000) power(5.00) tex("C:\Users\student\OneDrive\デスクトップ\画像\卒業制作\Month.png")
 }
 Object "obj1" {
 	visible 15
@@ -37,7 +37,7 @@ Object "obj1" {
 		-55.1233 -79.9969 -0.6981
 		-80.0000 22.9318 0.2001
 		80.0000 -57.7776 -0.5042
-		-29.7935 -2.3940 20.7777
+		-29.7935 -2.3940 54.6227
 	}
 	face 8 {
 		3 V(7 3 5) M(1) UV(1.00000 0.86112 1.00000 1.00000 0.15548 1.00000)
