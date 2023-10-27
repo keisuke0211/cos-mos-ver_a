@@ -83,25 +83,72 @@ HRESULT CPlayer::Init(void)
 {
 	//１Ｐ初期情報
 	m_aInfo[0].nModelIdx = RNLib::Model().Load("data\\MODEL\\1P.x");
-	m_aInfo[0].pos = D3DXVECTOR3(50.0f, 0.0f, 0.0f);
-	m_aInfo[0].fJumpPower = JUMP_POWER;
-	m_aInfo[0].fGravity = GRAVITY_POWER;
-	m_aInfo[0].fGravityCorr = GRAVITY_CORR;
-	m_aInfo[0].side = WORLD_SIDE::FACE;
 
 	//２Ｐ初期情報
 	m_aInfo[1].nModelIdx = RNLib::Model().Load("data\\MODEL\\2P.x");
-	m_aInfo[1].pos = D3DXVECTOR3(-50.0f, 0.0f, 0.0f);
-	m_aInfo[1].fJumpPower = -JUMP_POWER;
-	m_aInfo[1].fGravity = -GRAVITY_POWER;
-	m_aInfo[1].fGravityCorr = GRAVITY_CORR;
-	m_aInfo[1].side = WORLD_SIDE::BEHIND;
+
+	//キーコンフィグ初期化
+	InitKeyConfig();
 
 	//初期情報設定
 	Death(NULL);
 
 	//初期化成功
 	return S_OK;
+}
+
+//=======================================
+//各プレイヤーのキーボード・ジョイパッドのキーコンフィグ初期化設定
+//=======================================
+void CPlayer::InitKeyConfig(void)
+{
+	//どちらの世界でも共通のキー配置設定
+	for (int nCntSide = 0; nCntSide < (int)WORLD_SIDE::MAX; nCntSide++)
+	{
+		//１Ｐのキーボード配置
+		m_aInfo[0].Keyborad[nCntSide][(int)KEY_CONFIG::MOVE_LEFT]  = DIK_A;
+		m_aInfo[0].Keyborad[nCntSide][(int)KEY_CONFIG::MOVE_RIGHT] = DIK_D;
+		m_aInfo[0].Keyborad[nCntSide][(int)KEY_CONFIG::DECIDE]     = DIK_RETURN;
+		m_aInfo[0].Keyborad[nCntSide][(int)KEY_CONFIG::PAUSE]      = DIK_P;
+
+		//２Ｐのキーボード配置
+		m_aInfo[1].Keyborad[nCntSide][(int)KEY_CONFIG::MOVE_LEFT]  = DIK_LEFTARROW;
+		m_aInfo[1].Keyborad[nCntSide][(int)KEY_CONFIG::MOVE_RIGHT] = DIK_RIGHTARROW;
+		m_aInfo[1].Keyborad[nCntSide][(int)KEY_CONFIG::DECIDE]     = DIK_RETURN;
+		m_aInfo[1].Keyborad[nCntSide][(int)KEY_CONFIG::PAUSE]      = DIK_P;
+
+		//世界で変わるキー配置設定
+		switch ((WORLD_SIDE)nCntSide)
+		{
+			case WORLD_SIDE::FACE:
+				m_aInfo[0].Keyborad[nCntSide][(int)KEY_CONFIG::JUMP] = DIK_W;
+				m_aInfo[1].Keyborad[nCntSide][(int)KEY_CONFIG::JUMP] = DIK_UPARROW;
+
+				m_aInfo[0].Keyborad[nCntSide][(int)KEY_CONFIG::SWAP] = DIK_S;
+				m_aInfo[1].Keyborad[nCntSide][(int)KEY_CONFIG::SWAP] = DIK_DOWNARROW;
+				break;
+
+			case WORLD_SIDE::BEHIND:
+				m_aInfo[0].Keyborad[nCntSide][(int)KEY_CONFIG::JUMP] = DIK_S;
+				m_aInfo[1].Keyborad[nCntSide][(int)KEY_CONFIG::JUMP] = DIK_DOWNARROW;
+
+				m_aInfo[0].Keyborad[nCntSide][(int)KEY_CONFIG::SWAP] = DIK_W;
+				m_aInfo[1].Keyborad[nCntSide][(int)KEY_CONFIG::SWAP] = DIK_UPARROW;
+				break;
+		}
+
+	}
+
+	//ジョイパッドの設定は両者共通
+	for each(Info &Player in m_aInfo)
+	{
+		Player.JoyPad[(int)KEY_CONFIG::MOVE_LEFT]  = CInput::BUTTON::LEFT;  //左移動
+		Player.JoyPad[(int)KEY_CONFIG::MOVE_RIGHT] = CInput::BUTTON::RIGHT; //右移動
+		Player.JoyPad[(int)KEY_CONFIG::JUMP]       = CInput::BUTTON::B;     //ジャンプ
+		Player.JoyPad[(int)KEY_CONFIG::SWAP]       = CInput::BUTTON::Y;     //スワップ
+		Player.JoyPad[(int)KEY_CONFIG::DECIDE]     = CInput::BUTTON::A;     //決定
+		Player.JoyPad[(int)KEY_CONFIG::PAUSE]      = CInput::BUTTON::START; //ポーズ
+	}
 }
 
 //=======================================
@@ -166,7 +213,7 @@ void CPlayer::UpdateInfo(void)
 		RNLib::Polygon3D().Put(MarkPos, INITD3DXVECTOR3)
 			->SetSize(20.0f, 20.0f)
 			->SetBillboard(true)
-			->SetCol(INITCOLOR);
+			->SetCol(Color{ 255, 255, 255, 100});
 	}
 }
 
@@ -175,22 +222,23 @@ void CPlayer::UpdateInfo(void)
 //----------------------------
 void CPlayer::ActionControl(void)
 {
-	//各プレイヤーのアクションキー
-	const int ACTION_KEY[NUM_PLAYER][4] = {
-		{ DIK_W, DIK_S, DIK_D , DIK_A },	//１Ｐの操作キー
-		{ DIK_UPARROW, DIK_DOWNARROW, DIK_RIGHTARROW, DIK_LEFTARROW}//２Ｐの操作キー
-	};
+	//プレイヤー番号
+	int nIdxPlayer = -1;
 
-	for (int nCntPlayer = 0; nCntPlayer < NUM_PLAYER; nCntPlayer++)
+	for each (Info &Player in m_aInfo)
 	{
-		//情報を参照
-		Info& Player = m_aInfo[nCntPlayer];
+		//次のプレイヤー番号へ
+		nIdxPlayer++;
 
 		//ロケットに乗ってたらスキップ
 		if (Player.bRide) continue;
 
+		//プレイヤーのいる世界をint型に変換
+		const int& SIDE = (int)Player.side;
+
 		//ジャンプ入力（空中じゃない）
-		if (!Player.bJump && Player.bGround &&RNLib::Input().GetTrigger(ACTION_KEY[nCntPlayer][(int)Player.side], CInput::BUTTON::UP))
+		if (!Player.bJump && Player.bGround && 
+			RNLib::Input().GetTrigger(Player.Keyborad[SIDE][(int)KEY_CONFIG::JUMP], Player.JoyPad[(int)KEY_CONFIG::JUMP], nIdxPlayer))
 		{
 			Player.bGround = false;				//地面から離れた
 			Player.move.y = Player.fJumpPower;	//ジャンプ量代入
@@ -198,11 +246,11 @@ void CPlayer::ActionControl(void)
 		}
 
 		//右に移動
-		if (RNLib::Input().GetPress(ACTION_KEY[nCntPlayer][2], CInput::BUTTON::RIGHT))
+		if (RNLib::Input().GetPress(Player.Keyborad[SIDE][(int)KEY_CONFIG::MOVE_RIGHT], Player.JoyPad[(int)KEY_CONFIG::MOVE_RIGHT], nIdxPlayer))
 			Player.move.x += MOVE_SPEED;
 
 		//左に移動
-		if (RNLib::Input().GetPress(ACTION_KEY[nCntPlayer][3], CInput::BUTTON::LEFT))
+		if (RNLib::Input().GetPress(Player.Keyborad[SIDE][(int)KEY_CONFIG::MOVE_LEFT], Player.JoyPad[(int)KEY_CONFIG::MOVE_LEFT], nIdxPlayer))
 			Player.move.x -= MOVE_SPEED;
 	}
 }
@@ -219,15 +267,9 @@ void CPlayer::Swap(void)
 		return;
 	}
 
-	//各プレイヤーのアクションキー
-	const int ACTION_KEY[NUM_PLAYER][2] = {
-		{ DIK_S, DIK_W},	//１Ｐの操作キー
-		{ DIK_DOWNARROW, DIK_UPARROW }//２Ｐの操作キー
-	};
-
 	//両者ともにスワップボタンを押しているまたはどちらかがロケットに乗っている
-	if ((RNLib::Input().GetKeyPress(ACTION_KEY[0][(int)m_aInfo[0].side]) || m_aInfo[0].bRide) && 
-		(RNLib::Input().GetKeyPress(ACTION_KEY[1][(int)m_aInfo[1].side]) || m_aInfo[1].bRide))
+	if ((RNLib::Input().GetPress(m_aInfo[0].Keyborad[(int)m_aInfo[0].side][(int)KEY_CONFIG::SWAP], m_aInfo[0].JoyPad[(int)KEY_CONFIG::SWAP], 0) || m_aInfo[0].bRide) &&
+		(RNLib::Input().GetPress(m_aInfo[1].Keyborad[(int)m_aInfo[1].side][(int)KEY_CONFIG::SWAP], m_aInfo[1].JoyPad[(int)KEY_CONFIG::SWAP], 1) || m_aInfo[1].bRide))
 	{
 		//インターバル設定
 		s_nSwapInterval = SWAP_INTERVAL;
