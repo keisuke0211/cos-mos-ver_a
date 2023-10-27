@@ -12,6 +12,7 @@
 // 前方宣言
 //****************************************
 class CFontText;
+class CWords;
 
 //****************************************
 // クラス定義
@@ -19,15 +20,28 @@ class CFontText;
 // モード(タイトル)クラス
 class CMode_Title :public CMode {
 public:
+	// *** 定義 ***
+	static const int WORDS_MAX = 7;		// 文字の最大数
+
 	// *** 列挙型 ***
 	enum class STATE {
 		NONE,
 	};
 
+	// テクスチャ
+	enum TEX
+	{
+		TEX_BG = 0,	// 背景
+		TEX_PLANET,	// 惑星
+		TEX_MAX
+	};
+
 	// タイトルモード
 	enum TITLE
 	{
-		TITLE_OUTSET = 0,	// タイトル
+		TITLE_PLANET = 0,	// 惑星
+		TITLE_TITLE,		// タイトル
+		TITLE_OUTSET,		// 演出終了
 		TITLE_MENU,			// メニュー
 		TITLE_SELECT,		// ステージ選択
 		TITLE_NEXT,			// 次の画面に移動 
@@ -62,16 +76,23 @@ public:
 
 private:
 	// *** 関数 ***
-	/* メニュー生成			*/void MenuCreate(void);
-	/* メニュー				*/void Menu(void);
-	/* ステージ選択生成		*/void SelectCreate(void);
-	/* ステージ選択			*/void StageSelect(void);
-	/* テキスト削除			*/void TextClear(TITLE aTitle);
+	/* 惑星アニメメーション		*/void PlanetAnime(void);
+	/* タイトルアニメーション	*/void TitleAnime(void);
+	/* メニュー生成				*/void MenuCreate(void);
+	/* メニュー					*/void Menu(void);
+	/* ステージ選択生成			*/void SelectCreate(void);
+	/* ステージ選択				*/void StageSelect(void);
+	/* テキスト削除				*/void TextClear(TITLE aTitle);
 
 	// *** 変数 ***
-	TITLE Title;						// 現在のモード
-	int m_TexIdx;
+	TITLE Title;
+	D3DXVECTOR3 m_PlanetPos;
+	float m_PlanetAngle;
+	int m_TexIdx[TEX_MAX];
 	int m_nSelect;
-	CFontText *m_Menu[MENU_MAX];		// メニューテキスト
+	bool m_bMove[WORDS_MAX];
+	CWords *m_Words[WORDS_MAX];
+	CWords *m_WordsShadow[WORDS_MAX];
+	CFontText *m_Menu[MENU_MAX];
 	StageType *m_StageType;
 };

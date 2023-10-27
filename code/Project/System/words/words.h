@@ -58,19 +58,19 @@ public:
 	// 引数4  : CFont::FONT Type　　/ フォント種類
 	// 引数5  : Color col			/ 文字の色
 	//--------------------------------------------------
-	static CWords *CWords::Create(const char *Text, D3DXVECTOR3 pos, D3DXVECTOR3 Size, CFont::FONT Type, Color col);
+	static CWords *CWords::Create(const char *Text, D3DXVECTOR3 pos, D3DXVECTOR3 Size, CFont::FONT Type, D3DXCOLOR col);
 
 	// -- 設定 ------------------------------------------
 	/* 位置		*/virtual void SetPos(const D3DXVECTOR3 &pos);
 	/* 移動量	*/virtual void SetMove(const D3DXVECTOR3 &move);
-	/* 文字色	*/void SetColar(Color Collar);
+	/* 文字色	*/void SetColar(D3DXCOLOR Collar);
 	/* サイズ	*/void SetSize(D3DXVECTOR3 Size) { m_Info.size = Size; };
 	/* 向き		*/void SetRot(D3DXVECTOR3 Rot) { m_Info.rot = Rot; };
 	/* 移動量	*/void SetMoveRot(D3DXVECTOR3 inMoveRot) { m_Info.moveRot = inMoveRot; };
 
 	// -- 取得 ------------------------------------------
 	/* 位置			*/virtual D3DXVECTOR3 GetPos() { return m_Info.pos; }
-	/* 文字色		*/Color GetColar() { return m_Info.col; };
+	/* 文字色		*/D3DXCOLOR GetColar() { return m_Info.col; };
 	/* サイズ		*/D3DXVECTOR3 GetSize() { return m_Info.size; };
 	/* 移動量		*/D3DXVECTOR3 &GetMove() { return m_Info.move; };
 	/* 頂点バッファ	*/LPDIRECT3DVERTEXBUFFER9 &GetVtx() { return m_pVtxBuff; };
@@ -86,7 +86,7 @@ private:
 		D3DXVECTOR3 size;
 		D3DXVECTOR3 move;
 		D3DXVECTOR3 moveRot;
-		Color col;
+		D3DXCOLOR col;
 	};
 
 	// ***** 関数 *****

@@ -14,9 +14,9 @@
 CFontText::CFontText(int nPriority) : CFontObject(nPriority)
 {
 	m_Info.TextBoxCol = INITCOLOR;
-	m_Info.FontCol = INITCOLOR;
-	m_Info.TextBoxColOld = INITCOLOR;
-	m_Info.FontColOld = INITCOLOR;
+	m_Info.FontCol = INITD3DXCOLOR;
+	m_Info.TextBoxColOld = INITD3DXCOLOR;
+	m_Info.FontColOld = INITD3DXCOLOR;
 	m_Info.bCol = false;
 
 	m_Info.fTextSize = 0.0f;
@@ -40,7 +40,7 @@ CFontText::CFontText(int nPriority) : CFontObject(nPriority)
 	m_Info.bPause = false;
 	m_Info.bSpace = false;
 
-	m_Info.aShadow.col = INITCOLOR;
+	m_Info.aShadow.col = INITD3DXCOLOR;
 	m_Info.aShadow.AddPos = INITD3DXVECTOR3;
 	m_Info.aShadow.AddSize = INITD3DXVECTOR2;
 	m_Info.aShadow.bShadow = false;
@@ -66,9 +66,9 @@ CFontText::~CFontText()
 HRESULT CFontText::Init()
 {
 	m_Info.TextBoxCol = INITCOLOR;
-	m_Info.FontCol = INITCOLOR;
-	m_Info.TextBoxColOld = INITCOLOR;
-	m_Info.FontColOld = INITCOLOR;
+	m_Info.FontCol = INITD3DXCOLOR;
+	m_Info.TextBoxColOld = INITD3DXCOLOR;
+	m_Info.FontColOld = INITD3DXCOLOR;
 	m_Info.bCol = false;
 	m_Info.fTextSize = 0.0f;
 	m_Info.nTextLength = 0;
@@ -206,7 +206,7 @@ CFontText *CFontText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const 
 		}
 		else if (pFont == NULL)
 		{
-			pText->m_Info.FontCol = INITCOLOR;
+			pText->m_Info.FontCol = INITD3DXCOLOR;
 			pText->SetTextSize(20.0f);
 			pText->SetStandTime(10);
 			pText->EraseTime(1);
@@ -215,7 +215,7 @@ CFontText *CFontText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const 
 
 		if (Shadow == NULL)
 		{
-			pText->m_Info.aShadow.col = INITCOLOR;
+			pText->m_Info.aShadow.col = INITD3DXCOLOR;
 			pText->m_Info.aShadow.AddPos = INITD3DXVECTOR3;
 			pText->m_Info.aShadow.AddSize = INITD3DXVECTOR2;
 			pText->m_Info.aShadow.bShadow = false;
@@ -507,7 +507,7 @@ void CFontText::SetBoxColor(Color col)
 //========================================
 // テキストの色設定
 //========================================
-bool CFontText::SetTextColor(Color col)
+bool CFontText::SetTextColor(D3DXCOLOR col)
 {
 
 	for (int wordsCount = 0; wordsCount < m_Info.nTextLength; wordsCount++)
@@ -527,7 +527,7 @@ bool CFontText::SetTextColor(Color col)
 //========================================
 // 文字変更(単体)
 //========================================
-bool CFontText::ChgWords(char* Text, int nIdx, Color col)
+bool CFontText::ChgWords(char* Text, int nIdx, D3DXCOLOR col)
 {
 	if (m_Info.words[nIdx] != NULL)
 	{
@@ -541,7 +541,7 @@ bool CFontText::ChgWords(char* Text, int nIdx, Color col)
 		{
 			D3DXVECTOR3 AddPos = m_Info.aShadow.AddPos;
 			D3DXVECTOR2 AddSize = m_Info.aShadow.AddSize;
-			Color ShadowCol = m_Info.aShadow.col;
+			D3DXCOLOR ShadowCol = m_Info.aShadow.col;
 
 			m_Info.aShadow.shadow[nIdx]->Uninit();
 
@@ -571,7 +571,7 @@ bool CFontText::ChgWords(char* Text, int nIdx, Color col)
 //========================================
 // 文字変更(全体)　半角のみ
 //========================================
-bool CFontText::ChgText(char* Text, Color col)
+bool CFontText::ChgText(char* Text, D3DXCOLOR col)
 {
 	int nDigit = strlen(Text);
 	char aString[TXT_MAX];
