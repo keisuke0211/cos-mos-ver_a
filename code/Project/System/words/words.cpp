@@ -20,7 +20,7 @@ CWords::CWords(int nPriority) : CFontObject(nPriority)
 	m_Info.size = INITD3DXVECTOR3;
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.moveRot = INITD3DXVECTOR3;
-	m_Info.col = INITBGCOLOR;
+	m_Info.col = D3DXCOLOR(1.0f,1.0f,1.0f,1.0f);
 }
 
 //========================================
@@ -171,7 +171,7 @@ void CWords::Draw(void)
 //========================================
 // 生成
 //========================================
-CWords *CWords::Create(const char*text, D3DXVECTOR3 pos, D3DXVECTOR3 size, CFont::FONT type, Color col)
+CWords *CWords::Create(const char*text, D3DXVECTOR3 pos, D3DXVECTOR3 size, CFont::FONT type, D3DXCOLOR col)
 {
 	CWords * pWords = NULL;
 	pWords = new CWords;
@@ -206,7 +206,7 @@ void CWords::SetWords(const char*text, CFont::FONT type)
 	else
 	{
 		m_pTex = NULL;
-		SetColar(Color{0,0,0,0});
+		SetColar(D3DXCOLOR{0,0,0,0});
 	}
 }
 
@@ -229,7 +229,7 @@ void CWords::SetMove(const D3DXVECTOR3 &move)
 //========================================
 // 色
 //========================================
-void CWords::SetColar(Color col)
+void CWords::SetColar(D3DXCOLOR col)
 {
 	m_Info.col = col;
 
@@ -238,10 +238,10 @@ void CWords::SetColar(Color col)
 	//頂点バッファをロックし頂点情報へのポインタを取得
 	m_pVtxBuff->Lock(0, 0, (void**)&pVtx, 0);
 
-	pVtx[0].col = D3DXCOLOR(m_Info.col.r / 255, m_Info.col.g / 255,m_Info.col.b / 255,m_Info.col.a / 255);
-	pVtx[1].col = D3DXCOLOR(m_Info.col.r / 255, m_Info.col.g / 255,m_Info.col.b / 255,m_Info.col.a / 255);
-	pVtx[2].col = D3DXCOLOR(m_Info.col.r / 255, m_Info.col.g / 255,m_Info.col.b / 255,m_Info.col.a / 255);
-	pVtx[3].col = D3DXCOLOR(m_Info.col.r / 255, m_Info.col.g / 255,m_Info.col.b / 255,m_Info.col.a / 255);
+	pVtx[0].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);
+	pVtx[1].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);
+	pVtx[2].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);
+	pVtx[3].col = D3DXCOLOR(m_Info.col.r, m_Info.col.g, m_Info.col.b, m_Info.col.a);
 
 	//頂点バッファをアンロック
 	m_pVtxBuff->Unlock();
