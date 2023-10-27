@@ -106,7 +106,6 @@ void CRoadTripLaser::Update(void) {
 	}
 
 	// ブロックの位置設定
-	Block.y += m_pos.y - 100.0f;
 	m_pos += m_move;
 
 	// ブロック
