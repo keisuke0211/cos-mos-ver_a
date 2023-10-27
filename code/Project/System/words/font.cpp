@@ -66,7 +66,7 @@ void CFont::FontCreate(FONT nFont)
 	);
 
 	// ÉtÉHÉìÉgÇÃê∂ê¨
-	int fontsize = 60;
+	int fontsize = 120;
 	m_logFont[nFont] = { fontsize, 0, 0, 0, FW_DONTCARE, false, false, false, SHIFTJIS_CHARSET, OUT_TT_ONLY_PRECIS,
 		CLIP_DEFAULT_PRECIS, PROOF_QUALITY, FIXED_PITCH | FF_MODERN };
 

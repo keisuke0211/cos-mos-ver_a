@@ -40,6 +40,7 @@
 // èâä˙íl (Å¶D3DånóÒ)
 #define INITD3DXMATRIX        D3DXMATRIX   (1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f,0.0f,0.0f,0.0f,0.0f,1.0f)
 #define INITD3DVIEWPORT9      D3DVIEWPORT9 {0,0,0,0,0.0f,0.0f}
+#define INITD3DXCOLOR         D3DXCOLOR(0.0f,0.0f,0.0f,0.0f)
 #define INITD3DCOLOR          D3DCOLOR_RGBA(255,255,255,255)
 #define INITD3DXVECTOR3       D3DXVECTOR3  (0.0f,0.0f,0.0f)
 #define INITD3DXVECTOR2       D3DXVECTOR2  (0.0f,0.0f)
