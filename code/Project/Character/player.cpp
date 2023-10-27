@@ -233,12 +233,8 @@ void CPlayer::ActionControl(void)
 		//ロケットに乗ってたらスキップ
 		if (Player.bRide) continue;
 
-		//プレイヤーのいる世界をint型に変換
-		const int& SIDE = (int)Player.side;
-
 		//ジャンプ入力（空中じゃない）
-		if (!Player.bJump && Player.bGround && 
-			RNLib::Input().GetTrigger(Player.Keyborad[SIDE][(int)KEY_CONFIG::JUMP], Player.JoyPad[(int)KEY_CONFIG::JUMP], nIdxPlayer))
+		if (!Player.bJump && Player.bGround && IsKeyConfigTrigger(nIdxPlayer, Player.side, KEY_CONFIG::JUMP))
 		{
 			Player.bGround = false;				//地面から離れた
 			Player.move.y = Player.fJumpPower;	//ジャンプ量代入
@@ -246,11 +242,11 @@ void CPlayer::ActionControl(void)
 		}
 
 		//右に移動
-		if (RNLib::Input().GetPress(Player.Keyborad[SIDE][(int)KEY_CONFIG::MOVE_RIGHT], Player.JoyPad[(int)KEY_CONFIG::MOVE_RIGHT], nIdxPlayer))
+		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::MOVE_RIGHT))
 			Player.move.x += MOVE_SPEED;
 
 		//左に移動
-		if (RNLib::Input().GetPress(Player.Keyborad[SIDE][(int)KEY_CONFIG::MOVE_LEFT], Player.JoyPad[(int)KEY_CONFIG::MOVE_LEFT], nIdxPlayer))
+		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::MOVE_LEFT))
 			Player.move.x -= MOVE_SPEED;
 	}
 }
@@ -851,4 +847,20 @@ CPlayer::Info *CPlayer::GetInfo(WORLD_SIDE side)
 
 	//違うなら２Ｐ情報を返す
 	else return &m_aInfo[1];
+}
+
+//----------------------------
+//プレイヤーが指定されたキーコンフィグを使っているか
+//----------------------------
+bool CPlayer::IsKeyConfigTrigger(const int nIdx, const WORLD_SIDE side, KEY_CONFIG KeyConfig)
+{
+	return RNLib::Input().GetTrigger(m_aInfo[nIdx].Keyborad[(int)side][(int)KeyConfig], m_aInfo[nIdx].JoyPad[(int)KeyConfig], nIdx);
+}
+
+//----------------------------
+//プレイヤーが指定されたキーコンフィグを使っているか
+//----------------------------
+bool CPlayer::IsKeyConfigPress(const int nIdx, const WORLD_SIDE side, KEY_CONFIG KeyConfig)
+{
+	return RNLib::Input().GetPress(m_aInfo[nIdx].Keyborad[(int)side][(int)KeyConfig], m_aInfo[nIdx].JoyPad[(int)KeyConfig], nIdx);
 }
