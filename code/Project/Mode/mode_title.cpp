@@ -21,10 +21,18 @@
 // Author:KEISUKE OTONO
 //========================================
 CMode_Title::CMode_Title(void) {
-	m_TexIdx = 0;
+
+	for (int nCnt = 0; nCnt < TEX_MAX; nCnt++)
+	{
+		m_TexIdx[nCnt] = 0;
+	}
 	m_nSelect = 0;
 
-	m_StageType = NULL;;
+	Title = TITLE_OUTSET;	// ÉÇÅ[Éh
+	m_PlanetPos = INITD3DXVECTOR3;
+	m_PlanetAngle = 0.0f;
+	m_nSelect = 0;
+	m_StageType = NULL;
 }
 
 //========================================
@@ -33,6 +41,19 @@ CMode_Title::CMode_Title(void) {
 //========================================
 CMode_Title::~CMode_Title(void) {
 
+	for (int nCnt = 0; nCnt < WORDS_MAX; nCnt++)
+	{
+		if (m_Words[nCnt] != NULL)
+		{
+			m_Words[nCnt]->Uninit();
+			m_Words[nCnt] = NULL;
+		}
+		if (m_WordsShadow[nCnt] != NULL)
+		{
+			m_WordsShadow[nCnt]->Uninit();
+			m_WordsShadow[nCnt] = NULL;
+		}
+	}
 }
 
 //========================================
@@ -46,10 +67,19 @@ void CMode_Title::Init(void) {
 	{
 		m_Menu[nCnt] = {NULL};
 	}
-	Title = TITLE_OUTSET;
+	for (int nCnt = 0; nCnt < WORDS_MAX; nCnt++)
+	{
+		m_bMove[nCnt] = false;
+		m_Words[nCnt] = NULL;
+		m_WordsShadow[nCnt] = NULL;
+	}
+
+	m_PlanetPos = D3DXVECTOR3(RNLib::Window().GetCenterPos().x, 1460.0f, 0.0f);
+	Title = TITLE_PLANET;
 	m_nSelect = 0;
 
-	m_TexIdx = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\title.jpg");
+	m_TexIdx[0] = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\title.jpg");
+	m_TexIdx[1] = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\planet.png");
 
 	// ëJà⁄ê›íË
 	RNLib::Transition().Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
@@ -62,21 +92,6 @@ void CMode_Title::Init(void) {
 
 	// îwåiêFïœçX
 	SetBGColor(Color{ 200,0,0,255 });
-
-
-	FormFont pFont = {INITCOLOR,45.0f,1,1,-1,};
-	FormShadow pShadow = { Color{0,0,0,255},true, D3DXVECTOR3(6.0f,6.0f,0.0f) ,D3DXVECTOR2(4.0f,4.0f) };
-
-	m_Menu[0] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 600.0f, 0.0f),D3DXVECTOR2(1080.0f, 100.0f),
-		" ",CFont::FONT_851GKKTT,&pFont);
-
-	pFont = { INITCOLOR,70.0f,1,1,-1, };
-	m_Menu[1] = CFontText::Create(CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(340.0f, 100.0f, 0.0f), D3DXVECTOR2(0.0f, 0.0f),
-		"COS/MOS", CFont::FONT_ROND_B, &pFont,false,&pShadow);
-
-	pFont = { INITCOLOR,70.0f,5,10,-1 };// 45
-	m_Menu[2] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 600.0f, 0.0f),D3DXVECTOR2(1080.0f, 100.0f),
-		"É{É^ÉìÇâüÇµÇƒénÇﬂÇƒÇÀ",CFont::FONT_ROND_B,&pFont, false);
 }
 
 //========================================
@@ -103,15 +118,35 @@ void CMode_Title::Uninit(void) {
 void CMode_Title::Update(void) {
 	CMode::Update();
 
-	if (Title == TITLE_MENU)
+	// äeÉÇÅ[ÉhÇÃèàóù
+	if (Title == TITLE_PLANET)
+		PlanetAnime();
+	else if (Title == TITLE_TITLE)
+		TitleAnime();
+	else if (Title == TITLE_MENU)
 		Menu();
 	else if (Title == TITLE_SELECT)
 		StageSelect();
 
 	RNLib::Polygon2D().Put(D3DXVECTOR3(RNLib::Window().GetCenterPos().x, RNLib::Window().GetCenterPos().y, -1.0f), 0.0f, false)
-		->SetSize(1280.0f,720.0f)
-		->SetCol(Color{255,255,255,255})
-		->SetTex(m_TexIdx);
+		->SetSize(1280.0f, 720.0f)
+		->SetCol(Color{ 255,255,255,255 })
+		->SetTex(m_TexIdx[0]);
+
+	if (Title == TITLE_OUTSET || Title == TITLE_MENU)
+	{
+		m_PlanetAngle += -0.01f;
+
+		FloatLoopControl(&m_PlanetAngle, D3DX_PI, -D3DX_PI);
+	}
+
+	if (Title <= TITLE_MENU)
+	{
+		RNLib::Polygon2D().Put(m_PlanetPos, m_PlanetAngle, false)
+			->SetSize(1300.0f, 1300.0f)
+			->SetCol(Color{ 255,255,255,255 })
+			->SetTex(m_TexIdx[1]);
+	}
 
 	if ((RNLib::Input().GetKeyTrigger(DIK_RETURN) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::A)) && RNLib::Transition().GetState() == CTransition::STATE::NONE)
 	{
@@ -182,25 +217,131 @@ void CMode_Title::ProcessState(const PROCESS process) {
 }
 
 //========================================
+// òfêØÉAÉjÉÅÅ[ÉVÉáÉì
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Title::PlanetAnime(void)
+{
+	if (m_PlanetPos.y >= 1060.0f)
+	{
+		D3DXVECTOR3 move = INITD3DXVECTOR3;
+
+		move.y = -15.0f;
+
+		m_PlanetPos += move;
+		if (m_PlanetPos.y <= 1060.0f)
+		{
+			move.y = 0.0f;
+			m_PlanetPos.y = 1060;
+			Title = TITLE_TITLE;
+
+			{
+				m_WordsShadow[0] = CWords::Create("Çb", D3DXVECTOR3(786.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f,0.0f,0.0f,1.0f));
+				m_WordsShadow[1] = CWords::Create("Çn", D3DXVECTOR3(946.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[2] = CWords::Create("Çr", D3DXVECTOR3(1096.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[3] = CWords::Create("Å^", D3DXVECTOR3(1246.0f, -54.0f, 0.0f), D3DXVECTOR3(100.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
+				m_WordsShadow[4] = CWords::Create("Çl", D3DXVECTOR3(1406.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[5] = CWords::Create("Çn", D3DXVECTOR3(1566.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[6] = CWords::Create("Çr", D3DXVECTOR3(1706.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+			}
+			{
+				m_Words[0] = CWords::Create("Çb", D3DXVECTOR3(780.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
+				m_Words[1] = CWords::Create("Çn", D3DXVECTOR3(940.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
+				m_Words[2] = CWords::Create("Çr", D3DXVECTOR3(1090.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
+				m_Words[3] = CWords::Create("Å^", D3DXVECTOR3(1234.0f, -66.0f, 0.0f), D3DXVECTOR3(100.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
+				m_Words[4] = CWords::Create("Çl", D3DXVECTOR3(1400.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
+				m_Words[5] = CWords::Create("Çn", D3DXVECTOR3(1560.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
+				m_Words[6] = CWords::Create("Çr", D3DXVECTOR3(1700.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
+			}
+			m_bMove[0] = true;
+		}
+	}
+}
+
+//========================================
+// É^ÉCÉgÉãÉAÉjÉÅÅ[ÉVÉáÉì
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Title::TitleAnime(void)
+{
+	for (int nCnt = 0; nCnt < WORDS_MAX; nCnt++)
+	{
+		if (m_Words[nCnt] != NULL)
+		{
+			D3DXVECTOR3 pos = m_Words[nCnt]->GetPos();
+
+			if (pos.y <= 210.0f && m_bMove[nCnt])
+			{
+				D3DXVECTOR3 move;
+
+				move.y = 10.0f;
+
+				m_Words[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+				m_WordsShadow[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+
+				if (pos.y >= 200.0f)
+				{
+					move.y = 0.0f;
+					pos.y = 200;
+
+					m_Words[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+					m_WordsShadow[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+
+					if (nCnt == WORDS_MAX - 1)
+					{
+						FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),70.0f,5,10,-1, };// 45
+						FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f),true, D3DXVECTOR3(6.0f,6.0f,0.0f) ,D3DXVECTOR2(4.0f,4.0f) };
+
+						m_Menu[0] = CFontText::Create(CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(230.0f, 600.0f, 0.0f),D3DXVECTOR2(0.0f, 0.0f),
+							"É{É^ÉìÇâüÇµÇƒénÇﬂÇƒÇÀ",CFont::FONT_ROND_B,&pFont, false,&pShadow);
+
+						Title = TITLE_OUTSET;
+					}
+
+				}
+				else if (pos.y >= 20 && nCnt != WORDS_MAX - 1 && !m_bMove[nCnt + 1])
+				{
+					m_bMove[nCnt + 1] = true;
+				}
+			}
+		}
+	}
+}
+
+//========================================
 // ÉÅÉjÉÖÅ[ê∂ê¨
 // Author:KEISUKE OTONO
 //========================================
 void CMode_Title::MenuCreate(void)
 {
-	FormFont pFont = { INITCOLOR,55.0f,5,10,-1};// 45
+	FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),55.0f,5,10,-1};// 45
 
 	TextClear(TITLE_MENU);
 
+	for (int nCnt = 0; nCnt < WORDS_MAX; nCnt++)
+	{
+		if (m_Words[nCnt] != NULL)
+		{
+			m_Words[nCnt]->Uninit();
+			m_Words[nCnt] = NULL;
+		}
+		if (m_WordsShadow[nCnt] != NULL)
+		{
+			m_WordsShadow[nCnt]->Uninit();
+			m_WordsShadow[nCnt] = NULL;
+		}
+	}
+
 	m_Menu[0] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 150.0f, 0.0f),D3DXVECTOR2(450.0f, 100.0f),// 360,100
+		CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 150.0f, 1.0f),D3DXVECTOR2(450.0f, 100.0f),// 360,100
 		"ÉQÅ[ÉÄ",CFont::FONT_ROND_B,&pFont);
 
 	m_Menu[1] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 300.0f, 0.0f), D3DXVECTOR2(450.0f, 100.0f),
+		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 300.0f, 1.0f), D3DXVECTOR2(450.0f, 100.0f),
 		"ÉIÉvÉVÉáÉì", CFont::FONT_ROND_B, &pFont);
 
 	m_Menu[2] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 450.0f, 0.0f), D3DXVECTOR2(450.0f, 100.0f),
+		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 450.0f, 1.0f), D3DXVECTOR2(450.0f, 100.0f),
 		"ÉQÅ[ÉÄÇÇ‚ÇﬂÇÈ", CFont::FONT_ROND_B, &pFont);
 }
 
@@ -261,7 +402,7 @@ void CMode_Title::SelectCreate(void)
 	}
 
 	TextClear(TITLE_SELECT);
-	FormFont pFont = { INITCOLOR,65.0f,5,10,-1 };// 45
+	FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),65.0f,5,10,-1 };// 45
 	m_Menu[0] = CFontText::Create(
 		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
 		m_StageType[0].Text, CFont::FONT_ROND_B, &pFont);
@@ -311,7 +452,7 @@ void CMode_Title::StageSelect(void)
 		{
 			nTexIdx = nNoChoiceTex;
 		}
-		D3DXVECTOR3 pos = D3DXVECTOR3(RNLib::Window().GetCenterPos().x, 680,0.0f);
+		D3DXVECTOR3 pos = D3DXVECTOR3(RNLib::Window().GetCenterPos().x, 680,1.0f);
 		pos.x += ((nMax * -0.5f) + nCnt + 0.5f) * 50;
 
 		RNLib::Polygon2D().Put(pos, 0.0f, false)
@@ -338,7 +479,7 @@ void CMode_Title::StageSelect(void)
 		IntControl(&m_nSelect, nMax - 1, 0);
 
 		TextClear(TITLE_SELECT);
-		FormFont pFont = { INITCOLOR,65.0f,5,10,-1 };
+		FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),65.0f,5,10,-1 };
 		m_Menu[0] = CFontText::Create(
 			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
 			m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);

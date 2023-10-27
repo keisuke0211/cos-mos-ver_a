@@ -42,23 +42,36 @@ public:
 		MAX
 	};
 
+	//操作の割り当て
+	enum class KEY_CONFIG {
+		MOVE_LEFT = 0,	//左移動
+		MOVE_RIGHT,		//右移動
+		JUMP,			//ジャンプ
+		SWAP,			//スワップ
+		DECIDE,			//決定
+		PAUSE,			//ポーズ
+		MAX
+	};
+
 	//プレイヤー情報
 	struct Info
 	{
-		D3DXVECTOR3 StartPos;		//開始位置
+		D3DXVECTOR3 StartPos;     //開始位置
 
-		D3DXVECTOR3 pos;			//位置
-		D3DXVECTOR3 posOLd;			//前回位置
-		D3DXVECTOR3 rot;			//向き
-		D3DXVECTOR3 move;			//移動量
-		bool		bGround;		//地面に接しているか
-		bool		bJump;			//ジャンプ
-		bool		bRide;			//ロケットに乗っているかどうか
-		float		fJumpPower;		//ジャンプ量
-		float		fGravity;		//重力
-		float		fGravityCorr;	//重力係数
-		int			nModelIdx;		//モデル番号
-		WORLD_SIDE  side;			//どちらの世界に存在するか
+		D3DXVECTOR3 pos;          //位置
+		D3DXVECTOR3 posOLd;       //前回位置
+		D3DXVECTOR3 rot;          //向き
+		D3DXVECTOR3 move;         //移動量
+		bool		bGround;      //地面に接しているか
+		bool		bJump;        //ジャンプ
+		bool		bRide;        //ロケットに乗っているかどうか
+		float		fJumpPower;   //ジャンプ量
+		float		fGravity;     //重力
+		float		fGravityCorr; //重力係数
+		int			nModelIdx;    //モデル番号
+		WORLD_SIDE  side;         //どちらの世界に存在するか
+		int  Keyborad[(int)WORLD_SIDE::MAX][(int)KEY_CONFIG::MAX];	//キーボードのキー配置
+		CInput::BUTTON  JoyPad[(int)KEY_CONFIG::MAX];							//ジョイパッドのボタン配置
 	};
 
 	static const float SIZE_WIDTH;	//横幅
@@ -135,6 +148,7 @@ private:
 	static int	s_nNumGetParts;	//取得したパーツの数
 	static bool	s_bRideRocket;	//ロケットに乗れるかどうか
 
+	void InitKeyConfig(void);//各プレイヤーのキーボード・ジョイパッドのキーコンフィグ初期化設定
 	void SetPosOld(void);
 	void ActionControl(void);
 	void Move(COLLI_VEC vec);
@@ -170,6 +184,9 @@ private:
 	void CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock,D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionParts(Info *pInfo, CParts *pParts);
 	void CollisionRocket(Info *pInfo, CRocket *pRocket);
+
+	bool IsKeyConfigTrigger(const int nIdx, const WORLD_SIDE side, KEY_CONFIG KeyConfig);
+	bool IsKeyConfigPress(const int nIdx, const WORLD_SIDE side, KEY_CONFIG KeyConfig);
 
 	//情報更新処理（更新処理の最後に位置情報などを設定する
 	void UpdateInfo(void);

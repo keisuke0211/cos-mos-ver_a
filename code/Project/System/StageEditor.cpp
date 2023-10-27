@@ -40,7 +40,7 @@ CStageEditor::~CStageEditor()
 {
 	if (m_StageType != NULL)
 	{
-		delete m_StageType;
+		delete[] m_StageType;
 		m_StageType = NULL;
 	}
 }

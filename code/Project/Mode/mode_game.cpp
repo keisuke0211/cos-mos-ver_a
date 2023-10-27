@@ -235,7 +235,7 @@ void CMode_Game::BackGroundPut(Color mincol, Color addcol) {
 //========================================
 void CMode_Game::PauseCreate(void)
 {
-	FormFont pFont = { INITCOLOR,45.0f,1,1,-1, };
+	FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),45.0f,1,1,-1, };
 
 	m_Menu[0] = CFontText::Create(CFontText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 200.0f, 0.0f), D3DXVECTOR2(460.0f, 100.0f),
