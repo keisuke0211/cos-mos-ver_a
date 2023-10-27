@@ -19,6 +19,7 @@ public:
 	//========== [[[ 列挙型定義 ]]]
 	enum class ANIME_STATE {
 		NONE = -1,// 何もなし
+		RIDE,	  // 乗る
 		FLY,	  // 飛ぶ
 		MAX,
 	};
@@ -28,10 +29,13 @@ public:
 		D3DXVECTOR3 move;		// 移動量
 		D3DXCOLOR col;			// 頂点カラー
 		ANIME_STATE Animstate;	// アニメーションの状態
+		Scale3D scale;			// スケール
+		Scale3D Maxscale;		// 最大スケール
 		short nModelIdx;		// モデル番号
+		int	nRideAnimeCounter;	// ライドアニメーションカウンター
 		int	nFlyAnimeCounter;	// 飛行アニメーションカウンター
 	};
-
+	
 	// *** 関数 ***
 	CRocket();
 	~CRocket();

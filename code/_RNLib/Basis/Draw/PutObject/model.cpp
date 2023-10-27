@@ -154,6 +154,14 @@ CModel::CRegistInfo* CModel::Put(const Pos3D& pos, const Rot3D& rot, const short
 	return Put(CMatrix::ConvPosRotToMtx(pos, rot), modelIdx, isOnScreen);
 }
 
+//========================================
+// 設置処理(位置と向きと拡大倍率で指定)
+//========================================
+CModel::CRegistInfo* CModel::Put(const Pos3D& pos, const Rot3D& rot, const Scale3D& scale, const short& modelIdx, const bool& isOnScreen) {
+
+	return Put(CMatrix::ConvPosRotScaleToMtx(pos, rot, scale), modelIdx, isOnScreen);
+}
+
 //================================================================================
 //----------|---------------------------------------------------------------------
 //==========| データクラスのメンバ関数
