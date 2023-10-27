@@ -140,7 +140,7 @@ void CMode_Title::Update(void) {
 		FloatLoopControl(&m_PlanetAngle, D3DX_PI, -D3DX_PI);
 	}
 
-	if (Title != TITLE_SELECT)
+	if (Title <= TITLE_MENU)
 	{
 		RNLib::Polygon2D().Put(m_PlanetPos, m_PlanetAngle, false)
 			->SetSize(1300.0f, 1300.0f)
