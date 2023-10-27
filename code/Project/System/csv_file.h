@@ -45,15 +45,14 @@ public:
 	/* コンソール出力	*/void FileShow(void);
 
 	// -- 端数処理 -------------------------------------------------------------------
-	/* float	*/float Format(float val, int nLen, FORMAT format);
-	/* double	*/double Format(double val, int nLen, FORMAT format);
+	/* float	*/float Format(float val, float nLen, FORMAT format);
+	/* double	*/double Format(double val, float nLen, FORMAT format);
 
 	// -- 変換 -------------------------------------------------------------------
 	/* 文字列 → int		*/bool ToValue(int &val, const string &str);
 	/* 文字列 → float		*/bool ToValue(float &val, const string &str);
 	/* 文字列 → double		*/bool ToValue(double &val, const string &str);
 	/* 文字列 → char		*/bool ToValue(char* &val, const string &str);
-	/* 文字列 → bool		*/bool ToValue(bool &val, const string &str);
 
 	/* int		→ 文字列	*/string CastCell(int &val) { return to_string(val); }
 	/* float	→ 文字列	*/string CastCell(float &val){ return to_string(Format(val, 2, FORMAT_FLOOR)); }	

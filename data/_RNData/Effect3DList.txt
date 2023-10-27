@@ -61,7 +61,7 @@ POLYGON{
 	}
 	LIGHT_M{
 		LIFE:         30
-		TEXTURE_PATH: data\\Texture\\Effect\\light.PNG
+		TEXTURE_PATH: data\\_RNData\\Texture\\Effect\\light.PNG
 		PTN_X:        2
 		PTN_Y:        1
 		PTNSWAP_TIME: 2

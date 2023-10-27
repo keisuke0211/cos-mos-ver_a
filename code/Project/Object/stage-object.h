@@ -18,11 +18,16 @@ public:
 
 	//========== [[[ 列挙型定義 ]]]
 	enum class TYPE {
-		NONE,
-		BLOCK,
-		MOVE_BLOCK,
-		METEOR,
-		TRAMPOLINE,
+		NONE       = -1,//何もなし
+		BLOCK      = 0,	//ブロック
+		FILLBLOCK  = 1,	//穴埋めブロック
+		TRAMPOLINE = 2,	//トランポリン
+		SPIKE	   = 3,	//トゲ
+		MOVE_BLOCK = 4,	//移動ブロック
+		METEOR	   = 5,	//隕石
+		PARTS      = 6,	//ロケットパーツ
+		ROCKET     = 7,	//ロケット本体
+		BACKGROUND = 8,	//背景
 		MAX,
 	};
 
@@ -31,6 +36,7 @@ public:
 	virtual ~CStageObject();
 	virtual void Uninit(void) = 0;
 	virtual void Update(void) = 0;
+	TYPE GetType(void) { return m_type; }
 	void SetPos(const D3DXVECTOR3& pos) { m_pos = m_posOld = pos; }
 	D3DXVECTOR3& GetPos(void) { return m_pos; }
 	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }

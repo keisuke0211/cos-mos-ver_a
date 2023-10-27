@@ -12,22 +12,29 @@
 //==========| CTrampolineクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
-D3DXVECTOR3 static const METEOR_ADDROT = { 0.10f,0.02f,0.01f };				// 隕石の回転の移動量
-D3DXVECTOR3 static const METEOR_UNINIT_MINPOS = { -150.0f,-150.0f,0.0f };	// 最小の位置
-D3DXVECTOR3 static const METEOR_UNINIT_MAXPOS = { 150.0f,150.0f,0.0f };		// 最大の位置
-float			static const METEOR_BLINK_MAX = { 5.0f };					// 点滅アニメーションの最大数
-float			static const METEOR_BLINK_MIN = { 0.5f };					// 点滅の最小数
-int				static const METEOR_BLINK_ADJ = { 10 };						// 点滅アニメーションの調整
+const D3DXVECTOR3 METEOR_ADDROT = { 0.10f,0.02f,0.01f };				// 隕石の回転の移動量
+const D3DXVECTOR3 METEOR_UNINIT_MINPOS = { -150.0f,-150.0f,0.0f };		// 最小の位置
+const D3DXVECTOR3 METEOR_UNINIT_MAXPOS = { 150.0f,150.0f,0.0f };		// 最大の位置
+const float METEOR_ANIME_MAG = 2.0f;						// 点滅アニメーションの倍率
+const int	METEOR_BLINK_MAX = 10 * METEOR_ANIME_MAG;		// 点滅アニメーションの最大数
+const float METEOR_BLINK_MIN = 0.0f;						// 点滅の最小数
+const float METEOR_BLINK_ADJ = 0.01f;						// 点滅アニメーションの調整
 //========================================
 // コンストラクタ
 //========================================
 CMeteor::CMeteor(void) {
 	Manager::BlockMgr()->AddList(this);
 	
+	m_type = TYPE::METEOR;	// 種類の設定
+	// 大きさの設定
+	m_width = SIZE_OF_1_SQUARE * 3;
+	m_height = SIZE_OF_1_SQUARE * 3;
+
 	// 各情報の初期化
-	m_pos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
-	m_move = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+	ModelIdx = RNLib::Model().Load("data\\MODEL\\Meteorite.x");
+	m_pos = INITD3DXVECTOR3;
+	m_rot = INITD3DXVECTOR3;
+	m_move = INITD3DXVECTOR3;
 	m_fblink = 0.0f;
 	m_nblinlAnim = 0;
 }
@@ -41,7 +48,7 @@ CMeteor::~CMeteor(void) {
 
 //========================================
 // 初期化処理
-// Author:RYUKI FUJIWARA
+// Author:KOMURO HIROMU
 //========================================
 void CMeteor::Init(void) {
 
@@ -49,7 +56,7 @@ void CMeteor::Init(void) {
 
 //========================================
 // 終了処理
-// Author:RYUKI FUJIWARA
+// Author:KOMURO HIROMU
 //========================================
 void CMeteor::Uninit(void) {
 
@@ -57,27 +64,40 @@ void CMeteor::Uninit(void) {
 
 //========================================
 // 更新処理
-// Author:RYUKI FUJIWARA
+// Author:KOMURO HIROMU
 //========================================
 void CMeteor::Update(void) {
 
-	int nBlink;
+	int nBlink = 0;
 
-	m_pos += m_move;			// 移動量の追加
 	m_rot += METEOR_ADDROT;		// 向きの移動量の追加
+	m_pos += m_move;			// 移動量の追加
+
+	m_nblinlAnim++;	// 点滅アニメーションの増加
 
 	// 点滅アニメーションの計算
-	nBlink = (m_nblinlAnim % (int)METEOR_BLINK_MAX);
-	m_fblink = nBlink / METEOR_BLINK_ADJ;
-	m_fblink += METEOR_BLINK_MIN;
+	if (m_nblinlAnim < METEOR_BLINK_MAX * 2)
+	{
+		m_fblink -= METEOR_BLINK_MAX - m_nblinlAnim;
+		m_fblink = m_fblink / (10 * METEOR_ANIME_MAG);
 
-	RNLib::Model()->Put(m_pos, m_rot, ModelIdx, false)
+		if (m_fblink < 0)
+		{
+			m_fblink = fabsf(m_fblink);
+		}
+	}  
+	else
+	{
+		m_nblinlAnim = 0;
+	}
+
+
+	RNLib::Model().Put(m_pos, m_rot, ModelIdx, false)
 		->SetOutLine(true)
 		->SetBrightnessOfEmissive(m_fblink)
 		;
 
-	m_nblinlAnim++;	// 点滅アニメーションの増加
-
+	// とりあえず画面外で消す処理
 	if (m_pos.x >= METEOR_UNINIT_MAXPOS.x || m_pos.y >= METEOR_UNINIT_MAXPOS.y || m_pos.x <= METEOR_UNINIT_MINPOS.x || m_pos.y <= METEOR_UNINIT_MINPOS.y)
 	{
 		// 削除
@@ -87,7 +107,7 @@ void CMeteor::Update(void) {
 
 //========================================
 // 描画処理
-// Author:RYUKI FUJIWARA
+// Author:KOMURO HIROMU
 //========================================
 void CMeteor::Draw(void) {
 

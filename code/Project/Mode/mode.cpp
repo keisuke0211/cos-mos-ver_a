@@ -5,7 +5,10 @@
 // 
 //========================================
 #include "mode.h"
+#include "mode_logo.h"
+#include "mode_title.h"
 #include "mode_game.h"
+#include "mode_result.h"
 #include "../../_RNLib/RNlib.h"
 
 //================================================================================
@@ -59,7 +62,10 @@ CMode* CMode::Create(TYPE type) {
 	// 種類に応じてオブジェクト生成
 	CMode* pMode = NULL;
 	switch (type) {
+	case TYPE::LOGO:pMode = new CMode_Logo; break;
+	case TYPE::TITLE:pMode = new CMode_Title; break;
 	case TYPE::GAME:pMode = new CMode_Game; break;
+	case TYPE::RESULT:pMode = new CMode_Result; break;
 	default:
 		assert(false);
 		break;

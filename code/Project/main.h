@@ -11,4 +11,4 @@
 #include "Mode/mode_game.h"
 #include "../_RNLib/RNlib.h"
 
-#include "Object\Block\block-manager.h"
+#include "Object\stage-object-manager.h"

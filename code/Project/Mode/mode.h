@@ -17,7 +17,10 @@ public:
 	//========== [[[ —ñ‹“Œ^’è‹` ]]]
 	enum class TYPE{
 		NONE = -1,
+		LOGO,
+		TITLE,
 		GAME,
+		RESULT,
 		MAX,
 	};
 

@@ -95,7 +95,8 @@ void CSVFILE::FileSave(string filepath, char delim)
 
 	if (bHeader)
 	{
-		for (int nRow = 0; nRow < header.size(); nRow++)
+		signed int nHeader = header.size();
+		for (int nRow = 0; nRow < nHeader; nRow++)
 		{
 			/* 空白		*/if (bIndex && nRow == 0)ofs_csv_file << delim;
 			/* ヘッダー */ofs_csv_file << header.at(nRow) << delim;
@@ -103,13 +104,15 @@ void CSVFILE::FileSave(string filepath, char delim)
 		ofs_csv_file << endl;
 	}
 
-	for (int nLine = 0; nLine < index.size(); nLine++)
+	signed int nLine = index.size();
+	for (int nLine = 0; nLine < nLine; nLine++)
 	{
 		if (bIndex)
 		{
 			/* インデックス */ofs_csv_file << index.at(nLine) << delim;
 		}
-		for (int nRow = 0; nRow < header.size(); nRow++)
+		signed int nHeader = header.size();
+		for (int nRow = 0; nRow < nHeader; nRow++)
 		{
 			/* 要素 */ofs_csv_file << cell.at(nLine).at(nRow) << delim;
 		}
@@ -131,20 +134,23 @@ void CSVFILE::FileShow(void)
 
 	if (bHeader)
 	{
-		for (int nRow = 0; nRow < header.size(); nRow++)
+		signed int nHeader = header.size();
+		for (int nRow = 0; nRow < nHeader; nRow++)
 		{
 			if (bIndex && nRow == 0) cout << "\t";
 			cout << header.at(nRow) << "(h)" << "\t";
 		}
 		cout << endl;
 	}
-	for (int nLine = 0; nLine < index.size(); nLine++)
+	signed int nIndex = index.size();
+	for (int nLine = 0; nLine < nIndex; nLine++)
 	{
 		if (bIndex)
 		{
 			cout << index.at(nLine) << "(i)" << "\t";
 		}
-		for (int j = 0; j < header.size(); j++)
+		signed int nHeader = header.size();
+		for (int j = 0; j < nHeader; j++)
 		{
 			cout << cell.at(nLine).at(j) << "\t";
 		}
@@ -212,7 +218,7 @@ void CSVFILE::SetCell(string str, int row,int line)
 // 引数：データ / 桁数 / 処理
 // 返値：データ(変換後)
 //================================================================================
-float CSVFILE::Format(float val, int nLen, FORMAT format)
+float CSVFILE::Format(float val, float nLen, FORMAT format)
 {	
 	float fRet;
 
@@ -221,15 +227,15 @@ float CSVFILE::Format(float val, int nLen, FORMAT format)
 	switch (format)
 	{
 	case FORMAT_ROUNF: { /* 四捨五入 */
-		fRet = (int)(fRet + 0.5);
+		fRet = (float)(fRet + 0.5);
 	}
 	  break;
 	case FORMAT_CEIL: { /* 切り上げ */
-		fRet = (int)(fRet + 0.9);
+		fRet = (float)(fRet + 0.9);
 	}
 	  break;
 	case FORMAT_FLOOR: { /* 切り捨て */
-		fRet = (int)(fRet);
+		fRet = (float)(fRet);
 	}
 	  break;
 	}
@@ -242,24 +248,24 @@ float CSVFILE::Format(float val, int nLen, FORMAT format)
 // 引数：データ / 桁数 / 処理
 // 返値：データ(変換後)
 //================================================================================
-double CSVFILE::Format(double val, int nLen, FORMAT format)
+double CSVFILE::Format(double val, float nLen, FORMAT format)
 {
-	float fRet;
+	double fRet;
 
 	fRet = val * pow(10.0, nLen);
 
 	switch (format)
 	{
 	case FORMAT_ROUNF: { /* 四捨五入 */
-		fRet = (double)(int)(fRet + 0.5);
+		fRet = (float)(fRet + 0.5);
 	}
 	  break;
 	case FORMAT_CEIL: { /* 切り上げ */
-		fRet = (double)(int)(fRet + 0.9);
+		fRet = (float)(fRet + 0.9);
 	}
 	  break;
 	case FORMAT_FLOOR: { /* 切り捨て */
-		fRet = (double)(int)(fRet);
+		fRet = (float)(fRet);
 	}
 	  break;
 	}
@@ -335,24 +341,7 @@ bool CSVFILE::ToValue(char* &val, const string &str)
 		char_traits<char>::copy(cstr, str.c_str(), str.size() + 1);
 
 		val = cstr;
-		return true;
-	}
-	catch (...)
-	{
-		return false;
-	}
-}
 
-//================================================================================
-// 文字列 → bool型
-// 引数：データ(変換先) / データ(変換元)
-// 返値：変換出来たか
-//================================================================================
-bool CSVFILE::ToValue(bool &val, const string &str)
-{
-	try
-	{
-		val = stoi(str);
 		return true;
 	}
 	catch (...)
