@@ -185,6 +185,9 @@ private:
 	void CollisionParts(Info *pInfo, CParts *pParts);
 	void CollisionRocket(Info *pInfo, CRocket *pRocket);
 
+	bool IsKeyConfigTrigger(const int nIdx, const WORLD_SIDE side, KEY_CONFIG KeyConfig);
+	bool IsKeyConfigPress(const int nIdx, const WORLD_SIDE side, KEY_CONFIG KeyConfig);
+
 	//情報更新処理（更新処理の最後に位置情報などを設定する
 	void UpdateInfo(void);
 

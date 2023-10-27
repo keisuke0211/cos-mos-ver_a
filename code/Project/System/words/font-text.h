@@ -17,7 +17,7 @@
 // テキスト情報(生成用)
 struct FormFont
 {
-	Color col;			// 文字の色
+	D3DXCOLOR col;		// 文字の色
 	float fTextSize;	// 文字のサイズ(初期値 20)
 	int nAppearTime;	// 1文字目が表示されるまでの時間(初期値 1)
 	int nStandTime;		// 待機時間(初期値 10)
@@ -27,7 +27,7 @@ struct FormFont
 // 影情報(生成用)
 struct FormShadow
 {
-	Color col;				// 影の色
+	D3DXCOLOR col;			// 影の色
 	bool bShadow;			// 影フラグ
 	D3DXVECTOR3 AddPos;		// 文字の位置からずらす値 (初期値 0,0,0)	(元の文字 + AddPos)
 	D3DXVECTOR2 AddSize;	// 文字のサイズの加算値 (初期値 0,0)		(元の文字 + AddSize)
@@ -84,9 +84,9 @@ public:
 	/* 空白表示			*/void SetSpace(bool bSpace) { m_Info.bSpace = bSpace; }
 	/* ポーズ中の生成	*/void SetTetPause(bool bPause);
 	/* ボックスの色		*/void SetBoxColor(Color col);
-	/* テキストの色		*/bool SetTextColor(Color col);
-	/* 文字変更(単体)	*/bool ChgWords(char* Text, int nIdx, Color col);
-	/* 文字変更(全体)	*/bool ChgText(char* Text, Color col);// ※ 元のテキストより多いと使えない また半角英数のみ
+	/* テキストの色		*/bool SetTextColor(D3DXCOLOR col);
+	/* 文字変更(単体)	*/bool ChgWords(char* Text, int nIdx, D3DXCOLOR col);
+	/* 文字変更(全体)	*/bool ChgText(char* Text, D3DXCOLOR col);// ※ 元のテキストより多いと使えない また半角英数のみ
 
 	// -- 設定 ------------------------------------------
 	/*　サイズ	*/float GetTxtSize() { return m_Info.fTextSize; }
@@ -98,7 +98,7 @@ private:
 	// 影
 	struct Shadow
 	{
-		Color col;			// 影の色
+		D3DXCOLOR col;			// 影の色
 		bool bShadow;			// 影フラグ
 		CWords** shadow;		// 文字(影)
 		D3DXVECTOR3 AddPos;		// 文字の位置からずらす値 (初期値 0,0,0)	(元の文字 + AddPos)
@@ -109,9 +109,9 @@ private:
 	struct Info
 	{
 		Color TextBoxCol;		// テキストボックスの色
-		Color FontCol;			// 文字の色
-		Color TextBoxColOld;	// 前回のテキストボックスの色
-		Color FontColOld;		// 前回の文字の色
+		D3DXCOLOR FontCol;		// 文字の色
+		D3DXCOLOR TextBoxColOld;// 前回のテキストボックスの色
+		D3DXCOLOR FontColOld;	// 前回の文字の色
 		bool bCol;				// 色変更フラグ(ポーズ切替)
 		D3DXVECTOR3 TexPos;		// 位置
 		D3DXVECTOR2 TexSize;	// サイズ
