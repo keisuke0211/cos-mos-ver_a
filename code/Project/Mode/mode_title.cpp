@@ -41,6 +41,19 @@ CMode_Title::CMode_Title(void) {
 //========================================
 CMode_Title::~CMode_Title(void) {
 
+	for (int nCnt = 0; nCnt < WORDS_MAX; nCnt++)
+	{
+		if (m_Words[nCnt] != NULL)
+		{
+			m_Words[nCnt]->Uninit();
+			m_Words[nCnt] = NULL;
+		}
+		if (m_WordsShadow[nCnt] != NULL)
+		{
+			m_WordsShadow[nCnt]->Uninit();
+			m_WordsShadow[nCnt] = NULL;
+		}
+	}
 }
 
 //========================================
@@ -127,7 +140,7 @@ void CMode_Title::Update(void) {
 		FloatLoopControl(&m_PlanetAngle, D3DX_PI, -D3DX_PI);
 	}
 
-	if (Title != TITLE_SELECT)
+	if (Title <= TITLE_MENU)
 	{
 		RNLib::Polygon2D().Put(m_PlanetPos, m_PlanetAngle, false)
 			->SetSize(1300.0f, 1300.0f)
@@ -223,22 +236,22 @@ void CMode_Title::PlanetAnime(void)
 			Title = TITLE_TITLE;
 
 			{
-				m_WordsShadow[0] = CWords::Create("Çb", D3DXVECTOR3(786.0f, -54.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f,0.0f,0.0f,1.0f));
-				m_WordsShadow[1] = CWords::Create("Çn", D3DXVECTOR3(946.0f, -54.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-				m_WordsShadow[2] = CWords::Create("Çr", D3DXVECTOR3(1096.0f, -54.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-				m_WordsShadow[3] = CWords::Create("Å^", D3DXVECTOR3(1246.0f, -54.0f, 0.0f), D3DXVECTOR3(125.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
-				m_WordsShadow[4] = CWords::Create("Çl", D3DXVECTOR3(1406.0f, -54.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-				m_WordsShadow[5] = CWords::Create("Çn", D3DXVECTOR3(1566.0f, -54.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-				m_WordsShadow[6] = CWords::Create("Çr", D3DXVECTOR3(1706.0f, -54.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[0] = CWords::Create("Çb", D3DXVECTOR3(786.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f,0.0f,0.0f,1.0f));
+				m_WordsShadow[1] = CWords::Create("Çn", D3DXVECTOR3(946.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[2] = CWords::Create("Çr", D3DXVECTOR3(1096.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[3] = CWords::Create("Å^", D3DXVECTOR3(1246.0f, -54.0f, 0.0f), D3DXVECTOR3(100.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
+				m_WordsShadow[4] = CWords::Create("Çl", D3DXVECTOR3(1406.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[5] = CWords::Create("Çn", D3DXVECTOR3(1566.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[6] = CWords::Create("Çr", D3DXVECTOR3(1706.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
 			}
 			{
-				m_Words[0] = CWords::Create("Çb", D3DXVECTOR3(780.0f, -60.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
-				m_Words[1] = CWords::Create("Çn", D3DXVECTOR3(940.0f, -60.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
-				m_Words[2] = CWords::Create("Çr", D3DXVECTOR3(1090.0f, -60.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
-				m_Words[3] = CWords::Create("Å^", D3DXVECTOR3(1234.0f, -66.0f, 0.0f), D3DXVECTOR3(125.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
-				m_Words[4] = CWords::Create("Çl", D3DXVECTOR3(1400.0f, -60.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
-				m_Words[5] = CWords::Create("Çn", D3DXVECTOR3(1560.0f, -60.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
-				m_Words[6] = CWords::Create("Çr", D3DXVECTOR3(1700.0f, -60.0f, 0.0f), D3DXVECTOR3(150.0f, 150.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
+				m_Words[0] = CWords::Create("Çb", D3DXVECTOR3(780.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
+				m_Words[1] = CWords::Create("Çn", D3DXVECTOR3(940.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
+				m_Words[2] = CWords::Create("Çr", D3DXVECTOR3(1090.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
+				m_Words[3] = CWords::Create("Å^", D3DXVECTOR3(1234.0f, -66.0f, 0.0f), D3DXVECTOR3(100.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
+				m_Words[4] = CWords::Create("Çl", D3DXVECTOR3(1400.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
+				m_Words[5] = CWords::Create("Çn", D3DXVECTOR3(1560.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
+				m_Words[6] = CWords::Create("Çr", D3DXVECTOR3(1700.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
 			}
 			m_bMove[0] = true;
 		}

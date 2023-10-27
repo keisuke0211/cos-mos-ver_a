@@ -264,8 +264,8 @@ void CPlayer::Swap(void)
 	}
 
 	//両者ともにスワップボタンを押しているまたはどちらかがロケットに乗っている
-	if ((RNLib::Input().GetPress(m_aInfo[0].Keyborad[(int)m_aInfo[0].side][(int)KEY_CONFIG::SWAP], m_aInfo[0].JoyPad[(int)KEY_CONFIG::SWAP], 0) || m_aInfo[0].bRide) &&
-		(RNLib::Input().GetPress(m_aInfo[1].Keyborad[(int)m_aInfo[1].side][(int)KEY_CONFIG::SWAP], m_aInfo[1].JoyPad[(int)KEY_CONFIG::SWAP], 1) || m_aInfo[1].bRide))
+	if ((IsKeyConfigPress(0, m_aInfo[0].side, KEY_CONFIG::SWAP) || m_aInfo[0].bRide) &&
+		(IsKeyConfigPress(1, m_aInfo[1].side, KEY_CONFIG::SWAP) || m_aInfo[1].bRide))
 	{
 		//インターバル設定
 		s_nSwapInterval = SWAP_INTERVAL;
@@ -274,6 +274,8 @@ void CPlayer::Swap(void)
 		{
 			//ロケットに乗ってたらスキップ
 			if (Player.bRide) continue;
+
+			Manager::EffectMgr()->ParticleCreate(0, Player.pos);
 
 			//位置・重力加速度・ジャンプ量・存在する世界を反転
 			Player.pos.y *= -1.0f;
