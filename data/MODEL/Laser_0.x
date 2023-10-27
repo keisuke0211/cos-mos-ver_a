@@ -1110,7 +1110,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\MODEL\\TEXTURE\\iron_2.PNG";
+    "data\\TEXTURE\\iron_2.PNG";
    }
   }
   Material {
@@ -1119,7 +1119,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Desktop\\MODEL\\TEXTURE\\iron_2.PNG";
+    "data\\TEXTURE\\iron_2.PNG";
    }
   }
   Material {
