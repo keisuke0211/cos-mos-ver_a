@@ -62,11 +62,13 @@ int CTexture::Load(const char* loadPath) {
 		LPDIRECT3DDEVICE9 device = RNLib::Window().GetD3DDevice();
 		if (FAILED(D3DXCreateTextureFromFile(device, loadPath, &m_texs[idx])))
 		{// 読み込み失敗
+			assert(false);
+
 			// テクスチャのメモリリセット
 			RNLib::Memory().ReAlloc<LPDIRECT3DTEXTURE9>(&m_texs, m_num, numOld);
 
 			// 読み込み済パスのメモリリセット
-			RNLib::Memory().ReAlloc<char*>(&m_loadPaths, m_num, numOld);
+			ReAllocLoadPath(numOld);
 
 			// 数をリセット
 			m_num = numOld;
