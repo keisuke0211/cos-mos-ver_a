@@ -5,6 +5,7 @@
 // 
 //========================================
 #include "RNLib.h"
+#include "../Project/../Project/System/words/object/font-object.h"
 
 //****************************************
 // プロトタイプ宣言
@@ -483,6 +484,9 @@ namespace {
 
 					// 描画
 					m_drawMng.Draw(device, false);
+
+					// フォントオブジェクトの描画処理
+					CFontObject::DrawAll();
 
 					// レンダリング終了
 					m_camera.EndRendering(device);
