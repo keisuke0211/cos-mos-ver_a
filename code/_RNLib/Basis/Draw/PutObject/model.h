@@ -93,6 +93,7 @@ public:
 	CData&       GetData(const short& idx) { return m_datas[idx]; }
 	CRegistInfo* Put    (const Matrix& mtx, const short& modelIdx, const bool& isOnScreen = false);
 	CRegistInfo* Put    (const Pos3D& pos, const Rot3D& rot, const short& modelIdx, const bool& isOnScreen = false);
+	CRegistInfo* Put    (const Pos3D& pos, const Rot3D& rot, const Scale3D& scale, const short& modelIdx, const bool& isOnScreen = false);
 
 private:
 	//========== [[[ ïœêîêÈåæ ]]]
