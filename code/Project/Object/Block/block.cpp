@@ -65,6 +65,7 @@ void CBlock::Update(void)
 {
 	// ‰ß‹Ž‚ÌˆÊ’u
 	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_Info.nModelIdx, false)
+		->SetOutLine(true)
 		->SetCol(m_color);
 }
 

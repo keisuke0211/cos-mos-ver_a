@@ -14,8 +14,8 @@
 //==========| CMode_Gameクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
-#define COLOR_UP   Color{45,212,140,255}
-#define COLOR_DOWN Color{206,54,112,255}
+#define COLOR_UP   Color{255,191,0,255}
+#define COLOR_DOWN Color{52,184,0,255}
 static const int s_PlanetMaxSummon = 8;		// 出現する位置の最大数
 static const int s_StarMaxSummon = 10;		// 出現する位置の最大数
 static const D3DXVECTOR3 s_PlanetSummonPos[s_PlanetMaxSummon] = {	// 惑星の出現する位置
@@ -77,9 +77,7 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
-	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(-250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f, Color{255,255,255,255});
 	Manager::BlockMgr()->ShiningWaveCreate();
-	Manager::BlockMgr()->RoadTripLaserCreate(D3DXVECTOR3(-150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 100.0f);
 
 	BackGroundPut(Color{ 100,100,100,255 }, Color{ 100,100,100,255 });
 

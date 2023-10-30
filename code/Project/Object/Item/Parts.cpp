@@ -84,7 +84,8 @@ void CParts::Update(void) {
 	}
 
 	RNLib::Model().Put(m_pos, m_rot, ModelIdx, false)
-	->SetCol(Color{ 0,(int)(255* fBrightness),255,255 });
+		->SetCol(Color{ (int)(255 * fBrightness),(int)(255 * fBrightness),(int)(255 * fBrightness),255 })
+		->SetOutLine(true);
 }
 
 //---------------------------
