@@ -33,9 +33,9 @@ CTrampoline::CTrampoline(void) {
 	m_state = STATE::NONE;
 	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_bLand = false;
-	m_modelIdx[0] = RNLib::Model().Load("data\\MODEL\\Spring_Middle.x");
-	m_modelIdx[1] = RNLib::Model().Load("data\\MODEL\\Spring_Up.x");
-	m_modelIdx[2] = RNLib::Model().Load("data\\MODEL\\Spring_Down.x");
+	m_modelIdx[0] = RNLib::Model().Load("data\\MODEL\\Spring_Body.x");
+	m_modelIdx[1] = RNLib::Model().Load("data\\MODEL\\Spring_Footing.x");
+	m_modelIdx[2] = RNLib::Model().Load("data\\MODEL\\Spring_Footing.x");
 	m_fJamp = 8.0f;
 	m_nCnt = 1;
 }
@@ -70,7 +70,8 @@ void CTrampoline::Uninit(void) {
 void CTrampoline::Update(void) {
 
 	//“y‘äƒ‚ƒfƒ‹
-	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[0], false);
+	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[0], false)
+		->SetCol(m_color);
 
 	if (m_nCnt > 0) 
 	{

@@ -33,7 +33,6 @@ CMoveBlock::CMoveBlock(void)
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.rot = INITD3DXVECTOR3;
 	m_Info.size = INITD3DXVECTOR3;
-	m_Info.col = INITD3DCOLOR;
 	m_Info.frefdef = 0.0f;
 	m_Info.nType = 0;
 	m_Info.nID = m_nNumAll;
@@ -111,8 +110,10 @@ void CMoveBlock::Update(void)
 	}
 
 	CStageObject::SetPos(m_Info.pos);
-	RNLib::Model().Put(m_Info.pos, m_Info.rot, m_Info.nModelIdx);
-	RNLib::Model().Put(m_Info.pos, m_rot, nModelIdx);
+	RNLib::Model().Put(m_Info.pos, m_Info.rot, m_Info.nModelIdx)
+		->SetCol(m_color);
+	RNLib::Model().Put(m_Info.pos, m_rot, nModelIdx)
+		->SetCol(m_color);
 }
 
 //========================================
