@@ -415,12 +415,8 @@ void CStageEditor::SwapStage(int nStageIdx)
 {
 	if (m_Info.nStageIdx != nStageIdx)
 	{
-		Manager::BlockMgr()->ReleaseAll();
-
-		if (nStageIdx < m_Info.nStageMax)
-		{
-			StageLoad(nStageIdx);
-		}
+		Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::FADE);
+		CMode_Game::SetStage(nStageIdx);
 	}
 }
 
@@ -428,7 +424,6 @@ void CStageEditor::SwapStage(int nStageIdx)
 // •ÏŠ·
 // Author:KEISUKE OTONO
 //========================================
-
 // int
 bool CStageEditor::ToData(int &val, CSVFILE *pFile, int nRow, int nLine)
 {

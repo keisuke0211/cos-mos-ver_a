@@ -9,7 +9,7 @@
 NUM_STAGE = 3
 
 #========================================
-# ファイル名
+# ファイル名 / ステージ画像 / ステージ名
 #========================================
 STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE00.csv data\\TEXTURE\\BackGround\\Stage00.png ポラリス
 STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE01.csv data\\TEXTURE\\BackGround\\Stage01.png レグルス

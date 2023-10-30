@@ -142,6 +142,19 @@ void CMode_Game::Update(void) {
 			->SetPriority(-2)
 			->SetZTest(false);
 	}
+
+	if (RNLib::Input().GetKeyTrigger(DIK_RETURN))
+	{
+		int nStageIdx = Manager::StgEd()->GetStageIdx();
+		int nStageMax = Manager::StgEd()->GetStageMax();
+
+		nStageIdx++;
+
+		// ƒ‹[ƒv§Œä
+		IntLoopControl(&nStageIdx, nStageMax, 0);
+
+		Manager::StgEd()->SwapStage(nStageIdx);
+	}
 }
 
 //========================================
