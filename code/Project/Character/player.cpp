@@ -150,12 +150,12 @@ void CPlayer::InitKeyConfig(void)
 	//ジョイパッドの設定は両者共通
 	for each(Info &Player in m_aInfo)
 	{
-		Player.JoyPad[(int)KEY_CONFIG::MOVE_LEFT] = CInput::BUTTON::LEFT;  //左移動
+		Player.JoyPad[(int)KEY_CONFIG::MOVE_LEFT]  = CInput::BUTTON::LEFT;  //左移動
 		Player.JoyPad[(int)KEY_CONFIG::MOVE_RIGHT] = CInput::BUTTON::RIGHT; //右移動
-		Player.JoyPad[(int)KEY_CONFIG::JUMP] = CInput::BUTTON::A;     //ジャンプ
-		Player.JoyPad[(int)KEY_CONFIG::SWAP] = CInput::BUTTON::Y;     //スワップ
-		Player.JoyPad[(int)KEY_CONFIG::DECIDE] = CInput::BUTTON::A;     //決定
-		Player.JoyPad[(int)KEY_CONFIG::PAUSE] = CInput::BUTTON::START; //ポーズ
+		Player.JoyPad[(int)KEY_CONFIG::JUMP]       = CInput::BUTTON::A;     //ジャンプ
+		Player.JoyPad[(int)KEY_CONFIG::SWAP]       = CInput::BUTTON::Y;     //スワップ
+		Player.JoyPad[(int)KEY_CONFIG::DECIDE]     = CInput::BUTTON::A;     //決定
+		Player.JoyPad[(int)KEY_CONFIG::PAUSE]      = CInput::BUTTON::START; //ポーズ
 	}
 }
 
@@ -259,6 +259,10 @@ void CPlayer::ActionControl(void)
 		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::MOVE_LEFT) ||
 			RNLib::Input().GetStickAnglePress(CInput::STICK::LEFT, CInput::INPUT_ANGLE::LEFT, nIdxPlayer))
 			Player.move.x -= MOVE_SPEED;
+
+		//スワップ入力
+		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::SWAP))
+			Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, Player.pos, INIT_EFFECT_SCALE, Color{ 255,200,0,255 });
 	}
 }
 
@@ -286,10 +290,9 @@ void CPlayer::Swap(void)
 			//ロケットに乗ってたらスキップ
 			if (Player.bRide) continue;
 
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 16; i++)
 			{
-				Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, m_aInfo[0].pos, INIT_EFFECT_SCALE, INITCOLOR);
-				Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, m_aInfo[1].pos, INIT_EFFECT_SCALE, INITCOLOR);
+				Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, Player.pos, INIT_EFFECT_SCALE, INITCOLOR);
 			}
 
 			//位置・重力加速度・ジャンプ量・存在する世界を反転
@@ -446,7 +449,7 @@ void CPlayer::WholeCollision(void)
 				switch (type)
 				{
 				case CStageObject::TYPE::BLOCK:			CollisionBlock(&Player, MinPos, MaxPos, ColliRot);	break;
-				case CStageObject::TYPE::FILLBLOCK:		break;
+				case CStageObject::TYPE::FILLBLOCK:		CollisionFillBlock(ColliRot); break;
 				case CStageObject::TYPE::TRAMPOLINE:	CollisionTrampoline(&Player, MinPos, MaxPos, ColliRot);	break;
 				case CStageObject::TYPE::SPIKE:			CollisionSpike(&Player, MinPos, MaxPos, ColliRot);	break;
 				case CStageObject::TYPE::MOVE_BLOCK:	CollisionMoveBlock(&Player, (CMoveBlock *)stageObj, MinPos, MaxPos, ColliRot);	break;
@@ -554,7 +557,20 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 		//位置・移動量修正
 		FixPos_RIGHT(&pInfo->pos.x, MaxPos.x, &pInfo->move.x);
 		break;
+
+		//*********************************
+		//埋まった
+		//*********************************
+	case COLLI_ROT::UNKNOWN: 	Death(NULL); break;
 	}
+}
+
+//----------------------------
+//穴埋めブロックの当たり判定処理
+//----------------------------
+void CPlayer::CollisionFillBlock(COLLI_ROT ColliRot)
+{
+	Death(NULL);
 }
 
 //----------------------------
@@ -759,10 +775,7 @@ void CPlayer::CollisionRocket(Info *pInfo, CRocket *pRocket)
 
 	//ロケットに搭乗
 	pInfo->bRide = true;
-
-	//両方とも搭乗したら飛ばせる
-	if (m_aInfo[0].bRide && m_aInfo[1].bRide)
-		pRocket->SetState(CRocket::ANIME_STATE::RIDE);
+	pRocket->Ride();
 }
 
 //========================

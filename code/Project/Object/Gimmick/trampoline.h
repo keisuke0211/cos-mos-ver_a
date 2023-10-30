@@ -47,7 +47,7 @@ private:
 
 	//========== [[[ 変数宣言 ]]]
 	STATE m_state;			//種類
-	int m_modelIdx[3];		//モデル番号
+	int m_modelIdx[2];		//モデル番号
 	D3DXVECTOR3 m_scale;	//大きさ
 	bool		m_bLand;	//着地した？
 	float		m_fJamp;	//差分
