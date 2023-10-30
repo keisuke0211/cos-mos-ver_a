@@ -415,8 +415,11 @@ void CStageEditor::SwapStage(int nStageIdx)
 {
 	if (m_Info.nStageIdx != nStageIdx)
 	{
-		Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::FADE);
-		CMode_Game::SetStage(nStageIdx);
+		if (RNLib::Transition().GetState() == CTransition::STATE::NONE)
+		{
+			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::FADE);
+			CMode_Game::SetStage(nStageIdx);
+		}
 	}
 }
 
