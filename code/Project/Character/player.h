@@ -70,8 +70,8 @@ public:
 		float		fGravityCorr; //重力係数
 		int			nModelIdx;    //モデル番号
 		WORLD_SIDE  side;         //どちらの世界に存在するか
-		int  Keyborad[(int)WORLD_SIDE::MAX][(int)KEY_CONFIG::MAX];	//キーボードのキー配置
-		CInput::BUTTON  JoyPad[(int)KEY_CONFIG::MAX];							//ジョイパッドのボタン配置
+		int             Keyborad[(int)WORLD_SIDE::MAX][(int)KEY_CONFIG::MAX]; //キーボードのキー配置
+		CInput::BUTTON  JoyPad[(int)KEY_CONFIG::MAX];                         //ジョイパッドのボタン配置
 	};
 
 	static const float SIZE_WIDTH;	//横幅
