@@ -10,9 +10,10 @@
 #include "../../Character/player.h"
 
 
-#define MAX_COUNT (20)	//Å‘åƒJƒEƒ“ƒg”
-#define RADIUS_WIDTH (0.5f)	//‰¡”¼Œa
-#define RADIUS_HEIGHT (0.5f)	//c”¼Œa
+#define MAX_COUNT		(20)	//Å‘åƒJƒEƒ“ƒg”
+#define RADIUS_WIDTH	(0.5f)	//‰¡”¼Œa
+#define RADIUS_HEIGHT	(0.5f)	//c”¼Œa
+#define CORRECT_HEIGHT	(6.0f)	//‚‚³•â³
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -35,6 +36,8 @@ CTrampoline::CTrampoline(void) {
 	m_bLand = false;
 	m_modelIdx[0] = RNLib::Model().Load("data\\MODEL\\Spring_Body.x");
 	m_modelIdx[1] = RNLib::Model().Load("data\\MODEL\\Spring_Footing.x");
+	m_modelIdx[2] = RNLib::Model().Load("data\\MODEL\\Spring_Spring.x");
+	m_modelIdx[3] = RNLib::Model().Load("data\\MODEL\\Spring_Eye.x");
 	m_fJamp = 8.0f;
 	m_nCnt = 1;
 }
@@ -88,24 +91,34 @@ void CTrampoline::Update(void) {
 		
 		if (m_state == STATE::UP_LAND)
 		{
-			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false)
+			//ƒLƒmƒR
+			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y + CORRECT_HEIGHT, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false)
 				->SetOutLine(true);
-			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y - m_fJamp * fCountRate, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI), m_modelIdx[1], false)
+			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y - CORRECT_HEIGHT - m_fJamp * fCountRate, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI), m_modelIdx[1], false)
+				->SetOutLine(true);
+
+			//‚Î‚Ë
+			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y - m_fJamp * fCountRate, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI), m_modelIdx[2], false)
 				->SetOutLine(true);
 		}
 		else if (m_state == STATE::DOWN_LAND)
 		{
-			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y + m_fJamp * fCountRate, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false)
+			//ƒLƒmƒR
+			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y + CORRECT_HEIGHT + m_fJamp * fCountRate, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false)
 				->SetOutLine(true);
-			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y, m_pos.z), D3DXVECTOR3(0.0f, 0.0f,D3DX_PI), m_modelIdx[1], false)
+			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y - CORRECT_HEIGHT, m_pos.z), D3DXVECTOR3(0.0f, 0.0f,D3DX_PI), m_modelIdx[1], false)
+				->SetOutLine(true);
+
+			//‚Î‚Ë
+			RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y + m_fJamp * fCountRate, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[2], false)
 				->SetOutLine(true);
 		}
 	}
 	else if (m_state == STATE::NONE)
 	{//ƒgƒ‰ƒ“ƒ|ƒŠƒ“‚ªì“®‚µ‚Ä‚¢‚È‚¢
-		RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false)
+		RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y + CORRECT_HEIGHT, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[1], false)
 			->SetOutLine(true);
-		RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, D3DX_PI), m_modelIdx[1], false)
+		RNLib::Model().Put(D3DXVECTOR3(m_pos.x, m_pos.y - CORRECT_HEIGHT, m_pos.z), D3DXVECTOR3(0.0f, 0.0f, D3DX_PI), m_modelIdx[1], false)
 			->SetOutLine(true);
 	}
 
