@@ -1187,7 +1187,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\OneDrive\\デスクトップ\\画像\\卒業制作\\Engine.jpg";
+    "data\\TEXTURE\\Engine.jpg";
    }
   }
   Material {
