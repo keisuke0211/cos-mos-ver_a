@@ -28,6 +28,7 @@ CParticle::CParticle(void)
 {
 	m_Info.pos = INITD3DXVECTOR3;
 	m_Info.move = INITD3DXVECTOR3;
+	m_Info.scale = INITD3DXVECTOR3;
 	m_Info.col = INITCOLOR;
 	m_Info.nCount = MAX_COUNT;
 	m_nNumAll++;
@@ -74,11 +75,13 @@ void CParticle::Update(void)
 	//ˆÚ“®—Ê‰ÁŽZ
 	m_Info.pos += m_Info.move;
 
-	// ‰ß‹Ž‚ÌˆÊ’u
 	RNLib::Polygon3D().Put(m_Info.pos, INITD3DXVECTOR3)
 		->SetTex(m_Info.nTex)
 		->SetBillboard(true)
-		->SetCol(m_Info.col);
+		->SetCol(m_Info.col)
+		->SetSize(m_Info.scale.x, m_Info.scale.y)
+		->SetAlphaBlendMode(CDrawState::ALPHA_BLEND_MODE::ADD)
+		->SetPriority(1);
 
 	//ˆÚ“®—ÊŒ¸Š
 	m_Info.move.x += (0.0f - m_Info.move.x) * ATTEN_RATE;

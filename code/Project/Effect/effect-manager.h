@@ -11,6 +11,8 @@
 #include "effect.h"
 #include "particle.h"
 
+#define INIT_EFFECT_SCALE (D3DXVECTOR3(32.0f,32.0f,0.0f))
+
 //****************************************
 // ƒNƒ‰ƒX
 //****************************************
@@ -21,8 +23,8 @@ public:
 	virtual~CEffectMgr();
 	virtual void Update(void);
 
-	CEffect *EffectCreate(int nTex, D3DXVECTOR3 pos);
-	CParticle *ParticleCreate(int nTex, D3DXVECTOR3 pos);
+	CEffect *EffectCreate(int nTex, D3DXVECTOR3 pos , D3DXVECTOR3 scale, Color col);
+	CParticle *ParticleCreate(int nTex, D3DXVECTOR3 pos, D3DXVECTOR3 scale, Color col);
 
 private:
 
