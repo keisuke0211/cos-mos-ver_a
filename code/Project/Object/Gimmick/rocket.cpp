@@ -105,15 +105,13 @@ void CRocket::Update(void)
 //========================================
 void CRocket::UpdateState_Ride(void)
 {
-	m_Info.nRideAnimeCounter++;
+	m_Info.nRideAnimeCounter++;	// アニメーションの増加
 
 	if (m_Info.nRideAnimeCounter <= 1)
 	{// 大きくする
 	}
 	else if (m_Info.nRideAnimeCounter <= s_RideAnimeMax)
 	{// 小さくする
-		int nRideAnimeCounter = m_Info.nRideAnimeCounter - 1;
-
 		m_Info.fScaleMag -= m_Info.SmallSpeed;	// スケール倍率の減算
 		if (m_Info.fScaleMag <= 1.0f)
 		{
@@ -122,7 +120,7 @@ void CRocket::UpdateState_Ride(void)
 	}
 	else if (m_Info.nRideAnimeCounter <= (s_RideAnimeMax + s_RideAnimeShrink) * 4)
 	{// アニメーションの移行
-		m_Info.Animstate = CRocket::ANIME_STATE::FLY;	// 飛ぶアニメーションに変更	
+		m_Info.Animstate = CRocket::ANIME_STATE::NONE;	// なしに変更	
 		m_Info.nRideAnimeCounter = 0;					// 乗るアニメーションカウンターを初期化
 	}
 }
@@ -173,10 +171,11 @@ void CRocket::Draw(void)
 //========================================
 void CRocket::Ride(void)
 {
-	m_Info.nCountPlayer++;
-	m_Info.fScaleMag = s_RideAnimeMag;		// スケール倍率の設定
-	m_Info.SmallSpeed = (m_Info.fScaleMag - 1.0f) / s_RideAnimeMax;
+	m_Info.nCountPlayer++;											// プレイヤーの乗った人数の増加
+	m_Info.fScaleMag = s_RideAnimeMag;								// スケール倍率の設定
+	m_Info.SmallSpeed = (m_Info.fScaleMag - 1.0f) / s_RideAnimeMax;	// 小さくなる速度の設定
 
+	m_Info.Animstate = ANIME_STATE::RIDE;		// 乗る状態に移行
 	if (m_Info.nCountPlayer == CPlayer::NUM_PLAYER)
 	{// プレイヤーが全員乗ったら
 		m_Info.Animstate = ANIME_STATE::FLY;	// 飛ぶ状態に移行
