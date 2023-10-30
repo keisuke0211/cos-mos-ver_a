@@ -44,6 +44,17 @@ public:
 		int nStageMax;	// ステージの最大値
 	};
 
+	// 色
+	struct StageColor
+	{
+		Color Block;
+		Color Trampoline;
+		Color Spike;
+		Color Lift;
+		Color Meteor;
+		Color FillBlock;
+	};
+
 	// *** 関数宣言 ***
 	CStageEditor();
 	~CStageEditor();
@@ -51,9 +62,10 @@ public:
 	/* ステージ切り替え	*/void SwapStage(int nStageIdx);
 
 	// -- 取得 ---------------------------------------------
-	/* 最大値		*/int GetStageMax(void) { return m_Info.nStageMax; }
-	/* ステージ情報	*/StageType *GetInfo(void) { return m_StageType; }
-	/* 変換			*/bool ToData(int &val, CSVFILE *pFile, int nRow, int nLine);
+	/* 最大値			*/int GetStageMax(void) { return m_Info.nStageMax; }
+	/* 現在のステージ	*/int GetStageIdx(void) { return m_Info.nStageIdx; }
+	/* ステージ種類		*/StageType *GetType(void) { return m_StageType; }
+	/* 変換				*/bool ToData(int &val, CSVFILE *pFile, int nRow, int nLine);
 
 	// -- 読込 ---------------------------------------------
 	/* ファイルパス	*/void FileLoad(void);
@@ -73,8 +85,8 @@ private:
 		TYPE_FILL_BLOCK_22 = 21,	// ブロック(判定 無) 2 * 2
 		TYPE_FILL_BLOCK_33 = 22,	// ブロック(判定 無) 3 * 3
 		TYPE_FILL_BLOCK_44 = 23,	// ブロック(判定 無) 4 * 4
-		TYPE_PLAYER_0 = 90,			// プレイヤー2
-		TYPE_PLAYER_1,				// プレイヤー1
+		TYPE_PLAYER_0 = 90,			// １Ｐ
+		TYPE_PLAYER_1,				// ２Ｐ
 		TYPE_PARTS = 98,			// パーツ
 		TYPE_GOAL,					// ゴール
 		TYPE_MAX
@@ -84,7 +96,7 @@ private:
 	/* ステージ生成 */void SetStage(int nType);
 
 	// *** 変数宣言 ***
-	static StageType *m_StageType;	// ステージ種類
-	static int m_nStageMax;			// ステージの最大値
-	StageInfo m_Info;				// ステージ情報
+	static StageType *m_StageType;		// ステージ種類
+	static StageColor m_StageColor;		// 色情報
+	StageInfo m_Info;					// ステージ情報
 };

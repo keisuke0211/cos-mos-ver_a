@@ -144,7 +144,7 @@ void CPlayer::InitKeyConfig(void)
 	{
 		Player.JoyPad[(int)KEY_CONFIG::MOVE_LEFT]  = CInput::BUTTON::LEFT;  //左移動
 		Player.JoyPad[(int)KEY_CONFIG::MOVE_RIGHT] = CInput::BUTTON::RIGHT; //右移動
-		Player.JoyPad[(int)KEY_CONFIG::JUMP]       = CInput::BUTTON::B;     //ジャンプ
+		Player.JoyPad[(int)KEY_CONFIG::JUMP]       = CInput::BUTTON::A;     //ジャンプ
 		Player.JoyPad[(int)KEY_CONFIG::SWAP]       = CInput::BUTTON::Y;     //スワップ
 		Player.JoyPad[(int)KEY_CONFIG::DECIDE]     = CInput::BUTTON::A;     //決定
 		Player.JoyPad[(int)KEY_CONFIG::PAUSE]      = CInput::BUTTON::START; //ポーズ
@@ -242,11 +242,13 @@ void CPlayer::ActionControl(void)
 		}
 
 		//右に移動
-		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::MOVE_RIGHT))
+		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::MOVE_RIGHT) ||
+			RNLib::Input().GetStickAnglePress(CInput::STICK::LEFT, CInput::INPUT_ANGLE::RIGHT, nIdxPlayer))
 			Player.move.x += MOVE_SPEED;
 
 		//左に移動
-		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::MOVE_LEFT))
+		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::MOVE_LEFT) ||
+			RNLib::Input().GetStickAnglePress(CInput::STICK::LEFT, CInput::INPUT_ANGLE::LEFT, nIdxPlayer))			
 			Player.move.x -= MOVE_SPEED;
 	}
 }
@@ -451,11 +453,8 @@ void CPlayer::WholeCollision(void)
 				}
 
 				//当たれば即死のオブジェクトに当たっている
-				if (type == CStageObject::TYPE::SPIKE ||
-					type == CStageObject::TYPE::METEOR)
-				{
+				if (type == CStageObject::TYPE::SPIKE || type == CStageObject::TYPE::METEOR)
 					break;
-				}
 			}
 		}
 	}

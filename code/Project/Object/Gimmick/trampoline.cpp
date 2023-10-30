@@ -70,7 +70,8 @@ void CTrampoline::Uninit(void) {
 void CTrampoline::Update(void) {
 
 	//“y‘äƒ‚ƒfƒ‹
-	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[0], false);
+	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[0], false)
+		->SetCol(m_color);
 
 	if (m_nCnt > 0) 
 	{

@@ -97,7 +97,7 @@ void CStageObjectMgr::Load(void)
 //========================================
 // ブロック
 //========================================
-CBlock *CStageObjectMgr::BlockCreate(D3DXVECTOR3 pos)
+CBlock *CStageObjectMgr::BlockCreate(D3DXVECTOR3 pos, Color color)
 {
 	CBlock *pObj = NULL;
 
@@ -107,6 +107,7 @@ CBlock *CStageObjectMgr::BlockCreate(D3DXVECTOR3 pos)
 	// 初期化処理
 	pObj->Init();
 	pObj->SetPos(pos);
+	pObj->SetColor(color);
 
 	return pObj;
 }
@@ -114,7 +115,7 @@ CBlock *CStageObjectMgr::BlockCreate(D3DXVECTOR3 pos)
 //========================================
 // ブロック(判定　無)
 //========================================
-CFillBlock *CStageObjectMgr::FillBlockCreate(D3DXVECTOR3 pos,CFillBlock::FILL_TYPE type)
+CFillBlock *CStageObjectMgr::FillBlockCreate(D3DXVECTOR3 pos,CFillBlock::FILL_TYPE type, Color color)
 {
 	//プレイヤーインスタンスの生成
 	CFillBlock *pObj = new CFillBlock;
@@ -123,6 +124,7 @@ CFillBlock *CStageObjectMgr::FillBlockCreate(D3DXVECTOR3 pos,CFillBlock::FILL_TY
 	pObj->Init(type);
 
 	pObj->SetPos(pos);
+	pObj->SetColor(color);
 
 	//プレイヤーを返す
 	return pObj;
@@ -131,7 +133,7 @@ CFillBlock *CStageObjectMgr::FillBlockCreate(D3DXVECTOR3 pos,CFillBlock::FILL_TY
 //========================================
 // 棘
 //========================================
-CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
+CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos, Color color)
 {
 	CSpike *pObj = NULL;
 
@@ -150,6 +152,7 @@ CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
 	}
 
 	pObj->SetPos(pos);
+	pObj->SetColor(color);
 	
 	return pObj;
 }
@@ -157,7 +160,7 @@ CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
 //========================================
 // トランポリン
 //========================================
-CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos)
+CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos, Color color)
 {
 	CTrampoline *pObj = NULL;
 
@@ -167,6 +170,7 @@ CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos)
 	// 初期化処理
 	pObj->Init();
 	pObj->SetPos(pos);
+	pObj->SetColor(color);
 
 	return pObj;
 }
@@ -174,7 +178,7 @@ CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos)
 //========================================
 // 隕石
 //========================================
-CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move)
+CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move, Color color)
 {
 	CMeteor *pObj = NULL;
 
@@ -185,6 +189,7 @@ CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move)
 	pObj->Init();
 	pObj->SetPos(pos);
 	pObj->SetMove(move);
+	pObj->SetColor(color);
 
 	return pObj;
 }
@@ -192,7 +197,7 @@ CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move)
 //========================================
 // 移動床
 //========================================
-CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move, float fRefdef)
+CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move, float fRefdef, Color color)
 {
 	CMoveBlock *pObj = NULL;
 
@@ -204,6 +209,7 @@ CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move, 
 	pObj->SetPos(pos);
 	pObj->SetMove(move);
 	pObj->SetRefdef(fRefdef);
+	pObj->SetColor(color);
 
 	return pObj;
 }

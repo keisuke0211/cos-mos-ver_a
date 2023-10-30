@@ -169,7 +169,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Documents\\Project\\data\\TEXTURE\\Crater.png";
+    "data\\TEXTURE\\Crater.png";
    }
   }
   Material {
@@ -178,7 +178,7 @@ Mesh {
    0.000000;0.000000;0.000000;;
    0.000000;0.000000;0.000000;;
    TextureFilename {
-    "C:\\Users\\student\\Documents\\Project\\data\\TEXTURE\\Crater.png";
+    "data\\TEXTURE\\Crater.png";
    }
   }
  }
