@@ -57,7 +57,6 @@ float CEase::Easing(const TYPE& type, const float& base, const float& max) {
 	}break;
 	}
 
-	assert(rate <= 1.0f && rate >= 0.0f);
 
 	return rate;
 }
