@@ -34,6 +34,7 @@ public:
 		short    m_texIdx;
 		CCamera* m_texCamera;
 		bool     m_isZTest, m_isLighting, m_isBillboard;
+		CDrawState::ALPHA_BLEND_MODE m_alphaBlendMode;
 		float    m_distance;
 		Vertex3D m_vtxs[4];
 
