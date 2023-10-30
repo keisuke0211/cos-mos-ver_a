@@ -34,7 +34,7 @@ CRocket::CRocket(void)
 	m_Info.nFlyAnimeCounter = 0;
 	m_Info.Animstate = CRocket::ANIME_STATE::RIDE;
 	m_Info.nRideAnimeCounter = 0;
-	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\rocket.x");
+	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\Rocket_Body.x");
 }
 
 //========================================
