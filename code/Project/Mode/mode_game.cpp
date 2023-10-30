@@ -118,7 +118,7 @@ void CMode_Game::Update(void) {
 
 	if (m_state != (int)STATE::PAUSE)
 	{
-		if (RNLib::Input().GetKeyTrigger(DIK_P))
+		if (RNLib::Input().GetKeyTrigger(DIK_P) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::START))
 		{
 			SetState((int)STATE::PAUSE);
 		}
