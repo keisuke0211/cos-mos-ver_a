@@ -97,7 +97,8 @@ void CRocket::Update(void)
 
 	}
 
-	RNLib::Model().Put(m_pos, m_rot, m_Info.scale * m_Info.fScaleMag, m_Info.nModelIdx, false);
+	RNLib::Model().Put(m_pos, m_rot, m_Info.scale * m_Info.fScaleMag, m_Info.nModelIdx, false)
+		->SetOutLine(true);
 
 }
 //========================================
