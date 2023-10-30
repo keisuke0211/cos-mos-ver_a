@@ -225,8 +225,11 @@ void CMode_Title::Update(void) {
 			CMode_Game::SetStage(m_nSelect);
 			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::FADE);
 
-			delete[] m_StageType;
-			m_StageType = NULL;
+			if (m_StageType != NULL)
+			{
+				delete[] m_StageType;
+				m_StageType = NULL;
+			}
 		}
 		break;
 		}
