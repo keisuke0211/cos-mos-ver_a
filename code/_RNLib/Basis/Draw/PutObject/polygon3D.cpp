@@ -95,6 +95,7 @@ CPolygon3D::CDrawInfo::CDrawInfo() {
 	m_isZTest     = true;
 	m_isLighting  = true;
 	m_isBillboard = false;
+	m_alphaBlendMode = CDrawState::ALPHA_BLEND_MODE::NORMAL;
 	m_distance    = 0.0f;
 	for (int cntVtx(0); cntVtx < 4; cntVtx++) {
 		m_vtxs[cntVtx] = {};
@@ -139,6 +140,9 @@ void CPolygon3D::CDrawInfo::Draw(LPDIRECT3DDEVICE9& device, const Matrix& viewMt
 
 	// [[[ ライティングを有効/無効にする ]]]
 	RNLib::DrawStateMng().SetLightingMode(m_isLighting, device);
+
+	// [[[ 加算合成を有効/無効にする ]]]
+	RNLib::DrawStateMng().SetAlphaBlendMode(m_alphaBlendMode, device);
 
 	{
 		Matrix mtxTrans(INITMATRIX);	// 計算用マトリックス
@@ -251,17 +255,18 @@ CPolygon3D::CDrawInfo* CPolygon3D::CRegistInfo::ConvToDrawInfo(void) {
 
 	// 情報を代入
 	// (基底)
-	drawInfo->m_type        = CDrawInfoBase::TYPE::POLYGON3D;
-	drawInfo->m_priority    = m_priority;
+	drawInfo->m_type           = CDrawInfoBase::TYPE::POLYGON3D;
+	drawInfo->m_priority       = m_priority;
 	// (継承)
-	drawInfo->m_idx         = m_idx;
-	drawInfo->m_mtx         = m_mtx;
-	drawInfo->m_texIdx      = m_texIdx;
-	drawInfo->m_texCamera   = m_texCamera;
-	drawInfo->m_isZTest     = m_isZtest;
-	drawInfo->m_isLighting  = m_isLighting;
-	drawInfo->m_isBillboard = m_isBillboard;
-	drawInfo->m_distance    = CGeometry::FindDistanceToCameraPlane(CMatrix::ConvMtxToPos(m_mtx), RNLib::Camera3D());
+	drawInfo->m_idx            = m_idx;
+	drawInfo->m_mtx            = m_mtx;
+	drawInfo->m_texIdx         = m_texIdx;
+	drawInfo->m_texCamera      = m_texCamera;
+	drawInfo->m_isZTest        = m_isZtest;
+	drawInfo->m_isLighting     = m_isLighting;
+	drawInfo->m_isBillboard    = m_isBillboard;
+	drawInfo->m_alphaBlendMode = m_alphaBlendMode;
+	drawInfo->m_distance       = CGeometry::FindDistanceToCameraPlane(CMatrix::ConvMtxToPos(m_mtx), RNLib::Camera3D());
 
 	//----------------------------------------
 	// 頂点情報の設定
