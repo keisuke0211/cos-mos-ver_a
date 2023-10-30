@@ -179,6 +179,7 @@ private:
 	void FixPos_RIGHT(float *pPosX, float fMaxPosX, float *pMoveX);//âEÇ©ÇÁÇÃìñÇΩÇËîªíËÇ…ÇÊÇÈà íuÅEà⁄ìÆó èCê≥
 
 	void CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
+	void CollisionFillBlock(COLLI_ROT ColliRot);
 	void CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock,D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);

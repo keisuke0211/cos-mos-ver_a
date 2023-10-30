@@ -18,6 +18,7 @@ const float CRocket::s_RotAdd = 0.02f;		// 向きの増加量
 const int   CRocket::s_RotAnimeMax = 4;		// 小刻みアニメーションの最大 
 const float CRocket::s_MoveMag = 1.05f;		// 移動量の倍率
 const float CRocket::s_MoveAdd = 0.01f;		// 移動量の増加量
+const int   CRocket::s_FadeModeCountMax = 120;	// フェードのモードのカウント最大
 
 //========================================
 // コンストラクタ
@@ -135,6 +136,12 @@ void CRocket::UpdateState_Fly(void)
 	m_Info.nFlyAnimeCounter++;	// アニメーションの増加
 	nCounter = m_Info.nFlyAnimeCounter % s_RotAnimeMax;	// 割合の計算
 
+	// モードの切り替え	
+	if (m_Info.nFlyAnimeCounter >= s_FadeModeCountMax)
+	{
+		Manager::StgEd()->SwapStage(Manager::StgEd()->GetStageIdx() + 1);
+	}
+
 	// 向きを微動させる
 	if (nCounter >= s_RotAnimeMax * 0.5f)
 	{
@@ -158,6 +165,8 @@ void CRocket::UpdateState_Fly(void)
 			m_Info.move.y -= s_MoveAdd;
 		}
 	}
+
+	
 	m_pos += m_Info.move;	// 位置に移動量の増加
 }
 //========================================
