@@ -759,10 +759,7 @@ void CPlayer::CollisionRocket(Info *pInfo, CRocket *pRocket)
 
 	//ƒƒPƒbƒg‚É“‹æ
 	pInfo->bRide = true;
-
-	//—¼•û‚Æ‚à“‹æ‚µ‚½‚ç”ò‚Î‚¹‚é
-	if (m_aInfo[0].bRide && m_aInfo[1].bRide)
-		pRocket->SetState(CRocket::ANIME_STATE::RIDE);
+	pRocket->Ride();
 }
 
 //========================
