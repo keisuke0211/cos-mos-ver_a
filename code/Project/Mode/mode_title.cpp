@@ -38,6 +38,7 @@ CMode_Title::CMode_Title(void) {
 	Title = TITLE_OUTSET;	// ÉÇÅ[Éh
 	m_PlanetAngle = 0.0f;
 	m_nSelect = 0;
+	m_nOldSelect = 0;
 	m_StageType = NULL;
 	m_bMenuAnime = false;
 }
@@ -592,11 +593,16 @@ void CMode_Title::StageSelect(void)
 	{
 		IntControl(&m_nSelect, nMax - 1, 0);
 
-		TextClear(TITLE_SELECT);
-		FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),65.0f,5,10,-1 };
-		m_Menu[0] = CFontText::Create(
-			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-			m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);
+		if (m_nSelect != m_nOldSelect)
+		{
+			m_nOldSelect = m_nSelect;
+
+			TextClear(TITLE_SELECT);
+			FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),65.0f,5,10,-1 };
+			m_Menu[0] = CFontText::Create(
+				CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
+				m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);
+		}
 	}
 
 }

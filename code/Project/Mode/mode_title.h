@@ -97,6 +97,7 @@ private:
 	float m_PlanetAngle;
 	int m_TexIdx[TEX_MAX];
 	int m_nSelect;
+	int m_nOldSelect;
 	bool m_bMove[WORDS_MAX];
 	bool m_bMenuAnime;
 	CWords *m_Words[WORDS_MAX];
