@@ -23,6 +23,12 @@ const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.t
 //========================================
 CStageEditor::CStageEditor(void)
 {
+	if (m_StageType != NULL)
+	{
+		delete[] m_StageType;
+		m_StageType = NULL;
+	}
+
 	m_StageType = NULL;
 	m_StageColor.Block = INITCOLOR;
 	m_StageColor.FillBlock = INITCOLOR;
@@ -52,7 +58,21 @@ CStageEditor::~CStageEditor()
 }
 
 //========================================
+// 終了処理
+// Author:KEISUKE OTONO
+//========================================
+void CStageEditor::Uninit(void)
+{
+	if (m_StageType != NULL)
+	{
+		delete[] m_StageType;
+		m_StageType = NULL;
+	}
+}
+
+//========================================
 // ファイル読み込み
+// Author:KEISUKE OTONO
 //========================================
 void CStageEditor::FileLoad(void)
 {
@@ -115,6 +135,7 @@ void CStageEditor::FileLoad(void)
 
 //========================================
 // ステージ読み込み
+// Author:KEISUKE OTONO
 //========================================
 void CStageEditor::StageLoad(int stage)
 {
@@ -240,6 +261,12 @@ void CStageEditor::StageLoad(int stage)
 						ToData(m_StageColor.FillBlock.b, pFile, nRow, nLine); nLine++;
 						ToData(m_StageColor.FillBlock.a, pFile, nRow, nLine); nLine++;
 					}
+
+					if (cstr != NULL)
+					{
+						delete[] cstr;
+						cstr = NULL;
+					}
 				}
 			}
 			else if (!strcmp(aDataSearch, "SetStage"))
@@ -303,6 +330,7 @@ void CStageEditor::StageLoad(int stage)
 
 //========================================
 // ステージ生成
+// Author:KEISUKE OTONO
 //========================================
 void CStageEditor::SetStage(int nType)
 {
@@ -378,6 +406,7 @@ void CStageEditor::SetStage(int nType)
 
 //========================================
 // ステージ切り替え
+// Author:KEISUKE OTONO
 //========================================
 void CStageEditor::SwapStage(int nStageIdx)
 {
@@ -394,6 +423,7 @@ void CStageEditor::SwapStage(int nStageIdx)
 
 //========================================
 // 変換
+// Author:KEISUKE OTONO
 //========================================
 
 // int

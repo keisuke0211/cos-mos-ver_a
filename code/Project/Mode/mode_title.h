@@ -28,21 +28,14 @@ public:
 		NONE,
 	};
 
-	// テクスチャ
-	enum TEX
-	{
-		TEX_BG = 0,	// 背景
-		TEX_PLANET,	// 惑星
-		TEX_MAX
-	};
-
 	// タイトルモード
 	enum TITLE
 	{
 		TITLE_PLANET = 0,	// 惑星
 		TITLE_TITLE,		// タイトル
 		TITLE_OUTSET,		// 演出終了
-		TITLE_MENU,			// メニュー
+		TITLE_MENU_ANIME,	// メニュー
+		TITLE_MENU,			// メニュー生成
 		TITLE_SELECT,		// ステージ選択
 		TITLE_NEXT,			// 次の画面に移動 
 		TITLE_MAX
@@ -75,9 +68,22 @@ public:
 	void  ProcessState(const PROCESS process);
 
 private:
+	// *** 列挙型 ***
+
+	// テクスチャ
+	enum TEX
+	{
+		TEX_BG = 0,		// 背景
+		TEX_PLANET00,	// 惑星
+		TEX_PLANET01,	// 惑星
+		TEX_ICON,		// アイコン
+		TEX_MAX
+	};
+
 	// *** 関数 ***
 	/* 惑星アニメメーション		*/void PlanetAnime(void);
 	/* タイトルアニメーション	*/void TitleAnime(void);
+	/* メニューアニメーション	*/void MenuAnime(void);
 	/* メニュー生成				*/void MenuCreate(void);
 	/* メニュー					*/void Menu(void);
 	/* ステージ選択生成			*/void SelectCreate(void);
@@ -86,11 +92,14 @@ private:
 
 	// *** 変数 ***
 	TITLE Title;
-	D3DXVECTOR3 m_PlanetPos;
+	D3DXVECTOR3 m_BgPos[TEX_MAX];
+	D3DXVECTOR3 m_MenuPos[MENU_MAX];
 	float m_PlanetAngle;
 	int m_TexIdx[TEX_MAX];
 	int m_nSelect;
+	int m_nOldSelect;
 	bool m_bMove[WORDS_MAX];
+	bool m_bMenuAnime;
 	CWords *m_Words[WORDS_MAX];
 	CWords *m_WordsShadow[WORDS_MAX];
 	CFontText *m_Menu[MENU_MAX];

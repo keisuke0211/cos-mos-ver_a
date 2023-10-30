@@ -58,6 +58,7 @@ public:
 	// *** 関数宣言 ***
 	CStageEditor();
 	~CStageEditor();
+	/* 終了*/ void Uninit();
 
 	/* ステージ切り替え	*/void SwapStage(int nStageIdx);
 

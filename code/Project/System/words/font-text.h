@@ -73,16 +73,17 @@ public:
 	// 引数4  : const char *Text　　/ テキスト
 	// 引数5  : CFont::FONT Type　　/ フォント種類
 	// 引数6  : FormFont *pFont		/ フォント関連の情報(色・時間など) 無くても大丈夫
-	// 引数7  : bool bTextBok　　　 / メッセージボックスの表示・非表示 (初期値 true)
+	// 引数7  : bool bTextBox　　　 / メッセージボックスの表示・非表示 (初期値 true)
 	// 引数8  : FormShadow *Shadow  / フォントの影の情報 無くても大丈夫
 	//--------------------------------------------------
-	static CFontText *CFontText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, FormFont *pFont = NULL, bool bTextBok = true, FormShadow *Shadow = NULL);
+	static CFontText *CFontText::Create(Box type, D3DXVECTOR3 pos, D3DXVECTOR2 size, const char *Text, CFont::FONT FontType, FormFont *pFont = NULL, bool bTextBox = true, FormShadow *Shadow = NULL);
 
 	/* 削除 */void Disap(bool bDisap,int nTime);
 
 	// -- 設定 ------------------------------------------
 	/* 空白表示			*/void SetSpace(bool bSpace) { m_Info.bSpace = bSpace; }
 	/* ポーズ中の生成	*/void SetTetPause(bool bPause);
+	/* TextBoの表示		*/void SetTexBox(bool bTextBox) { m_Info.bTextBok = bTextBox; }
 	/* ボックスの色		*/void SetBoxColor(Color col);
 	/* テキストの色		*/bool SetTextColor(D3DXCOLOR col);
 	/* 文字変更(単体)	*/bool ChgWords(char* Text, int nIdx, D3DXCOLOR col);

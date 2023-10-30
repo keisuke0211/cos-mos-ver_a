@@ -24,15 +24,23 @@ CMode_Title::CMode_Title(void) {
 
 	for (int nCnt = 0; nCnt < TEX_MAX; nCnt++)
 	{
+		m_BgPos[nCnt] = INITD3DXVECTOR3;
 		m_TexIdx[nCnt] = 0;
 	}
+
+	for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
+	{
+		m_MenuPos[nCnt] = INITD3DXVECTOR3;
+	}
+
 	m_nSelect = 0;
 
 	Title = TITLE_OUTSET;	// モード
-	m_PlanetPos = INITD3DXVECTOR3;
 	m_PlanetAngle = 0.0f;
 	m_nSelect = 0;
+	m_nOldSelect = 0;
 	m_StageType = NULL;
+	m_bMenuAnime = false;
 }
 
 //========================================
@@ -63,6 +71,7 @@ CMode_Title::~CMode_Title(void) {
 void CMode_Title::Init(void) {
 	CMode::Init();
 
+	Title = TITLE_PLANET;
 	for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
 	{
 		m_Menu[nCnt] = {NULL};
@@ -73,13 +82,24 @@ void CMode_Title::Init(void) {
 		m_Words[nCnt] = NULL;
 		m_WordsShadow[nCnt] = NULL;
 	}
+	m_bMenuAnime = false;
 
-	m_PlanetPos = D3DXVECTOR3(RNLib::Window().GetCenterPos().x, 1460.0f, 0.0f);
-	Title = TITLE_PLANET;
+	// テクスチャ
+	m_BgPos[0] = D3DXVECTOR3(RNLib::Window().GetCenterPos().x, RNLib::Window().GetCenterPos().y, -1.0f);
+	m_BgPos[1] = D3DXVECTOR3(RNLib::Window().GetCenterPos().x, 1460.0f, 0.0f);
+	m_BgPos[2] = D3DXVECTOR3(RNLib::Window().GetCenterPos().x, 1460.0f, 0.0f);
+	m_BgPos[3] = D3DXVECTOR3(50, 140.0f, 0.0f);
 	m_nSelect = 0;
+
+	// メニュー
+	m_MenuPos[0] = D3DXVECTOR3(280.0f, 150.0f, 1.0f);
+	m_MenuPos[1] = D3DXVECTOR3(280.0f, 300.0f, 1.0f);
+	m_MenuPos[2] = D3DXVECTOR3(280.0f, 450.0f, 1.0f);
 
 	m_TexIdx[0] = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\title.jpg");
 	m_TexIdx[1] = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\planet.png");
+	m_TexIdx[2] = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\planet.png");
+	m_TexIdx[3] = RNLib::Texture().Load("data\\TEXTURE\\Effect\\mark_smiley_000.png");
 
 	// 遷移設定
 	RNLib::Transition().Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
@@ -123,29 +143,39 @@ void CMode_Title::Update(void) {
 		PlanetAnime();
 	else if (Title == TITLE_TITLE)
 		TitleAnime();
+	else if (Title == TITLE_MENU_ANIME)
+		MenuAnime();
 	else if (Title == TITLE_MENU)
 		Menu();
 	else if (Title == TITLE_SELECT)
 		StageSelect();
 
-	RNLib::Polygon2D().Put(D3DXVECTOR3(RNLib::Window().GetCenterPos().x, RNLib::Window().GetCenterPos().y, -1.0f), 0.0f, false)
+	RNLib::Polygon2D().Put(m_BgPos[0], 0.0f, false)
 		->SetSize(1280.0f, 720.0f)
 		->SetCol(Color{ 255,255,255,255 })
 		->SetTex(m_TexIdx[0]);
 
 	if (Title == TITLE_OUTSET || Title == TITLE_MENU)
 	{
-		m_PlanetAngle += -0.01f;
+		if(Title == TITLE_OUTSET)
+			m_PlanetAngle += -0.01f;
+		else if (Title == TITLE_MENU)
+			m_PlanetAngle += -0.005f;
 
 		FloatLoopControl(&m_PlanetAngle, D3DX_PI, -D3DX_PI);
 	}
 
 	if (Title <= TITLE_MENU)
 	{
-		RNLib::Polygon2D().Put(m_PlanetPos, m_PlanetAngle, false)
+		RNLib::Polygon2D().Put(m_BgPos[1], m_PlanetAngle, false)
 			->SetSize(1300.0f, 1300.0f)
 			->SetCol(Color{ 255,255,255,255 })
 			->SetTex(m_TexIdx[1]);
+
+		RNLib::Polygon2D().Put(m_BgPos[2], m_PlanetAngle, false)
+			->SetSize(600.0f, 600.0f)
+			->SetCol(Color{ 255,255,255,255 })
+			->SetTex(m_TexIdx[2]);
 	}
 
 	if ((RNLib::Input().GetKeyTrigger(DIK_RETURN) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::A)) && RNLib::Transition().GetState() == CTransition::STATE::NONE)
@@ -154,8 +184,7 @@ void CMode_Title::Update(void) {
 		{
 		case TITLE_OUTSET:
 		{
-			// メニュー生成
-			MenuCreate();
+			TextClear(TITLE_MENU_ANIME);
 		}
 		break;
 		case TITLE_MENU:
@@ -222,17 +251,17 @@ void CMode_Title::ProcessState(const PROCESS process) {
 //========================================
 void CMode_Title::PlanetAnime(void)
 {
-	if (m_PlanetPos.y >= 1060.0f)
+	if (m_BgPos[1].y >= 1060.0f)
 	{
 		D3DXVECTOR3 move = INITD3DXVECTOR3;
 
 		move.y = -15.0f;
 
-		m_PlanetPos += move;
-		if (m_PlanetPos.y <= 1060.0f)
+		m_BgPos[1] += move;
+		if (m_BgPos[1].y <= 1060.0f)
 		{
 			move.y = 0.0f;
-			m_PlanetPos.y = 1060;
+			m_BgPos[1].y = 1060;
 			Title = TITLE_TITLE;
 
 			{
@@ -274,7 +303,7 @@ void CMode_Title::TitleAnime(void)
 			{
 				D3DXVECTOR3 move;
 
-				move.y = 10.0f;
+				move.y = 15.0f;
 
 				m_Words[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
 				m_WordsShadow[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
@@ -309,12 +338,89 @@ void CMode_Title::TitleAnime(void)
 }
 
 //========================================
+// メニュー演出
+// Author:KEISUKE OTONO
+//========================================
+void CMode_Title::MenuAnime(void)
+{
+	if (!m_bMenuAnime)
+	{
+		for (int nCnt = 0; nCnt < WORDS_MAX; nCnt++)
+		{
+			if (m_Words[nCnt] != NULL)
+			{
+				D3DXVECTOR3 pos = m_Words[nCnt]->GetPos();
+
+				if (pos.y >= -60.0f && m_bMove[nCnt])
+				{
+					D3DXVECTOR3 move;
+
+					move.y = -15.0f;
+
+					m_Words[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+					m_WordsShadow[nCnt]->SetMove(D3DXVECTOR3(0.0f, move.y, 0.0f));
+				}
+			}
+		}
+
+		if (m_BgPos[1].y <= 1460.0f)
+		{
+			D3DXVECTOR3 move = INITD3DXVECTOR3;
+			move.y = 25.0f;
+
+			m_BgPos[1] += move;
+			if (m_BgPos[1].y >= 1460.0f)
+			{
+				move.y = 0.0f;
+				m_BgPos[1].y = 1460;
+				m_bMenuAnime = true;
+
+				m_BgPos[1] = D3DXVECTOR3(-640.0f, 600.0f, 0.0f);
+				m_BgPos[2] = D3DXVECTOR3(1240.0f, -200.0f, 0.0f);
+			}
+		}
+	}
+	else if (m_bMenuAnime)
+	{
+		if (m_BgPos[1].x <= 120.0f)
+		{
+			D3DXVECTOR3 move = INITD3DXVECTOR3;
+			move.x = 40.0f;
+
+			m_BgPos[1] += move;
+
+			if (m_BgPos[1].x >= 120.0f)
+			{
+				move.x = 0.0f;
+				m_BgPos[1].x = 120.0f;
+
+				MenuCreate();
+			}
+		}
+		if (m_BgPos[2].y <= 0)
+		{
+			D3DXVECTOR3 move01 = INITD3DXVECTOR3;
+			move01.y = 10.0f;
+
+			m_BgPos[2] += move01;
+
+			if (m_BgPos[2].y >= 0.0f)
+			{
+				move01.y = 0.0f;
+				m_BgPos[2].y = 0.0f;
+			}
+		}
+	}
+}
+
+//========================================
 // メニュー生成
 // Author:KEISUKE OTONO
 //========================================
 void CMode_Title::MenuCreate(void)
 {
-	FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),55.0f,5,10,-1};// 45
+	FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),45.0f,5,10,-1};// 45
+	FormShadow pShadow = { D3DXCOLOR(0.0f,0.0f,0.0f,1.0f), true, D3DXVECTOR3(4.0f,4.0f,0.0f), D3DXVECTOR2(4.0f,4.0f) };
 
 	TextClear(TITLE_MENU);
 
@@ -333,16 +439,16 @@ void CMode_Title::MenuCreate(void)
 	}
 
 	m_Menu[0] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT,D3DXVECTOR3(640.0f, 150.0f, 1.0f),D3DXVECTOR2(450.0f, 100.0f),// 360,100
-		"ゲーム",CFont::FONT_ROND_B,&pFont);
+		CFontText::BOX_NORMAL_RECT, m_MenuPos[0],D3DXVECTOR2(360.0f, 80.0f),// 360,100
+		"ゲーム",CFont::FONT_ROND_B,&pFont,false,&pShadow);
 
 	m_Menu[1] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 300.0f, 1.0f), D3DXVECTOR2(450.0f, 100.0f),
-		"オプション", CFont::FONT_ROND_B, &pFont);
+		CFontText::BOX_NORMAL_RECT, m_MenuPos[1], D3DXVECTOR2(360.0f, 80.0f),
+		"オプション", CFont::FONT_ROND_B, &pFont,false,&pShadow);
 
 	m_Menu[2] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 450.0f, 1.0f), D3DXVECTOR2(450.0f, 100.0f),
-		"ゲームをやめる", CFont::FONT_ROND_B, &pFont);
+		CFontText::BOX_NORMAL_RECT, m_MenuPos[2], D3DXVECTOR2(360.0f, 80.0f),
+		"ゲームをやめる", CFont::FONT_ROND_B, &pFont,false,&pShadow);
 }
 
 //========================================
@@ -358,11 +464,13 @@ void CMode_Title::Menu(void)
 		{
 			if (nCnt == m_nSelect)
 			{
-				m_Menu[nCnt]->SetBoxColor(Color{0,255,0,255});
+				m_Menu[nCnt]->SetTexBox(true);
+				m_Menu[nCnt]->SetTextColor(D3DXCOLOR(240,255,0,255));
 			}
 			else
 			{
-				m_Menu[nCnt]->SetBoxColor(INITCOLOR);
+				m_Menu[nCnt]->SetTexBox(false);
+				m_Menu[nCnt]->SetTextColor(INITD3DCOLOR);
 			}
 		}
 	}
@@ -379,6 +487,13 @@ void CMode_Title::Menu(void)
 
 	// ループ制御
 	IntLoopControl(&m_nSelect, MENU_MAX, 0);
+
+	m_BgPos[3].y = m_MenuPos[m_nSelect].y;
+
+	RNLib::Polygon2D().Put(m_BgPos[3], 0.0f, false)
+		->SetSize(50.0f, 50.0f)
+		->SetCol(Color{ 255,255,255,255 })
+		->SetTex(m_TexIdx[3]);
 }
 
 //========================================
@@ -478,11 +593,16 @@ void CMode_Title::StageSelect(void)
 	{
 		IntControl(&m_nSelect, nMax - 1, 0);
 
-		TextClear(TITLE_SELECT);
-		FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),65.0f,5,10,-1 };
-		m_Menu[0] = CFontText::Create(
-			CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-			m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);
+		if (m_nSelect != m_nOldSelect)
+		{
+			m_nOldSelect = m_nSelect;
+
+			TextClear(TITLE_SELECT);
+			FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),65.0f,5,10,-1 };
+			m_Menu[0] = CFontText::Create(
+				CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
+				m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);
+		}
 	}
 
 }
