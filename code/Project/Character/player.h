@@ -192,6 +192,8 @@ private:
 	void UpdateInfo(void);
 
 	Info m_aInfo[NUM_PLAYER];	//各プレイヤーの情報
+	static int s_nSwapMarkTex;  //スワップ先のマークテクスチャ番号
+	static int s_nSwapParticle; //スワップ時のパーティクルテクスチャ番号
 };
 
 #endif

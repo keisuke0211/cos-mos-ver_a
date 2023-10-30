@@ -26,11 +26,16 @@ const float CPlayer::GRAVITY_CORR = 0.07f;	//基本重力係数
 int			CPlayer::s_nNumGetParts = 0;	//取得したパーツの数
 bool		CPlayer::s_bRideRocket = false;	//ロケットに乗れるかどうか
 
-											//=======================================
-											//コンストラクタ
-											//=======================================
+int CPlayer::s_nSwapMarkTex = 0;  //スワップ先のマークテクスチャ番号
+int CPlayer::s_nSwapParticle = 0; //スワップ時のパーティクルテクスチャ番号
+
+//=======================================
+//コンストラクタ
+//=======================================
 CPlayer::CPlayer()
 {
+	s_nSwapMarkTex = 0;  //スワップ先のマークテクスチャ番号
+	s_nSwapParticle = 0; //スワップ時のパーティクルテクスチャ番号
 	s_nSwapInterval = 0;//残りスワップインターバル
 	s_nNumGetParts = 0;	//取得したパーツの数
 	s_bRideRocket = false;//ロケットに乗れるかどうか
@@ -89,6 +94,9 @@ HRESULT CPlayer::Init(void)
 
 	//キーコンフィグ初期化
 	InitKeyConfig();
+
+	s_nSwapMarkTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Circle_005.png");
+	s_nSwapParticle = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Star_000.png");
 
 	//初期情報設定
 	Death(NULL);
@@ -213,6 +221,7 @@ void CPlayer::UpdateInfo(void)
 		RNLib::Polygon3D().Put(MarkPos, INITD3DXVECTOR3)
 			->SetSize(20.0f, 20.0f)
 			->SetBillboard(true)
+			->SetTex(s_nSwapMarkTex)
 			->SetCol(Color{ 255, 255, 255, 100 });
 	}
 }
@@ -277,12 +286,10 @@ void CPlayer::Swap(void)
 			//ロケットに乗ってたらスキップ
 			if (Player.bRide) continue;
 
-			int ParTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Star_000.png");
-
 			for (int i = 0; i < 8; i++)
 			{
-				Manager::EffectMgr()->ParticleCreate(ParTex, m_aInfo[0].pos, INIT_EFFECT_SCALE, INITCOLOR);
-				Manager::EffectMgr()->ParticleCreate(ParTex, m_aInfo[1].pos, INIT_EFFECT_SCALE, INITCOLOR);
+				Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, m_aInfo[0].pos, INIT_EFFECT_SCALE, INITCOLOR);
+				Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, m_aInfo[1].pos, INIT_EFFECT_SCALE, INITCOLOR);
 			}
 
 			//位置・重力加速度・ジャンプ量・存在する世界を反転
