@@ -28,7 +28,6 @@ CFillBlock::CFillBlock(void)
 	m_width = SIZE_OF_1_SQUARE;
 	m_height = SIZE_OF_1_SQUARE;
 
-	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
 }
 
@@ -45,7 +44,6 @@ CFillBlock::~CFillBlock()
 //========================================
 HRESULT CFillBlock::Init(FILL_TYPE type)
 {
-	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
 
 	//ƒ‚ƒfƒ‹”Ô†“Ç‚Ýž‚Ý
@@ -68,7 +66,8 @@ void CFillBlock::Uninit(void)
 void CFillBlock::Update(void)
 {
 	// ‰ß‹Ž‚ÌˆÊ’u
-	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), m_Info.nModelIdx, false);
+	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, D3DX_PI, 0.0f), m_Info.nModelIdx, false)
+		->SetCol(m_color);
 }
 
 

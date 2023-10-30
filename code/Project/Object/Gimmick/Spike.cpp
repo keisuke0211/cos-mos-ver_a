@@ -21,7 +21,6 @@ CSpike::CSpike(void)
 	m_height = SIZE_OF_1_SQUARE * 0.5f;
 
 	m_Info.move = INITD3DXVECTOR3;
-	m_Info.col = INITD3DCOLOR;
 	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\Spike.x");
 }
 
@@ -39,7 +38,6 @@ CSpike::~CSpike()
 HRESULT CSpike::Init(void)
 {
 	m_Info.move = INITD3DXVECTOR3;
-	m_Info.col = INITD3DCOLOR;
 
 	return S_OK;
 }
@@ -58,7 +56,8 @@ void CSpike::Uninit(void)
 void CSpike::Update(void)
 {
 	// ‰ß‹Ž‚ÌˆÊ’u
-	RNLib::Model().Put(m_pos, m_rot, m_Info.nModelIdx, false);
+	RNLib::Model().Put(m_pos, m_rot, m_Info.nModelIdx, false)
+		->SetCol(m_color);
 }
 
 //========================================

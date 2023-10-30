@@ -394,8 +394,8 @@ void CMode_Title::SelectCreate(void)
 
 	for (int nCnt = 0; nCnt < nMax; nCnt++)
 	{
-		char *aTexFile = Manager::StgEd()->GetInfo()[nCnt].aTexFile;
-		char *aStgName = Manager::StgEd()->GetInfo()[nCnt].aStageName;
+		char *aTexFile = Manager::StgEd()->GetType()[nCnt].aTexFile;
+		char *aStgName = Manager::StgEd()->GetType()[nCnt].aStageName;
 
 		m_StageType[nCnt].nTex = RNLib::Texture().Load(aTexFile);
 		sprintf(m_StageType[nCnt].Text, aStgName);

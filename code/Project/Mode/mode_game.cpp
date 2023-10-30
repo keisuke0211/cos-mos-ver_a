@@ -77,7 +77,7 @@ void CMode_Game::Init(void) {
 	SetState((int)STATE::NONE);
 
 	Manager::BlockMgr()->Load();
-	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(-250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f);
+	Manager::BlockMgr()->MoveBlockCreate(D3DXVECTOR3(-250.0f, -10.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 50.0f, Color{255,255,255,255});
 	Manager::BlockMgr()->ShiningWaveCreate();
 	Manager::BlockMgr()->RoadTripLaserCreate(D3DXVECTOR3(-150.0f, 150.0f, 0.0f), D3DXVECTOR3(0.2f, 0.0f, 0.0f), 100.0f);
 
@@ -243,7 +243,7 @@ void CMode_Game::PauseCreate(void)
 
 	m_Menu[1] = CFontText::Create(CFontText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 350.0f, 0.0f), D3DXVECTOR2(460.0f, 100.0f),
-		"リスタート", CFont::FONT_ROND_B, &pFont);
+		"やり直す", CFont::FONT_ROND_B, &pFont);
 
 	m_Menu[2] = CFontText::Create(CFontText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 500.0f, 0.0f), D3DXVECTOR2(460.0f, 100.0f),
