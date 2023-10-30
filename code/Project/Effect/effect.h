@@ -18,7 +18,8 @@ public:
 	{
 		D3DXVECTOR3 pos;		// 位置
 		D3DXVECTOR3 move;		// 移動量
-		Color col;			// 頂点カラー
+		D3DXVECTOR3 scale;		// 移動量
+		Color col;				// 頂点カラー
 		int nCount;
 		int nTex;
 	};
@@ -35,10 +36,12 @@ public:
 	// -- 設定 ---------------------------------------------
 	/* 色		*/void SetColor(const Color col) { m_Info.col = col; }
 	/* 位置		*/void SetPos(const D3DXVECTOR3 pos) { m_Info.pos = pos; }
+	/* 位置		*/void SetScale(const D3DXVECTOR3 scale) { m_Info.scale = scale; }
 
 	// -- 所得 ---------------------------------------------
 	/* 色		*/Color GetColor(void) { return m_Info.col; }
 	/* 位置		*/D3DXVECTOR3 GetPos(void) { return m_Info.pos; }
+	/* 位置		*/D3DXVECTOR3 GetScale(void) { return m_Info.scale; }
 
 private:
 
