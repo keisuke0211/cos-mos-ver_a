@@ -122,6 +122,7 @@ void CRocket::UpdateState_Ride(void)
 	}
 	else if (m_Info.nRideAnimeCounter <= (s_RideAnimeMax + s_RideAnimeShrink) * 4)
 	{// アニメーションの移行
+
 		m_Info.Animstate = CRocket::ANIME_STATE::NONE;	// なしに変更	
 		m_Info.nRideAnimeCounter = 0;					// 乗るアニメーションカウンターを初期化
 	}
@@ -184,6 +185,8 @@ void CRocket::Ride(void)
 	m_Info.nCountPlayer++;											// プレイヤーの乗った人数の増加
 	m_Info.fScaleMag = s_RideAnimeMag;								// スケール倍率の設定
 	m_Info.SmallSpeed = (m_Info.fScaleMag - 1.0f) / s_RideAnimeMax;	// 小さくなる速度の設定
+	m_Info.nRideAnimeCounter = 0;									// 乗るアニメーションカウンターを初期化
+	m_Info.nFlyAnimeCounter = 0;									// 飛ぶアニメーションカウンターを初期化
 
 	m_Info.Animstate = ANIME_STATE::RIDE;		// 乗る状態に移行
 	if (m_Info.nCountPlayer == CPlayer::NUM_PLAYER)
