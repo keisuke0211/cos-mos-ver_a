@@ -8,6 +8,7 @@
 //========================================
 #include "rocket.h"
 #include "../../main.h"
+#include"../../Character/player.h"
 
 const int   CRocket::s_AnimeMax = 120;		// 初期微動アニメーションの最大数
 const int   CRocket::s_RideAnimeMax = 25;	// 乗り込みアニメーションの最大数
@@ -37,6 +38,7 @@ CRocket::CRocket(void)
 	m_Info.fScaleMag = 1.0f;
 	m_Info.Animstate = CRocket::ANIME_STATE::NONE;
 	m_Info.nRideAnimeCounter = 0;
+	m_Info.nCountPlayer = 0;
 	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\Rocket_Body.x");
 }
 
@@ -171,6 +173,12 @@ void CRocket::Draw(void)
 //========================================
 void CRocket::Ride(void)
 {
+	m_Info.nCountPlayer++;
 	m_Info.fScaleMag = s_RideAnimeMag;		// スケール倍率の設定
 	m_Info.SmallSpeed = (m_Info.fScaleMag - 1.0f) / s_RideAnimeMax;
+
+	if (m_Info.nCountPlayer == CPlayer::NUM_PLAYER)
+	{// プレイヤーが全員乗ったら
+		m_Info.Animstate = ANIME_STATE::FLY;	// 飛ぶ状態に移行
+	}
 }

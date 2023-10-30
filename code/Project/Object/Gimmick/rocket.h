@@ -36,6 +36,7 @@ public:
 		short nModelIdx;		// モデル番号
 		int	nRideAnimeCounter;	// ライドアニメーションカウンター
 		int	nFlyAnimeCounter;	// 飛行アニメーションカウンター
+		int nCountPlayer;		// プレイヤーのカウント
 	};
 	
 	// *** 関数 ***
