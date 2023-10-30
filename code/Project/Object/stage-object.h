@@ -41,6 +41,7 @@ public:
 	D3DXVECTOR3& GetPos(void) { return m_pos; }
 	void SetRot(const D3DXVECTOR3& rot) { m_rot = rot; }
 	D3DXVECTOR3& GetRot(void) { return m_rot; }
+	void SetColor(Color color) { m_color = color; }
 	float& GetWidth(void) { return m_width; }
 	float& GetHeight(void) { return m_height; }
 
@@ -50,6 +51,7 @@ protected:
 	D3DXVECTOR3 m_pos;
 	D3DXVECTOR3 m_posOld;
 	D3DXVECTOR3 m_rot;
+	Color       m_color;
 	float       m_width;
 	float       m_height;
 };

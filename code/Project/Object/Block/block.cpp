@@ -26,11 +26,9 @@ CBlock::CBlock(void)
 	m_height = SIZE_OF_1_SQUARE;
 
 	m_Info.move = INITD3DXVECTOR3;
-	m_Info.col  = INITD3DCOLOR;
 	m_Info.nType = 0;
 	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\Block.x");
 	m_Info.nID = m_nNumAll;
-	m_nNumAll++;
 }
 
 //========================================
@@ -38,7 +36,7 @@ CBlock::CBlock(void)
 //========================================
 CBlock::~CBlock()
 {
-	m_nNumAll--;
+
 }
 
 //========================================
@@ -47,7 +45,6 @@ CBlock::~CBlock()
 HRESULT CBlock::Init(void)
 {
 	m_Info.move = INITD3DXVECTOR3;
-	m_Info.col = INITD3DCOLOR;
 	m_Info.nType = 0;
 
 	return S_OK;
@@ -68,7 +65,8 @@ void CBlock::Update(void)
 {
 	// ‰ß‹Ž‚ÌˆÊ’u
 	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_Info.nModelIdx, false)
-		->SetOutLine(true);
+		->SetOutLine(true)
+		->SetCol(m_color);
 }
 
 //========================================

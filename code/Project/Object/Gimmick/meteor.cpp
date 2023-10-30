@@ -95,7 +95,7 @@ void CMeteor::Update(void) {
 	RNLib::Model().Put(m_pos, m_rot, ModelIdx, false)
 		->SetOutLine(true)
 		->SetBrightnessOfEmissive(m_fblink)
-		;
+		->SetCol(m_color);
 
 	// ‚Æ‚è‚ ‚¦‚¸‰æ–ÊŠO‚ÅÁ‚·ˆ—
 	if (m_pos.x >= METEOR_UNINIT_MAXPOS.x || m_pos.y >= METEOR_UNINIT_MAXPOS.y || m_pos.x <= METEOR_UNINIT_MINPOS.x || m_pos.y <= METEOR_UNINIT_MINPOS.y)

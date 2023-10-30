@@ -32,12 +32,12 @@ public:
 	CStageObjectMgr();
 	virtual~CStageObjectMgr();
 	virtual void Update(void);	void Load(void);
-	CBlock      *BlockCreate     (D3DXVECTOR3 pos);
-	CFillBlock  *FillBlockCreate(D3DXVECTOR3 pos,CFillBlock::FILL_TYPE type);
-	CSpike      *SpikeCreate	 (D3DXVECTOR3 pos);
-	CTrampoline *TrampolineCreate(D3DXVECTOR3 pos);
-	CMeteor     *MeteorCreate    (D3DXVECTOR3 pos, D3DXVECTOR3 move);
-	CMoveBlock  *MoveBlockCreate (D3DXVECTOR3 pos, D3DXVECTOR3 move,float fRefdef);
+	CBlock      *BlockCreate     (D3DXVECTOR3 pos,Color color);
+	CFillBlock  *FillBlockCreate(D3DXVECTOR3 pos,CFillBlock::FILL_TYPE type, Color color);
+	CSpike      *SpikeCreate	 (D3DXVECTOR3 pos, Color color);
+	CTrampoline *TrampolineCreate(D3DXVECTOR3 pos, Color color);
+	CMeteor     *MeteorCreate    (D3DXVECTOR3 pos, D3DXVECTOR3 move, Color color);
+	CMoveBlock  *MoveBlockCreate (D3DXVECTOR3 pos, D3DXVECTOR3 move,float fRefdef, Color color);
 	CParts      *PartsCreate	 (D3DXVECTOR3 pos);
 	CRocket     *RocketCreate    (D3DXVECTOR3 pos);
 	CPlanet		*PlanetCreate	 (D3DXVECTOR3 pos, D3DXVECTOR3 rot,CPlanet::STAR_TYPE type,Color col);
