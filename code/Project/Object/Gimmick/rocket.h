@@ -31,9 +31,12 @@ public:
 		ANIME_STATE Animstate;	// アニメーションの状態
 		Scale3D scale;			// スケール
 		Scale3D Maxscale;		// 最大スケール
+		float SmallSpeed;		// 小さくなる速度
+		float fScaleMag;		// スケールの倍率
 		short nModelIdx;		// モデル番号
 		int	nRideAnimeCounter;	// ライドアニメーションカウンター
 		int	nFlyAnimeCounter;	// 飛行アニメーションカウンター
+		int nCountPlayer;		// プレイヤーのカウント
 	};
 	
 	// *** 関数 ***
@@ -43,12 +46,16 @@ public:
 	/* 初期化	*/HRESULT Init(void);
 	/* 終了		*/void Uninit(void);
 	/* 更新		*/void Update(void);
+	/* 乗る状態の更新		*/void UpdateState_Ride(void);
+	/* 飛ぶ状態の更新		*/void UpdateState_Fly(void);
 	/* 描画		*/void Draw(void);
 
 	// -- 設定 ---------------------------------------------
 	/* 色			*/void SetColor(const D3DXCOLOR col) { m_Info.col = col; }
 	/* モデル番号	*/void SetModelIdx(const int nIdx) { m_Info.nModelIdx = nIdx; }
 	/* アニメーションの状態の設定*/void SetState(const ANIME_STATE state) { m_Info.Animstate = state; }
+	/* 乗ってる状態		*/void Ride(void);
+
 	// -- 所得 ---------------------------------------------
 	/* 色		*/D3DXCOLOR GetColor(void) { return m_Info.col; }
 
@@ -57,4 +64,12 @@ private:
 	// *** 変数 ***
 	Info m_Info;		// 共通情報
 
+	static const int   s_AnimeMax;
+	static const int   s_RideAnimeMax;
+	static const float s_RideAnimeMag;
+	static const float s_RideAnimeShrink;
+	static const float s_RotAdd;
+	static const int   s_RotAnimeMax;
+	static const float s_MoveMag;
+	static const float s_MoveAdd;
 };

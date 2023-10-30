@@ -27,7 +27,7 @@ CBlock::CBlock(void)
 
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.nType = 0;
-	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\Block.x");
+	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\Block_Chocolate.x");
 	m_Info.nID = m_nNumAll;
 }
 

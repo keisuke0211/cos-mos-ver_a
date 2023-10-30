@@ -60,7 +60,6 @@ void CShiningWave::Uninit(void) {
 // Author:KOMURO HIROMU
 //========================================
 void CShiningWave::Update(void) {
-	int nShining;    
 
 	/*for (int nCntShin = 0; nCntShin < s_nNumShining; nCntShin++)
 	{
