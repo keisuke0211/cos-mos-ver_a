@@ -70,8 +70,8 @@ public:
 		float		fGravityCorr; //重力係数
 		int			nModelIdx;    //モデル番号
 		WORLD_SIDE  side;         //どちらの世界に存在するか
-		int  Keyborad[(int)WORLD_SIDE::MAX][(int)KEY_CONFIG::MAX];	//キーボードのキー配置
-		CInput::BUTTON  JoyPad[(int)KEY_CONFIG::MAX];							//ジョイパッドのボタン配置
+		int             Keyborad[(int)WORLD_SIDE::MAX][(int)KEY_CONFIG::MAX]; //キーボードのキー配置
+		CInput::BUTTON  JoyPad[(int)KEY_CONFIG::MAX];                         //ジョイパッドのボタン配置
 	};
 
 	static const float SIZE_WIDTH;	//横幅
@@ -179,6 +179,7 @@ private:
 	void FixPos_RIGHT(float *pPosX, float fMaxPosX, float *pMoveX);//右からの当たり判定による位置・移動量修正
 
 	void CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
+	void CollisionFillBlock(COLLI_ROT ColliRot);
 	void CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock,D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);

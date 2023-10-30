@@ -15,6 +15,7 @@
 //==========| CMode_Titleクラスのメンバ関数
 //----------|---------------------------------------------------------------------
 //================================================================================
+bool CMode_Title::s_bStageSelect = false;
 
 //========================================
 // コンストラクタ
@@ -34,8 +35,6 @@ CMode_Title::CMode_Title(void) {
 	}
 
 	m_nSelect = 0;
-
-	Title = TITLE_OUTSET;	// モード
 	m_PlanetAngle = 0.0f;
 	m_nSelect = 0;
 	m_nOldSelect = 0;
@@ -62,6 +61,12 @@ CMode_Title::~CMode_Title(void) {
 			m_WordsShadow[nCnt] = NULL;
 		}
 	}
+
+	if (m_StageType != NULL)
+	{
+		delete[] m_StageType;
+		m_StageType = NULL;
+	}
 }
 
 //========================================
@@ -71,7 +76,6 @@ CMode_Title::~CMode_Title(void) {
 void CMode_Title::Init(void) {
 	CMode::Init();
 
-	Title = TITLE_PLANET;
 	for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
 	{
 		m_Menu[nCnt] = {NULL};
@@ -82,6 +86,18 @@ void CMode_Title::Init(void) {
 		m_Words[nCnt] = NULL;
 		m_WordsShadow[nCnt] = NULL;
 	}
+
+	if (s_bStageSelect)
+	{
+		SelectCreate();
+		s_bStageSelect = false;
+	}
+	else
+	{
+		Title = TITLE_PLANET;
+	}
+
+
 	m_bMenuAnime = false;
 
 	// テクスチャ

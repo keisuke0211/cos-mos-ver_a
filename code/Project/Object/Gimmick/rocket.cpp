@@ -18,6 +18,7 @@ const float CRocket::s_RotAdd = 0.02f;		// 向きの増加量
 const int   CRocket::s_RotAnimeMax = 4;		// 小刻みアニメーションの最大 
 const float CRocket::s_MoveMag = 1.05f;		// 移動量の倍率
 const float CRocket::s_MoveAdd = 0.01f;		// 移動量の増加量
+const int   CRocket::s_FadeModeCountMax = 120;	// フェードのモードのカウント最大
 
 //========================================
 // コンストラクタ
@@ -97,7 +98,8 @@ void CRocket::Update(void)
 
 	}
 
-	RNLib::Model().Put(m_pos, m_rot, m_Info.scale * m_Info.fScaleMag, m_Info.nModelIdx, false);
+	RNLib::Model().Put(m_pos, m_rot, m_Info.scale * m_Info.fScaleMag, m_Info.nModelIdx, false)
+		->SetOutLine(true);
 
 }
 //========================================
@@ -120,6 +122,7 @@ void CRocket::UpdateState_Ride(void)
 	}
 	else if (m_Info.nRideAnimeCounter <= (s_RideAnimeMax + s_RideAnimeShrink) * 4)
 	{// アニメーションの移行
+
 		m_Info.Animstate = CRocket::ANIME_STATE::NONE;	// なしに変更	
 		m_Info.nRideAnimeCounter = 0;					// 乗るアニメーションカウンターを初期化
 	}
@@ -133,6 +136,12 @@ void CRocket::UpdateState_Fly(void)
 
 	m_Info.nFlyAnimeCounter++;	// アニメーションの増加
 	nCounter = m_Info.nFlyAnimeCounter % s_RotAnimeMax;	// 割合の計算
+
+	// モードの切り替え	
+	if (m_Info.nFlyAnimeCounter >= s_FadeModeCountMax)
+	{
+		Manager::StgEd()->SwapStage(Manager::StgEd()->GetStageIdx() + 1);
+	}
 
 	// 向きを微動させる
 	if (nCounter >= s_RotAnimeMax * 0.5f)
@@ -157,6 +166,8 @@ void CRocket::UpdateState_Fly(void)
 			m_Info.move.y -= s_MoveAdd;
 		}
 	}
+
+	
 	m_pos += m_Info.move;	// 位置に移動量の増加
 }
 //========================================
@@ -174,6 +185,8 @@ void CRocket::Ride(void)
 	m_Info.nCountPlayer++;											// プレイヤーの乗った人数の増加
 	m_Info.fScaleMag = s_RideAnimeMag;								// スケール倍率の設定
 	m_Info.SmallSpeed = (m_Info.fScaleMag - 1.0f) / s_RideAnimeMax;	// 小さくなる速度の設定
+	m_Info.nRideAnimeCounter = 0;									// 乗るアニメーションカウンターを初期化
+	m_Info.nFlyAnimeCounter = 0;									// 飛ぶアニメーションカウンターを初期化
 
 	m_Info.Animstate = ANIME_STATE::RIDE;		// 乗る状態に移行
 	if (m_Info.nCountPlayer == CPlayer::NUM_PLAYER)
