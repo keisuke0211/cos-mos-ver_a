@@ -61,6 +61,12 @@ CMode_Title::~CMode_Title(void) {
 			m_WordsShadow[nCnt] = NULL;
 		}
 	}
+
+	if (m_StageType != NULL)
+	{
+		delete[] m_StageType;
+		m_StageType = NULL;
+	}
 }
 
 //========================================
