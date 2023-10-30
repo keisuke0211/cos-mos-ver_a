@@ -1,7 +1,7 @@
 //========================================
 // 
 // ロケット
-// Author:KEISUKE OTONO
+// Author:KOMURO HIROMU
 // 
 //========================================
 // *** rocket.cpp ***
@@ -9,13 +9,15 @@
 #include "rocket.h"
 #include "../../main.h"
 
-const int s_AnimeMax = 120;			// アニメーションの最大数
-const int s_RideAnimeMax = 20;		// 乗り込みアニメーションの最大数
-const float s_RideAnimeMag = 1.7f;	// 乗り込みアニメーションの大きさの倍率
-const float s_RotAdd = 0.02f;		// 向きの増加量
-const int s_RotAnimeMax = 4;		// 小刻みアニメーションの最大 
-const float s_MoveMag = 1.05f;		// 移動量の倍率
-const float s_MoveAdd = 0.01f;		// 移動量の増加量
+const int   CRocket::s_AnimeMax = 120;		// 初期微動アニメーションの最大数
+const int   CRocket::s_RideAnimeMax = 25;	// 乗り込みアニメーションの最大数
+const float CRocket::s_RideAnimeMag = 1.3f;	// 大きさ1.0を基準にそこから加算される大きさ	
+const float CRocket::s_RideAnimeShrink = 20;// 乗り込みアニメーションの縮む倍率
+const float CRocket::s_RotAdd = 0.02f;		// 向きの増加量
+const int   CRocket::s_RotAnimeMax = 4;		// 小刻みアニメーションの最大 
+const float CRocket::s_MoveMag = 1.05f;		// 移動量の倍率
+const float CRocket::s_MoveAdd = 0.01f;		// 移動量の増加量
+
 //========================================
 // コンストラクタ
 //========================================
@@ -30,9 +32,10 @@ CRocket::CRocket(void)
 	m_Info.move = INITD3DXVECTOR3;
 	m_Info.col = INITD3DCOLOR;
 	m_Info.scale = Scale3D(1.0f,1.0f,1.0f);
-	m_Info.Maxscale = Scale3D(1.0f, 1.0f, 1.0f);
 	m_Info.nFlyAnimeCounter = 0;
-	m_Info.Animstate = CRocket::ANIME_STATE::RIDE;
+	m_Info.SmallSpeed = 0.0f;
+	m_Info.fScaleMag = 1.0f;
+	m_Info.Animstate = CRocket::ANIME_STATE::NONE;
 	m_Info.nRideAnimeCounter = 0;
 	m_Info.nModelIdx = RNLib::Model().Load("data\\MODEL\\rocket.x");
 }
@@ -72,72 +75,102 @@ void CRocket::Uninit(void)
 //========================================
 void CRocket::Update(void)
 {
-	int nCounter;
+	//乗るアニメーションに移動
+	if (RNLib::Input().GetKeyPress(DIK_R))
+	{
+		m_Info.Animstate = CRocket::ANIME_STATE::RIDE;
+		Ride();
+	}
+
 	switch (m_Info.Animstate)
 	{
 	case CRocket::ANIME_STATE::NONE:
-
 		break;
 	case CRocket::ANIME_STATE::RIDE:
-		m_Info.nRideAnimeCounter++;
-		
-		if (m_Info.nRideAnimeCounter <= s_RideAnimeMax)
-		{
-			m_Info.scale = Scale3D(1.0f + (float)m_Info.nRideAnimeCounter / (s_RideAnimeMax * s_RideAnimeMag), 1.0f + (float)m_Info.nRideAnimeCounter / (s_RideAnimeMax * s_RideAnimeMag), 1.0f + (float)m_Info.nRideAnimeCounter / (s_RideAnimeMax * s_RideAnimeMag));
-		}
-		else if (m_Info.nRideAnimeCounter <= s_RideAnimeMax * 2)
-		{
-			if (m_Info.nRideAnimeCounter == s_RideAnimeMax + 1)
-			{
-				m_Info.Maxscale = m_Info.scale;
-			}
-			m_Info.scale = Scale3D(m_Info.Maxscale.x - (float)(m_Info.nRideAnimeCounter - s_RideAnimeMax) / (s_RideAnimeMax * s_RideAnimeMag), m_Info.Maxscale.y - (float)(m_Info.nRideAnimeCounter - s_RideAnimeMax) / (s_RideAnimeMax * s_RideAnimeMag), m_Info.Maxscale.z - (float)(m_Info.nRideAnimeCounter - s_RideAnimeMax) / (s_RideAnimeMax * s_RideAnimeMag));
-		}
-		else if (m_Info.nRideAnimeCounter <= s_RideAnimeMax * 3)
-		{
-			m_Info.Animstate = CRocket::ANIME_STATE::FLY;
-			m_Info.nRideAnimeCounter = 0;
-		}
+		UpdateState_Ride();		// 飛び出し準備状態の更新
 		break;
 	case CRocket::ANIME_STATE::FLY:
-		m_Info.nFlyAnimeCounter++;
-		nCounter = m_Info.nFlyAnimeCounter % s_RotAnimeMax;
-		if (nCounter >= s_RotAnimeMax * 0.5f)
-		{
-			m_rot.z += s_RotAdd;
-		}
-		else
-		{
-			m_rot.z -= s_RotAdd;
-		}
-
-		if (m_Info.nFlyAnimeCounter >= s_AnimeMax)
-		{
-			m_Info.move.y *= s_MoveMag;	// 移動量に倍率をかける
-
-			if (m_pos.y >= 0)
-			{// 上の世界にいるとき
-				m_Info.move.y += s_MoveAdd;
-			}
-			else
-			{// 下の世界にいるとき
-				m_Info.move.y -= s_MoveAdd;
-			}
-		}
-		m_pos += m_Info.move;	// 位置に移動量の増加
-								// 過去の位置
+		UpdateState_Fly();		// 飛び出し準備状態の更新
 		break;
 
 	}
 
-	RNLib::Model().Put(m_pos, m_rot, m_Info.scale, m_Info.nModelIdx, false);
+	RNLib::Model().Put(m_pos, m_rot, m_Info.scale * m_Info.fScaleMag, m_Info.nModelIdx, false);
 
 }
+//========================================
+// 乗る状態更新
+//========================================
+void CRocket::UpdateState_Ride(void)
+{
+	m_Info.nRideAnimeCounter++;
 
+	if (m_Info.nRideAnimeCounter <= 1)
+	{// 大きくする
+	}
+	else if (m_Info.nRideAnimeCounter <= s_RideAnimeMax)
+	{// 小さくする
+		int nRideAnimeCounter = m_Info.nRideAnimeCounter - 1;
+
+		m_Info.fScaleMag -= m_Info.SmallSpeed;	// スケール倍率の減算
+		if (m_Info.fScaleMag <= 1.0f)
+		{
+			m_Info.fScaleMag = 1.0f;
+		}
+	}
+	else if (m_Info.nRideAnimeCounter <= (s_RideAnimeMax + s_RideAnimeShrink) * 4)
+	{// アニメーションの移行
+		m_Info.Animstate = CRocket::ANIME_STATE::FLY;	// 飛ぶアニメーションに変更	
+		m_Info.nRideAnimeCounter = 0;					// 乗るアニメーションカウンターを初期化
+	}
+}
+//========================================
+// 飛ぶ状態更新
+//========================================
+void CRocket::UpdateState_Fly(void)
+{
+	int nCounter;
+
+	m_Info.nFlyAnimeCounter++;	// アニメーションの増加
+	nCounter = m_Info.nFlyAnimeCounter % s_RotAnimeMax;	// 割合の計算
+
+	// 向きを微動させる
+	if (nCounter >= s_RotAnimeMax * 0.5f)
+	{
+		m_rot.z += s_RotAdd;
+	}
+	else
+	{
+		m_rot.z -= s_RotAdd;
+	}
+
+	if (m_Info.nFlyAnimeCounter >= s_AnimeMax)
+	{
+		m_Info.move.y *= s_MoveMag;	// 移動量に倍率をかける
+
+		if (m_pos.y >= 0)
+		{// 上の世界にいるとき
+			m_Info.move.y += s_MoveAdd;
+		}
+		else
+		{// 下の世界にいるとき
+			m_Info.move.y -= s_MoveAdd;
+		}
+	}
+	m_pos += m_Info.move;	// 位置に移動量の増加
+}
 //========================================
 // 描画
 //========================================
 void CRocket::Draw(void)
 {
 
+}
+//========================================
+// 乗ってる状態
+//========================================
+void CRocket::Ride(void)
+{
+	m_Info.fScaleMag = s_RideAnimeMag;		// スケール倍率の設定
+	m_Info.SmallSpeed = (m_Info.fScaleMag - 1.0f) / s_RideAnimeMax;
 }
