@@ -139,7 +139,8 @@ void CRocket::UpdateState_Fly(void)
 	// ƒ‚[ƒh‚ÌØ‚è‘Ö‚¦	
 	if (m_Info.nFlyAnimeCounter >= s_FadeModeCountMax)
 	{
-		Manager::StgEd()->SwapStage(Manager::StgEd()->GetStageIdx() + 1);
+		int stage = Manager::StgEd()->GetType()->nStageIdx;
+		Manager::StgEd()->SwapStage(stage + 1);
 	}
 
 	// Œü‚«‚ð”÷“®‚³‚¹‚é

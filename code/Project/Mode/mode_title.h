@@ -53,7 +53,7 @@ public:
 	// *** 情報構造体 ***
 
 	// ステージ種類情報
-	struct StageType
+	struct PlanetType
 	{
 		int nTex;				// 画像
 		char Text[TXT_MAX];		// ステージ名
@@ -103,10 +103,12 @@ private:
 	int m_TexIdx[TEX_MAX];
 	int m_nSelect;
 	int m_nOldSelect;
+	int m_nPlanetIdx;
+	int m_nOldnPlanet;
 	bool m_bMove[WORDS_MAX];
 	bool m_bMenuAnime;
 	CWords *m_Words[WORDS_MAX];
 	CWords *m_WordsShadow[WORDS_MAX];
 	CFontText *m_Menu[MENU_MAX];
-	StageType *m_StageType;
+	PlanetType *m_PlanetType;
 };
