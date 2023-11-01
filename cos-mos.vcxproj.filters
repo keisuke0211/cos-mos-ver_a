@@ -1,524 +1,159 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="ソース ファイル">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
-    <Filter Include="ヘッダー ファイル">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
-    </Filter>
-    <Filter Include="リソース ファイル">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
-    </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="code\_RNLib\RNlib.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Mode\mode.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Mode\mode_game.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Block\block.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\stage-object-manager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\System\csv_file.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\manager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\precompile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Gimmick\meteor.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\System\StageEditor.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Character\player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\stage-object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Mode\mode.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Mode\mode_game.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Block\block.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\System\csv_file.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\main.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\manager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\precompile.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Gimmick\meteor.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Character\player.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Block\move-block.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Item\Parts.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Gimmick\Spike.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\BackGround\Planet.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Gimmick\rocket.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Mode\mode_title.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Mode\mode_result.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Block\fill-block.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Mode\mode_logo.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\System\words\font.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\System\words\words.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\System\words\object\font-object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\System\words\font-text.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Effect\effect-manager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\BackGround\Star.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\BackGround\ShiningWave.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\BackGround\Star.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Effect\effect.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Object\Gimmick\RoadTripLaser.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Effect\particle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\3DObject\Body\doll3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\3DObject\Body\doll3D-manager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\3DObject\Body\motion3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\3DObject\Body\setup3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Calculation\ease.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Calculation\geometry.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Calculation\matrix.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Calculation\number.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\model.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\polygon2D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\polygon3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\text2D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\text3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\camera.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\camera_control.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\color.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\draw-info.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\draw-manager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\draw-state.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\light3D.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\text.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\texture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Draw\transition.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Mechanical\file.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Mechanical\object.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Mechanical\object-manager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Mechanical\print.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Mechanical\regist.cpp">
-    <ClCompile Include="code\Project\Effect\effect-manager.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\default-data.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\input.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\setting.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\sound.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\_RNLib\Basis\Mechanical\window.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="code\Project\Effect\particle.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="code\_RNLib\_Basis\3D\Camera\camera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\_Basis\Draw\model.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\_Basis\Draw\polygon3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\_Basis\Draw\text3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\_Basis\Other\regist.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\game-mode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\RNlib.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\RNmain.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Character\player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Mode\mode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Mode\mode_game.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Block\block.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\stage-object-manager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Gimmick\trampoline.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\System\csv_file.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\main.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\manager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\precompile.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Gimmick\meteor.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\System\StageEditor.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\_Basis\Draw\polygon2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\_Basis\Draw\text2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Block\move-block.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Item\Parts.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\BackGround\Planet.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Gimmick\rocket.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Gimmick\Spike.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Mode\mode_title.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Mode\mode_result.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Block\fill-block.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Mode\mode_logo.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\System\words\font.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\System\words\words.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\System\words\object\font-object.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\System\words\font-text.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Effect\effect-manager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\BackGround\Star.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\BackGround\Shiningwave.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Gimmick\RoadTripLaser.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Effect\effect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Effect\particle.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\3DObject\Body\doll3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\3DObject\Body\doll3D-manager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\3DObject\Body\motion3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\3DObject\Body\setup3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Calculation\ease.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Calculation\geometry.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Calculation\matrix.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Calculation\number.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\model.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\polygon2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\polygon3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\text2D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\text3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\camera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\color.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\draw-info.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\draw-manager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\draw-state.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\light3D.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\text.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\texture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Draw\transition.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Mechanical\file.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Mechanical\memory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Mechanical\object.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Mechanical\object-manager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Mechanical\print.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Mechanical\regist.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\Mechanical\window.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\default-data.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\input.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\_RNLib\Basis\setting.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Effect\particle.h">
-    <ClInclude Include="code\_RNLib\Basis\sound.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include=".gitattributes" />
-    <None Include=".gitignore" />
-    <None Include="cos-mos.VC.db" />
-    <None Include="mqo\1P.mqo" />
-    <None Include="mqo\2P.mqo" />
-    <None Include="mqo\Block.mqo" />
-    <None Include="mqo\Lift.mqo" />
-    <None Include="mqo\Meteorite.mqo" />
-    <None Include="mqo\Spike Half.mqo" />
-    <None Include="mqo\Spike.mqo" />
-    <None Include="mqo\Spring Floor.mqo" />
-    <None Include="Debug\cos-mos.exe" />
-    <None Include="Debug\cos-mos.ilk" />
-    <None Include="Debug\cos-mos.pdb" />
-    <None Include="Debug\meteor.obj.enc" />
-    <None Include="data\GAMEDATA\STAGE\csv\STAGE00.csv" />
-    <None Include="data\GAMEDATA\STAGE\STAGE_EDITOR.xlsx" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="data\TEXTURE\Object\block.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="data\TEXTURE\meteo000.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="data\TEXTURE\pillar000.jpg">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
     <Object Include="Debug\data.obj" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="data\TEXTURE\meteo000.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="data\TEXTURE\Object\block.png">
-      <Filter>リソース ファイル</Filter>
-    </Image>
-    <Image Include="data\TEXTURE\pillar000.jpg">
-      <Filter>リソース ファイル</Filter>
-    </Image>
+    <ClCompile Include="code\Project\Character\player.cpp" />
+    <ClCompile Include="code\Project\Effect\effect-manager.cpp" />
+    <ClCompile Include="code\Project\Effect\effect.cpp" />
+    <ClCompile Include="code\Project\Effect\particle.cpp" />
+    <ClCompile Include="code\Project\main.cpp" />
+    <ClCompile Include="code\Project\manager.cpp" />
+    <ClCompile Include="code\Project\Mode\mode.cpp" />
+    <ClCompile Include="code\Project\Mode\mode_game.cpp" />
+    <ClCompile Include="code\Project\Mode\mode_logo.cpp" />
+    <ClCompile Include="code\Project\Mode\mode_result.cpp" />
+    <ClCompile Include="code\Project\Mode\mode_title.cpp" />
+    <ClCompile Include="code\Project\Object\BackGround\Planet.cpp" />
+    <ClCompile Include="code\Project\Object\BackGround\ShiningWave.cpp" />
+    <ClCompile Include="code\Project\Object\BackGround\Star.cpp" />
+    <ClCompile Include="code\Project\Object\Block\fill-block.cpp" />
+    <ClCompile Include="code\Project\Object\Gimmick\RoadTripLaser.cpp" />
+    <ClCompile Include="code\Project\Object\Gimmick\rocket.cpp" />
+    <ClCompile Include="code\Project\Object\Item\Parts.cpp" />
+    <ClCompile Include="code\Project\Object\Gimmick\Spike.cpp" />
+    <ClCompile Include="code\Project\Object\stage-object-manager.cpp" />
+    <ClCompile Include="code\Project\Object\Block\block.cpp" />
+    <ClCompile Include="code\Project\Object\Block\move-block.cpp" />
+    <ClCompile Include="code\Project\Object\Gimmick\meteor.cpp" />
+    <ClCompile Include="code\Project\Object\Gimmick\trampoline.cpp" />
+    <ClCompile Include="code\Project\Object\stage-object.cpp" />
+    <ClCompile Include="code\Project\precompile.cpp" />
+    <ClCompile Include="code\Project\System\csv_file.cpp" />
+    <ClCompile Include="code\Project\System\StageEditor.cpp" />
+    <ClCompile Include="code\Project\System\words\font.cpp" />
+    <ClCompile Include="code\Project\System\words\object\font-object.cpp" />
+    <ClCompile Include="code\Project\System\words\font-text.cpp" />
+    <ClCompile Include="code\Project\System\words\words.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\3DObject\Body\doll3D-manager.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\3DObject\Body\doll3D.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\3DObject\Body\motion3D.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\3DObject\Body\setup3D.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Calculation\ease.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Calculation\geometry.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Calculation\matrix.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Calculation\number.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\default-data.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\camera.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\camera_control.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\color.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\draw-info.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\draw-manager.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\draw-state.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\light3D.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\model.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\polygon2D.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\polygon3D.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\text2D.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\PutObject\text3D.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\text.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\texture.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Draw\transition.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\input.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Mechanical\file.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Mechanical\object-manager.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Mechanical\object.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Mechanical\print.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Mechanical\regist.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\Mechanical\window.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\setting.cpp" />
+    <ClCompile Include="code\_RNLib\Basis\sound.cpp" />
+    <ClCompile Include="code\_RNLib\RNlib.cpp" />
+    <ClCompile Include="code\Project\Object\Gimmick\goal-gate.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="code\Project\Character\player.h" />
+    <ClInclude Include="code\Project\Effect\effect-manager.h" />
+    <ClInclude Include="code\Project\Effect\effect.h" />
+    <ClInclude Include="code\Project\Effect\particle.h" />
+    <ClInclude Include="code\Project\main.h" />
+    <ClInclude Include="code\Project\manager.h" />
+    <ClInclude Include="code\Project\Mode\mode.h" />
+    <ClInclude Include="code\Project\Mode\mode_game.h" />
+    <ClInclude Include="code\Project\Mode\mode_logo.h" />
+    <ClInclude Include="code\Project\Mode\mode_result.h" />
+    <ClInclude Include="code\Project\Mode\mode_title.h" />
+    <ClInclude Include="code\Project\Object\BackGround\Planet.h" />
+    <ClInclude Include="code\Project\Object\BackGround\Shiningwave.h" />
+    <ClInclude Include="code\Project\Object\BackGround\Star.h" />
+    <ClInclude Include="code\Project\Object\Block\fill-block.h" />
+    <ClInclude Include="code\Project\Object\Gimmick\RoadTripLaser.h" />
+    <ClInclude Include="code\Project\Object\Gimmick\rocket.h" />
+    <ClInclude Include="code\Project\Object\Gimmick\Spike.h" />
+    <ClInclude Include="code\Project\Object\Item\Parts.h" />
+    <ClInclude Include="code\Project\Object\stage-object-manager.h" />
+    <ClInclude Include="code\Project\Object\Block\block.h" />
+    <ClInclude Include="code\Project\Object\Block\move-block.h" />
+    <ClInclude Include="code\Project\Object\Gimmick\meteor.h" />
+    <ClInclude Include="code\Project\Object\Gimmick\trampoline.h" />
+    <ClInclude Include="code\Project\Object\stage-object.h" />
+    <ClInclude Include="code\Project\precompile.h" />
+    <ClInclude Include="code\Project\System\csv_file.h" />
+    <ClInclude Include="code\Project\System\StageEditor.h" />
+    <ClInclude Include="code\Project\System\words\font.h" />
+    <ClInclude Include="code\Project\System\words\object\font-object.h" />
+    <ClInclude Include="code\Project\System\words\font-text.h" />
+    <ClInclude Include="code\Project\System\words\words.h" />
+    <ClInclude Include="code\_RNLib\Basis\3DObject\Body\doll3D-manager.h" />
+    <ClInclude Include="code\_RNLib\Basis\3DObject\Body\doll3D.h" />
+    <ClInclude Include="code\_RNLib\Basis\3DObject\Body\motion3D.h" />
+    <ClInclude Include="code\_RNLib\Basis\3DObject\Body\setup3D.h" />
+    <ClInclude Include="code\_RNLib\Basis\Calculation\ease.h" />
+    <ClInclude Include="code\_RNLib\Basis\Calculation\geometry.h" />
+    <ClInclude Include="code\_RNLib\Basis\Calculation\matrix.h" />
+    <ClInclude Include="code\_RNLib\Basis\Calculation\number.h" />
+    <ClInclude Include="code\_RNLib\Basis\default-data.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\camera.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\color.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\draw-info.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\draw-manager.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\draw-state.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\light3D.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\model.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\polygon2D.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\polygon3D.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\text2D.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\PutObject\text3D.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\text.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\texture.h" />
+    <ClInclude Include="code\_RNLib\Basis\Draw\transition.h" />
+    <ClInclude Include="code\_RNLib\Basis\input.h" />
+    <ClInclude Include="code\_RNLib\Basis\Mechanical\file.h" />
+    <ClInclude Include="code\_RNLib\Basis\Mechanical\memory.h" />
+    <ClInclude Include="code\_RNLib\Basis\Mechanical\object-manager.h" />
+    <ClInclude Include="code\_RNLib\Basis\Mechanical\object.h" />
+    <ClInclude Include="code\_RNLib\Basis\Mechanical\print.h" />
+    <ClInclude Include="code\_RNLib\Basis\Mechanical\regist.h" />
+    <ClInclude Include="code\_RNLib\Basis\Mechanical\window.h" />
+    <ClInclude Include="code\_RNLib\Basis\setting.h" />
+    <ClInclude Include="code\_RNLib\Basis\sound.h" />
+    <ClInclude Include="code\_RNLib\game-mode.h" />
+    <ClInclude Include="code\_RNLib\RNlib.h" />
+    <ClInclude Include="code\_RNLib\RNmain.h" />
+    <ClInclude Include="code\_RNLib\_Basis\3D\Camera\camera.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Draw\model.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Draw\polygon2D.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Draw\polygon3D.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Draw\text2D.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Draw\text3D.h" />
+    <ClInclude Include="code\_RNLib\_Basis\Other\regist.h" />
+    <ClInclude Include="code\Project\Object\Gimmick\goal-gate.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\TEXTURE\meteo000.png" />
+    <Image Include="data\TEXTURE\Object\block.png" />
+    <Image Include="data\TEXTURE\pillar000.jpg" />
   </ItemGroup>
   <ItemGroup>
     <Font Include="data\FONT\851Gkktt_005.ttf" />
@@ -527,9 +162,12 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="cos-mos.VC.db" />
+    <None Include="data\GAMEDATA\STAGE\csv\STAGE00.csv" />
+    <None Include="data\GAMEDATA\STAGE\STAGE_EDITOR.xlsx" />
     <None Include="Debug\cos-mos.exe" />
     <None Include="Debug\cos-mos.ilk" />
     <None Include="Debug\cos-mos.pdb" />
+    <None Include="Debug\meteor.obj.enc" />
     <None Include="mqo\1P.mqo" />
     <None Include="mqo\2P.mqo" />
     <None Include="mqo\Block.mqo" />
@@ -540,47 +178,14 @@
     <None Include="mqo\Spring Floor.mqo" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="data\GAMEDATA\BLOCK\BLOCK_DATA.txt" />
+    <Text Include="data\GAMEDATA\SOUND\SOUND_DATA.txt" />
+    <Text Include="data\GAMEDATA\STAGE\STAGE_FILE.txt" />
+    <Text Include="data\GAMEDATA\TEXTURE\TEXTURE_DATA.txt" />
     <Text Include="data\_RNData\AmbientLight.txt" />
     <Text Include="data\_RNData\Effect3DList.txt" />
     <Text Include="data\_RNData\FontList.txt" />
     <Text Include="data\_RNData\SoundList.txt" />
     <Text Include="data\_RNData\VisualSetting.txt" />
-    <ClInclude Include="code\Project\Object\stage-object.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Character\player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Mode\mode.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Mode\mode_game.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Block\block.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Gimmick\trampoline.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\System\csv_file.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\main.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\manager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\precompile.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="code\Project\Object\Gimmick\meteor.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <Text Include="data\GAMEDATA\BLOCK\BLOCK_DATA.txt" />
-    <Text Include="data\GAMEDATA\SOUND\SOUND_DATA.txt" />
-    <Text Include="data\GAMEDATA\STAGE\STAGE_FILE.txt" />
-    <Text Include="data\GAMEDATA\TEXTURE\TEXTURE_DATA.txt" />
   </ItemGroup>
 </Project>
