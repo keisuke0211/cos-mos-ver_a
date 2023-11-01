@@ -381,9 +381,11 @@ void CPlayer::Move(COLLI_VEC vec)
 			//重力処理
 		case COLLI_VEC::Y:
 			//トランポリンによる特殊ジャンプ中で、移動したら目標地点に到達するなら特殊ジャンプをOFFにする
-			if (Player.bTrampolineJump && Player.pos.y + Player.move.y == Player.fOrientHeight)
-					Player.bTrampolineJump = false;
-
+			if (Player.bTrampolineJump)
+			{
+				if(Player.pos.y + Player.move.y == Player.fOrientHeight)
+				Player.bTrampolineJump = false;
+			}
 			//通常時なら、重力処理でＹの移動量を計算
 			else Player.move.y += (Player.fGravity - Player.move.y) * Player.fGravityCorr;
 
@@ -889,6 +891,20 @@ void CPlayer::SetInfo(Info p1, Info p2)
 	//各プレイヤー情報設定
 	m_aInfo[0] = p1;	m_aInfo[0].StartPos = p1.pos;
 	m_aInfo[1] = p2;	m_aInfo[1].StartPos = p2.pos;
+}
+
+//----------------------------
+//プレイヤーにトランポリン用のジャンプを設定
+//----------------------------
+void CPlayer::SetTrampolineJump(Info*& pInfo, float fMaxHeight)
+{
+	SetSwapInterval();
+
+	//ジャンプ量を継承
+	pInfo->move.y = -(fMaxHeight / 10);
+	pInfo->fOrientHeight = -fMaxHeight;
+	pInfo->bTrampolineJump = true;
+	pInfo->bGround = false;
 }
 
 //----------------------------

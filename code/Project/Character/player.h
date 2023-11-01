@@ -96,53 +96,40 @@ public:
 	//----------------------------
 	static CPlayer *Create(void);
 
-	//----------------------------
 	//プレイヤー情報設定
 	//指定された番号のプレイヤー情報を設定します。
-	//----------------------------
 	void SetInfo(const Info info, const int nNum);
 
-	//----------------------------
 	//プレイヤー情報設定
 	//各プレイヤーの位置情報などを引数に渡してください。
 	//構造体「Info」に関してはplayer.hのクラス宣言を確認してください。
-	//----------------------------
 	void SetInfo(Info p1, Info p2);
 
-	//----------------------------
 	//プレイヤー位置情報設定
 	//指定したプレイヤーの位置情報を引数に渡してください。
-	//----------------------------
 	void SetPos(const int nNum, D3DXVECTOR3 pos) { m_aInfo[nNum].StartPos = m_aInfo[nNum].pos = pos; }
 
-	//----------------------------
 	//プレイヤー色情報設定
-	//指定したプレイヤーの位置情報を引数に渡してください。
-	//----------------------------
+	//指定したプレイヤーの色情報を引数に渡してください。
 	void SetColor(const int nNum, Color color) { m_aInfo[nNum].color = color; }
 
-	//----------------------------
+	//プレイヤーにトランポリン用のジャンプを設定
+	void SetTrampolineJump(Info*& pInfo, float fMaxHeight);
+
 	//プレイヤー情報取得
 	//各引数にプレイヤー情報のアドレスを渡します
-	//----------------------------
 	void GetInfo(Info*& pP1, Info*& pP2) { pP1 = &m_aInfo[0]; pP2 = &m_aInfo[1]; }
 
-	//----------------------------
 	//プレイヤー情報取得
 	//指定された番号のプレイヤー情報のアドレスを返します
-	//----------------------------
 	Info *GetInfo(int nNum) { return &m_aInfo[nNum]; }
 
-	//----------------------------
 	//プレイヤー情報取得
 	//指定された世界にいるプレイヤーの情報を返します
-	//----------------------------
 	Info *GetInfo(WORLD_SIDE side);
 
-	//----------------------------
 	//スワップインターバルを設定
 	//既にインターバルがあれば設定しない
-	//----------------------------
 	static void SetSwapInterval(void) { s_nSwapInterval = s_nSwapInterval == 0 ? SWAP_INTERVAL : s_nSwapInterval; }
 
 private:
