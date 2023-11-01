@@ -11,7 +11,7 @@
 
 
 #define MAX_COUNT		(12)	//最大カウント数
-#define PLAYER_FLAME	(12)	//プレイヤーの高さ到達カウント
+#define PLAYER_FLAME	(6)		//プレイヤーの高さ到達カウント
 #define RADIUS_WIDTH	(0.5f)	//横半径
 #define RADIUS_HEIGHT	(0.5f)	//縦半径
 #define CORRECT_WIDTH	(8.0f)	//高さ補正
@@ -32,7 +32,7 @@ CTrampoline::CTrampoline(void) {
 	//初期状態
 	m_type = TYPE::TRAMPOLINE;
 	m_width = SIZE_OF_1_SQUARE * 2;
-	m_height = SIZE_OF_1_SQUARE;
+	m_height = SIZE_OF_1_SQUARE * 1.5f;
 	m_state = STATE::NONE;
 	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_bLand = false;
@@ -173,27 +173,13 @@ void CTrampoline::Collision(void) {
 			&& p2->side == CPlayer::WORLD_SIDE::BEHIND)
 		{//2pが乗っているか
 
-			CPlayer::SetSwapInterval();
-
-			//ジャンプ量を継承
-			p2->move.y = -(p1->fMaxHeight / PLAYER_FLAME);
-			p2->fOrientHeight = -p1->fMaxHeight;
-			p2->bTrampolineJump = true;
-
-			p2->bGround = false;
+			pPlayer->SetTrampolineJump(p2, p1->fMaxHeight);
 		}
 		else if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + width
 			&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + height
 			&& p2->side == CPlayer::WORLD_SIDE::FACE)
 		{
-			CPlayer::SetSwapInterval();
-
-			//ジャンプ量を継承
-			p2->move.y = -(p1->fMaxHeight / PLAYER_FLAME);
-			p2->fOrientHeight = -p1->fMaxHeight;
-			p2->bTrampolineJump = true;
-
-			p2->bGround = false;
+			pPlayer->SetTrampolineJump(p2, p1->fMaxHeight);
 		}
 
 		if (m_state == STATE::NONE
@@ -223,27 +209,13 @@ void CTrampoline::Collision(void) {
 			&& p1->side == CPlayer::WORLD_SIDE::FACE)
 		{//1pが乗っているか
 
-			CPlayer::SetSwapInterval();
-
-			//ジャンプ量を継承
-			p1->move.y = -(p2->fMaxHeight / PLAYER_FLAME);
-			p1->fOrientHeight = -p2->fMaxHeight;
-			p1->bTrampolineJump = true;
-
-			p1->bGround = false;
+			pPlayer->SetTrampolineJump(p1, p2->fMaxHeight);
 		}
 		else if (p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + width
 			&& p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - height
 			&& p1->side == CPlayer::WORLD_SIDE::BEHIND)
 		{
-			CPlayer::SetSwapInterval();
-
-			//ジャンプ量を継承
-			p1->move.y = -(p2->fMaxHeight / PLAYER_FLAME);
-			p1->fOrientHeight = -p2->fMaxHeight;
-			p1->bTrampolineJump = true;
-
-			p1->bGround = false;
+			pPlayer->SetTrampolineJump(p1, p2->fMaxHeight);
 		}
 
 		if (m_state == STATE::NONE
@@ -260,4 +232,5 @@ void CTrampoline::Collision(void) {
 			m_nCnt = MAX_COUNT;
 		}
 	}
+
 }
