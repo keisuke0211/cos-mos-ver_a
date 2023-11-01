@@ -44,6 +44,7 @@ private:
 	static int s_nNumAll;					// パーツがいくつ存在するか
 	static const D3DXVECTOR3 PARTS_ADDROT;	// パーツの回転の移動量
 
+	int m_nEffctAnimCnt;	// エフェクトアニメカウント 
 	int ModelIdx;
-	bool m_bDisp;	//取得したかどうか
+	bool m_bDisp;		//　取得したかどうか
 }; 
