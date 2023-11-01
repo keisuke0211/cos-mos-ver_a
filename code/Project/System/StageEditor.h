@@ -27,21 +27,33 @@ public:
 	// ステージ種類情報
 	struct StageType
 	{
+		int		nIdx;				// ステージ番号
 		char	aFileName[0xff];	// ファイルパス
-		char	aTexFile[0xff];		// テクスチャパス
-		char	aStageName[0xff];	// ステージ名
+		char	aName[0xff];		// ステージ名
+	};
 
+	// 惑星種類情報
+	struct PlanetType
+	{
+		char	aTexFile[0xff];		// テクスチャパス
+		char	aName[0xff];		// 名前
+		StageType *StageType;		// ステージ情報
+		int nStageIdx;				// 現在のステージ
+		int nStageMax;				// 最大ステージ
 	};
 
 	// ステージ情報
 	struct StageInfo
 	{
+		// ファイル関連
 		int nRow;		// 行数
 		int nLine;		// 列数
 		int nRowMax;	// 行数の最大
 		int nLineMax;	// 列数の最大
-		int nStageIdx;	// 現在のステージ番号
-		int nStageMax;	// ステージの最大値
+
+		// ステージ関連
+		int nPlanetIdx;	// 現在の惑星
+		int nPlanetMax;	// 最大惑星
 	};
 
 	// 色
@@ -62,14 +74,14 @@ public:
 	/* ステージ切り替え	*/void SwapStage(int nStageIdx);
 
 	// -- 取得 ---------------------------------------------
-	/* 最大値			*/int GetStageMax(void) { return m_Info.nStageMax; }
-	/* 現在のステージ	*/int GetStageIdx(void) { return m_Info.nStageIdx; }
-	/* ステージ種類		*/StageType *GetType(void) { return m_StageType; }
+	/* 最大値			*/int GetPlanetMax(void) { return m_Info.nPlanetMax; }
+	/* 現在のステージ	*/int GetPlanetIdx(void) { return m_Info.nPlanetIdx; }
+	/* 惑星種類情報		*/PlanetType *GetType(void) { return m_PlanetType; }
 	/* 変換				*/bool ToData(int &val, CSVFILE *pFile, int nRow, int nLine);
 
 	// -- 読込 ---------------------------------------------
 	/* ファイルパス	*/void FileLoad(void);
-	/* ステージ読込	*/void StageLoad(int stage);
+	/* ステージ読込	*/void StageLoad(int planet,int stage);
 
 private:
 
@@ -99,7 +111,7 @@ private:
 	/* ステージ生成 */void SetStage(int nType);
 
 	// *** 変数宣言 ***
-	static StageType *m_StageType;		// ステージ種類
+	static PlanetType *m_PlanetType;	// 惑星情報
 	static StageColor m_StageColor;		// 色情報
 	StageInfo m_Info;					// ステージ情報
 };

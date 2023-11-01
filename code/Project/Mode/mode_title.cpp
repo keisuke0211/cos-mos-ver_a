@@ -35,10 +35,13 @@ CMode_Title::CMode_Title(void) {
 	}
 
 	m_nSelect = 0;
+	m_nOldSelect = 0;
+	m_nPlanetIdx = 0;
+	m_nOldnPlanet = 0;
 	m_PlanetAngle = 0.0f;
 	m_nSelect = 0;
 	m_nOldSelect = 0;
-	m_StageType = NULL;
+	m_PlanetType = NULL;
 	m_bMenuAnime = false;
 }
 
@@ -62,10 +65,10 @@ CMode_Title::~CMode_Title(void) {
 		}
 	}
 
-	if (m_StageType != NULL)
+	if (m_PlanetType != NULL)
 	{
-		delete[] m_StageType;
-		m_StageType = NULL;
+		delete[] m_PlanetType;
+		m_PlanetType = NULL;
 	}
 }
 
@@ -112,10 +115,10 @@ void CMode_Title::Init(void) {
 	m_MenuPos[1] = D3DXVECTOR3(280.0f, 300.0f, 1.0f);
 	m_MenuPos[2] = D3DXVECTOR3(280.0f, 450.0f, 1.0f);
 
-	m_TexIdx[0] = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\title.jpg");
-	m_TexIdx[1] = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\planet.png");
-	m_TexIdx[2] = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\planet.png");
-	m_TexIdx[3] = RNLib::Texture().Load("data\\TEXTURE\\Effect\\mark_smiley_000.png");
+	m_TexIdx[0] = RNLib::Texture().Load("data\\TEXTURE\\BackGround\\Space.png");
+	m_TexIdx[1] = RNLib::Texture().Load("data\\TEXTURE\\Planet\\blue.png");
+	m_TexIdx[2] = RNLib::Texture().Load("data\\TEXTURE\\Planet\\Orange.png");
+	m_TexIdx[3] = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Arrow_00.png");
 
 	// ‘JˆÚÝ’è
 	RNLib::Transition().Set(CTransition::STATE::OPEN, CTransition::TYPE::FADE);
@@ -174,9 +177,9 @@ void CMode_Title::Update(void) {
 	if (Title == TITLE_OUTSET || Title == TITLE_MENU)
 	{
 		if(Title == TITLE_OUTSET)
-			m_PlanetAngle += -0.01f;
+			m_PlanetAngle += -0.002f;
 		else if (Title == TITLE_MENU)
-			m_PlanetAngle += -0.005f;
+			m_PlanetAngle += -0.002f;
 
 		FloatLoopControl(&m_PlanetAngle, D3DX_PI, -D3DX_PI);
 	}
@@ -222,13 +225,13 @@ void CMode_Title::Update(void) {
 		case TITLE_SELECT:
 		{
 			TextClear(TITLE_NEXT);
-			CMode_Game::SetStage(m_nSelect);
+			CMode_Game::SetStage(m_nPlanetIdx,m_nSelect);
 			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::FADE);
 
-			if (m_StageType != NULL)
+			if (m_PlanetType != NULL)
 			{
-				delete[] m_StageType;
-				m_StageType = NULL;
+				delete[] m_PlanetType;
+				m_PlanetType = NULL;
 			}
 		}
 		break;
@@ -270,27 +273,27 @@ void CMode_Title::ProcessState(const PROCESS process) {
 //========================================
 void CMode_Title::PlanetAnime(void)
 {
-	if (m_BgPos[1].y >= 1060.0f)
+	if (m_BgPos[1].y >= 1000.0f)
 	{
 		D3DXVECTOR3 move = INITD3DXVECTOR3;
 
 		move.y = -15.0f;
 
 		m_BgPos[1] += move;
-		if (m_BgPos[1].y <= 1060.0f)
+		if (m_BgPos[1].y <= 1000.0f)
 		{
 			move.y = 0.0f;
-			m_BgPos[1].y = 1060;
+			m_BgPos[1].y = 1000;
 			Title = TITLE_TITLE;
 
 			{
-				m_WordsShadow[0] = CWords::Create("‚b", D3DXVECTOR3(786.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f,0.0f,0.0f,1.0f));
-				m_WordsShadow[1] = CWords::Create("‚n", D3DXVECTOR3(946.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-				m_WordsShadow[2] = CWords::Create("‚r", D3DXVECTOR3(1096.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[0] = CWords::Create("‚b", D3DXVECTOR3(786.0f, -52.0f, 0.0f),  D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f));
+				m_WordsShadow[1] = CWords::Create("‚n", D3DXVECTOR3(946.0f, -52.0f, 0.0f),  D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f));
+				m_WordsShadow[2] = CWords::Create("‚r", D3DXVECTOR3(1096.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f));
 				m_WordsShadow[3] = CWords::Create("^", D3DXVECTOR3(1246.0f, -54.0f, 0.0f), D3DXVECTOR3(100.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.8f, 0.2f, 0.4f, 1.0f));
-				m_WordsShadow[4] = CWords::Create("‚l", D3DXVECTOR3(1406.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-				m_WordsShadow[5] = CWords::Create("‚n", D3DXVECTOR3(1566.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
-				m_WordsShadow[6] = CWords::Create("‚r", D3DXVECTOR3(1706.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.0f, 0.0f, 0.0f, 1.0f));
+				m_WordsShadow[4] = CWords::Create("‚l", D3DXVECTOR3(1406.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f));
+				m_WordsShadow[5] = CWords::Create("‚n", D3DXVECTOR3(1566.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f));
+				m_WordsShadow[6] = CWords::Create("‚r", D3DXVECTOR3(1706.0f, -52.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.4f, 0.4f, 0.4f, 1.0f));
 			}
 			{
 				m_Words[0] = CWords::Create("‚b", D3DXVECTOR3(780.0f, -60.0f, 0.0f), D3DXVECTOR3(125.0f, 125.0f, 0.0f), CFont::FONT_ROND_B, D3DXCOLOR(0.2f, 0.8f, 0.5f, 1.0f));
@@ -510,7 +513,7 @@ void CMode_Title::Menu(void)
 	m_BgPos[3].y = m_MenuPos[m_nSelect].y;
 
 	RNLib::Polygon2D().Put(m_BgPos[3], 0.0f, false)
-		->SetSize(50.0f, 50.0f)
+		->SetSize(75.0f, 75.0f)
 		->SetCol(Color{ 255,255,255,255 })
 		->SetTex(m_TexIdx[3]);
 }
@@ -521,25 +524,30 @@ void CMode_Title::Menu(void)
 //========================================
 void CMode_Title::SelectCreate(void)
 {
+	Manager::StgEd()->Uninit();
 	Manager::StgEd()->FileLoad();
-	int nMax = Manager::StgEd()->GetStageMax();
+	int nPlanetMax = Manager::StgEd()->GetPlanetMax();
 
-	m_StageType = new StageType[nMax];
+	m_PlanetType = new PlanetType[nPlanetMax];
 
-	for (int nCnt = 0; nCnt < nMax; nCnt++)
+	for (int nCnt = 0; nCnt < nPlanetMax; nCnt++)
 	{
 		char *aTexFile = Manager::StgEd()->GetType()[nCnt].aTexFile;
-		char *aStgName = Manager::StgEd()->GetType()[nCnt].aStageName;
+		char *aStgName = Manager::StgEd()->GetType()[nCnt].aName;
 
-		m_StageType[nCnt].nTex = RNLib::Texture().Load(aTexFile);
-		sprintf(m_StageType[nCnt].Text, aStgName);
+		m_PlanetType[nCnt].nTex = RNLib::Texture().Load(aTexFile);
+		sprintf(m_PlanetType[nCnt].Text, aStgName);
 	}
 
 	TextClear(TITLE_SELECT);
 	FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),65.0f,5,10,-1 };// 45
 	m_Menu[0] = CFontText::Create(
-		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-		m_StageType[0].Text, CFont::FONT_ROND_B, &pFont);
+		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(360.0f, 70.0f),
+		m_PlanetType[0].Text, CFont::FONT_ROND_B, &pFont);
+
+	m_Menu[1] = CFontText::Create(
+		CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(400.0f, 80.0f),
+		Manager::StgEd()->GetType()[0].StageType[0].aName, CFont::FONT_ROND_B, &pFont);
 }
 
 //========================================
@@ -548,7 +556,8 @@ void CMode_Title::SelectCreate(void)
 //========================================
 void CMode_Title::StageSelect(void)
 {
-	int nMax = Manager::StgEd()->GetStageMax();
+	int nPlanetMax = Manager::StgEd()->GetPlanetMax();
+	int nStageMax = Manager::StgEd()->GetType()[m_nPlanetIdx].nStageMax;
 	int nChoiceTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\mark_smiley_000.png");
 	int nNoChoiceTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Circle_005.png");
 	int nPrevTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Arrow_01.png");
@@ -557,26 +566,25 @@ void CMode_Title::StageSelect(void)
 	int nTexIdx = 0;
 
 	// ƒXƒe[ƒW‰æ‘œ
-	RNLib::Polygon2D().Put(D3DXVECTOR3(RNLib::Window().GetCenterPos().x, RNLib::Window().GetCenterPos().y - 120.0f, -1.0f), 0.0f, false)
-		->SetSize(880.0f, 480.0f)
+	RNLib::Polygon2D().Put(D3DXVECTOR3(RNLib::Window().GetCenterPos().x, RNLib::Window().GetCenterPos().y, 0.0f), 0.0f, false)
+		->SetSize(780.0f, 780.0f)
 		->SetCol(Color{ 255,255,255,255 })
-		->SetTex(m_StageType[m_nSelect].nTex);
+		->SetTex(m_PlanetType[m_nPlanetIdx].nTex);
 
-	if (m_nSelect != 0)
-	{
+	if ((m_nPlanetIdx == 0 && m_nSelect != 0) || (m_nPlanetIdx != 0))
 		RNLib::Polygon2D().Put(D3DXVECTOR3(400.0f, 550.0f, 0.0), 0.0f, false)
-			->SetSize(100.0f, 100.0f)
-			->SetCol(Color{ 50,255,0,255 })
-			->SetTex(nPrevTex);
-	}
-	if(m_nSelect != nMax - 1)
-	RNLib::Polygon2D().Put(D3DXVECTOR3(880.0f, 550.0f, 0.0), 0.0f, false)
+		->SetSize(100.0f, 100.0f)
+		->SetCol(Color{ 50,255,0,255 })
+		->SetTex(nPrevTex);
+
+	if ((m_nPlanetIdx != nPlanetMax-1) || (m_nPlanetIdx == nPlanetMax-1 && m_nSelect != nStageMax-1))
+		RNLib::Polygon2D().Put(D3DXVECTOR3(880.0f, 550.0f, 0.0), 0.0f, false)
 		->SetSize(100.0f, 100.0f)
 		->SetCol(Color{ 50,255,0,255 })
 		->SetTex(nNextTex);
 
 	// ‘I‘ðƒAƒCƒRƒ“
-	for (int nCnt = 0; nCnt < nMax; nCnt++)
+	for (int nCnt = 0; nCnt < nStageMax; nCnt++)
 	{
 		if (nCnt == m_nSelect)
 		{
@@ -587,7 +595,7 @@ void CMode_Title::StageSelect(void)
 			nTexIdx = nNoChoiceTex;
 		}
 		D3DXVECTOR3 pos = D3DXVECTOR3(RNLib::Window().GetCenterPos().x, 680,1.0f);
-		pos.x += ((nMax * -0.5f) + nCnt + 0.5f) * 50;
+		pos.x += ((nStageMax * -0.5f) + nCnt + 0.5f) * 50;
 
 		RNLib::Polygon2D().Put(pos, 0.0f, false)
 			->SetSize(40.0f, 40.0f)
@@ -610,17 +618,43 @@ void CMode_Title::StageSelect(void)
 
 	if (bInput)
 	{
-		IntControl(&m_nSelect, nMax - 1, 0);
+		if (m_nSelect < 0 && m_nPlanetIdx != 0)
+		{
+			m_nPlanetIdx--;
+			nStageMax = Manager::StgEd()->GetType()[m_nPlanetIdx].nStageMax;
+			m_nSelect = nStageMax - 1;
+			
+		}
+		else if (m_nSelect >= nStageMax && m_nPlanetIdx != nPlanetMax-1)
+		{
+			m_nPlanetIdx++;
+			m_nSelect = 0;
+			nStageMax = Manager::StgEd()->GetType()[m_nPlanetIdx].nStageMax;
+		}
+
+		IntControl(&m_nSelect, nStageMax - 1, 0);
 
 		if (m_nSelect != m_nOldSelect)
 		{
 			m_nOldSelect = m_nSelect;
 
-			TextClear(TITLE_SELECT);
+			m_Menu[1]->Uninit();
+			m_Menu[1] = NULL;
+			FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),65.0f,5,10,-1 };
+			m_Menu[1] = CFontText::Create(
+				CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(400.0f, 80.0f),
+				Manager::StgEd()->GetType()[m_nPlanetIdx].StageType[m_nSelect].aName, CFont::FONT_ROND_B, &pFont);
+		}
+		if (m_nPlanetIdx != m_nOldnPlanet)
+		{
+			m_nOldnPlanet = m_nPlanetIdx;
+
+			m_Menu[0]->Uninit();
+			m_Menu[0] = NULL;
 			FormFont pFont = { D3DXCOLOR(1.0f,1.0f,1.0f,1.0f),65.0f,5,10,-1 };
 			m_Menu[0] = CFontText::Create(
-				CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 550.0f, 0.0f), D3DXVECTOR2(360.0f, 100.0f),
-				m_StageType[m_nSelect].Text, CFont::FONT_ROND_B, &pFont);
+				CFontText::BOX_NORMAL_RECT, D3DXVECTOR3(640.0f, 50.0f, 0.0f), D3DXVECTOR2(360.0f, 70.0f),
+				m_PlanetType[m_nPlanetIdx].Text, CFont::FONT_ROND_B, &pFont);
 		}
 	}
 

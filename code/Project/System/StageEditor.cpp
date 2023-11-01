@@ -14,7 +14,7 @@
 //========================================
 // 静的変数
 //========================================
-CStageEditor::StageType *CStageEditor::m_StageType = NULL;
+CStageEditor::PlanetType *CStageEditor::m_PlanetType = NULL;
 CStageEditor::StageColor CStageEditor::m_StageColor = {NULL};
 const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.txt";
 
@@ -23,13 +23,14 @@ const char* CStageEditor::STAGE_INFO_FILE = "data\\GAMEDATA\\STAGE\\STAGE_FILE.t
 //========================================
 CStageEditor::CStageEditor(void)
 {
-	if (m_StageType != NULL)
+	if (m_PlanetType != NULL)
 	{
-		delete[] m_StageType;
-		m_StageType = NULL;
+		Uninit();
 	}
-
-	m_StageType = NULL;
+	else
+	{
+		m_PlanetType = NULL;
+	}
 
 	{
 		m_StageColor.Set = INITCOLOR;
@@ -43,8 +44,6 @@ CStageEditor::CStageEditor(void)
 	m_Info.nLine = 0;
 	m_Info.nRowMax = 0;
 	m_Info.nLineMax = 0;
-	m_Info.nStageIdx = 0;
-	m_Info.nStageMax = 0;
 }
 
 //========================================
@@ -52,10 +51,19 @@ CStageEditor::CStageEditor(void)
 //========================================
 CStageEditor::~CStageEditor()
 {
-	if (m_StageType != NULL)
+	if (m_PlanetType != NULL)
 	{
-		delete[] m_StageType;
-		m_StageType = NULL;
+		for (int nPlanet = 0; nPlanet < m_Info.nPlanetMax; nPlanet++)
+		{
+			if (m_PlanetType[nPlanet].StageType != NULL)
+			{
+				delete[] m_PlanetType[nPlanet].StageType;
+				m_PlanetType[nPlanet].StageType = NULL;
+			}
+		}
+
+		delete[] m_PlanetType;
+		m_PlanetType = NULL;
 	}
 }
 
@@ -65,10 +73,19 @@ CStageEditor::~CStageEditor()
 //========================================
 void CStageEditor::Uninit(void)
 {
-	if (m_StageType != NULL)
+	if (m_PlanetType != NULL)
 	{
-		delete[] m_StageType;
-		m_StageType = NULL;
+		for (int nPlanet = 0; nPlanet < m_Info.nPlanetMax; nPlanet++)
+		{
+			if (m_PlanetType[nPlanet].StageType != NULL)
+			{
+				delete[] m_PlanetType[nPlanet].StageType;
+				m_PlanetType[nPlanet].StageType = NULL;
+			}
+		}
+
+		delete[] m_PlanetType;
+		m_PlanetType = NULL;
 	}
 }
 
@@ -78,7 +95,8 @@ void CStageEditor::Uninit(void)
 //========================================
 void CStageEditor::FileLoad(void)
 {
-	int nCntStage = 0;
+	int nCntPlanet = 0;
+	int *nCntStage;
 	char aDataSearch[TXT_MAX];	// データ検索用
 
 	// ファイルの読み込み
@@ -98,6 +116,13 @@ void CStageEditor::FileLoad(void)
 		if (!strcmp(aDataSearch, "END"))
 		{// 読み込みを終了
 			fclose(pFile);
+
+			if (nCntStage != NULL)
+			{
+				delete[] nCntStage;
+				nCntStage = NULL;
+			}
+
 			break;
 		}
 		if (aDataSearch[0] == '#')
@@ -105,7 +130,7 @@ void CStageEditor::FileLoad(void)
 			continue;
 		}
 
-		if (!strcmp(aDataSearch, "NUM_STAGE"))
+		if (!strcmp(aDataSearch, "NUM_PLANET"))
 		{
 			int nMax = -1;
 
@@ -117,22 +142,50 @@ void CStageEditor::FileLoad(void)
 				nMax = 0;
 			}
 
-			m_Info.nStageMax = nMax;
-			m_StageType = new StageType[nMax];
-			assert(m_StageType != NULL);
+			m_Info.nPlanetMax = nMax;
+			m_PlanetType = new PlanetType[nMax];
+			assert(m_PlanetType != NULL);
 
-			m_Info.nStageMax = nMax;	// 最大数の保存
+			nCntStage = new int[nMax];
+
+			for (int nCnt = 0; nCnt < nMax; nCnt++)
+			{
+				nCntStage[nCnt] = 0;
+			}
+
+		}
+		else if (!strcmp(aDataSearch, "PLANET"))
+		{
+			if (nCntPlanet < m_Info.nPlanetMax)
+			{
+				int StageMax = 0;
+
+				fscanf(pFile, "%s", &aDataSearch[0]);
+				fscanf(pFile, "%d", &StageMax);	// ステージ数
+
+				m_PlanetType[nCntPlanet].nStageMax = StageMax;
+				m_PlanetType[nCntPlanet].StageType = new StageType[StageMax];
+				assert(m_PlanetType[nCntPlanet].StageType != NULL);
+
+				fscanf(pFile, "%s", &m_PlanetType[nCntPlanet].aTexFile[0]);	// テクスチャパス
+				fscanf(pFile, "%s", &m_PlanetType[nCntPlanet].aName[0]);	// 惑星名
+
+				nCntPlanet++;
+			}
 		}
 		else if (!strcmp(aDataSearch, "STAGE"))
 		{
-			if (nCntStage < m_Info.nStageMax)
-			{
-				fscanf(pFile, "%s", &aDataSearch[0]);
-				fscanf(pFile, "%s", &m_StageType[nCntStage].aFileName[0]);	// ファイル名
-				fscanf(pFile, "%s", &m_StageType[nCntStage].aTexFile[0]);	// ステージ画像
-				fscanf(pFile, "%s", &m_StageType[nCntStage].aStageName[0]);	// ステージ名
+			int nPlanet = -1;
 
-				nCntStage++;
+			fscanf(pFile, "%s", &aDataSearch[0]);
+			fscanf(pFile, "%d", &nPlanet);	// 惑星番号
+
+			if (nCntStage[nPlanet] < m_PlanetType[nPlanet].nStageMax)
+			{
+				fscanf(pFile, "%s", &m_PlanetType[nPlanet].StageType[nCntStage[nPlanet]].aFileName[0]);	// ファイル名
+				fscanf(pFile, "%s", &m_PlanetType[nPlanet].StageType[nCntStage[nPlanet]].aName[0]);		// ステージ名
+
+				nCntStage[nPlanet]++;
 			}
 		}
 	}
@@ -142,21 +195,22 @@ void CStageEditor::FileLoad(void)
 // ステージ読み込み
 // Author:KEISUKE OTONO
 //========================================
-void CStageEditor::StageLoad(int stage)
+void CStageEditor::StageLoad(int planet, int stage)
 {
 	//プレイヤー初期化
 	CMode_Game::GetPlayer()->Init();
 
 	CSVFILE *pFile = new CSVFILE;
 
-	m_Info.nStageIdx = stage;
+	m_Info.nPlanetIdx = planet;
+	m_PlanetType[planet].nStageIdx = stage;
 	bool bSet = true;
 	bool bEnd = false;
 
-	IntControl(&m_Info.nStageIdx, m_Info.nStageMax, 0);
+	IntControl(&m_PlanetType[planet].nStageIdx, m_PlanetType[planet].nStageIdx, 0);
 
 	// 読み込み
-	pFile->FileLood(m_StageType[m_Info.nStageIdx].aFileName, false, false, ',');
+	pFile->FileLood(m_PlanetType[planet].StageType[stage].aFileName, false, false, ',');
 
 	// 行数の取得
 	int nRowMax = pFile->GetRowSize();
@@ -408,12 +462,15 @@ void CStageEditor::SetStage(int nType)
 //========================================
 void CStageEditor::SwapStage(int nStageIdx)
 {
-	if (m_Info.nStageIdx != nStageIdx)
+	int planet = m_Info.nPlanetIdx;
+	int stage = m_PlanetType[planet].nStageIdx;
+
+	if (stage != nStageIdx)
 	{
 		if (RNLib::Transition().GetState() == CTransition::STATE::NONE)
 		{
 			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::FADE);
-			CMode_Game::SetStage(nStageIdx);
+			CMode_Game::SetStage(planet,nStageIdx);
 		}
 	}
 }

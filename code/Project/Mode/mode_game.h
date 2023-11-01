@@ -47,7 +47,7 @@ public:
 	static CPlayer* GetPlayer(void);
 
 	// -- ê›íË -------------------------------------------------------------------
-	static void SetStage(int Idx) { m_nStageIdx = Idx; }
+	static void SetStage(int planet, int stage) { m_nPlanetIdx = planet; m_nStageIdx = stage; }
 	static void SetBgUpColor(Color color) { m_BgColorUp = color; }
 	static void SetBgDownColor(Color color) { m_BgColorDown = color; }
 
@@ -63,6 +63,7 @@ private:
 
 	//========== [[[ ïœêîêÈåæ ]]]
 	static CPlayer *s_pPlayer;
+	static int m_nPlanetIdx;
 	static int m_nStageIdx;
 	int m_nSelect;
 	CFontText *m_Menu[MENU_MAX];
