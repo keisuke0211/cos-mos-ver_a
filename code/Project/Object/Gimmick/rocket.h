@@ -36,7 +36,6 @@ public:
 		short nModelIdx;		// モデル番号
 		int	nRideAnimeCounter;	// ライドアニメーションカウンター
 		int	nFlyAnimeCounter;	// 飛行アニメーションカウンター
-		int nCountPlayer;		// プレイヤーのカウント
 	};
 	
 	// *** 関数 ***
@@ -62,14 +61,16 @@ public:
 private:
 
 	// *** 変数 ***
-	Info m_Info;		// 共通情報
+	Info m_Info;			// 共通情報
+	static int  s_nCountPlayer;		// プレイヤーのカウント
 
 	static const int   s_AnimeMax;
 	static const int   s_RideAnimeMax;
+	static const int   s_RotAnimeMax;
+	static const int   s_FadeModeCountMax;
 	static const float s_RideAnimeMag;
 	static const float s_RideAnimeShrink;
 	static const float s_RotAdd;
-	static const int   s_RotAnimeMax;
 	static const float s_MoveMag;
 	static const float s_MoveAdd;
 };

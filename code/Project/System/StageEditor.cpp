@@ -123,12 +123,15 @@ void CStageEditor::FileLoad(void)
 		}
 		else if (!strcmp(aDataSearch, "STAGE"))
 		{
-			fscanf(pFile, "%s", &aDataSearch[0]);
-			fscanf(pFile, "%s", &m_StageType[nCntStage].aFileName[0]);	// ファイル名
-			fscanf(pFile, "%s", &m_StageType[nCntStage].aTexFile[0]);	// ステージ画像
-			fscanf(pFile, "%s", &m_StageType[nCntStage].aStageName[0]);	// ステージ名
+			if (nCntStage < m_Info.nStageMax)
+			{
+				fscanf(pFile, "%s", &aDataSearch[0]);
+				fscanf(pFile, "%s", &m_StageType[nCntStage].aFileName[0]);	// ファイル名
+				fscanf(pFile, "%s", &m_StageType[nCntStage].aTexFile[0]);	// ステージ画像
+				fscanf(pFile, "%s", &m_StageType[nCntStage].aStageName[0]);	// ステージ名
 
-			nCntStage++;
+				nCntStage++;
+			}
 		}
 	}
 }
@@ -412,11 +415,10 @@ void CStageEditor::SwapStage(int nStageIdx)
 {
 	if (m_Info.nStageIdx != nStageIdx)
 	{
-		Manager::BlockMgr()->ReleaseAll();
-
-		if (nStageIdx < m_Info.nStageMax)
+		if (RNLib::Transition().GetState() == CTransition::STATE::NONE)
 		{
-			StageLoad(nStageIdx);
+			Manager::Transition(CMode::TYPE::GAME, CTransition::TYPE::FADE);
+			CMode_Game::SetStage(nStageIdx);
 		}
 	}
 }
@@ -425,7 +427,6 @@ void CStageEditor::SwapStage(int nStageIdx)
 // 変換
 // Author:KEISUKE OTONO
 //========================================
-
 // int
 bool CStageEditor::ToData(int &val, CSVFILE *pFile, int nRow, int nLine)
 {

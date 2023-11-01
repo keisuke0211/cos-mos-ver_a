@@ -31,6 +31,7 @@ CParts::CParts(void) {
 	ModelIdx = RNLib::Model().Load("data\\MODEL\\Rocket_Engine_break.x");
 	m_rot = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
 
+	m_nEffctAnimCnt = 0;
 	s_nNumAll++;
 }
 
@@ -86,6 +87,15 @@ void CParts::Update(void) {
 	RNLib::Model().Put(m_pos, m_rot, ModelIdx, false)
 		->SetCol(Color{ (int)(255 * fBrightness),(int)(255 * fBrightness),(int)(255 * fBrightness),255 })
 		->SetOutLine(true);
+
+	int ParTex = RNLib::Texture().Load("data\\TEXTURE\\Effect\\eff_Hit_002.png");
+
+	m_nEffctAnimCnt++;
+
+	if (m_nEffctAnimCnt % 6 == 1)
+	{
+		Manager::EffectMgr()->EffectCreate(ParTex, m_pos, INIT_EFFECT_SCALE, INITCOLOR);
+	}
 }
 
 //---------------------------

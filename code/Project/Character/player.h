@@ -62,6 +62,7 @@ public:
 		D3DXVECTOR3 posOLd;       //前回位置
 		D3DXVECTOR3 rot;          //向き
 		D3DXVECTOR3 move;         //移動量
+		Color		color;		  //色
 		bool		bGround;      //地面に接しているか
 		bool		bJump;        //ジャンプ
 		bool		bRide;        //ロケットに乗っているかどうか
@@ -70,8 +71,8 @@ public:
 		float		fGravityCorr; //重力係数
 		int			nModelIdx;    //モデル番号
 		WORLD_SIDE  side;         //どちらの世界に存在するか
-		int  Keyborad[(int)WORLD_SIDE::MAX][(int)KEY_CONFIG::MAX];	//キーボードのキー配置
-		CInput::BUTTON  JoyPad[(int)KEY_CONFIG::MAX];							//ジョイパッドのボタン配置
+		int             Keyborad[(int)WORLD_SIDE::MAX][(int)KEY_CONFIG::MAX]; //キーボードのキー配置
+		CInput::BUTTON  JoyPad[(int)KEY_CONFIG::MAX];                         //ジョイパッドのボタン配置
 	};
 
 	static const float SIZE_WIDTH;	//横幅
@@ -110,6 +111,12 @@ public:
 	//指定したプレイヤーの位置情報を引数に渡してください。
 	//----------------------------
 	void SetPos(const int nNum, D3DXVECTOR3 pos) { m_aInfo[nNum].StartPos = m_aInfo[nNum].pos = pos; }
+
+	//----------------------------
+	//プレイヤー色情報設定
+	//指定したプレイヤーの位置情報を引数に渡してください。
+	//----------------------------
+	void SetPos(const int nNum, Color color) { m_aInfo[nNum].color = color; }
 
 	//----------------------------
 	//プレイヤー情報取得
@@ -179,6 +186,7 @@ private:
 	void FixPos_RIGHT(float *pPosX, float fMaxPosX, float *pMoveX);//右からの当たり判定による位置・移動量修正
 
 	void CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
+	void CollisionFillBlock(COLLI_ROT ColliRot);
 	void CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);
 	void CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock,D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos, COLLI_ROT ColliRot);

@@ -67,6 +67,8 @@ public:
 	void  Update(void);
 	void  ProcessState(const PROCESS process);
 
+	/*　タイトルモード	*/static void SetSelect(bool bSelect) { s_bStageSelect = bSelect; }
+
 private:
 	// *** 列挙型 ***
 
@@ -89,6 +91,9 @@ private:
 	/* ステージ選択生成			*/void SelectCreate(void);
 	/* ステージ選択				*/void StageSelect(void);
 	/* テキスト削除				*/void TextClear(TITLE aTitle);
+
+	// *** 静的変数 ***
+	static bool s_bStageSelect;
 
 	// *** 変数 ***
 	TITLE Title;
