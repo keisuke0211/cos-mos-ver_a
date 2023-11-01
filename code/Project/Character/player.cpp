@@ -54,7 +54,9 @@ CPlayer::CPlayer()
 		Player.fJumpPower = 0.0f;			//ジャンプ量
 		Player.fGravity = 0.0f;				//重力
 		Player.fGravityCorr = 0.0f;			//重力係数
-		Player.fLastHeight = 0.0f;			//最高Ｙ座標
+		Player.fMaxHeight = 0.0f;			//最高Ｙ座標
+		Player.fOrientHeight = 0.0f;		//トランポリンによって跳ね上がる最高到達地点
+		Player.bTrampolineJump = false;		//トランポリン用の特殊ジャンプ
 		Player.nModelIdx = NONEDATA;		//モデル番号
 		Player.side = WORLD_SIDE::FACE;		//どちらの世界に存在するか
 	}
@@ -83,9 +85,9 @@ CPlayer *CPlayer::Create(void)
 	return pPlayer;
 }
 
-//=======================================
+//=====================================================================================================================
 //初期化処理
-//=======================================
+//=====================================================================================================================
 HRESULT CPlayer::Init(void)
 {
 	//１Ｐ初期情報
@@ -161,9 +163,9 @@ void CPlayer::InitKeyConfig(void)
 	}
 }
 
-//=======================================
+//=====================================================================================================================
 //終了処理
-//=======================================
+//=====================================================================================================================
 void CPlayer::Uninit(void)
 {
 
@@ -181,9 +183,9 @@ void CPlayer::SetPosOld(void)
 	}
 }
 
-//=======================================
+//=====================================================================================================================
 //更新処理
-//=======================================
+//=====================================================================================================================
 void CPlayer::Update(void)
 {
 	//前回位置更新
@@ -200,6 +202,8 @@ void CPlayer::Update(void)
 
 	//情報更新
 	UpdateInfo();
+
+	RNLib::Text2D().PutDebugLog(CreateText("FPS:%d", RNLib::GetFPSCount()));
 }
 
 //----------------------------
@@ -232,10 +236,10 @@ void CPlayer::UpdateInfo(void)
 		//最高Ｙ座標更新
 		switch (Player.side)
 		{
-			case WORLD_SIDE::FACE:	 Player.fLastHeight = Player.fLastHeight < Player.pos.y ? Player.pos.y : Player.fLastHeight; break;
-			case WORLD_SIDE::BEHIND: Player.fLastHeight = Player.fLastHeight > Player.pos.y ? Player.pos.y : Player.fLastHeight; break;
+			case WORLD_SIDE::FACE:	 Player.fMaxHeight = Player.fMaxHeight < Player.pos.y ? Player.pos.y : Player.fMaxHeight; break;
+			case WORLD_SIDE::BEHIND: Player.fMaxHeight = Player.fMaxHeight > Player.pos.y ? Player.pos.y : Player.fMaxHeight; break;
 		}
-		RNLib::Text2D().PutDebugLog(CreateText("%dP最高Ｙ座標：%f", nCntPlayer, Player.fLastHeight));
+		RNLib::Text2D().PutDebugLog(CreateText("%dP最高Ｙ座標：%f", nCntPlayer, Player.fMaxHeight));
 	}
 }
 
@@ -345,6 +349,7 @@ void CPlayer::Death(D3DXVECTOR3 *pDeathPos)
 		Player.bGround = false;
 		Player.bJump = true;
 		Player.bRide = false;
+		Player.bTrampolineJump = false;
 	}
 }
 
@@ -375,7 +380,12 @@ void CPlayer::Move(COLLI_VEC vec)
 
 			//重力処理
 		case COLLI_VEC::Y:
-			Player.move.y += (Player.fGravity - Player.move.y) * Player.fGravityCorr;
+			//トランポリンによる特殊ジャンプ中で、移動したら目標地点に到達するなら特殊ジャンプをOFFにする
+			if (Player.bTrampolineJump && Player.pos.y + Player.move.y == Player.fOrientHeight)
+					Player.bTrampolineJump = false;
+
+			//通常時なら、重力処理でＹの移動量を計算
+			else Player.move.y += (Player.fGravity - Player.move.y) * Player.fGravityCorr;
 
 			//位置更新
 			Player.pos.y += Player.move.y;
@@ -538,7 +548,7 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 		if (pInfo->side == WORLD_SIDE::FACE) {
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
-			pInfo->fLastHeight = MaxPos.y;//最高Ｙ座標設定
+			pInfo->fMaxHeight = MaxPos.y;//最高Ｙ座標設定
 		}
 		break;
 
@@ -553,7 +563,7 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 		if (pInfo->side == WORLD_SIDE::BEHIND) {
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
-			pInfo->fLastHeight = MinPos.y;//最高Ｙ座標設定
+			pInfo->fMaxHeight = MinPos.y;//最高Ｙ座標設定
 		}
 		break;
 
@@ -607,7 +617,7 @@ void CPlayer::CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 M
 		if (pInfo->side == WORLD_SIDE::FACE) {
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
-			pInfo->fLastHeight = MaxPos.y;//最高Ｙ座標設定
+			pInfo->fMaxHeight = MaxPos.y;//最高Ｙ座標設定
 		}
 		break;
 
@@ -622,7 +632,7 @@ void CPlayer::CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 M
 		if (pInfo->side == WORLD_SIDE::BEHIND) {
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
-			pInfo->fLastHeight = MinPos.y;//最高Ｙ座標設定
+			pInfo->fMaxHeight = MinPos.y;//最高Ｙ座標設定
 		}
 		break;
 	}
@@ -696,7 +706,7 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 			pInfo->pos += pMoveBlock->GetMove();
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
-			pInfo->fLastHeight = MaxPos.y;//最高Ｙ座標設定
+			pInfo->fMaxHeight = MaxPos.y;//最高Ｙ座標設定
 		}
 		break;
 
@@ -713,7 +723,7 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 			pInfo->pos += pMoveBlock->GetMove();
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
-			pInfo->fLastHeight = MinPos.y;//最高Ｙ座標設定
+			pInfo->fMaxHeight = MinPos.y;//最高Ｙ座標設定
 		}
 		break;
 
@@ -734,36 +744,32 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 		break;
 
 	case COLLI_ROT::UNKNOWN:
-		/*
 		//移動床 -> プレイヤーへの当たり判定処理を実行
 		const D3DXVECTOR3 BlockPos = pMoveBlock->GetPos();
 		const D3DXVECTOR3 BlockPosOld = pMoveBlock->GetPosOld();
 		const float fWidth = pMoveBlock->GetWidth() * 0.5f;
 		const float fHeight = pMoveBlock->GetHeight() * 0.5f;
-		const D3DXVECTOR3 PlayerMinPos = D3DXVECTOR3(pInfo->pos.x - SIZE_WIDTH, pInfo->pos.y - SIZE_HEIGHT, 0.0f);
-		const D3DXVECTOR3 PlayerMaxPos = D3DXVECTOR3(pInfo->pos.x + SIZE_WIDTH, pInfo->pos.y + SIZE_HEIGHT, 0.0f);
 
 		//移動床からの当たり判定
 		for (int nCntVec = 0; nCntVec < (int)COLLI_VEC::MAX; nCntVec++)
 		{
-		//プレイヤーのどの方向に当たっているか
-		COLLI_ROT ColliRot_Player = IsBoxCollider(BlockPos, BlockPosOld, fWidth, fHeight, PlayerMinPos, PlayerMaxPos, (COLLI_VEC)nCntVec);
+			//プレイヤーのどの方向に当たっているか
+			COLLI_ROT ColliRot_Player = IsBoxCollider(BlockPos, BlockPosOld, fWidth, fHeight, pInfo->pos, pInfo->posOLd, SIZE_WIDTH, SIZE_HEIGHT, (COLLI_VEC)nCntVec);
 
-		//それでも当たらないなら、スキップ
-		if (ColliRot_Player == COLLI_ROT::NONE || ColliRot_Player == COLLI_ROT::UNKNOWN) continue;
+			//それでも当たらないなら、スキップ
+			if (ColliRot_Player == COLLI_ROT::NONE || ColliRot_Player == COLLI_ROT::UNKNOWN) continue;
 
-		//当たった方向（上下・左右）を反転する
-		{
-		//当たった方向をint型に変換 - 1
-		const int nRot = (int)ColliRot_Player;
+			//当たった方向（上下・左右）を反転する
+			{
+				//当たった方向をint型に変換
+				const int nRot = (int)ColliRot_Player;
 
-		ColliRot_Player = (COLLI_ROT)(nRot - 1 + 2 * (nRot % 2));
+				ColliRot_Player = (COLLI_ROT)(nRot - 1 + 2 * (nRot % 2));
+			}
+
+			//もう一度当たり判定
+			CollisionMoveBlock(pInfo, pMoveBlock, MinPos, MaxPos, ColliRot_Player);
 		}
-
-		//もう一度当たり判定
-		CollisionMoveBlock(pInfo, pMoveBlock, MinPos, MaxPos, ColliRot_Player);
-		}
-		*/
 		break;
 	}
 }
