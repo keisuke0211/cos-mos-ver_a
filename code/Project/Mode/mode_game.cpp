@@ -15,8 +15,6 @@
 //==========| CMode_GameƒNƒ‰ƒX‚Ìƒƒ“ƒoŠÖ”
 //----------|---------------------------------------------------------------------
 //================================================================================
-#define COLOR_UP   Color{255,191,0,255}
-#define COLOR_DOWN Color{52,184,0,255}
 static const int s_PlanetMaxSummon = 8;		// oŒ»‚·‚éˆÊ’u‚ÌÅ‘å”
 static const int s_StarMaxSummon = 10;		// oŒ»‚·‚éˆÊ’u‚ÌÅ‘å”
 static const D3DXVECTOR3 s_PlanetSummonPos[s_PlanetMaxSummon] = {	// ˜f¯‚ÌoŒ»‚·‚éˆÊ’u
@@ -41,6 +39,8 @@ static const D3DXVECTOR3 s_StarSummonPos[s_StarMaxSummon] = {	// ¯‚ÌoŒ»‚·‚éˆÊ’
 	D3DXVECTOR3(400.0f,  -100.0f ,500.0f),
 	D3DXVECTOR3(500.0f,  0.0f ,500.0f),
 };
+Color CMode_Game::m_BgColorUp = INITCOLOR;
+Color CMode_Game::m_BgColorDown = INITCOLOR;
 CPlayer *CMode_Game::s_pPlayer = NULL;
 CPlayer* CMode_Game::GetPlayer(void) { return s_pPlayer; }
 int CMode_Game::m_nStageIdx = 0;
@@ -91,7 +91,7 @@ void CMode_Game::Init(void) {
 	// ƒXƒe[ƒW¶¬
 	Manager::StgEd()->StageLoad(m_nStageIdx);
 
-	SetBGColor(COLOR_UP);
+	SetBGColor(m_BgColorUp);
 }
 
 //========================================
@@ -137,7 +137,7 @@ void CMode_Game::Update(void) {
 		float height = RNLib::Window().GetHeight();
 		RNLib::Polygon3D().Put(D3DXVECTOR3(0.0f, -height*0.25f, 400.0f), INITD3DXVECTOR3)
 			->SetLighting(false)
-			->SetCol(COLOR_DOWN)
+			->SetCol(m_BgColorDown)
 			->SetSize(width * 2.0f, height * 0.5f)
 			->SetPriority(-2)
 			->SetZTest(false);

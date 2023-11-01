@@ -47,11 +47,10 @@ public:
 	// 色
 	struct StageColor
 	{
+		Color Set;
+		Color Player1;
+		Color Player2;
 		Color Block;
-		Color Trampoline;
-		Color Spike;
-		Color Lift;
-		Color Meteor;
 		Color FillBlock;
 	};
 
@@ -94,6 +93,9 @@ private:
 	};
 
 	// *** 関数宣言 ***
+	/* ステージ色	*/void StgColor(CSVFILE *pFile, int nRow, int nLine);
+	/* 色設定		*/void SetColor(CSVFILE *pFile, int nRow, int nLine);
+
 	/* ステージ生成 */void SetStage(int nType);
 
 	// *** 変数宣言 ***

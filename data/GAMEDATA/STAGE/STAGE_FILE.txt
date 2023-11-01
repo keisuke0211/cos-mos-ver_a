@@ -14,7 +14,6 @@ NUM_STAGE = 3
 STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE00.csv data\\TEXTURE\\BackGround\\Stage00.png ポラリス
 STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE01.csv data\\TEXTURE\\BackGround\\Stage01.png レグルス
 STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE02.csv data\\TEXTURE\\BackGround\\Stage02.png スピカ
-STAGE = data\\GAMEDATA\\STAGE\\csv\\STAGE99.csv data\\TEXTURE\\BackGround\\Stage99.png シリウス
 
 #========================================
 #

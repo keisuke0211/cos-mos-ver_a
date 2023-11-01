@@ -30,12 +30,14 @@ CStageEditor::CStageEditor(void)
 	}
 
 	m_StageType = NULL;
-	m_StageColor.Block = INITCOLOR;
-	m_StageColor.FillBlock = INITCOLOR;
-	m_StageColor.Lift = INITCOLOR;
-	m_StageColor.Meteor = INITCOLOR;
-	m_StageColor.Spike = INITCOLOR;
-	m_StageColor.Trampoline = INITCOLOR;
+
+	{
+		m_StageColor.Set = INITCOLOR;
+		m_StageColor.Player1 = INITCOLOR;
+		m_StageColor.Player2 = INITCOLOR;
+		m_StageColor.Block = INITCOLOR;
+		m_StageColor.FillBlock = INITCOLOR;
+	}
 
 	m_Info.nRow = 0;
 	m_Info.nLine = 0;
@@ -199,78 +201,7 @@ void CStageEditor::StageLoad(int stage)
 			}
 			else if (!strcmp(aDataSearch, "SetColor"))
 			{
-				while (1)
-				{
-					nLine = 0;
-					nRow++;
-					char *aDataSearch = NULL;	// データ検索用
-					string sData = pFile->GetData(nRow, nLine);
-					char* cstr = new char[sData.size() + 1]; // メモリ確保
-					std::char_traits<char>::copy(cstr, sData.c_str(), sData.size() + 1);
-					aDataSearch = cstr;
-
-					if (!strcmp(aDataSearch, "EndColor")) {
-						if (cstr != NULL) {
-							delete[] cstr;
-							cstr = NULL;
-						}
-						break;
-					}
-					else if (!strcmp(aDataSearch, "Block"))
-					{
-						nLine += 4;
-						ToData(m_StageColor.Block.r, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Block.g, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Block.b, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Block.a, pFile, nRow, nLine); nLine++;
-					}
-					else if (!strcmp(aDataSearch, "Trampoline"))
-					{
-						nLine += 4;
-						ToData(m_StageColor.Trampoline.r, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Trampoline.g, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Trampoline.b, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Trampoline.a, pFile, nRow, nLine); nLine++;
-					}
-					else if (!strcmp(aDataSearch, "Spike"))
-					{
-						nLine += 4;
-						ToData(m_StageColor.Spike.r, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Spike.g, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Spike.b, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Spike.a, pFile, nRow, nLine); nLine++;
-					}
-					else if (!strcmp(aDataSearch, "Lift"))
-					{
-						nLine += 4;
-						ToData(m_StageColor.Lift.r, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Lift.g, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Lift.b, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Lift.a, pFile, nRow, nLine); nLine++;
-					}
-					else if (!strcmp(aDataSearch, "Meteor"))
-					{
-						nLine += 4;
-						ToData(m_StageColor.Meteor.r, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Meteor.g, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Meteor.b, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.Meteor.a, pFile, nRow, nLine); nLine++;
-					}
-					else if (!strcmp(aDataSearch, "FillBlock"))
-					{
-						nLine += 4;
-						ToData(m_StageColor.FillBlock.r, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.FillBlock.g, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.FillBlock.b, pFile, nRow, nLine); nLine++;
-						ToData(m_StageColor.FillBlock.a, pFile, nRow, nLine); nLine++;
-					}
-
-					if (cstr != NULL)
-					{
-						delete[] cstr;
-						cstr = NULL;
-					}
-				}
+				StgColor(pFile,nRow,nLine);
 			}
 			else if (!strcmp(aDataSearch, "SetStage"))
 			{
@@ -332,6 +263,70 @@ void CStageEditor::StageLoad(int stage)
 }
 
 //========================================
+// 色設定
+// Author:KEISUKE OTONO
+//========================================
+void CStageEditor::StgColor(CSVFILE *pFile, int nRow, int nLine)
+{
+	while (1)
+	{
+		nLine = 0;
+		nRow++;
+		char *aDataSearch = NULL;	// データ検索用
+		string sData = pFile->GetData(nRow, nLine);
+		char* cstr = new char[sData.size() + 1]; // メモリ確保
+		std::char_traits<char>::copy(cstr, sData.c_str(), sData.size() + 1);
+		aDataSearch = cstr;
+
+		if (!strcmp(aDataSearch, "EndColor")) {
+			if (cstr != NULL) {
+				delete[] cstr;
+				cstr = NULL;
+			}
+			break;
+		}
+		else if (!strcmp(aDataSearch, "1P"))
+		{
+			SetColor(pFile, nRow, nLine);
+			m_StageColor.Player1 = m_StageColor.Set;
+			CMode_Game::GetPlayer()->SetColor(0, m_StageColor.Player1);
+		}
+		else if (!strcmp(aDataSearch, "2P"))
+		{
+			SetColor(pFile, nRow, nLine);
+			m_StageColor.Player2 = m_StageColor.Set;
+			CMode_Game::GetPlayer()->SetColor(1, m_StageColor.Player2);
+		}
+		else if (!strcmp(aDataSearch, "BgUp"))
+		{
+			SetColor(pFile, nRow, nLine);
+			CMode_Game::SetBgUpColor(m_StageColor.Set);
+		}
+		else if (!strcmp(aDataSearch, "BgDown"))
+		{
+			SetColor(pFile, nRow, nLine);
+			CMode_Game::SetBgDownColor(m_StageColor.Set);
+		}
+		else if (!strcmp(aDataSearch, "Block"))
+		{
+			SetColor(pFile, nRow, nLine);
+			m_StageColor.Block = m_StageColor.Set;
+		}
+		else if (!strcmp(aDataSearch, "FillBlock"))
+		{
+			SetColor(pFile, nRow, nLine);
+			m_StageColor.FillBlock = m_StageColor.Set;
+		}
+
+		if (cstr != NULL)
+		{
+			delete[] cstr;
+			cstr = NULL;
+		}
+	}
+}
+
+//========================================
 // ステージ生成
 // Author:KEISUKE OTONO
 //========================================
@@ -356,18 +351,18 @@ void CStageEditor::SetStage(int nType)
 			break;
 		case TYPE_TRAMPOLINE:
 			pos.x += fSizeX / 2;
-			Manager::BlockMgr()->TrampolineCreate(pos, m_StageColor.Trampoline);
+			Manager::BlockMgr()->TrampolineCreate(pos);
 			break;
 		case TYPE_SPIKE:
-			Manager::BlockMgr()->SpikeCreate(pos, m_StageColor.Spike);
+			Manager::BlockMgr()->SpikeCreate(pos);
 			break;
 		case TYPE_LIFT:
-			Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),0.0f, m_StageColor.Lift);
+			Manager::BlockMgr()->MoveBlockCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f),0.0f);
 			break;
 		case TYPE_Meteor:
 			pos.x += fSizeX;
 			pos.y -= fSizeY;
-			Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_StageColor.Meteor);
+			Manager::BlockMgr()->MeteorCreate(pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f));
 			break;
 		case TYPE_FILL_BLOCK_11:
 			Manager::BlockMgr()->FillBlockCreate(pos, CFillBlock::FILL_TYPE::FILL_1x1, m_StageColor.FillBlock);
@@ -421,6 +416,19 @@ void CStageEditor::SwapStage(int nStageIdx)
 			CMode_Game::SetStage(nStageIdx);
 		}
 	}
+}
+
+//========================================
+// 色設定
+// Author:KEISUKE OTONO
+//========================================
+void CStageEditor::SetColor(CSVFILE *pFile, int nRow, int nLine)
+{
+	nLine += 4;
+	ToData(m_StageColor.Set.r, pFile, nRow, nLine); nLine++;
+	ToData(m_StageColor.Set.g, pFile, nRow, nLine); nLine++;
+	ToData(m_StageColor.Set.b, pFile, nRow, nLine); nLine++;
+	ToData(m_StageColor.Set.a, pFile, nRow, nLine); nLine++;
 }
 
 //========================================

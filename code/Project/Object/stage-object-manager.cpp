@@ -133,7 +133,7 @@ CFillBlock *CStageObjectMgr::FillBlockCreate(D3DXVECTOR3 pos,CFillBlock::FILL_TY
 //========================================
 // ž™
 //========================================
-CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos, Color color)
+CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos)
 {
 	CSpike *pObj = NULL;
 
@@ -152,7 +152,6 @@ CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos, Color color)
 	}
 
 	pObj->SetPos(pos);
-	pObj->SetColor(color);
 	
 	return pObj;
 }
@@ -160,7 +159,7 @@ CSpike *CStageObjectMgr::SpikeCreate(D3DXVECTOR3 pos, Color color)
 //========================================
 // ƒgƒ‰ƒ“ƒ|ƒŠƒ“
 //========================================
-CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos, Color color)
+CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos)
 {
 	CTrampoline *pObj = NULL;
 
@@ -170,7 +169,6 @@ CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos, Color color)
 	// ‰Šú‰»ˆ—
 	pObj->Init();
 	pObj->SetPos(pos);
-	pObj->SetColor(color);
 
 	return pObj;
 }
@@ -178,7 +176,7 @@ CTrampoline *CStageObjectMgr::TrampolineCreate(D3DXVECTOR3 pos, Color color)
 //========================================
 // è¦Î
 //========================================
-CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move, Color color)
+CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move)
 {
 	CMeteor *pObj = NULL;
 
@@ -189,7 +187,6 @@ CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move, Color c
 	pObj->Init();
 	pObj->SetPos(pos);
 	pObj->SetMove(move);
-	pObj->SetColor(color);
 
 	return pObj;
 }
@@ -197,7 +194,7 @@ CMeteor *CStageObjectMgr::MeteorCreate(D3DXVECTOR3 pos,D3DXVECTOR3 move, Color c
 //========================================
 // ˆÚ“®°
 //========================================
-CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move, float fRefdef, Color color)
+CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move, float fRefdef)
 {
 	CMoveBlock *pObj = NULL;
 
@@ -209,7 +206,6 @@ CMoveBlock *CStageObjectMgr::MoveBlockCreate(D3DXVECTOR3 pos, D3DXVECTOR3 move, 
 	pObj->SetPos(pos);
 	pObj->SetMove(move);
 	pObj->SetRefdef(fRefdef);
-	pObj->SetColor(color);
 
 	return pObj;
 }

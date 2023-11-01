@@ -116,7 +116,7 @@ public:
 	//プレイヤー色情報設定
 	//指定したプレイヤーの位置情報を引数に渡してください。
 	//----------------------------
-	void SetPos(const int nNum, Color color) { m_aInfo[nNum].color = color; }
+	void SetColor(const int nNum, Color color) { m_aInfo[nNum].color = color; }
 
 	//----------------------------
 	//プレイヤー情報取得

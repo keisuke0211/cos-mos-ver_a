@@ -48,7 +48,8 @@ public:
 
 	// -- ê›íË -------------------------------------------------------------------
 	static void SetStage(int Idx) { m_nStageIdx = Idx; }
-	static void SetBgColor(Color color, int Idx) { m_BgColor[Idx] = color; }
+	static void SetBgUpColor(Color color) { m_BgColorUp = color; }
+	static void SetBgDownColor(Color color) { m_BgColorDown = color; }
 
 	// -- éÊìæ -------------------------------------------------------------------
 	static int GetStage(void) { return m_nStageIdx; }
@@ -66,5 +67,5 @@ private:
 	int m_nSelect;
 	CFontText *m_Menu[MENU_MAX];
 
-	static Color m_BgColor[2];
+	static Color m_BgColorUp, m_BgColorDown;
 };
