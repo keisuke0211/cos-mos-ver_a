@@ -93,6 +93,11 @@ void CMode_Game::Init(void) {
 	Manager::StgEd()->StageLoad(m_nPlanetIdx,m_nStageIdx);
 
 	SetBGColor(m_BgColorUp);
+
+	for (int nCnt = 0; nCnt < MENU_MAX; nCnt++)
+	{
+		m_Menu[nCnt] = NULL;
+	}
 }
 
 //========================================
@@ -120,17 +125,19 @@ void CMode_Game::Update(void) {
 
 	if (m_state != (int)STATE::PAUSE)
 	{
-		if (RNLib::Input().GetKeyTrigger(DIK_P) || RNLib::Input().GetButtonTrigger(CInput::BUTTON::START))
+		bool isTest = RNLib::Input().GetTrigger(DIK_P, CInput::BUTTON::START);
+
+		if (isTest)
 		{
 			SetState((int)STATE::PAUSE);
 		}
 
 		if (s_pPlayer != NULL)
 			s_pPlayer->Update();
-	}
 
-	if (RNLib::Input().GetKeyTrigger(DIK_SPACE) && RNLib::Transition().GetState() == CTransition::STATE::NONE)
-		Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::FADE);
+		if (RNLib::Input().GetKeyTrigger(DIK_0) && RNLib::Transition().GetState() == CTransition::STATE::NONE)
+			Manager::Transition(CMode::TYPE::RESULT, CTransition::TYPE::FADE);
+	}
 
 	// îwåi(âº)
 	{
