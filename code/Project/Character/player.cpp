@@ -54,6 +54,7 @@ CPlayer::CPlayer()
 		Player.fJumpPower = 0.0f;			//ジャンプ量
 		Player.fGravity = 0.0f;				//重力
 		Player.fGravityCorr = 0.0f;			//重力係数
+		Player.fLastHeight = 0.0f;			//最高Ｙ座標
 		Player.nModelIdx = NONEDATA;		//モデル番号
 		Player.side = WORLD_SIDE::FACE;		//どちらの世界に存在するか
 	}
@@ -206,8 +207,10 @@ void CPlayer::Update(void)
 //----------------------------
 void CPlayer::UpdateInfo(void)
 {
+	int nCntPlayer = -1;
 	for each (Info &Player in m_aInfo)
 	{
+		nCntPlayer++;
 		//ロケットに乗ってたらスキップ
 		if (Player.bRide) continue;
 
@@ -225,6 +228,14 @@ void CPlayer::UpdateInfo(void)
 			->SetBillboard(true)
 			->SetTex(s_nSwapMarkTex)
 			->SetCol(Color{ Player.color.r, Player.color.g, Player.color.b, 100 });
+
+		//最高Ｙ座標更新
+		switch (Player.side)
+		{
+			case WORLD_SIDE::FACE:	 Player.fLastHeight = Player.fLastHeight < Player.pos.y ? Player.pos.y : Player.fLastHeight; break;
+			case WORLD_SIDE::BEHIND: Player.fLastHeight = Player.fLastHeight > Player.pos.y ? Player.pos.y : Player.fLastHeight; break;
+		}
+		RNLib::Text2D().PutDebugLog(CreateText("%dP最高Ｙ座標：%f", nCntPlayer, Player.fLastHeight));
 	}
 }
 
@@ -527,6 +538,7 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 		if (pInfo->side == WORLD_SIDE::FACE) {
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
+			pInfo->fLastHeight = MaxPos.y;//最高Ｙ座標設定
 		}
 		break;
 
@@ -541,6 +553,7 @@ void CPlayer::CollisionBlock(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 		if (pInfo->side == WORLD_SIDE::BEHIND) {
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
+			pInfo->fLastHeight = MinPos.y;//最高Ｙ座標設定
 		}
 		break;
 
@@ -594,6 +607,7 @@ void CPlayer::CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 M
 		if (pInfo->side == WORLD_SIDE::FACE) {
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
+			pInfo->fLastHeight = MaxPos.y;//最高Ｙ座標設定
 		}
 		break;
 
@@ -608,6 +622,7 @@ void CPlayer::CollisionTrampoline(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 M
 		if (pInfo->side == WORLD_SIDE::BEHIND) {
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
+			pInfo->fLastHeight = MinPos.y;//最高Ｙ座標設定
 		}
 		break;
 	}
@@ -681,6 +696,7 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 			pInfo->pos += pMoveBlock->GetMove();
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
+			pInfo->fLastHeight = MaxPos.y;//最高Ｙ座標設定
 		}
 		break;
 
@@ -697,6 +713,7 @@ void CPlayer::CollisionMoveBlock(Info *pInfo, CMoveBlock *pMoveBlock, D3DXVECTOR
 			pInfo->pos += pMoveBlock->GetMove();
 			pInfo->bGround = true;	//地面に接している
 			pInfo->bJump = false;	//ジャンプ可能
+			pInfo->fLastHeight = MinPos.y;//最高Ｙ座標設定
 		}
 		break;
 
