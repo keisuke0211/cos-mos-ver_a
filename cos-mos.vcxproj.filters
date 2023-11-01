@@ -70,7 +70,7 @@
     <ClCompile Include="code\_RNLib\Basis\setting.cpp" />
     <ClCompile Include="code\_RNLib\Basis\sound.cpp" />
     <ClCompile Include="code\_RNLib\RNlib.cpp" />
-    <ClCompile Include="code\Project\Object\Gimmick\goal-gate.cpp" />
+    <ClCompile Include="code\Project\Object\Gimmick\goalgate.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="code\Project\Character\player.h" />
@@ -148,7 +148,7 @@
     <ClInclude Include="code\_RNLib\_Basis\Draw\text2D.h" />
     <ClInclude Include="code\_RNLib\_Basis\Draw\text3D.h" />
     <ClInclude Include="code\_RNLib\_Basis\Other\regist.h" />
-    <ClInclude Include="code\Project\Object\Gimmick\goal-gate.h" />
+    <ClInclude Include="code\Project\Object\Gimmick\goalgate.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="data\TEXTURE\meteo000.png" />

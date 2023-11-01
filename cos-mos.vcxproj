@@ -169,7 +169,7 @@
     <ClCompile Include="code\Project\Object\BackGround\ShiningWave.cpp" />
     <ClCompile Include="code\Project\Object\BackGround\Star.cpp" />
     <ClCompile Include="code\Project\Object\Block\fill-block.cpp" />
-    <ClCompile Include="code\Project\Object\Gimmick\goal-gate.cpp" />
+    <ClCompile Include="code\Project\Object\Gimmick\goalgate.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\RoadTripLaser.cpp" />
     <ClCompile Include="code\Project\Object\Gimmick\rocket.cpp" />
     <ClCompile Include="code\Project\Object\Item\Parts.cpp" />
@@ -238,7 +238,7 @@
     <ClInclude Include="code\Project\Object\BackGround\Shiningwave.h" />
     <ClInclude Include="code\Project\Object\BackGround\Star.h" />
     <ClInclude Include="code\Project\Object\Block\fill-block.h" />
-    <ClInclude Include="code\Project\Object\Gimmick\goal-gate.h" />
+    <ClInclude Include="code\Project\Object\Gimmick\goalgate.h" />
     <ClInclude Include="code\Project\Object\Gimmick\RoadTripLaser.h" />
     <ClInclude Include="code\Project\Object\Gimmick\rocket.h" />
     <ClInclude Include="code\Project\Object\Gimmick\Spike.h" />

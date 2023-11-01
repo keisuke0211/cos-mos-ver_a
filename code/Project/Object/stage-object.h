@@ -25,9 +25,10 @@ public:
 		SPIKE	   = 3,	//トゲ
 		MOVE_BLOCK = 4,	//移動ブロック
 		METEOR	   = 5,	//隕石
-		PARTS      = 6,	//ロケットパーツ
-		ROCKET     = 7,	//ロケット本体
-		BACKGROUND = 8,	//背景
+		GOALGATE   = 6, //ゴールゲート
+		PARTS      = 7,	//ロケットパーツ
+		ROCKET     = 8,	//ロケット本体
+		BACKGROUND = 9,	//背景
 		MAX,
 	};
 
