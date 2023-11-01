@@ -69,6 +69,7 @@ public:
 		float		fJumpPower;   //ジャンプ量
 		float		fGravity;     //重力
 		float		fGravityCorr; //重力係数
+		float		fLastHeight;  //最高Ｙ座標
 		int			nModelIdx;    //モデル番号
 		WORLD_SIDE  side;         //どちらの世界に存在するか
 		int             Keyborad[(int)WORLD_SIDE::MAX][(int)KEY_CONFIG::MAX]; //キーボードのキー配置
