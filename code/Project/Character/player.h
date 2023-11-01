@@ -68,7 +68,6 @@ public:
 		bool		bRide;        //ロケットに乗っているかどうか
 		float		fJumpPower;   //ジャンプ量
 		float		fGravity;     //重力
-		float		fGravityCorr; //重力係数
 		float		fMaxHeight;   //最高Ｙ座標
 		int			nTramJumpCounter;//トランポリンによって跳ね上がる時間
 		bool		bTramJump;    //トランポリン用の特殊ジャンプ
@@ -140,10 +139,11 @@ private:
 
 	static const float JUMP_POWER;		//基本ジャンプ量
 	static const float GRAVITY_POWER;	//基本重力加速度
-	static const float GRAVITY_CORR;	//基本重力係数
 
+	static const int TRAMPOLINE_JUMP_COUNTER;
 	static int	s_nNumGetParts;	//取得したパーツの数
 	static bool	s_bRideRocket;	//ロケットに乗れるかどうか
+
 
 	void InitKeyConfig(void);//各プレイヤーのキーボード・ジョイパッドのキーコンフィグ初期化設定
 	void SetPosOld(void);

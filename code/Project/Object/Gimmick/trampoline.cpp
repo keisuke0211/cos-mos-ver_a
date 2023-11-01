@@ -32,7 +32,7 @@ CTrampoline::CTrampoline(void) {
 	//èâä˙èÛë‘
 	m_type = TYPE::TRAMPOLINE;
 	m_width = SIZE_OF_1_SQUARE * 2;
-	m_height = SIZE_OF_1_SQUARE * 1.5f;
+	m_height = SIZE_OF_1_SQUARE;
 	m_state = STATE::NONE;
 	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_bLand = false;
