@@ -14,14 +14,15 @@ const int	CPlayer::SWAP_INTERVAL = 30;	//スワップインターバル
 int			CPlayer::s_nSwapInterval = 0;	//残りスワップインターバル
 
 const float CPlayer::SIZE_WIDTH = 8.0f;	//横幅
-const float CPlayer::SIZE_HEIGHT = 8.0f;	//高さ
+const float CPlayer::SIZE_HEIGHT = 8.0f;//高さ
 
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 2.7f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 10.0f;	//基本ジャンプ量
-const float CPlayer::GRAVITY_POWER = -8.0f;	//基本重力加速度
-const float CPlayer::GRAVITY_CORR = 0.07f;	//基本重力係数
+const float CPlayer::JUMP_POWER = 4.0f;		//基本ジャンプ量
+const float CPlayer::GRAVITY_POWER = -0.3f;	//基本重力加速度
+
+const int	CPlayer::TRAMPOLINE_JUMP_COUNTER = 10;
 
 int			CPlayer::s_nNumGetParts = 0;	//取得したパーツの数
 bool		CPlayer::s_bRideRocket = false;	//ロケットに乗れるかどうか
@@ -53,7 +54,6 @@ CPlayer::CPlayer()
 		Player.bRide = false;				//ロケットに乗っているかどうか
 		Player.fJumpPower = 0.0f;			//ジャンプ量
 		Player.fGravity = 0.0f;				//重力
-		Player.fGravityCorr = 0.0f;			//重力係数
 		Player.fMaxHeight = 0.0f;			//最高Ｙ座標
 		Player.nTramJumpCounter = 0;		//トランポリンによって跳ね上がる最高到達地点
 		Player.bTramJump = false;			//トランポリン用の特殊ジャンプ
@@ -239,7 +239,7 @@ void CPlayer::UpdateInfo(void)
 			case WORLD_SIDE::FACE:	 Player.fMaxHeight = Player.fMaxHeight < Player.pos.y ? Player.pos.y : Player.fMaxHeight; break;
 			case WORLD_SIDE::BEHIND: Player.fMaxHeight = Player.fMaxHeight > Player.pos.y ? Player.pos.y : Player.fMaxHeight; break;
 		}
-		RNLib::Text2D().PutDebugLog(CreateText("%dP最高Ｙ座標：%f", nCntPlayer, Player.fMaxHeight));
+		RNLib::Text2D().PutDebugLog(CreateText("%dP最高Y座標：%f", nCntPlayer, Player.fMaxHeight));
 	}
 }
 
@@ -332,13 +332,11 @@ void CPlayer::Death(D3DXVECTOR3 *pDeathPos)
 	//１Ｐ用初期情報
 	m_aInfo[0].fJumpPower = JUMP_POWER;
 	m_aInfo[0].fGravity = GRAVITY_POWER;
-	m_aInfo[0].fGravityCorr = GRAVITY_CORR;
 	m_aInfo[0].side = WORLD_SIDE::FACE;
 
 	//２Ｐ用初期情報
 	m_aInfo[1].fJumpPower = -JUMP_POWER;
 	m_aInfo[1].fGravity = -GRAVITY_POWER;
-	m_aInfo[1].fGravityCorr = GRAVITY_CORR;
 	m_aInfo[1].side = WORLD_SIDE::BEHIND;
 
 	//両者共通初期情報
@@ -387,7 +385,7 @@ void CPlayer::Move(COLLI_VEC vec)
 				Player.bTramJump = false;
 			}
 			//通常時なら、重力処理でＹの移動量を計算
-			else Player.move.y += (Player.fGravity - Player.move.y) * Player.fGravityCorr;
+			else Player.move.y += Player.fGravity;
 
 			//位置更新
 			Player.pos.y += Player.move.y;
@@ -901,8 +899,10 @@ void CPlayer::SetTrampolineJump(Info*& pInfo, float fMaxHeight)
 	SetSwapInterval();
 
 	//ジャンプ量を継承
-	pInfo->move.y = -(fMaxHeight / 10);
-	pInfo->nTramJumpCounter = 10;
+	float posy = pInfo->pos.y;
+	float diff = -fMaxHeight - pInfo->pos.y;
+	float movey = pInfo->move.y = (-fMaxHeight - pInfo->pos.y) / TRAMPOLINE_JUMP_COUNTER;
+	pInfo->nTramJumpCounter = TRAMPOLINE_JUMP_COUNTER;
 	pInfo->bTramJump = true;
 	pInfo->bGround = false;
 }

@@ -44,6 +44,7 @@ Color CMode_Game::m_BgColorDown = INITCOLOR;
 CPlayer *CMode_Game::s_pPlayer = NULL;
 CPlayer* CMode_Game::GetPlayer(void) { return s_pPlayer; }
 int CMode_Game::m_nStageIdx = 0;
+int CMode_Game::m_nPlanetIdx = 0;
 
 //========================================
 // コンストラクタ
@@ -89,7 +90,7 @@ void CMode_Game::Init(void) {
 	/* ブロック	*/Manager::BlockMgr()->Load();
 
 	// ステージ生成
-	Manager::StgEd()->StageLoad(m_nStageIdx);
+	Manager::StgEd()->StageLoad(m_nPlanetIdx,m_nStageIdx);
 
 	SetBGColor(m_BgColorUp);
 }
@@ -141,19 +142,6 @@ void CMode_Game::Update(void) {
 			->SetSize(width * 2.0f, height * 0.5f)
 			->SetPriority(-2)
 			->SetZTest(false);
-	}
-
-	if (RNLib::Input().GetKeyTrigger(DIK_RETURN))
-	{
-		int nStageIdx = Manager::StgEd()->GetStageIdx();
-		int nStageMax = Manager::StgEd()->GetStageMax();
-
-		nStageIdx++;
-
-		// ループ制御
-		IntLoopControl(&nStageIdx, nStageMax, 0);
-
-		Manager::StgEd()->SwapStage(nStageIdx);
 	}
 }
 
