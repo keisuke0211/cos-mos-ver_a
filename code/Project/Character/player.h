@@ -62,6 +62,7 @@ public:
 		D3DXVECTOR3 posOLd;       //前回位置
 		D3DXVECTOR3 rot;          //向き
 		D3DXVECTOR3 move;         //移動量
+		Color		color;		  //色
 		bool		bGround;      //地面に接しているか
 		bool		bJump;        //ジャンプ
 		bool		bRide;        //ロケットに乗っているかどうか
@@ -110,6 +111,12 @@ public:
 	//指定したプレイヤーの位置情報を引数に渡してください。
 	//----------------------------
 	void SetPos(const int nNum, D3DXVECTOR3 pos) { m_aInfo[nNum].StartPos = m_aInfo[nNum].pos = pos; }
+
+	//----------------------------
+	//プレイヤー色情報設定
+	//指定したプレイヤーの位置情報を引数に渡してください。
+	//----------------------------
+	void SetPos(const int nNum, Color color) { m_aInfo[nNum].color = color; }
 
 	//----------------------------
 	//プレイヤー情報取得

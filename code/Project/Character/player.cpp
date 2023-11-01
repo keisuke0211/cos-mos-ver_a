@@ -47,6 +47,7 @@ CPlayer::CPlayer()
 		Player.posOLd = INITD3DXVECTOR3;	//前回位置
 		Player.rot = INITD3DXVECTOR3;		//向き
 		Player.move = INITD3DXVECTOR3;		//移動量
+		Player.color = INITCOLOR;			//色
 		Player.bGround = false;				//地面に接しているか
 		Player.bJump = false;				//ジャンプ
 		Player.bRide = false;				//ロケットに乗っているかどうか
@@ -212,7 +213,8 @@ void CPlayer::UpdateInfo(void)
 
 		//位置設定
 		RNLib::Model().Put(Player.pos, Player.rot, Player.nModelIdx, false)
-			->SetOutLine(true);
+			->SetOutLine(true)
+			->SetCol(Player.color);
 
 		//スワップ先のマークを描画する位置
 		D3DXVECTOR3 MarkPos = Player.pos;
@@ -222,7 +224,7 @@ void CPlayer::UpdateInfo(void)
 			->SetSize(20.0f, 20.0f)
 			->SetBillboard(true)
 			->SetTex(s_nSwapMarkTex)
-			->SetCol(Color{ 255, 255, 255, 100 });
+			->SetCol(Color{ Player.color.r, Player.color.g, Player.color.b, 100 });
 	}
 }
 
