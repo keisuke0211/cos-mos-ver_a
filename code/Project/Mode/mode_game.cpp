@@ -8,6 +8,7 @@
 #include "../Character/player.h"
 #include "../System/StageEditor.h"
 #include "../System/words/font-text.h"
+#include "../Mode/mode_title.h"
 
 //================================================================================
 //----------|---------------------------------------------------------------------
@@ -141,6 +142,19 @@ void CMode_Game::Update(void) {
 			->SetPriority(-2)
 			->SetZTest(false);
 	}
+
+	if (RNLib::Input().GetKeyTrigger(DIK_RETURN))
+	{
+		int nStageIdx = Manager::StgEd()->GetStageIdx();
+		int nStageMax = Manager::StgEd()->GetStageMax();
+
+		nStageIdx++;
+
+		// ループ制御
+		IntLoopControl(&nStageIdx, nStageMax, 0);
+
+		Manager::StgEd()->SwapStage(nStageIdx);
+	}
 }
 
 //========================================
@@ -245,7 +259,7 @@ void CMode_Game::PauseCreate(void)
 
 	m_Menu[2] = CFontText::Create(CFontText::BOX_NORMAL_RECT,
 		D3DXVECTOR3(640.0f, 500.0f, 0.0f), D3DXVECTOR2(460.0f, 100.0f),
-		"タイトル画面に戻る", CFont::FONT_ROND_B, &pFont);
+		"選択画面に戻る", CFont::FONT_ROND_B, &pFont);
 }
 
 //========================================
@@ -302,6 +316,7 @@ void CMode_Game::PauseSelect(void)
 			break;
 		case MENU_TITLE:
 			Manager::Transition(CMode::TYPE::TITLE, CTransition::TYPE::FADE);
+			CMode_Title::SetSelect(true);
 			break;
 		}
 

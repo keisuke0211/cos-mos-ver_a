@@ -259,6 +259,10 @@ void CPlayer::ActionControl(void)
 		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::MOVE_LEFT) ||
 			RNLib::Input().GetStickAnglePress(CInput::STICK::LEFT, CInput::INPUT_ANGLE::LEFT, nIdxPlayer))
 			Player.move.x -= MOVE_SPEED;
+
+		//スワップ入力
+		if (IsKeyConfigPress(nIdxPlayer, Player.side, KEY_CONFIG::SWAP))
+			Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, Player.pos, INIT_EFFECT_SCALE, Color{ 255,200,0,255 });
 	}
 }
 
@@ -286,10 +290,9 @@ void CPlayer::Swap(void)
 			//ロケットに乗ってたらスキップ
 			if (Player.bRide) continue;
 
-			for (int i = 0; i < 8; i++)
+			for (int i = 0; i < 16; i++)
 			{
-				Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, m_aInfo[0].pos, INIT_EFFECT_SCALE, INITCOLOR);
-				Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, m_aInfo[1].pos, INIT_EFFECT_SCALE, INITCOLOR);
+				Manager::EffectMgr()->ParticleCreate(s_nSwapParticle, Player.pos, INIT_EFFECT_SCALE, INITCOLOR);
 			}
 
 			//位置・重力加速度・ジャンプ量・存在する世界を反転
