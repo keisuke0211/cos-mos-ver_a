@@ -10,9 +10,11 @@
 #include "../../Character/player.h"
 
 
-#define MAX_COUNT		(20)	//最大カウント数
+#define MAX_COUNT		(12)	//最大カウント数
+#define PLAYER_FLAME	(12)	//プレイヤーの高さ到達カウント
 #define RADIUS_WIDTH	(0.5f)	//横半径
 #define RADIUS_HEIGHT	(0.5f)	//縦半径
+#define CORRECT_WIDTH	(8.0f)	//高さ補正
 #define CORRECT_HEIGHT	(6.0f)	//高さ補正
 
 //================================================================================
@@ -73,6 +75,14 @@ void CTrampoline::Update(void) {
 
 	//土台モデル
 	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[0], false)
+		->SetCol(m_color)
+		->SetOutLine(true);
+
+	//目玉モデル
+	RNLib::Model().Put(D3DXVECTOR3(m_pos.x + CORRECT_WIDTH, m_pos.y, m_pos.z - CORRECT_HEIGHT), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[3], false)
+		->SetCol(m_color)
+		->SetOutLine(true);
+	RNLib::Model().Put(D3DXVECTOR3(m_pos.x - CORRECT_WIDTH, m_pos.y, m_pos.z - CORRECT_HEIGHT), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[3], false)
 		->SetCol(m_color)
 		->SetOutLine(true);
 
@@ -166,7 +176,9 @@ void CTrampoline::Collision(void) {
 			CPlayer::SetSwapInterval();
 
 			//ジャンプ量を継承
-			p2->move.y = p1->move.y * 2.5f;
+			p2->move.y = -(p1->fMaxHeight / PLAYER_FLAME);
+			p2->fOrientHeight = -p1->fMaxHeight;
+			p2->bTrampolineJump = true;
 
 			p2->bGround = false;
 		}
@@ -177,7 +189,9 @@ void CTrampoline::Collision(void) {
 			CPlayer::SetSwapInterval();
 
 			//ジャンプ量を継承
-			p2->move.y = p1->move.y * 2.5f;
+			p2->move.y = -(p1->fMaxHeight / PLAYER_FLAME);
+			p2->fOrientHeight = -p1->fMaxHeight;
+			p2->bTrampolineJump = true;
 
 			p2->bGround = false;
 		}
@@ -212,7 +226,9 @@ void CTrampoline::Collision(void) {
 			CPlayer::SetSwapInterval();
 
 			//ジャンプ量を継承
-			p1->move.y = p2->move.y * 2.5f;
+			p1->move.y = -(p2->fMaxHeight / PLAYER_FLAME);
+			p1->fOrientHeight = -p2->fMaxHeight;
+			p1->bTrampolineJump = true;
 
 			p1->bGround = false;
 		}
@@ -223,7 +239,9 @@ void CTrampoline::Collision(void) {
 			CPlayer::SetSwapInterval();
 
 			//ジャンプ量を継承
-			p1->move.y = p2->move.y * 2.5f;
+			p1->move.y = -(p2->fMaxHeight / PLAYER_FLAME);
+			p1->fOrientHeight = -p2->fMaxHeight;
+			p1->bTrampolineJump = true;
 
 			p1->bGround = false;
 		}
