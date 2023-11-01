@@ -19,7 +19,7 @@ const float CPlayer::SIZE_HEIGHT = 8.0f;//高さ
 const float CPlayer::MOVE_SPEED = 0.5f;		//移動量
 const float CPlayer::MAX_MOVE_SPEED = 2.7f;	//最大移動量
 
-const float CPlayer::JUMP_POWER = 4.0f;		//基本ジャンプ量
+const float CPlayer::JUMP_POWER = 5.0f;		//基本ジャンプ量
 const float CPlayer::GRAVITY_POWER = -0.3f;	//基本重力加速度
 
 const int	CPlayer::TRAMPOLINE_JUMP_COUNTER = 10;
@@ -683,6 +683,11 @@ void CPlayer::CollisionSpike(Info *pInfo, D3DXVECTOR3 MinPos, D3DXVECTOR3 MaxPos
 		//位置・移動量修正
 		FixPos_RIGHT(&pInfo->pos.x, MaxPos.x, &pInfo->move.x);
 		break;
+
+		//*********************************
+		//埋まった
+		//*********************************
+	case COLLI_ROT::UNKNOWN: Death(NULL); break;
 	}
 }
 

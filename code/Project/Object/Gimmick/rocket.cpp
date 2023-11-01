@@ -19,13 +19,16 @@ const int   CRocket::s_RotAnimeMax = 4;		// 小刻みアニメーションの最大
 const float CRocket::s_MoveMag = 1.05f;		// 移動量の倍率
 const float CRocket::s_MoveAdd = 0.01f;		// 移動量の増加量
 const int   CRocket::s_FadeModeCountMax = 120;	// フェードのモードのカウント最大
-int   CRocket::s_nCountPlayer = 0;	// プレイヤーのカウント
+int         CRocket::s_nCountPlayer = 0;	// プレイヤーのカウント
+
 //========================================
 // コンストラクタ
 //========================================
 CRocket::CRocket(void)
 {
 	Manager::BlockMgr()->AddList(this);
+
+	s_nCountPlayer = 0;
 
 	m_type = TYPE::ROCKET;
 	m_width = SIZE_OF_1_SQUARE*3;
@@ -47,7 +50,7 @@ CRocket::CRocket(void)
 //========================================
 CRocket::~CRocket()
 {
-
+	s_nCountPlayer = 0;
 }
 
 //========================================
@@ -100,6 +103,7 @@ void CRocket::Update(void)
 	RNLib::Model().Put(m_pos, m_rot, m_Info.scale * m_Info.fScaleMag, m_Info.nModelIdx, false)
 		->SetOutLine(true);
 
+	RNLib::Text2D().PutDebugLog(CreateText("プレイヤーカウンター：%d", s_nCountPlayer));
 }
 //========================================
 // 乗る状態更新
