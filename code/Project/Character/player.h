@@ -70,8 +70,8 @@ public:
 		float		fGravity;     //重力
 		float		fGravityCorr; //重力係数
 		float		fMaxHeight;   //最高Ｙ座標
-		float		fOrientHeight;//トランポリンによって跳ね上がる、最高到達地点
-		bool		bTrampolineJump;//トランポリン用の特殊ジャンプ
+		int			nTramJumpCounter;//トランポリンによって跳ね上がる時間
+		bool		bTramJump;    //トランポリン用の特殊ジャンプ
 		int			nModelIdx;    //モデル番号
 		WORLD_SIDE  side;         //どちらの世界に存在するか
 		int             Keyborad[(int)WORLD_SIDE::MAX][(int)KEY_CONFIG::MAX]; //キーボードのキー配置

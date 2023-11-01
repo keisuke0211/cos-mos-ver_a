@@ -55,8 +55,8 @@ CPlayer::CPlayer()
 		Player.fGravity = 0.0f;				//重力
 		Player.fGravityCorr = 0.0f;			//重力係数
 		Player.fMaxHeight = 0.0f;			//最高Ｙ座標
-		Player.fOrientHeight = 0.0f;		//トランポリンによって跳ね上がる最高到達地点
-		Player.bTrampolineJump = false;		//トランポリン用の特殊ジャンプ
+		Player.nTramJumpCounter = 0;		//トランポリンによって跳ね上がる最高到達地点
+		Player.bTramJump = false;			//トランポリン用の特殊ジャンプ
 		Player.nModelIdx = NONEDATA;		//モデル番号
 		Player.side = WORLD_SIDE::FACE;		//どちらの世界に存在するか
 	}
@@ -349,7 +349,7 @@ void CPlayer::Death(D3DXVECTOR3 *pDeathPos)
 		Player.bGround = false;
 		Player.bJump = true;
 		Player.bRide = false;
-		Player.bTrampolineJump = false;
+		Player.bTramJump = false;
 	}
 }
 
@@ -380,11 +380,11 @@ void CPlayer::Move(COLLI_VEC vec)
 
 			//重力処理
 		case COLLI_VEC::Y:
-			//トランポリンによる特殊ジャンプ中で、移動したら目標地点に到達するなら特殊ジャンプをOFFにする
-			if (Player.bTrampolineJump)
-			{
-				if(Player.pos.y + Player.move.y == Player.fOrientHeight)
-				Player.bTrampolineJump = false;
+			//トランポリンによる特殊ジャンプ中
+			if (Player.bTramJump)
+			{//カウンターを減らして、０になったら特殊ジャンプ終了
+				if(--Player.nTramJumpCounter <= 0)
+				Player.bTramJump = false;
 			}
 			//通常時なら、重力処理でＹの移動量を計算
 			else Player.move.y += (Player.fGravity - Player.move.y) * Player.fGravityCorr;
@@ -902,8 +902,8 @@ void CPlayer::SetTrampolineJump(Info*& pInfo, float fMaxHeight)
 
 	//ジャンプ量を継承
 	pInfo->move.y = -(fMaxHeight / 10);
-	pInfo->fOrientHeight = -fMaxHeight;
-	pInfo->bTrampolineJump = true;
+	pInfo->nTramJumpCounter = 10;
+	pInfo->bTramJump = true;
 	pInfo->bGround = false;
 }
 
