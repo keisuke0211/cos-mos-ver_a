@@ -10,9 +10,11 @@
 #include "../../Character/player.h"
 
 
-#define MAX_COUNT		(20)	//最大カウント数
+#define MAX_COUNT		(12)	//最大カウント数
+#define PLAYER_FLAME	(6)		//プレイヤーの高さ到達カウント
 #define RADIUS_WIDTH	(0.5f)	//横半径
 #define RADIUS_HEIGHT	(0.5f)	//縦半径
+#define CORRECT_WIDTH	(8.0f)	//高さ補正
 #define CORRECT_HEIGHT	(6.0f)	//高さ補正
 
 //================================================================================
@@ -30,7 +32,7 @@ CTrampoline::CTrampoline(void) {
 	//初期状態
 	m_type = TYPE::TRAMPOLINE;
 	m_width = SIZE_OF_1_SQUARE * 2;
-	m_height = SIZE_OF_1_SQUARE;
+	m_height = SIZE_OF_1_SQUARE * 1.5f;
 	m_state = STATE::NONE;
 	m_scale = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
 	m_bLand = false;
@@ -73,6 +75,14 @@ void CTrampoline::Update(void) {
 
 	//土台モデル
 	RNLib::Model().Put(m_pos, D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[0], false)
+		->SetCol(m_color)
+		->SetOutLine(true);
+
+	//目玉モデル
+	RNLib::Model().Put(D3DXVECTOR3(m_pos.x + CORRECT_WIDTH, m_pos.y, m_pos.z - CORRECT_HEIGHT), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[3], false)
+		->SetCol(m_color)
+		->SetOutLine(true);
+	RNLib::Model().Put(D3DXVECTOR3(m_pos.x - CORRECT_WIDTH, m_pos.y, m_pos.z - CORRECT_HEIGHT), D3DXVECTOR3(0.0f, 0.0f, 0.0f), m_modelIdx[3], false)
 		->SetCol(m_color)
 		->SetOutLine(true);
 
@@ -163,23 +173,13 @@ void CTrampoline::Collision(void) {
 			&& p2->side == CPlayer::WORLD_SIDE::BEHIND)
 		{//2pが乗っているか
 
-			CPlayer::SetSwapInterval();
-
-			//ジャンプ量を継承
-			p2->move.y = p1->move.y * 2.5f;
-
-			p2->bGround = false;
+			pPlayer->SetTrampolineJump(p2, p1->fMaxHeight);
 		}
 		else if (p2->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - width&& p2->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + width
 			&& p2->pos.y - CPlayer::SIZE_HEIGHT <= m_pos.y + height
 			&& p2->side == CPlayer::WORLD_SIDE::FACE)
 		{
-			CPlayer::SetSwapInterval();
-
-			//ジャンプ量を継承
-			p2->move.y = p1->move.y * 2.5f;
-
-			p2->bGround = false;
+			pPlayer->SetTrampolineJump(p2, p1->fMaxHeight);
 		}
 
 		if (m_state == STATE::NONE
@@ -209,23 +209,13 @@ void CTrampoline::Collision(void) {
 			&& p1->side == CPlayer::WORLD_SIDE::FACE)
 		{//1pが乗っているか
 
-			CPlayer::SetSwapInterval();
-
-			//ジャンプ量を継承
-			p1->move.y = p2->move.y * 2.5f;
-
-			p1->bGround = false;
+			pPlayer->SetTrampolineJump(p1, p2->fMaxHeight);
 		}
 		else if (p1->pos.x + CPlayer::SIZE_WIDTH >= m_pos.x - width&& p1->pos.x - CPlayer::SIZE_WIDTH <= m_pos.x + width
 			&& p1->pos.y + CPlayer::SIZE_HEIGHT >= m_pos.y - height
 			&& p1->side == CPlayer::WORLD_SIDE::BEHIND)
 		{
-			CPlayer::SetSwapInterval();
-
-			//ジャンプ量を継承
-			p1->move.y = p2->move.y * 2.5f;
-
-			p1->bGround = false;
+			pPlayer->SetTrampolineJump(p1, p2->fMaxHeight);
 		}
 
 		if (m_state == STATE::NONE
@@ -242,4 +232,5 @@ void CTrampoline::Collision(void) {
 			m_nCnt = MAX_COUNT;
 		}
 	}
+
 }
